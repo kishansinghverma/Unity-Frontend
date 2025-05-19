@@ -1,29 +1,31 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import { Box, Flex, useColorModeValue } from '@chakra-ui/react';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { useApp } from '../../context/AppContext';
+import { useAppSelector } from '../../hooks/useAppSelector';
 
 const AppShell: React.FC = () => {
-  const { currentApp } = useApp();
+  const { currentApp } = useAppSelector(state => state.app);
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
+  const bg = useColorModeValue('gray.50', 'gray.900');
 
   if (!currentApp) {
-    return <div>Loading...</div>;
+    return <Box>Loading...</Box>;
   }
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+    <Flex h="100vh" bg={bg}>
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
       
-      <div className="flex flex-col flex-1 overflow-hidden">
+      <Flex direction="column" flex="1" overflow="hidden">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <Box as="main" flex="1" overflowY="auto" p={{ base: 4, md: 6 }}>
           <Outlet />
-        </main>
-      </div>
-    </div>
+        </Box>
+      </Flex>
+    </Flex>
   );
 };
 
