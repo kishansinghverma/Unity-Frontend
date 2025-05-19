@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { Box, Heading, Text, useColorModeValue } from '@chakra-ui/react';
 
 interface CardProps {
   children: ReactNode;
@@ -15,21 +16,41 @@ const Card: React.FC<CardProps> = ({
   className = '',
   footer
 }) => {
+  const bg = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden ${className}`}>
+    <Box
+      bg={bg}
+      borderWidth="1px"
+      borderColor={borderColor}
+      borderRadius="lg"
+      overflow="hidden"
+      className={className}
+      shadow="sm"
+    >
       {(title || description) && (
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          {title && <h3 className="text-lg font-medium text-gray-800 dark:text-white">{title}</h3>}
-          {description && <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{description}</p>}
-        </div>
+        <Box p={4} borderBottomWidth="1px" borderColor={borderColor}>
+          {title && <Heading size="md">{title}</Heading>}
+          {description && (
+            <Text mt={1} fontSize="sm" color="gray.500">
+              {description}
+            </Text>
+          )}
+        </Box>
       )}
-      <div className="p-4">{children}</div>
+      <Box p={4}>{children}</Box>
       {footer && (
-        <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+        <Box
+          p={4}
+          borderTopWidth="1px"
+          borderColor={borderColor}
+          bg={useColorModeValue('gray.50', 'gray.700')}
+        >
           {footer}
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 

@@ -1,4 +1,18 @@
 import React from 'react';
+import {
+  Table as ChakraTable,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Box,
+  Text,
+  Flex,
+  Icon,
+  Spinner,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { ListColumn, SortConfig } from '../../types';
 
@@ -21,108 +35,99 @@ function Table<T extends { id: string }>({
   isLoading = false,
   emptyMessage = 'No data available'
 }: TableProps<T>) {
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const hoverBg = useColorModeValue('gray.50', 'gray.700');
+
   if (isLoading) {
     return (
-      <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-        <div className="h-64 flex items-center justify-center">
-          <div className="animate-pulse flex space-x-4">
-            <div className="flex-1 space-y-6 py-1">
-              <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              <div className="space-y-3">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded col-span-2"></div>
-                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded col-span-1"></div>
-                </div>
-                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Flex justify="center" align="center" h="64" bg={useColorModeValue('white', 'gray.800')} borderRadius="lg">
+        <Spinner />
+      </Flex>
     );
   }
 
   if (data.length === 0) {
     return (
-      <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-        <div className="h-64 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
-          <svg className="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-          </svg>
-          <p>{emptyMessage}</p>
-        </div>
-      </div>
+      <Flex
+        direction="column"
+        justify="center"
+        align="center"
+        h="64"
+        bg={useColorModeValue('white', 'gray.800')}
+        borderRadius="lg"
+      >
+        <Text color="gray.500">{emptyMessage}</Text>
+      </Flex>
     );
   }
 
   return (
-    <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-50 dark:bg-gray-700">
-            <tr>
+    <Box
+      borderWidth="1px"
+      borderColor={borderColor}
+      borderRadius="lg"
+      overflow="hidden"
+      bg={useColorModeValue('white', 'gray.800')}
+    >
+      <Box overflowX="auto">
+        <ChakraTable variant="simple">
+          <Thead>
+            <Tr>
               {columns.map((column) => (
-                <th
-                  key={column.id}
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-default"
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>{column.label}</span>
+                <Th key={column.id}>
+                  <Flex align="center" cursor={column.sortable ? 'pointer' : 'default'}>
+                    <Text onClick={() => column.sortable && onSort && onSort(column.accessor)}>
+                      {column.label}
+                    </Text>
                     {column.sortable && (
-                      <button
-                        onClick={() => onSort && onSort(column.accessor)}
-                        className="focus:outline-none"
-                      >
-                        <span className="flex flex-col">
-                          <ChevronUp 
-                            className={`w-3 h-3 ${
-                              sortConfig?.field === column.accessor && sortConfig?.direction === 'asc'
-                                ? 'text-blue-600 dark:text-blue-400'
-                                : 'text-gray-400'
-                            }`} 
-                          />
-                          <ChevronDown 
-                            className={`w-3 h-3 -mt-1 ${
-                              sortConfig?.field === column.accessor && sortConfig?.direction === 'desc'
-                                ? 'text-blue-600 dark:text-blue-400'
-                                : 'text-gray-400'
-                            }`} 
-                          />
-                        </span>
-                      </button>
+                      <Box ml={2}>
+                        <Icon
+                          as={ChevronUp}
+                          w={3}
+                          h={3}
+                          color={
+                            sortConfig?.field === column.accessor && sortConfig?.direction === 'asc'
+                              ? 'blue.500'
+                              : 'gray.400'
+                          }
+                        />
+                        <Icon
+                          as={ChevronDown}
+                          w={3}
+                          h={3}
+                          mt="-2px"
+                          color={
+                            sortConfig?.field === column.accessor && sortConfig?.direction === 'desc'
+                              ? 'blue.500'
+                              : 'gray.400'
+                          }
+                        />
+                      </Box>
                     )}
-                  </div>
-                </th>
+                  </Flex>
+                </Th>
               ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+            </Tr>
+          </Thead>
+          <Tbody>
             {data.map((item) => (
-              <tr
+              <Tr
                 key={item.id}
                 onClick={() => onRowClick && onRowClick(item)}
-                className={`${
-                  onRowClick ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700' : ''
-                } transition-colors`}
+                cursor={onRowClick ? 'pointer' : 'default'}
+                _hover={{ bg: onRowClick ? hoverBg : 'transparent' }}
               >
-                {columns.map((column) => {
-                  const value = item[column.accessor];
-                  return (
-                    <td
-                      key={`${item.id}-${column.id}`}
-                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-                    >
-                      {value}
-                    </td>
-                  );
-                })}
-              </tr>
+                {columns.map((column) => (
+                  <Td key={`${item.id}-${column.id}`}>
+                    {item[column.accessor]}
+                  </Td>
+                ))}
+              </Tr>
             ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          </Tbody>
+        </ChakraTable>
+      </Box>
+    </Box>
   );
 }
 
