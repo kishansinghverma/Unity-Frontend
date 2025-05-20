@@ -10,9 +10,8 @@ import CustomerList from './apps/crudApp/pages/CustomerList';
 import CustomerDetail from './apps/crudApp/pages/CustomerDetail';
 import CustomerNew from './apps/crudApp/pages/CustomerNew';
 import CustomerEdit from './apps/crudApp/pages/CustomerEdit';
-
-// Context Provider
-import { AppProvider } from './context/AppContext';
+import GatePassForm from './apps/crudApp/pages/GatePassForm';
+import GatePassList from './apps/crudApp/pages/GatePassList';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +23,8 @@ const router = createBrowserRouter([
       { path: 'customers/:id', element: <CustomerDetail /> },
       { path: 'customers/new', element: <CustomerNew /> },
       { path: 'customers/edit/:id', element: <CustomerEdit /> },
+      { path: 'gatepass/new', element: <GatePassForm /> },
+      { path: 'gatepass/list', element: <GatePassList /> },
       
       // Placeholder routes for second app (to be built later)
       { path: 'analytics', element: <div className="p-8 text-center">Analytics App - Coming Soon</div> },
@@ -43,9 +44,7 @@ const router = createBrowserRouter([
 
 const AppRoutes: React.FC = () => {
   return (
-    <AppProvider>
-      <RouterProvider router={router} />
-    </AppProvider>
+    <RouterProvider router={router} />
   );
 };
 

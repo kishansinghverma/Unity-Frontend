@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, LayoutDashboard, Users, ShoppingCart, Package, Settings, BarChart3, User } from 'lucide-react';
-import { useApp } from '../../context/AppContext';
+import { X, LayoutDashboard, Users, ShoppingCart, Package, Settings, BarChart3, User, ClipboardList, ClipboardCheck } from 'lucide-react';
+import { useAppSelector } from '../../store/hooks';
+import { selectCurrentApp } from '../../store/slices/appSlice';
 
 interface SidebarProps {
   open: boolean;
@@ -10,7 +11,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
   const location = useLocation();
-  const { currentApp } = useApp();
+  const currentApp = useAppSelector(selectCurrentApp);
 
   // Define navigation items based on current app
   const getNavItems = () => {
@@ -18,6 +19,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       return [
         { name: 'Dashboard', path: '/', icon: <LayoutDashboard className="w-5 h-5" /> },
         { name: 'Customers', path: '/customers', icon: <Users className="w-5 h-5" /> },
+        { name: 'New Gate Pass', path: '/gatepass/new', icon: <ClipboardList className="w-5 h-5" /> },
+        { name: 'Gate Pass Records', path: '/gatepass/list', icon: <ClipboardCheck className="w-5 h-5" /> },
         { name: 'Orders', path: '/orders', icon: <ShoppingCart className="w-5 h-5" /> },
         { name: 'Products', path: '/products', icon: <Package className="w-5 h-5" /> },
         { name: 'Settings', path: '/settings', icon: <Settings className="w-5 h-5" /> },

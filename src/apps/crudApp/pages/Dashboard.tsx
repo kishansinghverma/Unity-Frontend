@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import DashboardStats from '../components/DashboardStats';
 import RecentActivity from '../components/RecentActivity';
 import Card from '../../../components/ui/Card';
-import { BarChart3, TrendingUp } from 'lucide-react';
+import { BarChart3, TrendingUp, Clipboard, ClipboardList } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
   return (
@@ -14,7 +15,14 @@ const Dashboard: React.FC = () => {
             Welcome back! Here's an overview of your business.
           </p>
         </div>
-        <div className="mt-4 sm:mt-0">
+        <div className="mt-4 sm:mt-0 flex space-x-3">
+          <Link 
+            to="/gatepass/new"
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <ClipboardList className="w-5 h-5 mr-2" />
+            New Gate Pass
+          </Link>
           <div className="inline-flex rounded-md shadow-sm">
             <button className="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600 focus:z-10 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
               This Week
@@ -58,6 +66,38 @@ const Dashboard: React.FC = () => {
         <div>
           <RecentActivity />
         </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card title="Quick Actions">
+          <div className="flex flex-col space-y-4">
+            <Link 
+              to="/customers/new" 
+              className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600"
+            >
+              <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-md">
+                <Clipboard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div className="ml-4">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-white">New Customer</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Add a new customer to your database</p>
+              </div>
+            </Link>
+            
+            <Link 
+              to="/gatepass/new" 
+              className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600"
+            >
+              <div className="p-2 bg-red-100 dark:bg-red-900 rounded-md">
+                <ClipboardList className="w-5 h-5 text-red-600 dark:text-red-400" />
+              </div>
+              <div className="ml-4">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-white">नया गेटपास</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Create a new gate pass for vendors</p>
+              </div>
+            </Link>
+          </div>
+        </Card>
       </div>
     </div>
   );

@@ -25,6 +25,8 @@ export interface ListColumn {
   accessor: string;
   sortable?: boolean;
   filterable?: boolean;
+  render?: (item: any) => React.ReactNode;
+  alignment?: 'left' | 'center' | 'right';
 }
 
 export interface Filter {

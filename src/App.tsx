@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppRoutes from './routes';
-import { User, ChevronDown } from 'lucide-react';
+import { useAppSelector } from './store/hooks';
+import { selectTheme } from './store/slices/themeSlice';
 
 function App() {
+  const theme = useAppSelector(selectTheme);
+  
+  // Apply theme class to document when theme changes
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+  
   return (
     <AppRoutes />
   );

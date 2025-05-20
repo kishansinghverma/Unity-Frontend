@@ -55,6 +55,14 @@ function Table<T extends { id: string }>({
     );
   }
 
+  const getAlignmentClass = (alignment?: 'left' | 'center' | 'right') => {
+    switch (alignment) {
+      case 'center': return 'text-center';
+      case 'right': return 'text-right';
+      default: return 'text-left';
+    }
+  };
+
   return (
     <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
@@ -65,9 +73,9 @@ function Table<T extends { id: string }>({
                 <th
                   key={column.id}
                   scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-default"
+                  className={`px-6 py-3 ${getAlignmentClass(column.alignment)} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-default`}
                 >
-                  <div className="flex items-center space-x-1">
+                  <div className={`flex items-center ${column.alignment === 'center' ? 'justify-center' : column.alignment === 'right' ? 'justify-end' : 'justify-start'} space-x-1`}>
                     <span>{column.label}</span>
                     {column.sortable && (
                       <button
@@ -107,13 +115,25 @@ function Table<T extends { id: string }>({
                 } transition-colors`}
               >
                 {columns.map((column) => {
-                  const value = item[column.accessor];
+                  const rawValue = item[column.accessor as keyof T];
+                  
+                  if (column.render) {
+                    return (
+                      <td
+                        key={`${item.id}-${column.id}`}
+                        className={`px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 ${getAlignmentClass(column.alignment)}`}
+                      >
+                        {column.render(item)}
+                      </td>
+                    );
+                  }
+                  
                   return (
                     <td
                       key={`${item.id}-${column.id}`}
-                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
+                      className={`px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 ${getAlignmentClass(column.alignment)}`}
                     >
-                      {value}
+                      {String(rawValue)}
                     </td>
                   );
                 })}

@@ -2,10 +2,11 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { useApp } from '../../context/AppContext';
+import { useAppSelector } from '../../store/hooks';
+import { selectCurrentApp } from '../../store/slices/appSlice';
 
 const AppShell: React.FC = () => {
-  const { currentApp } = useApp();
+  const currentApp = useAppSelector(selectCurrentApp);
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
 
   if (!currentApp) {
