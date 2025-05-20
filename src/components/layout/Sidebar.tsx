@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, LayoutDashboard, Users, ShoppingCart, Package, Settings, BarChart3, User, ClipboardList, ClipboardCheck, FileCheck } from 'lucide-react';
+import { X, LayoutDashboard, Users, ShoppingCart, Package, Settings, BarChart3, User, ClipboardList, ClipboardCheck, FileCheck, UserSquare } from 'lucide-react';
 import { useAppSelector } from '../../store/hooks';
 import { selectCurrentApp } from '../../store/slices/appSlice';
 
@@ -19,6 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       return [
         { name: 'Dashboard', path: '/', icon: <LayoutDashboard className="w-5 h-5" /> },
         { name: 'Customers', path: '/customers', icon: <Users className="w-5 h-5" /> },
+        { name: 'Parties', path: '/parties', icon: <UserSquare className="w-5 h-5" /> },
         { name: 'New Gate Pass', path: '/gatepass/new', icon: <ClipboardList className="w-5 h-5" /> },
         { name: 'Gate Pass Records', path: '/gatepass/list', icon: <ClipboardCheck className="w-5 h-5" /> },
         { name: 'Processed Records', path: '/processed/list', icon: <FileCheck className="w-5 h-5" /> },

@@ -13,6 +13,8 @@ import CustomerEdit from './apps/crudApp/pages/CustomerEdit';
 import GatePassForm from './apps/crudApp/pages/GatePassForm';
 import GatePassList from './apps/crudApp/pages/GatePassList';
 import ProcessedRecordsList from './apps/crudApp/pages/ProcessedRecordsList';
+import PartyList from './apps/crudApp/pages/PartyList';
+import PartyForm from './apps/crudApp/pages/PartyForm';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,10 @@ const router = createBrowserRouter([
       { path: 'gatepass/new', element: <GatePassForm /> },
       { path: 'gatepass/list', element: <GatePassList /> },
       { path: 'processed/list', element: <ProcessedRecordsList /> },
+      { path: 'parties', element: <PartyList /> },
+      { path: 'parties/new', element: <PartyForm /> },
+      { path: 'parties/:id', element: <PartyForm /> },
+      { path: 'parties/edit/:id', element: <PartyForm /> },
       
       // Placeholder routes for second app (to be built later)
       { path: 'analytics', element: <div className="p-8 text-center">Analytics App - Coming Soon</div> },
