@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SimpleGrid } from '@chakra-ui/react';
 import { Save, X } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 import Input from '../../../components/ui/Input';
@@ -36,7 +37,6 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear error when field is updated
     if (errors[name]) {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -84,8 +84,8 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
       title={isEditing ? 'Edit Customer' : 'Add New Customer'}
       description={isEditing ? 'Update customer information' : 'Create a new customer record'}
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form onSubmit={handleSubmit}>
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={6}>
           <Input
             label="First Name"
             name="firstName"
@@ -105,9 +105,9 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
             error={errors.lastName}
             placeholder="Doe"
           />
-        </div>
+        </SimpleGrid>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={6}>
           <Input
             label="Email"
             type="email"
@@ -126,9 +126,9 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
             onChange={handleChange}
             placeholder="+1 (555) 123-4567"
           />
-        </div>
+        </SimpleGrid>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={6}>
           <Input
             label="Company"
             name="company"
@@ -150,9 +150,9 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
               { value: 'pending', label: 'Pending' },
             ]}
           />
-        </div>
+        </SimpleGrid>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={6}>
           <Select
             label="Country"
             name="country"
@@ -165,11 +165,10 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
               { value: 'au', label: 'Australia' },
             ]}
           />
-        </div>
+        </SimpleGrid>
         
-        <div className="flex justify-end space-x-3">
+        <SimpleGrid columns={2} spacing={3} justifyContent="end">
           <Button
-            type="button"
             variant="ghost"
             onClick={() => navigate('/customers')}
             leftIcon={<X className="w-4 h-4" />}
@@ -178,13 +177,12 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
           </Button>
           <Button
             type="submit"
-            variant="primary"
             isLoading={isLoading}
             leftIcon={<Save className="w-4 h-4" />}
           >
             {isEditing ? 'Update Customer' : 'Create Customer'}
           </Button>
-        </div>
+        </SimpleGrid>
       </form>
     </Card>
   );

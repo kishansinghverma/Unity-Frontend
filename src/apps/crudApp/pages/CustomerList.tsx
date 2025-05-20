@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Flex,
+  Text,
+  InputGroup,
+  InputLeftElement,
+  ButtonGroup,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { Plus, Search, Filter, RefreshCw } from 'lucide-react';
 import Table from '../../../components/ui/Table';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import { ListColumn, SortConfig } from '../../../types';
-import { getMockCustomers } from '../services/mockData';
-
-interface Customer {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  company: string;
-  status: string;
-  country: string;
-}
+import { useAppSelector } from '../../../hooks/useAppSelector';
 
 const CustomerList: React.FC = () => {
   const navigate = useNavigate();
-  const [customers] = useState<Customer[]>(getMockCustomers());
+  const { customers } = useAppSelector(state => state.customers);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     field: 'lastName',
@@ -56,7 +54,6 @@ const CustomerList: React.FC = () => {
       );
     });
 
-    // Add full name for display
     const dataWithFullName = filteredData.map(customer => ({
       ...customer,
       fullName: `${customer.firstName} ${customer.lastName}`
@@ -80,45 +77,53 @@ const CustomerList: React.FC = () => {
     return dataWithFullName;
   };
 
-  const handleRowClick = (customer: Customer) => {
+  const handleRowClick = (customer: any) => {
     navigate(`/customers/${customer.id}`);
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Customers</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+    <Box spacing="6">
+      <Flex
+        direction={{ base: 'column', md: 'row' }}
+        justify="space-between"
+        align={{ md: 'center' }}
+        mb="6"
+      >
+        <Box mb={{ base: 4, md: 0 }}>
+          <Text fontSize="2xl" fontWeight="bold">
+            Customers
+          </Text>
+          <Text mt="1" fontSize="sm" color="gray.500">
             Manage your customer records
-          </p>
-        </div>
-        <div className="mt-4 md:mt-0">
-          <Button
-            onClick={() => navigate('/customers/new')}
-            leftIcon={<Plus className="w-4 h-4" />}
-          >
-            Add Customer
-          </Button>
-        </div>
-      </div>
+          </Text>
+        </Box>
+        <Button
+          onClick={() => navigate('/customers/new')}
+          leftIcon={<Plus className="w-4 h-4" />}
+        >
+          Add Customer
+        </Button>
+      </Flex>
 
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="w-full md:w-1/3">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <Flex
+        direction={{ base: 'column', md: 'row' }}
+        gap="4"
+        mb="6"
+      >
+        <Box flex={{ md: '1' }} maxW={{ md: '1/3' }}>
+          <InputGroup>
+            <InputLeftElement>
               <Search className="h-4 w-4 text-gray-400" />
-            </div>
+            </InputLeftElement>
             <Input
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search customers..."
-              className="pl-10"
             />
-          </div>
-        </div>
+          </InputGroup>
+        </Box>
         
-        <div className="flex gap-2">
+        <ButtonGroup>
           <Button
             variant="ghost"
             leftIcon={<Filter className="w-4 h-4" />}
@@ -131,8 +136,8 @@ const CustomerList: React.FC = () => {
           >
             Refresh
           </Button>
-        </div>
-      </div>
+        </ButtonGroup>
+      </Flex>
 
       <Table
         data={getSortedData()}
@@ -143,31 +148,32 @@ const CustomerList: React.FC = () => {
         emptyMessage="No customers found. Try adjusting your search."
       />
 
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-gray-700 dark:text-gray-300">
-          Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
-          <span className="font-medium">{customers.length}</span> results
-        </div>
+      <Flex
+        mt="4"
+        align="center"
+        justify="space-between"
+        direction={{ base: 'column', sm: 'row' }}
+        gap="4"
+      >
+        <Text fontSize="sm" color={useColorModeValue('gray.700', 'gray.300')}>
+          Showing <Text as="span" fontWeight="medium">1</Text> to{' '}
+          <Text as="span" fontWeight="medium">10</Text> of{' '}
+          <Text as="span" fontWeight="medium">{customers.length}</Text> results
+        </Text>
         
-        <div className="flex space-x-1">
-          <Button variant="ghost" size="sm" disabled>
+        <ButtonGroup size="sm">
+          <Button variant="ghost" isDisabled>
             Previous
           </Button>
-          <Button variant="primary" size="sm">
-            1
-          </Button>
-          <Button variant="ghost" size="sm">
-            2
-          </Button>
-          <Button variant="ghost" size="sm">
-            3
-          </Button>
-          <Button variant="ghost" size="sm">
+          <Button variant="solid">1</Button>
+          <Button variant="ghost">2</Button>
+          <Button variant="ghost">3</Button>
+          <Button variant="ghost">
             Next
           </Button>
-        </div>
-      </div>
-    </div>
+        </ButtonGroup>
+      </Flex>
+    </Box>
   );
 };
 

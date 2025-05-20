@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Box, Text } from '@chakra-ui/react';
 import CustomerForm from '../components/CustomerForm';
+import { useAppDispatch } from '../../../hooks/useAppSelector';
+import { addCustomer } from '../../../store/slices/customerSlice';
 
 const CustomerNew: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (data: any) => {
@@ -11,26 +15,28 @@ const CustomerNew: React.FC = () => {
     
     // Simulate API request
     setTimeout(() => {
+      dispatch(addCustomer(data));
       setIsLoading(false);
-      // Normally you would save the data to your backend here
       navigate('/customers');
     }, 1000);
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Add New Customer</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+    <Box spacing="6">
+      <Box mb="6">
+        <Text fontSize="2xl" fontWeight="bold">
+          Add New Customer
+        </Text>
+        <Text mt="1" fontSize="sm" color="gray.500">
           Create a new customer record in the system
-        </p>
-      </div>
+        </Text>
+      </Box>
 
       <CustomerForm
         onSubmit={handleSubmit}
         isLoading={isLoading}
       />
-    </div>
+    </Box>
   );
 };
 
