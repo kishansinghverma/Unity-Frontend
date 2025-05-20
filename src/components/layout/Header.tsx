@@ -1,6 +1,7 @@
-import React from 'react';
-import { Menu, Search, Bell, User, ChevronDown } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { APPS } from '../../constants/apps';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -8,7 +9,38 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
-  const { currentApp } = useApp();
+  const { currentApp, setCurrentApp } = useApp();
+  const [appsDropdownOpen, setAppsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setAppsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const getIcon = (icon: string) => {
+    switch (icon) {
+      case 'LayoutDashboard': return <LayoutDashboard className="w-5 h-5" />;
+      case 'BarChart3': return <BarChart3 className="w-5 h-5" />;
+      default: return <LayoutDashboard className="w-5 h-5" />;
+    }
+  };
+
+  const handleAppChange = (appId: string) => {
+    const app = APPS.find(a => a.id === appId);
+    if (app) {
+      setCurrentApp(app);
+      setAppsDropdownOpen(false);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-10 flex items-center justify-between h-16 px-4 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -20,10 +52,45 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
           <Menu className="w-6 h-6 text-gray-600 dark:text-gray-300" />
         </button>
         
-        <div className="hidden md:flex items-center">
-          <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
-            {currentApp?.name}
-          </h1>
+        <div className="relative" ref={dropdownRef}>
+          <button 
+            onClick={() => setAppsDropdownOpen(!appsDropdownOpen)}
+            className="flex items-center space-x-2 focus:outline-none"
+          >
+            <div className="flex items-center space-x-2">
+              <span className="h-8 w-8 bg-blue-600 rounded-md flex items-center justify-center">
+                <span className="text-white font-bold text-xl">D</span>
+              </span>
+              <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
+                {currentApp?.name}
+              </h1>
+              <ChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            </div>
+          </button>
+          
+          {appsDropdownOpen && (
+            <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-20">
+              <div className="p-2">
+                <h3 className="text-xs font-semibold text-gray-500 uppercase dark:text-gray-400 px-3 py-2">Apps</h3>
+                <div className="mt-1 space-y-1">
+                  {APPS.map((app) => (
+                    <button
+                      key={app.id}
+                      onClick={() => handleAppChange(app.id)}
+                      className={`flex items-center px-3 py-2 w-full rounded-md text-sm font-medium transition-colors ${
+                        currentApp?.id === app.id
+                          ? 'bg-blue-100 text-blue-600 dark:bg-gray-700 dark:text-blue-400'
+                          : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                      }`}
+                    >
+                      {getIcon(app.icon)}
+                      <span className="ml-3">{app.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       

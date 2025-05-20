@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { X, LayoutDashboard, Users, ShoppingCart, Package, Settings, BarChart3, User } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { APPS } from '../../constants/apps';
 
 interface SidebarProps {
   open: boolean;
@@ -11,22 +10,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
   const location = useLocation();
-  const { currentApp, setCurrentApp } = useApp();
-
-  const handleAppChange = (appId: string) => {
-    const app = APPS.find(a => a.id === appId);
-    if (app) {
-      setCurrentApp(app);
-    }
-  };
-
-  const getIcon = (icon: string) => {
-    switch (icon) {
-      case 'LayoutDashboard': return <LayoutDashboard className="w-5 h-5" />;
-      case 'BarChart3': return <BarChart3 className="w-5 h-5" />;
-      default: return <LayoutDashboard className="w-5 h-5" />;
-    }
-  };
+  const { currentApp } = useApp();
 
   // Define navigation items based on current app
   const getNavItems = () => {
@@ -71,26 +55,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       </div>
       
       <div className="flex-1 overflow-y-auto">
-        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase dark:text-gray-400">Apps</h3>
-          <div className="mt-2 space-y-1">
-            {APPS.map((app) => (
-              <button
-                key={app.id}
-                onClick={() => handleAppChange(app.id)}
-                className={`flex items-center px-3 py-2 w-full rounded-md text-sm font-medium transition-colors ${
-                  currentApp?.id === app.id
-                    ? 'bg-blue-100 text-blue-600 dark:bg-gray-700 dark:text-blue-400'
-                    : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-                }`}
-              >
-                {getIcon(app.icon)}
-                <span className="ml-3">{app.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-        
         <nav className="px-4 py-3">
           <h3 className="text-xs font-semibold text-gray-500 uppercase dark:text-gray-400">Navigation</h3>
           <div className="mt-2 space-y-1">
