@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, LayoutDashboard, Users, ShoppingCart, Package, Settings, BarChart3, User, ChevronDown, PlusCircle } from 'lucide-react';
+import { X, LayoutDashboard, Users, ShoppingCart, Package, Settings, BarChart3, User, ChevronDown } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { APPS } from '../../constants/apps';
 
@@ -35,7 +35,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     if (currentApp?.id === 'crud-app') {
       return [
         { name: 'Dashboard', path: '/', icon: <LayoutDashboard className="w-5 h-5" /> },
-        { name: 'New', path: '/new', icon: <PlusCircle className="w-5 h-5" /> },
         { name: 'Customers', path: '/customers', icon: <Users className="w-5 h-5" /> },
         { name: 'Orders', path: '/orders', icon: <ShoppingCart className="w-5 h-5" /> },
         { name: 'Products', path: '/products', icon: <Package className="w-5 h-5" /> },

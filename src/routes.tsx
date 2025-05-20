@@ -10,7 +10,6 @@ import CustomerList from './apps/crudApp/pages/CustomerList';
 import CustomerDetail from './apps/crudApp/pages/CustomerDetail';
 import CustomerNew from './apps/crudApp/pages/CustomerNew';
 import CustomerEdit from './apps/crudApp/pages/CustomerEdit';
-import NewForm from './apps/crudApp/pages/NewForm';
 
 // Context Provider
 import { AppProvider } from './context/AppContext';
@@ -21,7 +20,6 @@ const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { index: true, element: <Dashboard /> },
-      { path: 'new', element: <NewForm /> },
       { path: 'customers', element: <CustomerList /> },
       { path: 'customers/:id', element: <CustomerDetail /> },
       { path: 'customers/new', element: <CustomerNew /> },
