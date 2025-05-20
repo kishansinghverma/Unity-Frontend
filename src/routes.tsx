@@ -12,6 +12,7 @@ import CustomerNew from './apps/crudApp/pages/CustomerNew';
 import CustomerEdit from './apps/crudApp/pages/CustomerEdit';
 import GatePassForm from './apps/crudApp/pages/GatePassForm';
 import GatePassList from './apps/crudApp/pages/GatePassList';
+import ProcessedRecordsList from './apps/crudApp/pages/ProcessedRecordsList';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       { path: 'customers/edit/:id', element: <CustomerEdit /> },
       { path: 'gatepass/new', element: <GatePassForm /> },
       { path: 'gatepass/list', element: <GatePassList /> },
+      { path: 'processed/list', element: <ProcessedRecordsList /> },
       
       // Placeholder routes for second app (to be built later)
       { path: 'analytics', element: <div className="p-8 text-center">Analytics App - Coming Soon</div> },
