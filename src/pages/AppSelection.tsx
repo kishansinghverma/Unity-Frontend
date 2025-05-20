@@ -1,16 +1,28 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Wheat, CandlestickChart, LogOut } from 'lucide-react';
 import { APPS } from '../constants/apps';
 import { useAuth } from '../context/AuthContext';
+import { useAppDispatch } from '../store/hooks';
+import { setCurrentApp } from '../store/slices/appSlice';
 
 const AppSelection: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { logout } = useAuth();
 
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleAppSelect = (app: typeof APPS[0]) => {
+    // Set the current app in Redux store
+    dispatch(setCurrentApp(app));
+    
+    // Navigate to the appropriate path
+    const appPath = app.id === 'crud-app' ? '/emandi' : '/moneytrail';
+    navigate(appPath);
   };
 
   return (
@@ -45,13 +57,11 @@ const AppSelection: React.FC = () => {
                 <Wheat size={48} className="text-yellow-600" /> :
                 <CandlestickChart size={48} className="text-green-600" />;
 
-              const appPath = app.id === 'crud-app' ? '/emandi' : '/moneytrail';
-
               return (
-                <Link
+                <button
                   key={app.id}
-                  to={appPath}
-                  className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300"
+                  onClick={() => handleAppSelect(app)}
+                  className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 text-left"
                 >
                   <div className="flex items-center space-x-6">
                     <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
@@ -62,7 +72,7 @@ const AppSelection: React.FC = () => {
                       <p className="mt-1 text-gray-500 dark:text-gray-400">{app.description}</p>
                     </div>
                   </div>
-                </Link>
+                </button>
               );
             })}
           </div>
