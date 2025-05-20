@@ -145,9 +145,9 @@ const Overview: React.FC = () => {
   // Component for rendering a list section with title
   const ListSection: React.FC<{ title: string; items: ListItem[] }> = ({ title, items }) => {
     return (
-      <div className="mb-6">
+      <div className="h-full">
         <h2 className="text-xl font-bold px-4 py-2 bg-purple-800 text-white">{title}</h2>
-        <div className="bg-white rounded-md shadow">
+        <div className="bg-white rounded-md shadow h-[calc(100%-2.5rem)] overflow-auto">
           {items.length > 0 ? (
             items.map(item => <ListItemComponent key={item.id} item={item} />)
           ) : (
@@ -159,16 +159,18 @@ const Overview: React.FC = () => {
   };
 
   return (
-    <div className="p-4 max-w-3xl mx-auto">
+    <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-center mb-6">MoneyTrail Dashboard</h1>
       
       <div className="bg-gray-50 p-2 text-center text-gray-500 mb-4 rounded">
         Swipe right on an item to see actions
       </div>
       
-      <ListSection title="Upcoming Tasks" items={upcomingTasks} />
-      <ListSection title="Today's Events" items={todayEvents} />
-      <ListSection title="Evening Plans" items={eveningPlans} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(100vh-220px)]">
+        <ListSection title="Upcoming Tasks" items={upcomingTasks} />
+        <ListSection title="Today's Events" items={todayEvents} />
+        <ListSection title="Evening Plans" items={eveningPlans} />
+      </div>
     </div>
   );
 };
