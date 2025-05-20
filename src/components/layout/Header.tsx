@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3, Wheat, LogIn, DollarSign, ReceiptIndianRupee } from 'lucide-react';
+import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3, Wheat, LogIn } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { APPS } from '../../constants/apps';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectCurrentApp, setCurrentApp } from '../../store/slices/appSlice';
 import ThemeToggle from '../ui/ThemeToggle';
 import { useAuth } from '../../context/AuthContext';
+import ChartNoAxesCombined from '../icons/ChartNoAxesCombined';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -38,8 +39,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
       case 'LayoutDashboard': return <LayoutDashboard className="w-5 h-5" />;
       case 'BarChart3': return <BarChart3 className="w-5 h-5" />;
       case 'Wheat': return <Wheat className="w-5 h-5" />;
-      case 'DollarSign': return <DollarSign className="w-5 h-5" />;
-      case 'ReceiptIndianRupee': return <ReceiptIndianRupee className="w-5 h-5" />;
+      case 'ChartNoAxesCombined': return <ChartNoAxesCombined className="w-5 h-5" />;
       default: return <LayoutDashboard className="w-5 h-5" />;
     }
   };
