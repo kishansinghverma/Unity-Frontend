@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import DashboardStats from '../components/DashboardStats';
 import RecentActivity from '../components/RecentActivity';
 import Card from '../../../components/ui/Card';
-import { BarChart3, TrendingUp, Clipboard, ClipboardList } from 'lucide-react';
+import { BarChart3, TrendingUp, ClipboardList } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
   return (
@@ -72,15 +72,15 @@ const Dashboard: React.FC = () => {
         <Card title="Quick Actions">
           <div className="flex flex-col space-y-4">
             <Link 
-              to="/customers/new" 
+              to="/parties/new" 
               className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600"
             >
               <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-md">
-                <Clipboard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <ClipboardList className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="ml-4">
-                <h3 className="text-sm font-medium text-gray-900 dark:text-white">New Customer</h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Add a new customer to your database</p>
+                <h3 className="text-sm font-medium text-gray-900 dark:text-white">New Party</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Add a new party to your database</p>
               </div>
             </Link>
             

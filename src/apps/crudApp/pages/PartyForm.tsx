@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { Save, X } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
@@ -142,67 +143,104 @@ const PartyForm: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <Card>
-        <div className="p-6">
-          <h1 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-            {isEditMode ? 'पार्टी अपडेट करें' : 'नई पार्टी जोड़ें'}
-          </h1>
-          
-          <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          {isEditMode ? 'पार्टी अपडेट करें' : 'नई पार्टी जोड़ें'}
+        </h1>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          {isEditMode ? 'Update party information in the system' : 'Create a new party record in the system'}
+        </p>
+      </div>
+
+      <Card 
+        title={isEditMode ? 'पार्टी अपडेट करें' : 'नई पार्टी जोड़ें'}
+        description={isEditMode ? 'Update party details' : 'Add new party details'}
+      >
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
+              <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                आदमिया फर्म का नाम <span className="text-red-500">*</span>
+              </label>
               <Input
+                id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="आदमिया फर्म का नाम"
                 error={errors.name}
+                required
               />
             </div>
             
             <div>
+              <label htmlFor="mandi" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                मंडी का नाम <span className="text-red-500">*</span>
+              </label>
               <Input
+                id="mandi"
                 name="mandi"
                 value={formData.mandi}
                 onChange={handleChange}
                 placeholder="मंडी का नाम"
                 error={errors.mandi}
+                required
               />
             </div>
-            
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
+              <label htmlFor="state" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                राज्य का नाम <span className="text-red-500">*</span>
+              </label>
               <Select
+                id="state"
                 name="state"
                 value={formData.state}
                 onChange={handleChange}
                 options={STATES}
                 error={errors.state}
+                required
               />
             </div>
             
             <div>
+              <label htmlFor="distance" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                दूरी (K.M.) <span className="text-red-500">*</span>
+              </label>
               <Input
+                id="distance"
                 name="distance"
                 value={formData.distance}
                 onChange={handleChange}
                 placeholder="दूरी"
                 type="number"
                 error={errors.distance}
+                required
               />
             </div>
-            
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
+              <label htmlFor="licence" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                लाइसेंस संख्या {!formData.licenceNotRequired && <span className="text-red-500">*</span>}
+              </label>
               <Input
+                id="licence"
                 name="licence"
                 value={formData.licence}
                 onChange={handleChange}
                 placeholder="लाइसेंस संख्या"
                 disabled={formData.licenceNotRequired}
                 error={errors.licence}
+                required={!formData.licenceNotRequired}
               />
             </div>
             
-            <div className="flex items-center">
+            <div className="flex items-center mt-8">
               <Checkbox
                 id="licenceNotRequired"
                 name="licenceNotRequired"
@@ -213,23 +251,31 @@ const PartyForm: React.FC = () => {
                 लाइसेंस नंबर की आवश्यकता नहीं है
               </label>
             </div>
-            
-            <div className="flex justify-center pt-4">
-              <Button
-                type="submit"
-                variant="primary"
-                disabled={isSubmitting}
-                className="w-full md:w-auto px-8"
-              >
-                {isSubmitting 
-                  ? 'प्रोसेसिंग...' 
-                  : isEditMode 
-                    ? 'पार्टी अपडेट करें' 
-                    : 'पार्टी जोड़ें'}
-              </Button>
-            </div>
-          </form>
-        </div>
+          </div>
+          
+          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => navigate('/parties')}
+              leftIcon={<X className="w-4 h-4" />}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={isSubmitting}
+              leftIcon={<Save className="w-4 h-4" />}
+            >
+              {isSubmitting 
+                ? 'प्रोसेसिंग...' 
+                : isEditMode 
+                  ? 'पार्टी अपडेट करें' 
+                  : 'पार्टी जोड़ें'}
+            </Button>
+          </div>
+        </form>
       </Card>
     </div>
   );

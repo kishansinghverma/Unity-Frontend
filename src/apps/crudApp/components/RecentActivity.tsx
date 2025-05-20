@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, ShoppingCart, Clock, Package } from 'lucide-react';
+import { UserSquare, ClipboardList, Clock, ClipboardCheck } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 
 interface ActivityItem {
@@ -13,37 +13,37 @@ interface ActivityItem {
 const mockActivities: ActivityItem[] = [
   {
     id: '1',
-    icon: <User className="h-4 w-4 text-blue-600" />,
-    title: 'New customer registered',
-    description: 'Jane Smith created an account',
+    icon: <UserSquare className="h-4 w-4 text-blue-600" />,
+    title: 'New party added',
+    description: 'Arjun Trading Company added',
     time: '5 minutes ago',
   },
   {
     id: '2',
-    icon: <ShoppingCart className="h-4 w-4 text-green-600" />,
-    title: 'New order placed',
-    description: 'Order #38294 from Apple Inc.',
+    icon: <ClipboardList className="h-4 w-4 text-green-600" />,
+    title: 'New gate pass created',
+    description: 'Gate pass #38294 for Yash Rawal',
     time: '1 hour ago',
   },
   {
     id: '3',
-    icon: <Package className="h-4 w-4 text-purple-600" />,
-    title: 'Product updated',
-    description: 'iPhone 13 Pro stock increased by 50',
+    icon: <ClipboardCheck className="h-4 w-4 text-purple-600" />,
+    title: 'Gate pass processed',
+    description: 'Gate pass #38291 marked as processed',
     time: '3 hours ago',
   },
   {
     id: '4',
-    icon: <ShoppingCart className="h-4 w-4 text-green-600" />,
-    title: 'New order placed',
-    description: 'Order #38293 from Microsoft Corp.',
+    icon: <ClipboardList className="h-4 w-4 text-green-600" />,
+    title: 'New gate pass created',
+    description: 'Gate pass #38293 for N.S',
     time: '5 hours ago',
   },
   {
     id: '5',
     icon: <Clock className="h-4 w-4 text-orange-600" />,
     title: 'Status update',
-    description: 'Order #38288 changed to shipped',
+    description: 'Gate pass #38288 changed to completed',
     time: '1 day ago',
   },
 ];

@@ -6,10 +6,6 @@ import AppShell from './components/layout/AppShell';
 
 // CRUD App
 import Dashboard from './apps/crudApp/pages/Dashboard';
-import CustomerList from './apps/crudApp/pages/CustomerList';
-import CustomerDetail from './apps/crudApp/pages/CustomerDetail';
-import CustomerNew from './apps/crudApp/pages/CustomerNew';
-import CustomerEdit from './apps/crudApp/pages/CustomerEdit';
 import GatePassForm from './apps/crudApp/pages/GatePassForm';
 import GatePassList from './apps/crudApp/pages/GatePassList';
 import ProcessedRecordsList from './apps/crudApp/pages/ProcessedRecordsList';
@@ -22,10 +18,6 @@ const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { index: true, element: <Dashboard /> },
-      { path: 'customers', element: <CustomerList /> },
-      { path: 'customers/:id', element: <CustomerDetail /> },
-      { path: 'customers/new', element: <CustomerNew /> },
-      { path: 'customers/edit/:id', element: <CustomerEdit /> },
       { path: 'gatepass/new', element: <GatePassForm /> },
       { path: 'gatepass/list', element: <GatePassList /> },
       { path: 'processed/list', element: <ProcessedRecordsList /> },
@@ -39,9 +31,7 @@ const router = createBrowserRouter([
       { path: 'reports', element: <div className="p-8 text-center">Reports - Coming Soon</div> },
       { path: 'analytics-settings', element: <div className="p-8 text-center">Analytics Settings - Coming Soon</div> },
       
-      // Orders and Products (to be built later)
-      { path: 'orders', element: <div className="p-8 text-center">Orders - Coming Soon</div> },
-      { path: 'products', element: <div className="p-8 text-center">Products - Coming Soon</div> },
+      // Settings
       { path: 'settings', element: <div className="p-8 text-center">Settings - Coming Soon</div> },
       
       // Catch all route

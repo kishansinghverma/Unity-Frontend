@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, ShoppingCart, Package, DollarSign } from 'lucide-react';
+import { UserSquare, ClipboardList, ClipboardCheck, DollarSign } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 
 interface StatCardProps {
@@ -31,24 +31,24 @@ const DashboardStats: React.FC = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <StatCard
-        title="Customers"
-        value="1,284"
+        title="Parties"
+        value="328"
         change="+12% from last month"
-        icon={<Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
+        icon={<UserSquare className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
         positive={true}
       />
       <StatCard
-        title="Orders"
+        title="Gate Passes"
         value="843"
         change="+8% from last month"
-        icon={<ShoppingCart className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
+        icon={<ClipboardList className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
         positive={true}
       />
       <StatCard
-        title="Products"
+        title="Processed Records"
         value="524"
         change="-3% from last month"
-        icon={<Package className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
+        icon={<ClipboardCheck className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
         positive={false}
       />
       <StatCard
