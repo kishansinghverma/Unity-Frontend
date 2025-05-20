@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 import { User, ShoppingCart, Clock, Package } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 
@@ -49,30 +50,35 @@ const mockActivities: ActivityItem[] = [
 ];
 
 const RecentActivity: React.FC = () => {
+  const iconBg = useColorModeValue('gray.100', 'gray.700');
+
   return (
     <Card title="Recent Activity" className="h-full">
-      <div className="space-y-4">
+      <Box spacing="4">
         {mockActivities.map((activity) => (
-          <div key={activity.id} className="flex items-start space-x-3">
-            <div className="flex-shrink-0 rounded-full p-2 bg-gray-100 dark:bg-gray-700">
+          <Flex key={activity.id} align="start" mb={4} gap="3">
+            <Box
+              p="2"
+              borderRadius="full"
+              bg={iconBg}
+              flexShrink={0}
+            >
               {activity.icon}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-800 dark:text-white">
+            </Box>
+            <Box flex="1" minW="0">
+              <Text fontSize="sm" fontWeight="medium">
                 {activity.title}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              </Text>
+              <Text fontSize="sm" color="gray.500">
                 {activity.description}
-              </p>
-            </div>
-            <div className="flex-shrink-0">
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                {activity.time}
-              </p>
-            </div>
-          </div>
+              </Text>
+            </Box>
+            <Text fontSize="xs" color="gray.500" flexShrink={0}>
+              {activity.time}
+            </Text>
+          </Flex>
         ))}
-      </div>
+      </Box>
     </Card>
   );
 };
