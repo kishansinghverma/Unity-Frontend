@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Wheat, LogOut } from 'lucide-react';
+import { Wheat, CandlestickChart, LogOut } from 'lucide-react';
 import { APPS } from '../constants/apps';
 import { useAuth } from '../context/AuthContext';
-import ChartNoAxesCombined from '../components/icons/ChartNoAxesCombined';
 
 const AppSelection: React.FC = () => {
   const navigate = useNavigate();
@@ -44,7 +43,7 @@ const AppSelection: React.FC = () => {
             {APPS.map((app) => {
               const appIcon = app.icon === 'Wheat' ?
                 <Wheat size={48} className="text-yellow-600" /> :
-                <ChartNoAxesCombined size={48} className="text-green-600" />;
+                <CandlestickChart size={48} className="text-green-600" />;
 
               const appPath = app.id === 'crud-app' ? '/emandi' : '/moneytrail';
 
