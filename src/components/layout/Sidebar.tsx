@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat, LogIn, DollarSign } from 'lucide-react';
+import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat, LogIn, PieChart } from 'lucide-react';
 import { useAppSelector } from '../../store/hooks';
 import { selectCurrentApp } from '../../store/slices/appSlice';
 import { useAuth } from '../../context/AuthContext';
@@ -28,7 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       ];
     } else {
       return [
-        { name: 'Overview', path: '/moneytrail', icon: <DollarSign className="w-5 h-5" /> },
+        { name: 'Overview', path: '/moneytrail', icon: <PieChart className="w-5 h-5" /> },
         { name: 'Reports', path: '/moneytrail/reports', icon: <BarChart3 className="w-5 h-5" /> },
         { name: 'Settings', path: '/moneytrail/settings', icon: <Settings className="w-5 h-5" /> },
       ];

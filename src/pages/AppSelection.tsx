@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Wheat, DollarSign, LogOut } from 'lucide-react';
+import { Wheat, PieChart, LogOut } from 'lucide-react';
 import { APPS } from '../constants/apps';
 import { useAuth } from '../context/AuthContext';
 
@@ -43,7 +43,7 @@ const AppSelection: React.FC = () => {
             {APPS.map((app) => {
               const appIcon = app.icon === 'Wheat' ?
                 <Wheat size={48} className="text-yellow-600" /> :
-                <DollarSign size={48} className="text-green-600" />;
+                <PieChart size={48} className="text-green-600" />;
 
               const appPath = app.id === 'crud-app' ? '/emandi' : '/moneytrail';
 
