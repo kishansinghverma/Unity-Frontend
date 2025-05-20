@@ -71,6 +71,7 @@ const eveningPlans: ListItem[] = [
 
 const Overview: React.FC = () => {
   const [swipedItemId, setSwipedItemId] = useState<string | null>(null);
+  const [swipeProgress, setSwipeProgress] = useState<{id: string, amount: number} | null>(null);
 
   const handleCloseAll = () => {
     setSwipedItemId(null);
@@ -94,9 +95,24 @@ const Overview: React.FC = () => {
   // Component for rendering a single list item with swipe actions
   const ListItemComponent: React.FC<{ item: ListItem }> = ({ item }) => {
     const isActive = swipedItemId === item.id;
+    const currentSwipe = swipeProgress?.id === item.id ? swipeProgress.amount : 0;
+    
+    // Calculate transform styles based on both swipe state and progress
+    const getTransformStyle = () => {
+      if (isActive) {
+        return 'transform -translate-x-40 transition-transform duration-300 ease-out';
+      } 
+      if (currentSwipe !== 0) {
+        // No transition during active swipe for responsive feel
+        return `transform translate-x-${currentSwipe}px`;
+      }
+      return 'transform translate-x-0 transition-transform duration-300 ease-out';
+    };
     
     const swipeHandlers = useSwipeable({
       onSwipedLeft: () => {
+        // Clear the progress state
+        setSwipeProgress(null);
         if (swipedItemId === item.id) {
           setSwipedItemId(null);
         } else {
@@ -104,16 +120,38 @@ const Overview: React.FC = () => {
         }
       },
       onSwipedRight: () => {
+        // Clear the progress state
+        setSwipeProgress(null);
         setSwipedItemId(null);
       },
-      trackMouse: true
+      onSwiping: (e) => {
+        // Track swipe distance and direction for visual feedback
+        if (e.dir === 'Left') {
+          // Limit leftward movement to prevent overshooting
+          const maxLeft = -160;
+          const newAmount = Math.max(e.deltaX, maxLeft);
+          setSwipeProgress({ id: item.id, amount: newAmount });
+        } else if (e.dir === 'Right') {
+          // Close if already open, otherwise limit rightward movement
+          if (swipedItemId === item.id) {
+            setSwipedItemId(null);
+          } else {
+            const maxRight = 50;
+            const newAmount = Math.min(e.deltaX, maxRight);
+            setSwipeProgress({ id: item.id, amount: newAmount });
+          }
+        }
+      },
+      trackMouse: true,
+      trackTouch: true,
+      delta: 10 // Make swipe detection more sensitive
     });
 
     return (
       <div className="relative overflow-hidden border-b border-gray-100">
         <div 
           {...swipeHandlers}
-          className={`flex items-center p-4 bg-white transition-transform ${isActive ? 'transform -translate-x-40' : ''}`}
+          className={`flex items-center p-4 bg-white touch-manipulation ${getTransformStyle()}`}
         >
           <div className="flex-shrink-0 w-12 h-12 mr-4 bg-gray-100 rounded-full flex items-center justify-center">
             {item.icon}
@@ -124,31 +162,29 @@ const Overview: React.FC = () => {
           </div>
           <div className="flex-shrink-0 ml-4 text-gray-400">{item.time}</div>
         </div>
-        {isActive && (
-          <div className="absolute inset-y-0 right-0 flex">
-            <button 
-              onClick={() => handleArchive(item.id)}
-              className="w-20 h-full bg-blue-500 flex flex-col items-center justify-center text-white"
-            >
-              <div className="text-2xl mb-1">📨</div>
-              <span className="text-sm">Archive</span>
-            </button>
-            <button 
-              onClick={() => handleStar(item.id)}
-              className="w-20 h-full bg-orange-500 flex flex-col items-center justify-center text-white"
-            >
-              <div className="text-2xl mb-1">⭐</div>
-              <span className="text-sm">Star</span>
-            </button>
-            <button 
-              onClick={() => handleDelete(item.id)}
-              className="w-20 h-full bg-red-500 flex flex-col items-center justify-center text-white"
-            >
-              <div className="text-2xl mb-1">🗑️</div>
-              <span className="text-sm">Delete</span>
-            </button>
-          </div>
-        )}
+        <div className={`absolute inset-y-0 right-0 flex ${isActive ? 'opacity-100' : 'opacity-0'}`}>
+          <button 
+            onClick={() => handleArchive(item.id)}
+            className="w-20 h-full bg-blue-500 flex flex-col items-center justify-center text-white"
+          >
+            <div className="text-2xl mb-1">📨</div>
+            <span className="text-sm">Archive</span>
+          </button>
+          <button 
+            onClick={() => handleStar(item.id)}
+            className="w-20 h-full bg-orange-500 flex flex-col items-center justify-center text-white"
+          >
+            <div className="text-2xl mb-1">⭐</div>
+            <span className="text-sm">Star</span>
+          </button>
+          <button 
+            onClick={() => handleDelete(item.id)}
+            className="w-20 h-full bg-red-500 flex flex-col items-center justify-center text-white"
+          >
+            <div className="text-2xl mb-1">🗑️</div>
+            <span className="text-sm">Delete</span>
+          </button>
+        </div>
       </div>
     );
   };
