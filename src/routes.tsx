@@ -17,6 +17,9 @@ import ProcessedRecordsList from './apps/crudApp/pages/ProcessedRecordsList';
 import PartyList from './apps/crudApp/pages/PartyList';
 import PartyForm from './apps/crudApp/pages/PartyForm';
 
+// MoneyTrail App
+import Overview from './apps/moneyTrailApp/pages/Overview';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -48,7 +51,7 @@ const router = createBrowserRouter([
       { path: 'settings', element: <div className="p-8 text-center">eMandi Settings - Coming Soon</div> },
     ],
   },
-  // Analytics App Routes with authentication
+  // MoneyTrail App Routes with authentication
   {
     path: '/moneytrail',
     element: (
@@ -57,7 +60,7 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <div className="p-8 text-center">MoneyTrail Dashboard - Coming Soon</div> },
+      { index: true, element: <Overview /> },
       { path: 'reports', element: <div className="p-8 text-center">MoneyTrail Reports - Coming Soon</div> },
       { path: 'settings', element: <div className="p-8 text-center">MoneyTrail Settings - Coming Soon</div> },
     ],

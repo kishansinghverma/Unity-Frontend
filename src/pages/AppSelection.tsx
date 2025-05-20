@@ -55,7 +55,7 @@ const AppSelection: React.FC = () => {
             {APPS.map((app) => {
               const appIcon = app.icon === 'Wheat' ?
                 <Wheat size={48} className="text-yellow-600" /> :
-                <CandlestickChart size={48} className="text-green-600" />;
+                <CandlestickChart size={48} className="text-purple-800" />;
 
               return (
                 <button
