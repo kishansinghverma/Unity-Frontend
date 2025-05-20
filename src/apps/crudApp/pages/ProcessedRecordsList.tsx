@@ -131,14 +131,6 @@ const ProcessedRecordsList: React.FC = () => {
             Manage processed records
           </p>
         </div>
-        <div className="mt-4 md:mt-0">
-          <Button
-            onClick={() => console.log('Add new processed record')}
-            leftIcon={<Plus className="w-4 h-4" />}
-          >
-            New Record
-          </Button>
-        </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-4">

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3 } from 'lucide-react';
+import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3, Wheat } from 'lucide-react';
 import { APPS } from '../../constants/apps';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectCurrentApp, setCurrentApp } from '../../store/slices/appSlice';
@@ -33,6 +33,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
     switch (icon) {
       case 'LayoutDashboard': return <LayoutDashboard className="w-5 h-5" />;
       case 'BarChart3': return <BarChart3 className="w-5 h-5" />;
+      case 'Wheat': return <Wheat className="w-5 h-5" />;
       default: return <LayoutDashboard className="w-5 h-5" />;
     }
   };
@@ -61,8 +62,8 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
             className="flex items-center space-x-2 focus:outline-none"
           >
             <div className="flex items-center space-x-2">
-              <span className="h-8 w-8 bg-blue-600 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-xl">D</span>
+              <span className="h-8 w-8 bg-yellow-600 rounded-md flex items-center justify-center">
+                <Wheat className="w-5 h-5 text-white" />
               </span>
               <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
                 {currentApp?.name}

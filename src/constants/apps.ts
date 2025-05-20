@@ -3,9 +3,9 @@ import { AppInfo } from '../types';
 export const APPS: AppInfo[] = [
   {
     id: 'crud-app',
-    name: 'Business Management',
-    description: 'Manage customers, orders, and products',
-    icon: 'LayoutDashboard',
+    name: 'eMandi Portal',
+    description: 'Manage gate passes, processed records, and parties',
+    icon: 'Wheat',
   },
   {
     id: 'second-app',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ClipboardCheck, FileCheck, UserSquare } from 'lucide-react';
+import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat } from 'lucide-react';
 import { useAppSelector } from '../../store/hooks';
 import { selectCurrentApp } from '../../store/slices/appSlice';
 
@@ -18,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     if (currentApp?.id === 'crud-app') {
       return [
         { name: 'New Gate Pass', path: '/gatepass/new', icon: <ClipboardList className="w-5 h-5" /> },
-        { name: 'Queued', path: '/gatepass/list', icon: <ClipboardCheck className="w-5 h-5" /> },
+        { name: 'Queued', path: '/gatepass/list', icon: <ListChecks className="w-5 h-5" /> },
         { name: 'Processed', path: '/processed/list', icon: <FileCheck className="w-5 h-5" /> },
         { name: 'Parties', path: '/parties', icon: <UserSquare className="w-5 h-5" /> },
         { name: 'Dashboard', path: '/', icon: <LayoutDashboard className="w-5 h-5" /> },
@@ -43,10 +43,10 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     >
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
         <Link to="/" className="flex items-center space-x-2">
-          <span className="h-8 w-8 bg-blue-600 rounded-md flex items-center justify-center">
-            <span className="text-white font-bold text-xl">D</span>
+          <span className="h-8 w-8 bg-green-600 rounded-md flex items-center justify-center">
+            <span className="text-white font-bold text-xl">U</span>
           </span>
-          <span className="text-xl font-semibold text-gray-800 dark:text-white">D365 UI</span>
+          <span className="text-xl font-semibold text-gray-800 dark:text-white">Unity Hub</span>
         </Link>
         <button
           onClick={() => setOpen(false)}
