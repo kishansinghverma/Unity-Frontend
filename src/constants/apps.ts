@@ -11,6 +11,6 @@ export const APPS: AppInfo[] = [
     id: 'second-app',
     name: 'MoneyTrail',
     description: 'Track finances and analyze monetary data',
-    icon: 'PieChart',
+    icon: 'ReceiptIndianRupee',
   },
 ];
