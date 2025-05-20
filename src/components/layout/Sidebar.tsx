@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat } from 'lucide-react';
+import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat, LogIn } from 'lucide-react';
 import { useAppSelector } from '../../store/hooks';
 import { selectCurrentApp } from '../../store/slices/appSlice';
+import { useAuth } from '../../context/AuthContext';
 
 interface SidebarProps {
   open: boolean;
@@ -12,14 +13,15 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
   const location = useLocation();
   const currentApp = useAppSelector(selectCurrentApp);
+  const { isAuthenticated, logout } = useAuth();
 
   // Define navigation items based on current app
   const getNavItems = () => {
     if (currentApp?.id === 'crud-app') {
       return [
-        { name: 'New Gate Pass', path: '/emandi/gatepass/new', icon: <ClipboardList className="w-5 h-5" /> },
-        { name: 'Queued', path: '/emandi/gatepass/list', icon: <ListChecks className="w-5 h-5" /> },
-        { name: 'Processed', path: '/emandi/processed/list', icon: <FileCheck className="w-5 h-5" /> },
+        { name: 'New Gate Pass', path: '/emandi/gatepasses/new', icon: <ClipboardList className="w-5 h-5" /> },
+        { name: 'Queued', path: '/emandi/gatepasses/queued', icon: <ListChecks className="w-5 h-5" /> },
+        { name: 'Processed', path: '/emandi/gatepasses/processed', icon: <FileCheck className="w-5 h-5" /> },
         { name: 'Parties', path: '/emandi/parties', icon: <UserSquare className="w-5 h-5" /> },
         { name: 'Dashboard', path: '/emandi/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
         { name: 'Settings', path: '/emandi/settings', icon: <Settings className="w-5 h-5" /> },
@@ -37,10 +39,22 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
 
   // Helper function to determine if a nav item should be active
   const isNavItemActive = (itemPath: string) => {
-    if (itemPath === '/emandi/gatepass/new' && (location.pathname === '/emandi' || location.pathname === '/emandi/gatepass/new')) {
+    // Default route logic
+    if (itemPath === '/emandi/gatepasses/new' && (location.pathname === '/emandi' || location.pathname === '/emandi/gatepasses/new')) {
       return true;
     }
+    
+    // Other specific route logic
+    if (itemPath === '/emandi/gatepasses/queued' && location.pathname === '/emandi/gatepasses') {
+      return true;
+    }
+    
     return location.pathname === itemPath;
+  };
+
+  const handleLogout = () => {
+    logout();
+    window.location.href = '/';
   };
 
   return (
@@ -50,7 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       }`}
     >
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-        <Link to={currentApp?.id === 'crud-app' ? '/emandi' : '/analytics'} className="flex items-center space-x-2">
+        <Link to="/app-selection" className="flex items-center space-x-2">
           <span className="h-8 w-8 bg-green-600 rounded-md flex items-center justify-center">
             <span className="text-white font-bold text-xl">U</span>
           </span>
@@ -87,15 +101,39 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       </div>
       
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-500 text-white">
-            <User className="w-5 h-5" />
+        {isAuthenticated ? (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-500 text-white">
+                <User className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">John Doe</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Administrator</p>
+              </div>
+            </div>
+            <button 
+              onClick={handleLogout}
+              className="p-2 text-gray-500 hover:text-red-500 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </button>
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">John Doe</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Administrator</p>
+        ) : (
+          <div className="flex items-center justify-center">
+            <Link 
+              to="/"
+              className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 px-3 py-2"
+            >
+              <LogIn className="w-5 h-5" />
+              <span>Sign in</span>
+            </Link>
           </div>
-        </div>
+        )}
       </div>
     </aside>
   );

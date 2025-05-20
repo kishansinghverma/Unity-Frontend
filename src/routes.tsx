@@ -3,6 +3,11 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 
 // Layout
 import AppShell from './components/layout/AppShell';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Auth pages
+import Login from './pages/Login';
+import AppSelection from './pages/AppSelection';
 
 // CRUD App
 import Dashboard from './apps/crudApp/pages/Dashboard';
@@ -15,32 +20,50 @@ import PartyForm from './apps/crudApp/pages/PartyForm';
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <Login />,
+  },
+  {
+    path: '/app-selection',
+    element: (
+      <ProtectedRoute>
+        <AppSelection />
+      </ProtectedRoute>
+    ),
+  },
+  // eMandi Portal Routes without authentication
+  {
+    path: '/emandi',
     element: <AppShell />,
     children: [
-      // Root redirect to default app
-      { index: true, element: <Navigate to="/emandi" replace /> },
-      
-      // eMandi Portal App Routes
-      { path: 'emandi', element: <GatePassForm /> },
-      { path: 'emandi/dashboard', element: <Dashboard /> },
-      { path: 'emandi/gatepass/new', element: <GatePassForm /> },
-      { path: 'emandi/gatepass/list', element: <GatePassList /> },
-      { path: 'emandi/processed/list', element: <ProcessedRecordsList /> },
-      { path: 'emandi/parties', element: <PartyList /> },
-      { path: 'emandi/parties/new', element: <PartyForm /> },
-      { path: 'emandi/parties/:id', element: <PartyForm /> },
-      { path: 'emandi/parties/edit/:id', element: <PartyForm /> },
-      { path: 'emandi/settings', element: <div className="p-8 text-center">eMandi Settings - Coming Soon</div> },
-      
-      // Analytics App Routes
-      { path: 'analytics', element: <div className="p-8 text-center">Analytics Dashboard - Coming Soon</div> },
-      { path: 'analytics/reports', element: <div className="p-8 text-center">Reports - Coming Soon</div> },
-      { path: 'analytics/settings', element: <div className="p-8 text-center">Analytics Settings - Coming Soon</div> },
-      
-      // Catch all route
-      { path: '*', element: <Navigate to="/emandi" replace /> }
+      { index: true, element: <GatePassForm /> },
+      { path: 'dashboard', element: <Dashboard /> },
+      { path: 'gatepasses', element: <Navigate to="/emandi/gatepasses/queued" replace /> },
+      { path: 'gatepasses/new', element: <GatePassForm /> },
+      { path: 'gatepasses/queued', element: <GatePassList /> },
+      { path: 'gatepasses/processed', element: <ProcessedRecordsList /> },
+      { path: 'parties', element: <PartyList /> },
+      { path: 'parties/new', element: <PartyForm /> },
+      { path: 'parties/:id', element: <PartyForm /> },
+      { path: 'parties/edit/:id', element: <PartyForm /> },
+      { path: 'settings', element: <div className="p-8 text-center">eMandi Settings - Coming Soon</div> },
     ],
   },
+  // Analytics App Routes with authentication
+  {
+    path: '/analytics',
+    element: (
+      <ProtectedRoute>
+        <AppShell />
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <div className="p-8 text-center">Analytics Dashboard - Coming Soon</div> },
+      { path: 'reports', element: <div className="p-8 text-center">Reports - Coming Soon</div> },
+      { path: 'settings', element: <div className="p-8 text-center">Analytics Settings - Coming Soon</div> },
+    ],
+  },
+  // Catch all route - redirect to login
+  { path: '*', element: <Navigate to="/" replace /> }
 ]);
 
 const AppRoutes: React.FC = () => {

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import AppRoutes from './routes';
 import { useAppSelector } from './store/hooks';
 import { selectTheme } from './store/slices/themeSlice';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   const theme = useAppSelector(selectTheme);
@@ -16,7 +17,9 @@ function App() {
   }, [theme]);
   
   return (
-    <AppRoutes />
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
   );
 }
 

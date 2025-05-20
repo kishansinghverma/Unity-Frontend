@@ -33,23 +33,23 @@ const PartyList: React.FC = () => {
     { id: 'state', label: 'State', accessor: 'state', sortable: true },
     { id: 'distance', label: 'Distance (K.M.)', accessor: 'distance', sortable: true, alignment: 'right' },
     { id: 'licence', label: 'Licence', accessor: 'licence', sortable: true },
-    { 
-      id: 'actions', 
-      label: 'Actions', 
+    {
+      id: 'actions',
+      label: 'Actions',
       accessor: 'id',
       alignment: 'center',
       render: (party: Party) => (
         <div className="flex justify-center space-x-2">
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               handleEdit(party.id);
             }}
-            className="text-green-500 hover:text-green-700"
+            className="text-green-500 hover:text-green-700 mx-2"
           >
             <Edit className="w-5 h-5" />
           </button>
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(party.id);
@@ -95,7 +95,7 @@ const PartyList: React.FC = () => {
       filteredData.sort((a, b) => {
         const aValue = a[sortConfig.field as keyof Party];
         const bValue = b[sortConfig.field as keyof Party];
-        
+
         if (aValue < bValue) {
           return sortConfig.direction === 'asc' ? -1 : 1;
         }
@@ -114,7 +114,7 @@ const PartyList: React.FC = () => {
   };
 
   const allFilteredData = getSortedAndFilteredData();
-  
+
   // Pagination
   const totalPages = Math.ceil(allFilteredData.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -132,7 +132,7 @@ const PartyList: React.FC = () => {
         </div>
         <div className="mt-4 md:mt-0">
           <Button
-            onClick={() => navigate('/parties/new')}
+            onClick={() => navigate('/emandi/parties/new')}
             leftIcon={<Plus className="w-4 h-4" />}
           >
             New Party
@@ -154,7 +154,7 @@ const PartyList: React.FC = () => {
             />
           </div>
         </div>
-        
+
         <div className="flex gap-2">
           <Button
             variant="ghost"
@@ -186,25 +186,25 @@ const PartyList: React.FC = () => {
           Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to <span className="font-medium">{Math.min(indexOfLastItem, allFilteredData.length)}</span> of{' '}
           <span className="font-medium">{allFilteredData.length}</span> results
         </div>
-        
+
         <div className="flex space-x-1">
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
           >
             Previous
           </Button>
-          
+
           {/* Pagination buttons */}
           <div className="flex space-x-1">
             {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
               const pageNumber = i + 1;
               return (
-                <Button 
+                <Button
                   key={pageNumber}
-                  variant={currentPage === pageNumber ? "primary" : "ghost"} 
+                  variant={currentPage === pageNumber ? "primary" : "ghost"}
                   size="sm"
                   onClick={() => setCurrentPage(pageNumber)}
                 >
@@ -212,12 +212,12 @@ const PartyList: React.FC = () => {
                 </Button>
               );
             })}
-            
+
             {totalPages > 5 && currentPage < totalPages && (
               <>
                 {currentPage < totalPages - 1 && <span className="px-2 self-center">...</span>}
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="sm"
                   onClick={() => setCurrentPage(totalPages)}
                 >
@@ -226,9 +226,9 @@ const PartyList: React.FC = () => {
               </>
             )}
           </div>
-          
-          <Button 
-            variant="ghost" 
+
+          <Button
+            variant="ghost"
             size="sm"
             disabled={currentPage === totalPages || totalPages === 0}
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}

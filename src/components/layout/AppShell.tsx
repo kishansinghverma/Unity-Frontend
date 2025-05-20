@@ -1,16 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { useAppSelector } from '../../store/hooks';
-import { selectCurrentApp } from '../../store/slices/appSlice';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { selectCurrentApp, setCurrentApp } from '../../store/slices/appSlice';
+import { APPS } from '../../constants/apps';
 
 const AppShell: React.FC = () => {
   const currentApp = useAppSelector(selectCurrentApp);
+  const dispatch = useAppDispatch();
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
 
+  // Ensure we have a default app set (important for direct access to /emandi without authentication)
+  useEffect(() => {
+    if (!currentApp) {
+      // Find the eMandi app (crud-app) from APPS and set it as the current app
+      const emandiApp = APPS.find(app => app.id === 'crud-app');
+      if (emandiApp) {
+        dispatch(setCurrentApp(emandiApp));
+      }
+    }
+  }, [currentApp, dispatch]);
+
+  // Display a loading state until the app is set
   if (!currentApp) {
-    return <div>Loading...</div>;
+    return <div className="flex h-screen items-center justify-center">Loading...</div>;
   }
 
   return (

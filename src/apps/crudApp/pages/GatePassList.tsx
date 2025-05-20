@@ -124,7 +124,7 @@ const GatePassList: React.FC = () => {
         </div>
         <div className="mt-4 md:mt-0">
           <Button
-            onClick={() => navigate('/gatepass/new')}
+            onClick={() => navigate('/emandi/gatepasses/new')}
             leftIcon={<Plus className="w-4 h-4" />}
           >
             New Gate Pass

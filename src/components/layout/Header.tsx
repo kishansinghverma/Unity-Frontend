@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3, Wheat } from 'lucide-react';
+import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3, Wheat, LogIn } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { APPS } from '../../constants/apps';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectCurrentApp, setCurrentApp } from '../../store/slices/appSlice';
 import ThemeToggle from '../ui/ThemeToggle';
+import { useAuth } from '../../context/AuthContext';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -13,6 +15,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
   const dispatch = useAppDispatch();
   const currentApp = useAppSelector(selectCurrentApp);
+  const { isAuthenticated } = useAuth();
   const [appsDropdownOpen, setAppsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -55,9 +58,9 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
         >
           <Menu className="w-6 h-6 text-gray-600 dark:text-gray-300" />
         </button>
-        
+
         <div className="relative" ref={dropdownRef}>
-          <button 
+          <button
             onClick={() => setAppsDropdownOpen(!appsDropdownOpen)}
             className="flex items-center space-x-2 focus:outline-none"
           >
@@ -71,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
               <ChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-400" />
             </div>
           </button>
-          
+
           {appsDropdownOpen && (
             <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-20">
               <div className="p-2">
@@ -81,11 +84,10 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
                     <button
                       key={app.id}
                       onClick={() => handleAppChange(app.id)}
-                      className={`flex items-center px-3 py-2 w-full rounded-md text-sm font-medium transition-colors ${
-                        currentApp?.id === app.id
+                      className={`flex items-center px-3 py-2 w-full rounded-md text-sm font-medium transition-colors ${currentApp?.id === app.id
                           ? 'bg-blue-100 text-blue-600 dark:bg-gray-700 dark:text-blue-400'
                           : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-                      }`}
+                        }`}
                     >
                       {getIcon(app.icon)}
                       <span className="ml-3">{app.name}</span>
@@ -97,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
           )}
         </div>
       </div>
-      
+
       <div className="flex items-center space-x-3">
         <div className="relative hidden md:block">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -109,25 +111,12 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
             placeholder="Search..."
           />
         </div>
-        
+
         <ThemeToggle />
-        
+
         <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
           <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
         </button>
-        
-        <div className="relative">
-          <button className="flex items-center space-x-2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white">
-              <User className="w-4 h-4" />
-            </div>
-            <div className="hidden md:block text-left">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">John Doe</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Administrator</p>
-            </div>
-            <ChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-          </button>
-        </div>
       </div>
     </header>
   );
