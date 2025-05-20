@@ -9,8 +9,8 @@ export const APPS: AppInfo[] = [
   },
   {
     id: 'second-app',
-    name: 'Analytics',
-    description: 'View reports and analyze data',
-    icon: 'BarChart3',
+    name: 'MoneyTrail',
+    description: 'Track finances and analyze monetary data',
+    icon: 'DollarSign',
   },
 ];

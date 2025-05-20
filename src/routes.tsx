@@ -50,16 +50,16 @@ const router = createBrowserRouter([
   },
   // Analytics App Routes with authentication
   {
-    path: '/analytics',
+    path: '/moneytrail',
     element: (
       <ProtectedRoute>
         <AppShell />
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <div className="p-8 text-center">Analytics Dashboard - Coming Soon</div> },
-      { path: 'reports', element: <div className="p-8 text-center">Reports - Coming Soon</div> },
-      { path: 'settings', element: <div className="p-8 text-center">Analytics Settings - Coming Soon</div> },
+      { index: true, element: <div className="p-8 text-center">MoneyTrail Dashboard - Coming Soon</div> },
+      { path: 'reports', element: <div className="p-8 text-center">MoneyTrail Reports - Coming Soon</div> },
+      { path: 'settings', element: <div className="p-8 text-center">MoneyTrail Settings - Coming Soon</div> },
     ],
   },
   // Catch all route - redirect to login

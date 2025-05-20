@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat, LogIn } from 'lucide-react';
+import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat, LogIn, DollarSign } from 'lucide-react';
 import { useAppSelector } from '../../store/hooks';
 import { selectCurrentApp } from '../../store/slices/appSlice';
 import { useAuth } from '../../context/AuthContext';
@@ -28,9 +28,9 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       ];
     } else {
       return [
-        { name: 'Overview', path: '/analytics', icon: <BarChart3 className="w-5 h-5" /> },
-        { name: 'Reports', path: '/analytics/reports', icon: <BarChart3 className="w-5 h-5" /> },
-        { name: 'Settings', path: '/analytics/settings', icon: <Settings className="w-5 h-5" /> },
+        { name: 'Overview', path: '/moneytrail', icon: <DollarSign className="w-5 h-5" /> },
+        { name: 'Reports', path: '/moneytrail/reports', icon: <BarChart3 className="w-5 h-5" /> },
+        { name: 'Settings', path: '/moneytrail/settings', icon: <Settings className="w-5 h-5" /> },
       ];
     }
   };
@@ -64,12 +64,12 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       }`}
     >
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-        <Link to="/app-selection" className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2">
           <span className="h-8 w-8 bg-green-600 rounded-md flex items-center justify-center">
             <span className="text-white font-bold text-xl">U</span>
           </span>
           <span className="text-xl font-semibold text-gray-800 dark:text-white">Unity Hub</span>
-        </Link>
+        </div>
         <button
           onClick={() => setOpen(false)}
           className="p-1 rounded-md lg:hidden focus:outline-none focus:ring-2 focus:ring-blue-500"

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3, Wheat, LogIn } from 'lucide-react';
+import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3, Wheat, LogIn, DollarSign } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { APPS } from '../../constants/apps';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -38,6 +38,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
       case 'LayoutDashboard': return <LayoutDashboard className="w-5 h-5" />;
       case 'BarChart3': return <BarChart3 className="w-5 h-5" />;
       case 'Wheat': return <Wheat className="w-5 h-5" />;
+      case 'DollarSign': return <DollarSign className="w-5 h-5" />;
       default: return <LayoutDashboard className="w-5 h-5" />;
     }
   };
@@ -52,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
       if (app.id === 'crud-app') {
         navigate('/emandi');
       } else if (app.id === 'second-app') {
-        navigate('/analytics');
+        navigate('/moneytrail');
       }
     }
   };
@@ -73,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
             className="flex items-center space-x-2 focus:outline-none"
           >
             <div className="flex items-center space-x-2">
-              <span className={`h-8 w-8 ${currentApp?.icon === 'Wheat' ? 'bg-yellow-600' : 'bg-blue-600'} rounded-md flex items-center justify-center`}>
+              <span className={`h-8 w-8 ${currentApp?.icon === 'Wheat' ? 'bg-yellow-600' : 'bg-green-600'} rounded-md flex items-center justify-center`}>
                 <span className="text-white">{getIcon(currentApp?.icon || 'LayoutDashboard')}</span>
               </span>
               <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
