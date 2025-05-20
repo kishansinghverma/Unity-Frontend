@@ -65,7 +65,7 @@ const Dashboard: React.FC = () => {
         <Card title="Quick Actions">
           <div className="flex flex-col space-y-4">
             <Link 
-              to="/parties/new" 
+              to="/emandi/parties/new" 
               className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600"
             >
               <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-md">
@@ -78,7 +78,7 @@ const Dashboard: React.FC = () => {
             </Link>
             
             <Link 
-              to="/gatepass/new" 
+              to="/emandi/gatepass/new" 
               className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600"
             >
               <div className="p-2 bg-red-100 dark:bg-red-900 rounded-md">

@@ -17,18 +17,18 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
   const getNavItems = () => {
     if (currentApp?.id === 'crud-app') {
       return [
-        { name: 'New Gate Pass', path: '/gatepass/new', icon: <ClipboardList className="w-5 h-5" /> },
-        { name: 'Queued', path: '/gatepass/list', icon: <ListChecks className="w-5 h-5" /> },
-        { name: 'Processed', path: '/processed/list', icon: <FileCheck className="w-5 h-5" /> },
-        { name: 'Parties', path: '/parties', icon: <UserSquare className="w-5 h-5" /> },
-        { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-        { name: 'Settings', path: '/settings', icon: <Settings className="w-5 h-5" /> },
+        { name: 'New Gate Pass', path: '/emandi/gatepass/new', icon: <ClipboardList className="w-5 h-5" /> },
+        { name: 'Queued', path: '/emandi/gatepass/list', icon: <ListChecks className="w-5 h-5" /> },
+        { name: 'Processed', path: '/emandi/processed/list', icon: <FileCheck className="w-5 h-5" /> },
+        { name: 'Parties', path: '/emandi/parties', icon: <UserSquare className="w-5 h-5" /> },
+        { name: 'Dashboard', path: '/emandi/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
+        { name: 'Settings', path: '/emandi/settings', icon: <Settings className="w-5 h-5" /> },
       ];
     } else {
       return [
         { name: 'Overview', path: '/analytics', icon: <BarChart3 className="w-5 h-5" /> },
-        { name: 'Reports', path: '/reports', icon: <BarChart3 className="w-5 h-5" /> },
-        { name: 'Settings', path: '/analytics-settings', icon: <Settings className="w-5 h-5" /> },
+        { name: 'Reports', path: '/analytics/reports', icon: <BarChart3 className="w-5 h-5" /> },
+        { name: 'Settings', path: '/analytics/settings', icon: <Settings className="w-5 h-5" /> },
       ];
     }
   };
@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
 
   // Helper function to determine if a nav item should be active
   const isNavItemActive = (itemPath: string) => {
-    if (itemPath === '/gatepass/new' && (location.pathname === '/' || location.pathname === '/gatepass/new')) {
+    if (itemPath === '/emandi/gatepass/new' && (location.pathname === '/emandi' || location.pathname === '/emandi/gatepass/new')) {
       return true;
     }
     return location.pathname === itemPath;
@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       }`}
     >
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-        <Link to="/" className="flex items-center space-x-2">
+        <Link to={currentApp?.id === 'crud-app' ? '/emandi' : '/analytics'} className="flex items-center space-x-2">
           <span className="h-8 w-8 bg-green-600 rounded-md flex items-center justify-center">
             <span className="text-white font-bold text-xl">U</span>
           </span>
