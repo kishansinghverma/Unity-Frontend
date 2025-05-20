@@ -35,6 +35,14 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
 
   const navItems = getNavItems();
 
+  // Helper function to determine if a nav item should be active
+  const isNavItemActive = (itemPath: string) => {
+    if (itemPath === '/gatepass/new' && (location.pathname === '/' || location.pathname === '/gatepass/new')) {
+      return true;
+    }
+    return location.pathname === itemPath;
+  };
+
   return (
     <aside
       className={`fixed inset-y-0 left-0 z-20 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-hidden transition-all transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 lg:z-auto lg:static lg:w-72 ${
@@ -65,7 +73,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
                 key={item.path}
                 to={item.path}
                 className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  location.pathname === item.path
+                  isNavItemActive(item.path)
                     ? 'bg-blue-100 text-blue-600 dark:bg-gray-700 dark:text-blue-400'
                     : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
                 }`}
