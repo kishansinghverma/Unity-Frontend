@@ -21,7 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
         { name: 'Queued', path: '/gatepass/list', icon: <ListChecks className="w-5 h-5" /> },
         { name: 'Processed', path: '/processed/list', icon: <FileCheck className="w-5 h-5" /> },
         { name: 'Parties', path: '/parties', icon: <UserSquare className="w-5 h-5" /> },
-        { name: 'Dashboard', path: '/', icon: <LayoutDashboard className="w-5 h-5" /> },
+        { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
         { name: 'Settings', path: '/settings', icon: <Settings className="w-5 h-5" /> },
       ];
     } else {

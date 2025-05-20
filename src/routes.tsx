@@ -17,7 +17,8 @@ const router = createBrowserRouter([
     path: '/',
     element: <AppShell />,
     children: [
-      { index: true, element: <Dashboard /> },
+      { index: true, element: <GatePassForm /> },
+      { path: 'dashboard', element: <Dashboard /> },
       { path: 'gatepass/new', element: <GatePassForm /> },
       { path: 'gatepass/list', element: <GatePassList /> },
       { path: 'processed/list', element: <ProcessedRecordsList /> },
