@@ -44,8 +44,10 @@ function Overview() {
     setEveningPlans(mockRecords.filter((_, index) => index >= 5));
   };
 
-  const handleTaskClick = (task: RecordItem) => {
-    setSelectedTask(task);
+  const handleTaskClick = (task: RecordItem, listType: 'upcoming' | 'today' | 'evening') => {
+    if (listType !== 'evening') {
+      setSelectedTask(task);
+    }
   };
 
   // Updated header style to match table header
@@ -81,7 +83,7 @@ function Overview() {
         >
           <div 
             className="px-4 py-3 flex items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            onClick={() => handleTaskClick(record)}
+            onClick={() => handleTaskClick(record, listType)}
           >
             <div className="flex-shrink-0 w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-base mr-2">
               {record.icon}

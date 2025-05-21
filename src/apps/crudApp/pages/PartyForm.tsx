@@ -281,4 +281,4 @@ const PartyForm: React.FC = () => {
   );
 };
 
-export default PartyForm; 
+export default PartyForm;

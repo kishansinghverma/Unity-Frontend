@@ -82,4 +82,4 @@ const AppSelection: React.FC = () => {
   );
 };
 
-export default AppSelection; 
+export default AppSelection;

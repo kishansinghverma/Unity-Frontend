@@ -194,4 +194,4 @@ const GatePassList: React.FC = () => {
   );
 };
 
-export default GatePassList; 
+export default GatePassList;

@@ -29,6 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     } else {
       return [
         { name: 'Overview', path: '/moneytrail', icon: <CandlestickChart className="w-5 h-5" /> },
+        { name: 'Dashboard', path: '/moneytrail/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
         { name: 'Reports', path: '/moneytrail/reports', icon: <BarChart3 className="w-5 h-5" /> },
         { name: 'Settings', path: '/moneytrail/settings', icon: <Settings className="w-5 h-5" /> },
       ];

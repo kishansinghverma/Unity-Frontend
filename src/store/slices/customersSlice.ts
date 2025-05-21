@@ -126,4 +126,4 @@ export const selectCustomerById = (id: string) =>
 export const selectCustomersLoading = (state: RootState) => state.customers.loading;
 export const selectCustomersError = (state: RootState) => state.customers.error;
 
-export default customersSlice.reducer; 
+export default customersSlice.reducer;

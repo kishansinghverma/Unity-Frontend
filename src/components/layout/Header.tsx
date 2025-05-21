@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
   };
 
   return (
-    <header className="sticky top-0 z-10 flex items-center justify-between h-16 px-4 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <header className="sticky top-0 z-50 flex items-center justify-between h-16 px-4 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       <div className="flex items-center">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -84,7 +84,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
           </button>
 
           {appsDropdownOpen && (
-            <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-20">
+            <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50">
               <div className="p-2">
                 <h3 className="text-xs font-semibold text-gray-500 uppercase dark:text-gray-400 px-3 py-2">Apps</h3>
                 <div className="mt-1 space-y-1">

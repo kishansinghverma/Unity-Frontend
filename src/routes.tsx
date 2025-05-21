@@ -1,5 +1,8 @@
-import React from 'react';
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { createBrowserRouter, RouterProvider, Navigate, useLocation } from 'react-router-dom';
+import { useAppDispatch } from './store/hooks';
+import { setCurrentApp } from './store/slices/appSlice';
+import { APPS } from './constants/apps';
 
 // Layout
 import AppShell from './components/layout/AppShell';
@@ -19,6 +22,18 @@ import PartyForm from './apps/crudApp/pages/PartyForm';
 
 // MoneyTrail App
 import Overview from './apps/moneyTrailApp/pages/Overview';
+import MoneyTrailDashboard from './apps/moneyTrailApp/pages/Dashboard';
+
+const PersistLastVisitedPage: React.FC = ({ children }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Persist the last visited page in localStorage
+    localStorage.setItem('lastVisitedPage', location.pathname);
+  }, [location]);
+
+  return <>{children}</>;
+};
 
 const router = createBrowserRouter([
   {
@@ -33,10 +48,13 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-  // eMandi Portal Routes without authentication
   {
     path: '/emandi',
-    element: <AppShell />,
+    element: (
+      <PersistLastVisitedPage>
+        <AppShell />
+      </PersistLastVisitedPage>
+    ),
     children: [
       { index: true, element: <GatePassForm /> },
       { path: 'dashboard', element: <Dashboard /> },
@@ -51,28 +69,53 @@ const router = createBrowserRouter([
       { path: 'settings', element: <div className="p-8 text-center">eMandi Settings - Coming Soon</div> },
     ],
   },
-  // MoneyTrail App Routes with authentication
   {
     path: '/moneytrail',
     element: (
       <ProtectedRoute>
-        <AppShell />
+        <PersistLastVisitedPage>
+          <AppShell />
+        </PersistLastVisitedPage>
       </ProtectedRoute>
     ),
     children: [
       { index: true, element: <Overview /> },
+      { path: 'dashboard', element: <MoneyTrailDashboard /> },
       { path: 'reports', element: <div className="p-8 text-center">MoneyTrail Reports - Coming Soon</div> },
       { path: 'settings', element: <div className="p-8 text-center">MoneyTrail Settings - Coming Soon</div> },
     ],
   },
-  // Catch all route - redirect to login
   { path: '*', element: <Navigate to="/" replace /> }
 ]);
 
 const AppRoutes: React.FC = () => {
-  return (
-    <RouterProvider router={router} />
-  );
+  const [isRedirecting, setIsRedirecting] = useState(true);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    // Redirect to last visited page if available
+    const lastVisitedPage = localStorage.getItem('lastVisitedPage');
+    if (lastVisitedPage && window.location.pathname === '/') {
+      window.location.replace(lastVisitedPage);
+    } else {
+      setIsRedirecting(false);
+    }
+
+    // Update currentApp based on last visited page
+    if (lastVisitedPage) {
+      const matchingApp = APPS.find(app => lastVisitedPage.startsWith(`/${app.id}`));
+      if (matchingApp) {
+        dispatch(setCurrentApp(matchingApp));
+      }
+    }
+  }, [dispatch]);
+
+  if (isRedirecting) {
+    // Show a loading spinner or placeholder while redirecting
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+
+  return <RouterProvider router={router} />;
 };
 
 export default AppRoutes;

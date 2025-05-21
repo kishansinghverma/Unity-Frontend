@@ -174,4 +174,4 @@ const GatePassForm: React.FC = () => {
   );
 };
 
-export default GatePassForm; 
+export default GatePassForm;

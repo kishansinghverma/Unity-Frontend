@@ -28,6 +28,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('lastVisitedPage'); // Clear last visited page on logout
     setIsAuthenticated(false);
   };
 
@@ -46,4 +47,4 @@ export const useAuth = (): AuthContextType => {
   return context;
 };
 
-export default AuthContext; 
+export default AuthContext;

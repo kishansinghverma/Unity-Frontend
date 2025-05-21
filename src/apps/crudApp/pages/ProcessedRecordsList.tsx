@@ -234,4 +234,4 @@ const ProcessedRecordsList: React.FC = () => {
   );
 };
 
-export default ProcessedRecordsList; 
+export default ProcessedRecordsList;

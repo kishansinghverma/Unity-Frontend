@@ -116,4 +116,4 @@ export const deleteMockParty = (id: string) => {
   }
   
   return false;
-}; 
+};

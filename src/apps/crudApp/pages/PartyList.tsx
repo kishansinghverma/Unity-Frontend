@@ -241,4 +241,4 @@ const PartyList: React.FC = () => {
   );
 };
 
-export default PartyList; 
+export default PartyList;

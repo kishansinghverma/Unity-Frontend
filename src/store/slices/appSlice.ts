@@ -30,4 +30,4 @@ export const { setCurrentApp } = appSlice.actions;
 export const selectCurrentApp = (state: RootState) => state.app.currentApp;
 export const selectAvailableApps = (state: RootState) => state.app.availableApps;
 
-export default appSlice.reducer; 
+export default appSlice.reducer;

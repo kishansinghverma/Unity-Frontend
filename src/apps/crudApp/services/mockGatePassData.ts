@@ -102,4 +102,4 @@ export const deleteMockGatePass = (id: string) => {
   }
   
   return false;
-}; 
+};
