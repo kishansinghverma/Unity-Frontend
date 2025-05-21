@@ -24,7 +24,7 @@ export function SwipeableList({ children, className = '' }: SwipeableListProps) 
     <SwipeableListContext.Provider
       value={{ openItemId, setOpenItemId }}
     >
-      <ul className={`divide-y divide-gray-200 ${className}`}>
+      <ul className={`divide-y divide-gray-200 dark:divide-gray-700 ${className}`}>
         {children}
       </ul>
     </SwipeableListContext.Provider>

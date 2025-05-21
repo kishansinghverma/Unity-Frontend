@@ -41,11 +41,11 @@ function Overview() {
     setEveningPlans(mockRecords.filter((_, index) => index >= 5));
   };
 
-  // Unified header style with slate-400 color, supporting dark mode
-  const headerStyle = "text-sm font-medium text-white dark:text-gray-100 px-4 py-3 bg-slate-400 dark:bg-slate-600 border-b border-stone-400 dark:border-slate-500";
+  // Updated header style to match table header
+  const headerStyle = "text-sm font-medium text-gray-700 dark:text-gray-300 px-4 py-3 bg-gray-200 dark:bg-gray-700";
 
   const renderSwipeableList = (items: RecordItem[], listType: 'upcoming' | 'today' | 'evening') => (
-    <SwipeableList className="overflow-hidden">
+    <SwipeableList className="overflow-hidden divide-y divide-gray-200 dark:divide-gray-700">
       {items.map((record) => (
         <SwipeableList.Item
           key={record.id}
@@ -72,16 +72,16 @@ function Overview() {
             },
           ]}
         >
-          <div className="px-4 py-3 flex items-center bg-white dark:bg-gray-800 active:bg-gray-100 dark:active:bg-gray-700 transition-colors">
+          <div className="px-4 py-3 flex items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             <div className="flex-shrink-0 w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-base mr-2">
               {record.icon}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{record.title}</h3>
+              <h3 className="text-sm font-medium text-gray-900 dark:text-gray-300 truncate">{record.title}</h3>
               <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{record.subtitle}</p>
             </div>
             <div className="ml-2 flex-shrink-0">
-              <span className="text-xs text-gray-400 dark:text-gray-500">{record.date}</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">{record.date}</span>
             </div>
           </div>
         </SwipeableList.Item>
@@ -126,7 +126,7 @@ function Overview() {
       {isAnyListEmpty && (
         <div className="mt-6 flex justify-center">
           <button
-            className="px-4 py-2 bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 rounded-full text-sm flex items-center gap-2 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors border border-slate-300 dark:border-slate-600"
+            className="px-4 py-2 bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full text-sm flex items-center gap-2 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300 dark:border-gray-600"
             onClick={resetAllLists}
           >
             <RefreshCw size={14} />
@@ -138,4 +138,4 @@ function Overview() {
   );
 }
 
-export default Overview; 
+export default Overview;
