@@ -1,223 +1,141 @@
-import React, { useState } from 'react';
-import { Calendar, ShoppingCart, Phone, Users, Dumbbell, Coffee, Book } from 'lucide-react';
-import { useSwipeable } from 'react-swipeable';
+import { useState } from 'react';
+import { Archive, Star, Trash2, RefreshCw } from 'lucide-react';
+import { SwipeableList } from '../components/SwipeableList';
+import { mockRecords, RecordItem } from '../data/mockData';
 
-interface ListItem {
-  id: string;
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  time: string;
-}
+function Overview() {
+  const [upcomingTasks, setUpcomingTasks] = useState<RecordItem[]>(
+    mockRecords.filter((_, index) => index < 2)
+  );
 
-// Sample data for three different list sections
-const upcomingTasks: ListItem[] = [
-  {
-    id: '1',
-    icon: <Calendar className="w-6 h-6 text-red-500" />,
-    title: 'Meeting with Alex',
-    description: 'Discuss project timeline',
-    time: '9:30 AM'
-  },
-  {
-    id: '2',
-    icon: <ShoppingCart className="w-6 h-6 text-green-500" />,
-    title: 'Grocery shopping',
-    description: 'Vegetables, fruits, and milk',
-    time: '11:00 AM'
-  },
-  {
-    id: '3',
-    icon: <Phone className="w-6 h-6 text-blue-500" />,
-    title: 'Call Mom',
-    description: 'Birthday wishes',
-    time: '1:30 PM'
-  },
-];
+  const [todaysEvents, setTodaysEvents] = useState<RecordItem[]>(
+    mockRecords.filter((_, index) => index >= 2 && index < 5)
+  );
 
-const todayEvents: ListItem[] = [
-  {
-    id: '4',
-    icon: <Users className="w-6 h-6 text-purple-500" />,
-    title: 'Team standup',
-    description: 'Daily progress update',
-    time: '2:15 PM'
-  },
-  {
-    id: '5',
-    icon: <Dumbbell className="w-6 h-6 text-yellow-500" />,
-    title: 'Gym workout',
-    description: 'Chest and triceps day',
-    time: '5:00 PM'
-  },
-];
+  const [eveningPlans, setEveningPlans] = useState<RecordItem[]>(
+    mockRecords.filter((_, index) => index >= 5)
+  );
 
-const eveningPlans: ListItem[] = [
-  {
-    id: '6',
-    icon: <Coffee className="w-6 h-6 text-orange-500" />,
-    title: 'Dinner with Sarah',
-    description: 'At Italian Bistro',
-    time: '7:30 PM'
-  },
-  {
-    id: '7',
-    icon: <Book className="w-6 h-6 text-indigo-500" />,
-    title: 'Read book',
-    description: 'Chapter 5-7',
-    time: '9:00 PM'
-  },
-];
-
-const Overview: React.FC = () => {
-  const [swipedItemId, setSwipedItemId] = useState<string | null>(null);
-  const [swipeProgress, setSwipeProgress] = useState<{id: string, amount: number} | null>(null);
-
-  const handleCloseAll = () => {
-    setSwipedItemId(null);
+  const handleDelete = (id: string, listType: 'upcoming' | 'today' | 'evening') => {
+    switch (listType) {
+      case 'upcoming':
+        setUpcomingTasks(upcomingTasks.filter(record => record.id !== id));
+        break;
+      case 'today':
+        setTodaysEvents(todaysEvents.filter(record => record.id !== id));
+        break;
+      case 'evening':
+        setEveningPlans(eveningPlans.filter(record => record.id !== id));
+        break;
+    }
   };
 
-  const handleArchive = (id: string) => {
-    console.log(`Archive item ${id}`);
-    setSwipedItemId(null);
+  const handleAction = (id: string, action: string) => {
+    console.log(`Performed ${action} on item ${id}`);
+    // In a real app, you would handle the action here
   };
 
-  const handleStar = (id: string) => {
-    console.log(`Star item ${id}`);
-    setSwipedItemId(null);
+  const resetAllLists = () => {
+    setUpcomingTasks(mockRecords.filter((_, index) => index < 2));
+    setTodaysEvents(mockRecords.filter((_, index) => index >= 2 && index < 5));
+    setEveningPlans(mockRecords.filter((_, index) => index >= 5));
   };
 
-  const handleDelete = (id: string) => {
-    console.log(`Delete item ${id}`);
-    setSwipedItemId(null);
-  };
+  // Unified header style with slate-400 color, supporting dark mode
+  const headerStyle = "text-sm font-medium text-white dark:text-gray-100 px-4 py-3 bg-slate-400 dark:bg-slate-600 border-b border-stone-400 dark:border-slate-500";
 
-  // Component for rendering a single list item with swipe actions
-  const ListItemComponent: React.FC<{ item: ListItem }> = ({ item }) => {
-    const isActive = swipedItemId === item.id;
-    const currentSwipe = swipeProgress?.id === item.id ? swipeProgress.amount : 0;
-    
-    // Calculate transform styles based on both swipe state and progress
-    const getTransformStyle = () => {
-      if (isActive) {
-        return 'transform -translate-x-40 transition-transform duration-300 ease-out';
-      } 
-      if (currentSwipe !== 0) {
-        // No transition during active swipe for responsive feel
-        return `transform translate-x-${currentSwipe}px`;
-      }
-      return 'transform translate-x-0 transition-transform duration-300 ease-out';
-    };
-    
-    const swipeHandlers = useSwipeable({
-      onSwipedLeft: () => {
-        // Clear the progress state
-        setSwipeProgress(null);
-        if (swipedItemId === item.id) {
-          setSwipedItemId(null);
-        } else {
-          setSwipedItemId(item.id);
-        }
-      },
-      onSwipedRight: () => {
-        // Clear the progress state
-        setSwipeProgress(null);
-        setSwipedItemId(null);
-      },
-      onSwiping: (e) => {
-        // Track swipe distance and direction for visual feedback
-        if (e.dir === 'Left') {
-          // Limit leftward movement to prevent overshooting
-          const maxLeft = -160;
-          const newAmount = Math.max(e.deltaX, maxLeft);
-          setSwipeProgress({ id: item.id, amount: newAmount });
-        } else if (e.dir === 'Right') {
-          // Close if already open, otherwise limit rightward movement
-          if (swipedItemId === item.id) {
-            setSwipedItemId(null);
-          } else {
-            const maxRight = 50;
-            const newAmount = Math.min(e.deltaX, maxRight);
-            setSwipeProgress({ id: item.id, amount: newAmount });
-          }
-        }
-      },
-      trackMouse: true,
-      trackTouch: true,
-      delta: 10 // Make swipe detection more sensitive
-    });
-
-    return (
-      <div className="relative overflow-hidden border-b border-gray-100">
-        <div 
-          {...swipeHandlers}
-          className={`flex items-center p-4 bg-white touch-manipulation ${getTransformStyle()}`}
+  const renderSwipeableList = (items: RecordItem[], listType: 'upcoming' | 'today' | 'evening') => (
+    <SwipeableList className="overflow-hidden">
+      {items.map((record) => (
+        <SwipeableList.Item
+          key={record.id}
+          id={record.id}
+          className="group"
+          actions={[
+            {
+              icon: Archive,
+              color: 'blue',
+              label: 'Archive',
+              onClick: () => handleAction(record.id, 'archive'),
+            },
+            {
+              icon: Star,
+              color: 'orange',
+              label: 'Star',
+              onClick: () => handleAction(record.id, 'star'),
+            },
+            {
+              icon: Trash2,
+              color: 'red',
+              label: 'Delete',
+              onClick: () => handleDelete(record.id, listType),
+            },
+          ]}
         >
-          <div className="flex-shrink-0 w-12 h-12 mr-4 bg-gray-100 rounded-full flex items-center justify-center">
-            {item.icon}
+          <div className="px-4 py-3 flex items-center bg-white dark:bg-gray-800 active:bg-gray-100 dark:active:bg-gray-700 transition-colors">
+            <div className="flex-shrink-0 w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-base mr-2">
+              {record.icon}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{record.title}</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{record.subtitle}</p>
+            </div>
+            <div className="ml-2 flex-shrink-0">
+              <span className="text-xs text-gray-400 dark:text-gray-500">{record.date}</span>
+            </div>
           </div>
-          <div className="flex-grow">
-            <h3 className="text-lg font-medium text-gray-800">{item.title}</h3>
-            <p className="text-gray-500">{item.description}</p>
-          </div>
-          <div className="flex-shrink-0 ml-4 text-gray-400">{item.time}</div>
-        </div>
-        <div className={`absolute inset-y-0 right-0 flex ${isActive ? 'opacity-100' : 'opacity-0'}`}>
-          <button 
-            onClick={() => handleArchive(item.id)}
-            className="w-20 h-full bg-blue-500 flex flex-col items-center justify-center text-white"
-          >
-            <div className="text-2xl mb-1">📨</div>
-            <span className="text-sm">Archive</span>
-          </button>
-          <button 
-            onClick={() => handleStar(item.id)}
-            className="w-20 h-full bg-orange-500 flex flex-col items-center justify-center text-white"
-          >
-            <div className="text-2xl mb-1">⭐</div>
-            <span className="text-sm">Star</span>
-          </button>
-          <button 
-            onClick={() => handleDelete(item.id)}
-            className="w-20 h-full bg-red-500 flex flex-col items-center justify-center text-white"
-          >
-            <div className="text-2xl mb-1">🗑️</div>
-            <span className="text-sm">Delete</span>
-          </button>
-        </div>
-      </div>
-    );
-  };
+        </SwipeableList.Item>
+      ))}
+      {items.length === 0 && (
+        <li className="py-6 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
+          <Archive size={24} className="mb-2" />
+          <p className="text-sm text-center">No items</p>
+        </li>
+      )}
+    </SwipeableList>
+  );
 
-  // Component for rendering a list section with title
-  const ListSection: React.FC<{ title: string; items: ListItem[] }> = ({ title, items }) => {
-    return (
-      <div className="h-full">
-        <h2 className="text-xl font-bold px-4 py-2 bg-purple-800 text-white">{title}</h2>
-        <div className="bg-white rounded-md shadow h-[calc(100%-2.5rem)] overflow-auto" onClick={handleCloseAll}>
-          {items.length > 0 ? (
-            items.map(item => <ListItemComponent key={item.id} item={item} />)
-          ) : (
-            <div className="p-6 text-center text-gray-500">No items in this section</div>
-          )}
-        </div>
-      </div>
-    );
-  };
+  const renderListSection = (title: string, items: RecordItem[], listType: 'upcoming' | 'today' | 'evening') => (
+    <>
+      <h2 className={headerStyle}>{title}</h2>
+      {renderSwipeableList(items, listType)}
+    </>
+  );
+
+  const isAnyListEmpty = upcomingTasks.length === 0 || todaysEvents.length === 0 || eveningPlans.length === 0;
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
-      <div className="bg-gray-50 p-2 text-center text-gray-500 mb-4 rounded">
-        Swipe left on an item to see actions, swipe right to dismiss
+    <main className="max-w-full w-full px-2 py-4 bg-gray-50 dark:bg-gray-900">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-auto">
+        {/* Upcoming Tasks */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-md dark:shadow-black/10 overflow-hidden self-start">
+          {renderListSection("Upcoming Tasks", upcomingTasks, 'upcoming')}
+        </div>
+
+        {/* Today's Events */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-md dark:shadow-black/10 overflow-hidden self-start">
+          {renderListSection("Today's Events", todaysEvents, 'today')}
+        </div>
+
+        {/* Evening Plans */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-md dark:shadow-black/10 overflow-hidden self-start">
+          {renderListSection("Evening Plans", eveningPlans, 'evening')}
+        </div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(100vh-220px)]">
-        <ListSection title="Upcoming Tasks" items={upcomingTasks} />
-        <ListSection title="Today's Events" items={todayEvents} />
-        <ListSection title="Evening Plans" items={eveningPlans} />
-      </div>
-    </div>
+
+      {isAnyListEmpty && (
+        <div className="mt-6 flex justify-center">
+          <button
+            className="px-4 py-2 bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 rounded-full text-sm flex items-center gap-2 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors border border-slate-300 dark:border-slate-600"
+            onClick={resetAllLists}
+          >
+            <RefreshCw size={14} />
+            <span>Reset All Lists</span>
+          </button>
+        </div>
+      )}
+    </main>
   );
-};
+}
 
 export default Overview; 
