@@ -1,7 +1,11 @@
 import { RefreshCw } from 'lucide-react';
-import { mockRecords } from '../data/mockData';
+import { mockRecords, RecordItem } from '../data/mockData';
+import { useState } from 'react';
+import { TaskModal } from '../components/TaskModal';
 
 function Dashboard() {
+  const [selectedTransaction, setSelectedTransaction] = useState<RecordItem | null>(null);
+
   const totalTasks = mockRecords.length;
   const completedTasks = Math.floor(totalTasks * 0.6); // Example: 60% completed
   const pendingTasks = totalTasks - completedTasks;
@@ -29,14 +33,66 @@ function Dashboard() {
         </div>
       </div>
 
+      <div className="mt-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Transaction
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Amount
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Date
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              {mockRecords.map((record) => (
+                <tr
+                  key={record.id}
+                  onClick={() => setSelectedTransaction(record)}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 h-10 w-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                        {record.icon}
+                      </div>
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{record.title}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{record.subtitle}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="text-sm text-green-500 font-semibold">₹1000.00</span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    {record.date}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <div className="mt-6 flex justify-center">
-        <button
-          className="px-4 py-2 bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full text-sm flex items-center gap-2 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300 dark:border-gray-600"
-        >
+        <button className="px-4 py-2 bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full text-sm flex items-center gap-2 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors border border-gray-300 dark:border-gray-600">
           <RefreshCw size={14} />
           <span>Refresh Dashboard</span>
         </button>
       </div>
+
+      {selectedTransaction && (
+        <TaskModal
+          task={selectedTransaction}
+          onClose={() => setSelectedTransaction(null)}
+        />
+      )}
     </main>
   );
 }

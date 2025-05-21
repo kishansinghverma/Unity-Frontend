@@ -24,7 +24,7 @@ import PartyForm from './apps/crudApp/pages/PartyForm';
 import Overview from './apps/moneyTrailApp/pages/Overview';
 import MoneyTrailDashboard from './apps/moneyTrailApp/pages/Dashboard';
 
-const PersistLastVisitedPage: React.FC = ({ children }) => {
+const PersistLastVisitedPage: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
