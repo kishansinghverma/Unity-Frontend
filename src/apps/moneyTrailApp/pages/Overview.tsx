@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Archive, Star, Trash2, RefreshCw } from 'lucide-react';
 import { SwipeableList } from '../components/SwipeableList';
+import { TaskModal } from '../components/TaskModal';
 import { mockRecords, RecordItem } from '../data/mockData';
 
 function Overview() {
@@ -15,6 +16,8 @@ function Overview() {
   const [eveningPlans, setEveningPlans] = useState<RecordItem[]>(
     mockRecords.filter((_, index) => index >= 5)
   );
+
+  const [selectedTask, setSelectedTask] = useState<RecordItem | null>(null);
 
   const handleDelete = (id: string, listType: 'upcoming' | 'today' | 'evening') => {
     switch (listType) {
@@ -39,6 +42,10 @@ function Overview() {
     setUpcomingTasks(mockRecords.filter((_, index) => index < 2));
     setTodaysEvents(mockRecords.filter((_, index) => index >= 2 && index < 5));
     setEveningPlans(mockRecords.filter((_, index) => index >= 5));
+  };
+
+  const handleTaskClick = (task: RecordItem) => {
+    setSelectedTask(task);
   };
 
   // Updated header style to match table header
@@ -72,7 +79,10 @@ function Overview() {
             },
           ]}
         >
-          <div className="px-4 py-3 flex items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <div 
+            className="px-4 py-3 flex items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+            onClick={() => handleTaskClick(record)}
+          >
             <div className="flex-shrink-0 w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-base mr-2">
               {record.icon}
             </div>
@@ -134,6 +144,12 @@ function Overview() {
           </button>
         </div>
       )}
+
+      {/* Task Modal */}
+      <TaskModal 
+        task={selectedTask} 
+        onClose={() => setSelectedTask(null)} 
+      />
     </main>
   );
 }
