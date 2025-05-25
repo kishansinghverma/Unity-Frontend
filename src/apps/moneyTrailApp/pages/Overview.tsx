@@ -81,21 +81,23 @@ function Overview() {
             },
           ]}
         >
-          <div 
-            className="px-4 py-3 flex items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            onClick={() => handleTaskClick(record, listType)}
-          >
-            <div className="flex-shrink-0 w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-base mr-2">
-              {record.icon}
+          {(isSwiping) => (
+            <div 
+              className="px-4 py-3 flex items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+              onClick={() => !isSwiping && handleTaskClick(record, listType)}
+            >
+              <div className="flex-shrink-0 w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-base mr-2">
+                {record.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-300 truncate">{record.title}</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{record.subtitle}</p>
+              </div>
+              <div className="ml-2 flex-shrink-0">
+                <span className="text-xs text-gray-500 dark:text-gray-400">{record.date}</span>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-sm font-medium text-gray-900 dark:text-gray-300 truncate">{record.title}</h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{record.subtitle}</p>
-            </div>
-            <div className="ml-2 flex-shrink-0">
-              <span className="text-xs text-gray-500 dark:text-gray-400">{record.date}</span>
-            </div>
-          </div>
+          )}
         </SwipeableList.Item>
       ))}
       {items.length === 0 && (

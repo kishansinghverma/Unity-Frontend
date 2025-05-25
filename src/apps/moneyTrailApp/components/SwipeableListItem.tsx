@@ -5,7 +5,7 @@ import { useSwipe } from '../hooks/useSwipe';
 
 interface SwipeableListItemProps {
   id: string;
-  children: React.ReactNode;
+  children: React.ReactNode | ((isSwiping: boolean) => React.ReactNode);
   actions: ActionButtonProps[];
   className?: string;
   maxSwipeDistance?: number;
@@ -67,7 +67,7 @@ export function SwipeableListItem({
         }}
         ref={elementRef}
       >
-        {children}
+        {typeof children === 'function' ? children(Math.abs(swipeDistance) > 5) : children}
       </div>
 
       {/* Action buttons container */}

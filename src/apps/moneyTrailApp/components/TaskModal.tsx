@@ -1,37 +1,88 @@
-import { useState } from 'react';
-import { X, CreditCard, Smartphone, FileText, Check } from 'lucide-react';
+import { ReactNode, useState } from 'react';
+import { X, CreditCard, Smartphone, FileText, Check, Phone } from 'lucide-react';
 import { RecordItem } from '../data/mockData';
+import { TransactionItem } from './PhonePeListItem';
 
 interface TaskModalProps {
   task: RecordItem | null;
   onClose: () => void;
 }
 
-interface Transaction {
-  id: number;
-  date: string;
-  name: string;
-  account?: string;
-  amount: string;
-  time?: string;
+interface TransactionData {
+  id: string;
+  day: string;
+  month: string;
+  icon: ReactNode;
+  upiId: string;
+  transactionInfo: string;
+  amount: number;
+  isCredit: boolean;
 }
+
+const PlaceholderBankIcon: React.FC = () => ( // No className prop needed if not used
+  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="rounded-xl">
+    <rect width="48" height="48" rx="12" fill="url(#iconGradientDef)" />
+    <defs>
+      <linearGradient id="iconGradientDef" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#E0E7FF" /> {/* Light Indigo */}
+        <stop offset="100%" stopColor="#C7D2FE" /> {/* Indigo */}
+      </linearGradient>
+    </defs>
+    <path d="M18 36V22H14V36H18ZM24 36V22H20V36H24ZM30 36V22H26V36H30ZM12 19L24 12L36 19V20H12V19Z" fill="#4338CA" /> {/* Indigo-700 */}
+  </svg>
+);
 
 export function TaskModal({ task, onClose }: TaskModalProps) {
   if (!task) return null;
 
   const [location, setLocation] = useState('Settlement');
   const [amount, setAmount] = useState('1000');
+  const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null);
 
   // Mock data for demonstration
-  const bankTransactions: Transaction[] = [{
-    id: 1,
-    date: '24/Feb/2025',
-    name: 'NEFT CR-BOFA0MM6205-ACCENTURE SOLUTIONS PVT LTD',
-    account: 'HDFC Bank - XXXX1234',
-    amount: '₹1000.00'
+  const bankTransactions: TransactionData[] = [{
+    id: 'tx2',
+    day: '28',
+    month: 'Feb',
+    icon: <PlaceholderBankIcon />,
+    upiId: 'AMAZONPAY_VERY_LONG_UPI_ID_EXAMPLE_SHOULD_TRUNCATE@ABL',
+    transactionInfo: 'Purchase - Electronics Gadget Weekly - Item XYZ Model 123 Pro Max Ultra',
+    amount: 150.50,
+    isCredit: false,
   }];
 
-  const phonepeTransactions: Transaction[] = [];
+  const initialTransactions: TransactionData[] = [
+    {
+      id: 'tx1',
+      day: '24',
+      month: 'Feb',
+      icon: <img src="https://placehold.co/40x40/6366F1/FFFFFF?text=B1&font=Inter&font-size=16" alt="Bank Icon" className="w-10 h-10 rounded-lg object-cover" />,
+      upiId: 'UPI-MAHESH CHAND-9675234150@AXL-SBIN001',
+      transactionInfo: '1649-191981935767-PAYMENT FROM PHONE',
+      amount: 3000.00,
+      isCredit: true,
+    },
+    {
+      id: 'tx2',
+      day: '28',
+      month: 'Feb',
+      icon: <PlaceholderBankIcon />,
+      upiId: 'AMAZONPAY_VERY_LONG_UPI_ID_EXAMPLE_SHOULD_TRUNCATE@ABL',
+      transactionInfo: 'Purchase - Electronics Gadget Weekly - Item XYZ Model 123 Pro Max Ultra',
+      amount: 150.50,
+      isCredit: false,
+    },
+    {
+      id: 'tx3',
+      day: '02',
+      month: 'Mar',
+      icon: <img src="https://placehold.co/40x40/10B981/FFFFFF?text=SB&font=Inter&font-size=16" alt="Bank Icon" className="w-10 h-10 rounded-lg object-cover" />,
+      upiId: 'SALARY_CREDIT_XYZCORP@ICICI',
+      transactionInfo: 'Monthly Salary - February 2025',
+      amount: 50000.00,
+      isCredit: true,
+    },
+  ];
 
   const transactionDetails = {
     date: '24/Feb/2025',
@@ -39,6 +90,10 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
     utr: 'BOFAN52025022401533583',
     recipient: 'SINGH KISHAN',
     bank: 'HDFC'
+  };
+
+  const handleSelectTransaction = (id: string) => {
+    setSelectedTransactionId(prevId => prevId === id ? null : id);
   };
 
   return (
@@ -71,7 +126,7 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center gap-2">
                     <CreditCard className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Bank Transaction</h2>
+                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Upcoming Tasks</h2>
                   </div>
                 </div>
                 <div className="p-4 flex-1 overflow-y-auto">
@@ -85,13 +140,13 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{transaction.date}</span>
+                            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{transaction.day}</span>
                           </div>
                           <p className="font-medium text-gray-900 dark:text-white text-xs mb-1 truncate">
-                            {transaction.name}
+                            {transaction.transactionInfo}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 truncate">
-                            {transaction.account}
+                            {transaction.amount}
                           </p>
                           <div className="text-right">
                             <span className="text-sm font-bold text-green-600 dark:text-green-400">{transaction.amount}</span>
@@ -112,7 +167,7 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
                   </div>
                 </div>
 
-                {phonepeTransactions.length === 0 && (
+                {initialTransactions.length === 0 && (
                   <div className="p-4 flex-1 flex items-center justify-center">
                     <div className="text-center">
                       <FileText className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
@@ -122,30 +177,24 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
                   </div>
                 )}
 
-                {phonepeTransactions.length > 0 && (
+                {initialTransactions.length > 0 && (
                   <div className="p-4 flex-1 overflow-y-auto">
-                    {phonepeTransactions.map(transaction => (
-                      <div key={transaction.id} className="border border-gray-200 dark:border-gray-700 rounded-md p-3 hover:shadow-sm transition-shadow dark:bg-gray-800">
-                        <div className="flex items-start gap-3">
-                          <div className="bg-red-100 dark:bg-red-900/30 p-1.5 rounded-md">
-                            <div className="w-5 h-5 bg-red-500 dark:bg-red-600 rounded flex items-center justify-center">
-                              <span className="text-white text-xs font-bold">M</span>
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{transaction.date}</span>
-                              <span className="text-xs text-gray-500 dark:text-gray-400">{transaction.time}</span>
-                            </div>
-                            <p className="font-medium text-gray-900 dark:text-white text-xs mb-2">
-                              {transaction.name}
-                            </p>
-                            <div className="text-right">
-                              <span className="text-sm font-bold text-green-600 dark:text-green-400">{transaction.amount}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                    {initialTransactions.map((tx) => (
+                      <TransactionItem
+                        key={tx.id}
+                        id={tx.id}
+                        day={tx.day}
+                        month={tx.month}
+                        icon={tx.icon}
+                        upiId={tx.upiId}
+                        transactionInfo={tx.transactionInfo}
+                        amount={tx.amount}
+                        currency="₹"
+                        isCredit={tx.isCredit}
+                        isSelected={selectedTransactionId === tx.id}
+                        onSelect={handleSelectTransaction}
+                        selectionStyle={'checkmark'}
+                      />
                     ))}
                   </div>
                 )}
