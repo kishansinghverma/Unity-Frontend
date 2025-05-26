@@ -1,23 +1,12 @@
 import { ReactNode, useState, useEffect } from 'react';
 import { X, CreditCard, Smartphone, FileText, Check, Phone } from 'lucide-react';
 import { RecordItem } from '../data/mockData';
-import { TransactionItem } from './PhonePeListItem';
+import { TransactionData, TransactionItem } from './PhonePeListItem';
 import TransactionCard from './TransactionCard';
 
 interface TaskModalProps {
   task: RecordItem | null;
   onClose: () => void;
-}
-
-interface TransactionData {
-  id: string;
-  day: string;
-  month: string;
-  icon: ReactNode;
-  upiId: string;
-  transactionInfo: string;
-  amount: number;
-  isCredit: boolean;
 }
 
 const PlaceholderBankIcon: React.FC = () => ( // No className prop needed if not used
@@ -39,7 +28,7 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
   const [location, setLocation] = useState('Settlement');
   const [amount, setAmount] = useState('1000');
   const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null);
-  
+
   // Effect to set the first column's height
   useEffect(() => {
     const updateHeight = () => {
@@ -49,64 +38,47 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
         document.documentElement.style.setProperty('--first-col-height', `${height}px`);
       }
     };
-    
+
     // Initial calculation
     updateHeight();
-    
+
     // Set up observer for dynamic content changes
     const observer = new ResizeObserver(updateHeight);
     const firstColumn = document.querySelector('[data-first-column]');
     if (firstColumn) {
       observer.observe(firstColumn);
     }
-    
+
     return () => {
       observer.disconnect();
     };
   }, []);  // Run once on mount
 
-  // Mock data for demonstration
-  const bankTransactions: TransactionData[] = [{
-    id: 'tx2',
-    day: '28',
-    month: 'Feb',
-    icon: <PlaceholderBankIcon />,
-    upiId: 'AMAZONPAY_VERY_LONG_UPI_ID_EXAMPLE_SHOULD_TRUNCATE@ABL',
-    transactionInfo: 'Purchase - Electronics Gadget Weekly - Item XYZ Model 123 Pro Max Ultra',
-    amount: 150.50,
-    isCredit: false,
-  }];
+  const initialTransactions = [
 
-  const initialTransactions: TransactionData[] = [
     {
-      id: 'tx1',
-      day: '24',
-      month: 'Feb',
-      icon: <img src="https://placehold.co/40x40/6366F1/FFFFFF?text=B1&font=Inter&font-size=16" alt="Bank Icon" className="w-10 h-10 rounded-lg object-cover" />,
-      upiId: 'UPI-MAHESH CHAND-9675234150@AXL-SBIN001',
-      transactionInfo: '1649-191981935767-PAYMENT FROM PHONE',
-      amount: 3000.00,
-      isCredit: true,
+      id: 'txn1',
+      date: '2025-05-26T10:30:00.000Z',
+      recipient: 'Amazon Inc.',
+      bank: 'HDFC',
+      type: 'Debit',
+      amount: 1250.75,
     },
     {
-      id: 'tx2',
-      day: '28',
-      month: 'Feb',
-      icon: <PlaceholderBankIcon />,
-      upiId: 'AMAZONPAY_VERY_LONG_UPI_ID_EXAMPLE_SHOULD_TRUNCATE@ABL',
-      transactionInfo: 'Purchase - Electronics Gadget Weekly - Item XYZ Model 123 Pro Max Ultra',
-      amount: 150.50,
-      isCredit: false,
+      id: 'txn2',
+      date: '2025-05-25T15:45:00.000Z',
+      recipient: 'Salary Deposit',
+      bank: 'ICICI',
+      type: 'Credit',
+      amount: 75000,
     },
     {
-      id: 'tx3',
-      day: '02',
-      month: 'Mar',
-      icon: <img src="https://placehold.co/40x40/10B981/FFFFFF?text=SB&font=Inter&font-size=16" alt="Bank Icon" className="w-10 h-10 rounded-lg object-cover" />,
-      upiId: 'SALARY_CREDIT_XYZCORP@ICICI',
-      transactionInfo: 'Monthly Salary - February 2025',
-      amount: 50000.00,
-      isCredit: true,
+      id: 'txn3',
+      date: '2025-05-24T08:00:00.000Z',
+      recipient: 'Grocery Store',
+      bank: 'SBI',
+      type: 'Debit',
+      amount: 340.50,
     },
   ];
 
@@ -160,158 +132,156 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
                 </div>
               </div>
 
-          {/* PhonePe Transaction Column */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-[var(--first-col-height,auto)]">
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">PhonePe Transactions</h2>
-              </div>
-            </div>
+              {/* PhonePe Transaction Column */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-[var(--first-col-height,auto)]">
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-2">
+                    <Smartphone className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white">PhonePe Transactions</h2>
+                  </div>
+                </div>
 
-            {initialTransactions.length === 0 && (
-              <div className="p-4 flex-1 flex items-center justify-center">
-                <div className="text-center">
-                  <FileText className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-                  <p className="text-gray-500 dark:text-gray-400 font-medium text-sm">No Transaction Identified.</p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">PhonePe transactions will appear here</p>
+                {initialTransactions.length === 0 && (
+                  <div className="p-4 flex-1 flex items-center justify-center">
+                    <div className="text-center">
+                      <FileText className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+                      <p className="text-gray-500 dark:text-gray-400 font-medium text-sm">No Transaction Identified.</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">PhonePe transactions will appear here</p>
+                    </div>
+                  </div>
+                )}
+
+                {initialTransactions.length > 0 && (
+                  <div className="p-4 flex-1 overflow-y-auto">
+                    {initialTransactions.map((transaction) => (
+                      <TransactionItem
+                        key={transaction.id}
+                        id={transaction.id}
+                        date={transaction.date}
+                        recipient={transaction.recipient}
+                        bank={transaction.bank}
+                        type={transaction.type === 'Credit' ? 'Credit' : 'Debit'}
+                        amount={transaction.amount}
+                        iconDisplay={<PlaceholderBankIcon />} // Pass the icon component
+                        isSelected={selectedTransactionId === transaction.id}
+                        onSelect={handleSelectTransaction}
+                        currency="₹"
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Draft Transactions Column */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-[var(--first-col-height,auto)]">
+                <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Draft Transactions</h2>
+                  </div>
+                </div>
+                <div className="p-4 flex-1 flex items-center justify-center">
+                  <div className="text-center">
+                    <FileText className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+                    <p className="text-gray-500 dark:text-gray-400 font-medium text-sm">No Transaction Identified.</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Draft transactions will appear here</p>
+                  </div>
                 </div>
               </div>
-            )}
-
-            {initialTransactions.length > 0 && (
-              <div className="p-4 flex-1 overflow-y-auto">
-                {initialTransactions.map((tx) => (
-                  <TransactionItem
-                    key={tx.id}
-                    id={tx.id}
-                    day={tx.day}
-                    month={tx.month}
-                    icon={tx.icon}
-                    upiId={tx.upiId}
-                    transactionInfo={tx.transactionInfo}
-                    amount={tx.amount}
-                    currency="₹"
-                    isCredit={tx.isCredit}
-                    isSelected={selectedTransactionId === tx.id}
-                    onSelect={handleSelectTransaction}
-                    selectionStyle={'checkmark'}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Draft Transactions Column */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-[var(--first-col-height,auto)]">
-            <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Draft Transactions</h2>
-              </div>
             </div>
-            <div className="p-4 flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <FileText className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-                <p className="text-gray-500 dark:text-gray-400 font-medium text-sm">No Transaction Identified.</p>
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Draft transactions will appear here</p>
+
+            {/* Transaction Details Table */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Transaction Details</h3>
               </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Transaction Details Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Transaction Details</h3>
-          </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">UTR / Transaction #</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Recipient</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Bank</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    <tr className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                        {transactionDetails.date}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs">
+                        {transactionDetails.description}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        {transactionDetails.utr || '-'}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        {transactionDetails.recipient || '-'}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        <select
+                          value={location}
+                          onChange={(e) => setLocation(e.target.value)}
+                          className="border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                        >
+                          <option value="Settlement">Settlement</option>
+                          <option value="Branch">Branch</option>
+                          <option value="ATM">ATM</option>
+                        </select>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                        {transactionDetails.bank}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">UTR / Transaction #</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Recipient</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Bank</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                <tr className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                    {transactionDetails.date}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs">
-                    {transactionDetails.description}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    {transactionDetails.utr || '-'}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    {transactionDetails.recipient || '-'}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    <select
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              {/* Amount and Action Row */}
+              <div className="bg-gray-50 dark:bg-gray-700 px-4 py-3 border-t border-gray-200 dark:border-gray-600">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-bold text-gray-700 dark:text-gray-300">₹</span>
+                      <input
+                        type="text"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-lg font-bold text-green-600 dark:text-green-400 w-20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={onClose}
+                      className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors font-medium text-sm"
                     >
-                      <option value="Settlement">Settlement</option>
-                      <option value="Branch">Branch</option>
-                      <option value="ATM">ATM</option>
-                    </select>
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                    {transactionDetails.bank}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {/* Amount and Action Row */}
-          <div className="bg-gray-50 dark:bg-gray-700 px-4 py-3 border-t border-gray-200 dark:border-gray-600">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold text-gray-700 dark:text-gray-300">₹</span>
-                  <input
-                    type="text"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-lg font-bold text-green-600 dark:text-green-400 w-20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700"
-                  />
+                      <X className="w-4 h-4" />
+                      Reject
+                    </button>
+                    <button
+                      onClick={() => {
+                        // Handle approval logic here
+                        alert('Transaction Approved!');
+                        onClose();
+                      }}
+                      className="flex items-center gap-2 px-6 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition-colors font-medium shadow-sm text-sm"
+                    >
+                      <Check className="w-4 h-4" />
+                      Approve
+                    </button>
+                  </div>
                 </div>
-              </div>
-
-              <div className="flex gap-2">
-                <button
-                  onClick={onClose}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors font-medium text-sm"
-                >
-                  <X className="w-4 h-4" />
-                  Reject
-                </button>
-                <button
-                  onClick={() => {
-                    // Handle approval logic here
-                    alert('Transaction Approved!');
-                    onClose();
-                  }}
-                  className="flex items-center gap-2 px-6 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition-colors font-medium shadow-sm text-sm"
-                >
-                  <Check className="w-4 h-4" />
-                  Approve
-                </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    </div >
+      </div >
     </div >
   );
 }
