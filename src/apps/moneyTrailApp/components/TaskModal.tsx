@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { X, CreditCard, Smartphone, FileText, Check, Phone } from 'lucide-react';
 import { RecordItem } from '../data/mockData';
 import { TransactionItem } from './PhonePeListItem';
@@ -39,6 +39,31 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
   const [location, setLocation] = useState('Settlement');
   const [amount, setAmount] = useState('1000');
   const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null);
+  
+  // Effect to set the first column's height
+  useEffect(() => {
+    const updateHeight = () => {
+      const firstColumn = document.querySelector('[data-first-column]');
+      if (firstColumn) {
+        const height = firstColumn.clientHeight;
+        document.documentElement.style.setProperty('--first-col-height', `${height}px`);
+      }
+    };
+    
+    // Initial calculation
+    updateHeight();
+    
+    // Set up observer for dynamic content changes
+    const observer = new ResizeObserver(updateHeight);
+    const firstColumn = document.querySelector('[data-first-column]');
+    if (firstColumn) {
+      observer.observe(firstColumn);
+    }
+    
+    return () => {
+      observer.disconnect();
+    };
+  }, []);  // Run once on mount
 
   // Mock data for demonstration
   const bankTransactions: TransactionData[] = [{
@@ -120,10 +145,10 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
         <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
           <div className="max-w-7xl mx-auto p-6">
             {/* Three Column Layout */}
-            <div className="grid grid-cols-3 gap-4 mb-6 h-64">
+            <div className="grid grid-cols-3 gap-4 mb-6">
 
               {/* Bank Transaction Column */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-full flex flex-col">
+              <div data-first-column className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center gap-2">
                     <CreditCard className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -136,7 +161,7 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
               </div>
 
           {/* PhonePe Transaction Column */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-full flex flex-col">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-[var(--first-col-height,auto)]">
             <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center gap-2">
                 <Smartphone className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -178,7 +203,7 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
           </div>
 
           {/* Draft Transactions Column */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden h-full flex flex-col">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-[var(--first-col-height,auto)]">
             <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-orange-600 dark:text-orange-400" />

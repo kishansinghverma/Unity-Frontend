@@ -125,11 +125,8 @@ const TransactionCard: React.FC = () => {
   const tagBaseStyle = "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border";
 
   return (
-    // Main container for the card
-    <div> {/* This is the root div from your previous structure */}
-      {/* Inner container for card content and styling */}
-      <div> {/* Added padding here as it was removed from the root previously */}
-        {/* Header section: Bank Icon, Bank Name, Amount */}
+    <div>
+      <div> 
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center shadow-xl bg-gradient-to-br ${bankTheme.gradient}`}>
@@ -141,7 +138,6 @@ const TransactionCard: React.FC = () => {
             <div className={`text-xl font-bold ${isDebit ? 'text-red-600' : 'text-emerald-600'}`}>
               {isDebit ? '-' : '+'}₹{currentTransaction.amount.toLocaleString()}
             </div>
-            {/* Transaction Type tag removed from here */}
           </div>
         </div>
 
