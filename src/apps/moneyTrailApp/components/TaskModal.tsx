@@ -75,7 +75,7 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
     {
       id: 'txn3',
       date: '2025-05-24T08:00:00.000Z',
-      recipient: 'Grocery Store',
+      recipient: 'Grocery Store Purchase -1234',
       bank: 'SBI',
       type: 'Debit',
       amount: 340.50,

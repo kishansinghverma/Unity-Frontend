@@ -109,7 +109,7 @@ export const TransactionItem: FC<TransactionItemProps> = ({
 
   // Base styling for the item
   const baseStyling = `w-full rounded-lg p-3 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden group
-                       border border-transparent dark:border-transparent
+                       border border-gray-100 dark:border-gray-700
                        hover:shadow-md dark:hover:shadow-slate-700/40`;
   
   // Hover effects
@@ -158,7 +158,7 @@ export const TransactionItem: FC<TransactionItemProps> = ({
         {/* Recipient information section */}
         <div className="flex-grow min-w-0"> {/* min-w-0 is important for text truncation to work correctly in flex items */}
           <p 
-            className={`text-sm sm:text-base font-medium ${currentRecipientColor} line-clamp-2`} // Allows up to 2 lines, then truncates
+            className={`text-sm sm:text-base ${currentRecipientColor} line-clamp-2`} // Allows up to 2 lines, then truncates
             title={recipient} // Full recipient name on hover
           >
             {recipient}
@@ -182,7 +182,4 @@ export const TransactionItem: FC<TransactionItemProps> = ({
   );
 };
 
-// Optional: If you want to export all components from this module
-// export { TransactionItem, TransactionData, TransactionItemProps, PlaceholderBankIcon };
-// Default export is often TransactionItem if it's the primary component of the file.
 export default TransactionItem;
