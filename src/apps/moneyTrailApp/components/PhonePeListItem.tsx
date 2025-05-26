@@ -170,9 +170,7 @@ export const TransactionItem: FC<TransactionItemProps> = ({
           <div className={`text-base sm:text-lg font-semibold whitespace-nowrap ${currentAmountColor} mb-0.5`}>
             {isCredit ? '+' : '-'} {currency}{parseFloat(amount.toString()).toFixed(2)}
           </div>
-          <div className={`flex items-center text-xs whitespace-nowrap ${currentDateTimeColor}`}>
-            <CalendarIcon className="w-3.5 h-3.5 mr-1 opacity-70" />
-            <span className="opacity-90">{month} {day}</span>
+          <div className={`flex items-center text-xs font-semibold whitespace-nowrap ${currentDateTimeColor}`}>
             <ClockIcon className="w-3.5 h-3.5 ml-1.5 mr-0.5 opacity-70" />
             <span className="opacity-90">{time}</span>
           </div>
