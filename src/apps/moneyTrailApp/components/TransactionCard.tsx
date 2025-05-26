@@ -50,22 +50,22 @@ const TransactionCard: React.FC = () => {
       "processed": true
     },
     {
-      "_id": "6818a43aa5ebd8d3fe2f96b5",
-      "date": "2025-02-17T18:30:00.000Z",
-      "description": "464482015-EMI RTN CHARGES-JANUARY 140125-MIR2504677639181",
-      "amount": 236,
-      "type": "Debit",
-      "bank": "HDFC",
-      "processed": true
+      _id: "6818a43aa5ebd8d3fe2f96b5",
+      date: "2025-02-17T18:30:00.000Z",
+      description: "464482015-EMI RTN CHARGES-JANUARY 140125-MIR2504677639181",
+      amount: 236,
+      type: "Debit",
+      bank: "HDFC",
+      processed: true
     },
     {
-      "_id": "6818a60ba5ebd8d3fe2f97ea",
-      "date": "2025-02-20T18:30:00.000Z",
-      "description": "TO TRANSFER-UPI/DR/215254668498/R L Shar/YESB/paytm.s155/Payme--",
-      "amount": 2950,
-      "type": "Debit",
-      "bank": "SBI",
-      "processed": true
+      _id: "6818a60ba5ebd8d3fe2f97ea",
+      date: "2025-02-20T18:30:00.000Z",
+      description: "TO TRANSFER-UPI/DR/215254668498/R L Shar/YESB/paytm.s155/Payme--",
+      amount: 2950,
+      type: "Debit",
+      bank: "SBI",
+      processed: true
     },
   ];
 
@@ -113,10 +113,30 @@ const TransactionCard: React.FC = () => {
 
   const getBankTheme = (bank: string): BankTheme => {
     switch (bank.toUpperCase()) {
-      case 'HDFC': return { gradient: 'from-blue-500 to-blue-600', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200' };
-      case 'SBI': return { gradient: 'from-green-500 to-green-600', bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200' };
-      case 'ICICI': return { gradient: 'from-orange-500 to-orange-600', bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200' };
-      default: return { gradient: 'from-gray-500 to-gray-600', bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200' };
+      case 'HDFC': return {
+        gradient: 'from-blue-500 to-blue-600',
+        bg: 'bg-blue-50 dark:bg-blue-900/20',
+        text: 'text-blue-700 dark:text-blue-300',
+        border: 'border-blue-200 dark:border-blue-800'
+      };
+      case 'SBI': return {
+        gradient: 'from-green-500 to-green-600',
+        bg: 'bg-green-50 dark:bg-green-900/20',
+        text: 'text-green-700 dark:text-green-300',
+        border: 'border-green-200 dark:border-green-800'
+      };
+      case 'ICICI': return {
+        gradient: 'from-orange-500 to-orange-600',
+        bg: 'bg-orange-50 dark:bg-orange-900/20',
+        text: 'text-orange-700 dark:text-orange-300',
+        border: 'border-orange-200 dark:border-orange-800'
+      };
+      default: return {
+        gradient: 'from-gray-500 to-gray-600',
+        bg: 'bg-gray-50 dark:bg-gray-800/50',
+        text: 'text-gray-700 dark:text-gray-300',
+        border: 'border-gray-200 dark:border-gray-700'
+      };
     }
   };
   const bankTheme: BankTheme = getBankTheme(currentTransaction.bank);
@@ -132,10 +152,14 @@ const TransactionCard: React.FC = () => {
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center shadow-xl bg-gradient-to-br ${bankTheme.gradient}`}>
               <Building2 className="w-6 h-6 text-white" />
             </div>
-            <div className="font-semibold text-gray-800">{currentTransaction.bank}</div>
+            <div className="font-semibold text-gray-800 dark:text-gray-100">{currentTransaction.bank}</div>
           </div>
           <div className="text-right">
-            <div className={`text-xl font-bold ${isDebit ? 'text-red-600' : 'text-emerald-600'}`}>
+            <div className={`text-xl font-bold ${
+              isDebit 
+                ? 'text-red-600 dark:text-red-400'
+                : 'text-emerald-600 dark:text-emerald-400'
+            }`}>
               {isDebit ? '-' : '+'}₹{currentTransaction.amount.toLocaleString()}
             </div>
           </div>
@@ -146,8 +170,8 @@ const TransactionCard: React.FC = () => {
           {/* Transaction Type Tag */}
           <span className={`${tagBaseStyle} ${
             isDebit
-              ? 'bg-red-100 text-red-700 border-red-200'
-              : 'bg-emerald-100 text-emerald-700 border-emerald-200'
+              ? 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800'
+              : 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800'
           }`}>
             {currentTransaction.type}
           </span>
@@ -160,8 +184,8 @@ const TransactionCard: React.FC = () => {
           {/* Processed/Pending Status Tag */}
           <span className={`${tagBaseStyle} ${
             currentTransaction.processed
-              ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
-              : 'bg-yellow-100 text-yellow-700 border-yellow-200'
+              ? 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800'
+              : 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800'
           }`}>
             {currentTransaction.processed ? (
               <CheckCircle2 className="w-3 h-3 mr-1.5" />
@@ -173,26 +197,26 @@ const TransactionCard: React.FC = () => {
         </div>
 
         {/* Description Section */}
-        <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
               {/* Date display updated to a single line */}
               <div className="flex items-center space-x-2 mb-2">
-                <Calendar className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                <div className="font-medium text-sm text-gray-700">{dateInfo.fullDateWithDay}</div>
+                <Calendar className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                <div className="font-medium text-sm text-gray-700 dark:text-gray-200">{dateInfo.fullDateWithDay}</div>
               </div>
 
               {/* Description label removed, icon added */}
               <div className="flex items-start space-x-2"> {/* Changed to items-start for icon alignment */}
-                <FileText className="w-4 h-4 text-gray-500 flex-shrink-0 mt-0.5" /> {/* Icon added, mt-0.5 for slight alignment adjustment */}
-                <div className="text-sm font-mono text-gray-700 break-all leading-relaxed">
+                <FileText className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0 mt-0.5" /> {/* Icon added, mt-0.5 for slight alignment adjustment */}
+                <div className="text-sm font-mono text-gray-700 dark:text-gray-300 break-all leading-relaxed">
                   {currentTransaction.description}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div> {/* End of inner container with padding */}
+      </div>
     </div>
   );
 };

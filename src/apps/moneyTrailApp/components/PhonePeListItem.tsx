@@ -80,27 +80,27 @@ export const TransactionItem: React.FC<TransactionItemProps> = ({
   selectionStyle = 'checkmark',
 }) => {
   const baseStyling = "w-full rounded-2xl p-4 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden [&:not(:first-child)]:mt-3 [&:not(:last-child)]:mb-3";
-  const hoverClasses = "hover:translate-x-1 hover:shadow-lg"; 
+  const hoverClasses = "hover:translate-x-1 hover:shadow-lg dark:hover:shadow-gray-800"; 
 
   let selectionSpecificClasses = "";
   let selectionIndicatorElement: ReactNode = null; 
 
-  let currentUpiIdColor = 'text-slate-700';
-  let currentTransactionInfoColor = 'text-slate-500';
-  let currentDateColor = 'text-slate-500';
-  let currentAmountColor = isCredit ? 'text-emerald-600' : 'text-rose-600';
+  let currentUpiIdColor = 'text-slate-700 dark:text-slate-200';
+  let currentTransactionInfoColor = 'text-slate-500 dark:text-slate-400';
+  let currentDateColor = 'text-slate-500 dark:text-slate-400';
+  let currentAmountColor = isCredit ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
 
   if (isSelected) {
     // Subtle 'checkmark' style for selected item
-    selectionSpecificClasses = "bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 ring-1 ring-indigo-300"; 
-    selectionIndicatorElement = <CheckIcon className="w-6 h-6 text-indigo-500 absolute top-3 right-3 bg-white rounded-full p-0.5 shadow-md" />; 
-    currentUpiIdColor = 'text-indigo-700'; 
-    currentTransactionInfoColor = 'text-indigo-500'; 
-    currentDateColor = 'text-indigo-400'; 
-    currentAmountColor = isCredit ? 'text-emerald-600' : 'text-rose-600'; 
+    selectionSpecificClasses = "bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 dark:from-slate-800 dark:via-indigo-900 dark:to-purple-900 ring-1 ring-indigo-300 dark:ring-indigo-600"; 
+    selectionIndicatorElement = <CheckIcon className="w-6 h-6 text-indigo-500 dark:text-indigo-400 absolute top-3 right-3 bg-white dark:bg-gray-800 rounded-full p-0.5 shadow-md dark:shadow-gray-900" />; 
+    currentUpiIdColor = 'text-indigo-700 dark:text-indigo-300'; 
+    currentTransactionInfoColor = 'text-indigo-500 dark:text-indigo-400'; 
+    currentDateColor = 'text-indigo-400 dark:text-indigo-500'; 
+    currentAmountColor = isCredit ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'; 
   } else {
     // Non-selected items with gray background
-    selectionSpecificClasses = "bg-gray-50 shadow-md"; 
+    selectionSpecificClasses = "bg-gray-50 dark:bg-gray-800 shadow-md dark:shadow-gray-900"; 
   }
 
   return (
