@@ -79,7 +79,7 @@ export const TransactionItem: React.FC<TransactionItemProps> = ({
   onSelect,
   selectionStyle = 'checkmark',
 }) => {
-  const baseStyling = "w-full rounded-2xl p-4 my-3 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden";
+  const baseStyling = "w-full rounded-2xl p-4 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden [&:not(:first-child)]:mt-3 [&:not(:last-child)]:mb-3";
   const hoverClasses = "hover:translate-x-1 hover:shadow-lg"; 
 
   let selectionSpecificClasses = "";
@@ -99,8 +99,8 @@ export const TransactionItem: React.FC<TransactionItemProps> = ({
     currentDateColor = 'text-indigo-400'; 
     currentAmountColor = isCredit ? 'text-emerald-600' : 'text-rose-600'; 
   } else {
-    // Non-selected items are clean white cards
-    selectionSpecificClasses = "bg-white shadow-md"; 
+    // Non-selected items with gray background
+    selectionSpecificClasses = "bg-gray-50 shadow-md"; 
   }
 
   return (
