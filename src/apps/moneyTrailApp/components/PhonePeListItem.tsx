@@ -1,4 +1,5 @@
 import React, { ReactNode, FC } from 'react'; // Removed useState as it's not used in this isolated module
+import { CheckCircle, Clock } from 'lucide-react';
 
 // --- Type Definitions ---
 interface IconProps {
@@ -27,15 +28,6 @@ export interface TransactionItemProps extends Omit<TransactionData, 'icon'> {
   currency?: string;        // Currency symbol, defaults to '₹'
 }
 
-// --- Icon Components ---
-
-// Checkmark icon for selected state
-const CheckIcon: FC<IconProps> = ({ className = "w-4 h-4" }) => ( // Default size matches usage
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-  </svg>
-);
-
 // Generic placeholder for bank icons
 export const PlaceholderBankIcon: FC<IconProps> = ({ className, title = "Bank Icon" }) => (
   <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className={`${className} rounded-lg`} aria-label={title}>
@@ -49,20 +41,6 @@ export const PlaceholderBankIcon: FC<IconProps> = ({ className, title = "Bank Ic
     <path d="M12 18L24 12L36 18V20H12V18Z" fill="#4338CA" />
     <path d="M15 36V22H13V36H15ZM22.5 36V22H20.5V36H22.5ZM30 36V22H28V36H30Z" fill="#4338CA" />
     <rect x="10" y="34" width="28" height="2" rx="1" fill="#3730A3" />
-  </svg>
-);
-
-// Calendar icon for date display
-const CalendarIcon: FC<IconProps> = ({ className = "w-3.5 h-3.5", title = "Date" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} aria-label={title}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-  </svg>
-);
-
-// Clock icon for time display
-const ClockIcon: FC<IconProps> = ({ className = "w-3.5 h-3.5", title = "Time" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} aria-label={title}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
 
@@ -108,7 +86,7 @@ export const TransactionItem: FC<TransactionItemProps> = ({
   const isCredit = type === 'Credit';
 
   // Base styling for the item
-  const baseStyling = `w-full rounded-lg p-3 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden group
+  const baseStyling = `w-full rounded-lg p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden group
                        border border-gray-100 dark:border-gray-700
                        hover:shadow-md dark:hover:shadow-slate-700/40`;
   
@@ -125,9 +103,8 @@ export const TransactionItem: FC<TransactionItemProps> = ({
   let currentAmountColor = isCredit ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400';
 
   if (isSelected) {
-    selectionSpecificClasses = `ring-1 ring-indigo-400 dark:ring-indigo-500 shadow-lg dark:shadow-indigo-900/50
-                              bg-indigo-50/70 dark:bg-slate-800`;
-    selectionIndicatorElement = <CheckIcon className="w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 dark:bg-indigo-400 rounded-full p-0.5 shadow" />;
+    selectionSpecificClasses = `ring-1 ring-indigo-400 dark:ring-indigo-500 shadow-lg dark:shadow-indigo-900/50 bg-indigo-50/70 dark:bg-slate-800`;
+    selectionIndicatorElement = <CheckCircle className="w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 dark:bg-indigo-400 rounded-full p-0.5 shadow" />;
     currentRecipientColor = 'text-indigo-700 dark:text-indigo-300';
     currentDateTimeColor = 'text-indigo-600 dark:text-indigo-400';
     currentAmountColor = isCredit ? 'text-green-500 dark:text-green-300 font-semibold' : 'text-red-500 dark:text-red-300 font-semibold';
@@ -157,21 +134,18 @@ export const TransactionItem: FC<TransactionItemProps> = ({
 
         {/* Recipient information section */}
         <div className="flex-grow min-w-0"> {/* min-w-0 is important for text truncation to work correctly in flex items */}
-          <p 
-            className={`text-sm sm:text-base ${currentRecipientColor} line-clamp-2`} // Allows up to 2 lines, then truncates
-            title={recipient} // Full recipient name on hover
-          >
+          <p className={`text-sm font-medium ${currentRecipientColor} line-clamp-2`}title={recipient}>
             {recipient}
           </p>
         </div>
 
         {/* Amount and Date/Time section */}
         <div className={`flex flex-col items-end flex-shrink-0 ml-auto text-right`}>
-          <div className={`text-base sm:text-lg font-semibold whitespace-nowrap ${currentAmountColor} mb-0.5`}>
+          <div className={`text-md font-semibold whitespace-nowrap ${currentAmountColor} mb-0.5`}>
             {isCredit ? '+' : '-'} {currency}{parseFloat(amount.toString()).toFixed(2)}
           </div>
           <div className={`flex items-center text-xs font-semibold whitespace-nowrap ${currentDateTimeColor}`}>
-            <ClockIcon className="w-3.5 h-3.5 ml-1.5 mr-0.5 opacity-70" />
+            <Clock className="w-3.5 h-3.5 ml-1.5 mr-0.5 opacity-70" />
             <span className="opacity-90">{time}</span>
           </div>
         </div>
