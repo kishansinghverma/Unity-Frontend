@@ -28,7 +28,7 @@ const AppShell: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
       
       <div className="flex flex-col flex-1 overflow-hidden">
