@@ -319,7 +319,7 @@ const DashboardPage: React.FC = () => {
 
 const Dashboard: React.FC = () => {
     return (
-        <main className="flex-1 overflow-x-hidden overflow-y-auto">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto pb-6">
           <DashboardPage />
         </main>
     );

@@ -81,8 +81,8 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
           >
             <div className="flex items-center space-x-2">
               <span className={`h-8 w-8 ${
-                currentApp?.icon === 'Wheat' ? 'bg-yellow-600' : 
-                currentApp?.icon === 'Home' ? 'bg-blue-600' : 
+                currentApp?.icon === 'Wheat' ? 'bg-yellow-400' : 
+                currentApp?.icon === 'Home' ? 'bg-rose-600' : 
                 'bg-purple-800'
               } rounded-md flex items-center justify-center`}>
                 <span className="text-white">{getIcon(currentApp?.icon || 'LayoutDashboard')}</span>
