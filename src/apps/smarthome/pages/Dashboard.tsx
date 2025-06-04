@@ -291,7 +291,8 @@ const DashboardPage: React.FC = () => {
             Manage Rooms <ChevronRight size={18} className="ml-1" />
           </button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {/* Added items-start to prevent cards in the same row from stretching */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start">
           {currentRooms.map((room) => (
             <RoomCard key={room.id} room={room} onDeviceToggle={handleDeviceToggle} />
           ))}
