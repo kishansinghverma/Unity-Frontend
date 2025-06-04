@@ -1,5 +1,6 @@
 import React, { ReactNode, FC } from 'react';
 import { CheckCircle, Clock } from 'lucide-react';
+import { formatDateTime } from '../../../services/utils';
 
 // Data structure for a single location history entry
 export interface LocationHistoryData {
@@ -13,29 +14,6 @@ export interface LocationHistoryItemProps extends LocationHistoryData {
     isSelected: boolean;
     onSelect: (id: string) => void; // Callback function when item is selected
 }
-
-// --- Helper functions ---
-
-// Helper to format date and time
-const formatDateAndTime = (dateString: string): { day: string, month: string, time: string } => {
-    try {
-        const dateObj = new Date(dateString);
-        if (isNaN(dateObj.getTime())) {
-            throw new Error("Invalid date value");
-        }
-        const day = dateObj.getDate().toString();
-        const month = dateObj.toLocaleString('default', { month: 'short' });
-        const time = dateObj.toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-        });
-        return { day, month, time };
-    } catch (error) {
-        console.error("Error parsing date:", dateString, error);
-        return { day: "??", month: "???", time: "--:-- --" };
-    }
-};
 
 // Palette of subtle color pairs for icons
 const subtleColorPairs = [
@@ -75,7 +53,7 @@ export const LocationHistoryItem: FC<LocationHistoryItemProps> = ({
     isSelected,
     onSelect,
 }) => {
-    const { day, month, time } = formatDateAndTime(dateTimeString);
+    const { time } = formatDateTime(dateTimeString);
     const singleLineLocation = location.split('\n').join(', ');
     const firstLetter = singleLineLocation.charAt(0).toUpperCase() || '?';
 
@@ -91,8 +69,8 @@ export const LocationHistoryItem: FC<LocationHistoryItemProps> = ({
     let selectionSpecificClasses = "";
     let selectionIndicatorElement: ReactNode = null;
 
-    let currentPrimaryTextColor = 'text-slate-700 dark:text-slate-100';
-    let currentDateTimeColor = 'text-slate-500 dark:text-slate-400';
+    let currentDateTimeColor = 'text-slate-800 dark:text-slate-100';
+    let currentPrimaryTextColor = 'text-slate-500 dark:text-slate-400';
 
     // Initialize icon colors with generated subtle colors
     let iconContainerBg = generatedIconBgColor;
@@ -101,8 +79,8 @@ export const LocationHistoryItem: FC<LocationHistoryItemProps> = ({
     if (isSelected) {
         selectionSpecificClasses = `ring-1 ring-indigo-400 dark:ring-indigo-500 shadow-lg dark:shadow-indigo-900/50 bg-indigo-50/70 dark:bg-slate-800`;
         selectionIndicatorElement = <CheckCircle className="w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 dark:bg-indigo-400 rounded-full p-0.5 shadow" />;
-        currentPrimaryTextColor = 'text-indigo-700 dark:text-indigo-300';
-        currentDateTimeColor = 'text-indigo-600 dark:text-indigo-400';
+        currentDateTimeColor = 'text-indigo-700 dark:text-indigo-300';
+        currentPrimaryTextColor = 'text-indigo-600 dark:text-indigo-400';
 
         iconContainerBg = 'bg-indigo-100 dark:bg-indigo-700/50';
         iconTextColor = 'text-indigo-600 dark:text-indigo-300';
@@ -115,28 +93,25 @@ export const LocationHistoryItem: FC<LocationHistoryItemProps> = ({
         <div
             className={`${baseStyling} ${selectionSpecificClasses} ${hoverClasses} [&:not(:first-child)]:mt-3 [&:not(:last-child)]:mb-3`}
             onClick={() => onSelect(id)}
-            title={`Location: ${singleLineLocation} on ${month} ${day} at ${time}`}
         >
             {selectionIndicatorElement}
 
-            <div className="flex items-start space-x-3 sm:space-x-4">
-                <div
-                    className={`flex-shrink-0 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 ${iconContainerBg} rounded-lg shadow-inner mt-0.5`}
-                    aria-label={`Icon for location starting with ${firstLetter}`}
-                >
+            <div className="flex items-start space-x-3">
+                <div className={`flex-shrink-0 flex items-center justify-center w-11 h-11 rounded-lg p-0.5 ${iconContainerBg}`}>
                     <span className={`text-lg sm:text-xl font-bold ${iconTextColor}`}>
                         {firstLetter}
                     </span>
                 </div>
 
-                <div className="flex-grow min-w-0">
-                    <div className="relative">
-                        <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2`} title={singleLineLocation} >
-                            {singleLineLocation}
-                        </p>
-                        <div className={`flex items-center text-xs font-semibold whitespace-nowrap ${currentDateTimeColor}`}>
-                            <Clock className="w-3.5 h-3.5 ml-1.5 mr-0.5 opacity-70" />
-                            <span className="opacity-90">{time}</span>
+                <div className="flex-grow min-w-0 py-0.5">
+                    <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2`} title={singleLineLocation}>
+                        {singleLineLocation}
+                    </p>
+                    <div className={`flex items-center text-xs font-semibold absolute bottom-2 right-2 px-1.5 py-1`}>
+                        <div className='bg-gradient-to-r from-transparent via-gray-50 to-gray-50 dark:via-slate-800/60 dark:to-slate-800/60 px-3'>&nbsp;</div>
+                        <div className={`${currentDateTimeColor} flex bg-gray-50 items-center  dark:bg-slate-800/60`}>
+                            <Clock className="w-3.5 h-3.5 mr-0.5 opacity-85" />
+                            <span className="opacity-100">{time}</span>
                         </div>
                     </div>
                 </div>
