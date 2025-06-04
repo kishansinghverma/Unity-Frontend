@@ -1,10 +1,23 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Wheat, CandlestickChart, LogOut } from 'lucide-react';
+import { Wheat, CandlestickChart, LogOut, Home } from 'lucide-react';
 import { APPS } from '../constants/apps';
 import { useAuth } from '../context/AuthContext';
 import { useAppDispatch } from '../store/hooks';
 import { setCurrentApp } from '../store/slices/appSlice';
+
+const getAppIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'Wheat':
+      return <Wheat className="w-8 h-8 text-yellow-600" />;
+    case 'ChartCandlestick':
+      return <CandlestickChart className="w-8 h-8 text-purple-600" />;
+    case 'Home':
+      return <Home className="w-8 h-8 text-blue-600" />;
+    default:
+      return null;
+  }
+};
 
 const AppSelection: React.FC = () => {
   const navigate = useNavigate();
@@ -20,8 +33,19 @@ const AppSelection: React.FC = () => {
     // Set the current app in Redux store
     dispatch(setCurrentApp(app));
     
-    // Navigate to the appropriate path
-    const appPath = app.id === 'emandi' ? '/emandi' : '/moneytrail';
+    // Navigate to the appropriate app path
+    let appPath = '/';
+    switch (app.id) {
+      case 'emandi':
+        appPath = '/emandi';
+        break;
+      case 'moneytrail':
+        appPath = '/moneytrail';
+        break;
+      case 'smarthome':
+        appPath = '/smarthome';
+        break;
+    }
     navigate(appPath);
   };
 
@@ -53,9 +77,7 @@ const AppSelection: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {APPS.map((app) => {
-              const appIcon = app.icon === 'Wheat' ?
-                <Wheat size={48} className="text-yellow-600" /> :
-                <CandlestickChart size={48} className="text-purple-800" />;
+              const appIcon = getAppIcon(app.icon);
 
               return (
                 <button

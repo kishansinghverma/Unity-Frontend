@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3, Wheat, LogIn, DollarSign, CandlestickChart } from 'lucide-react';
+import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3, Wheat, LogIn, DollarSign, CandlestickChart, Home } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { APPS } from '../../constants/apps';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -38,6 +38,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
       case 'Wheat': return <Wheat className="w-5 h-5" />;
       case 'DollarSign': return <DollarSign className="w-5 h-5" />;
       case 'ChartCandlestick': return <CandlestickChart className="w-5 h-5" />;
+      case 'Home': return <Home className="w-5 h-5" />;
       default: return <LayoutDashboard className="w-5 h-5" />;
     }
   };
@@ -49,10 +50,16 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
       setAppsDropdownOpen(false);
 
       // Navigate to the appropriate app route
-      if (app.id === 'emandi') {
-        navigate('/emandi');
-      } else if (app.id === 'second-app') {
-        navigate('/moneytrail');
+      switch (app.id) {
+        case 'emandi':
+          navigate('/emandi');
+          break;
+        case 'moneytrail':
+          navigate('/moneytrail');
+          break;
+        case 'smarthome':
+          navigate('/smarthome');
+          break;
       }
     }
   };
@@ -73,7 +80,11 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
             className="flex items-center space-x-2 focus:outline-none"
           >
             <div className="flex items-center space-x-2">
-              <span className={`h-8 w-8 ${currentApp?.icon === 'Wheat' ? 'bg-yellow-600' : 'bg-purple-800'} rounded-md flex items-center justify-center`}>
+              <span className={`h-8 w-8 ${
+                currentApp?.icon === 'Wheat' ? 'bg-yellow-600' : 
+                currentApp?.icon === 'Home' ? 'bg-blue-600' : 
+                'bg-purple-800'
+              } rounded-md flex items-center justify-center`}>
                 <span className="text-white">{getIcon(currentApp?.icon || 'LayoutDashboard')}</span>
               </span>
               <h1 className="text-xl font-semibold text-gray-800 dark:text-white">

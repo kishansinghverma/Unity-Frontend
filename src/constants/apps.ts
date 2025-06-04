@@ -8,9 +8,15 @@ export const APPS: AppInfo[] = [
     icon: 'Wheat',
   },
   {
-    id: 'second-app',
-    name: 'MoneyTrail',
+    id: 'moneytrail',
+    name: 'Money Trail',
     description: 'Track finances and analyze monetary data',
     icon: 'ChartCandlestick',
+  },
+  {
+    id: 'smarthome',
+    name: 'Smart Home',
+    description: 'Control and monitor your smart home devices',
+    icon: 'Home',
   },
 ];

@@ -20,9 +20,12 @@ import ProcessedRecordsList from './apps/emandi/pages/ProcessedRecordsList';
 import PartyList from './apps/emandi/pages/PartyList';
 import PartyForm from './apps/emandi/pages/PartyForm';
 
-// MoneyTrail App
-import Overview from './apps/moneyTrailApp/pages/Overview';
-import MoneyTrailDashboard from './apps/moneyTrailApp/pages/Dashboard';
+// Money Trail App
+import Overview from './apps/moneytrail/pages/Overview';
+import MoneyTrailDashboard from './apps/moneytrail/pages/Dashboard';
+
+// Smart Home App
+import SmartHomeDashboard from './apps/smarthome/pages/Dashboard';
 
 const PersistLastVisitedPage: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
@@ -81,8 +84,23 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Overview /> },
       { path: 'dashboard', element: <MoneyTrailDashboard /> },
-      { path: 'reports', element: <div className="p-8 text-center">MoneyTrail Reports - Coming Soon</div> },
-      { path: 'settings', element: <div className="p-8 text-center">MoneyTrail Settings - Coming Soon</div> },
+      { path: 'reports', element: <div className="p-8 text-center">Money Trail Reports - Coming Soon</div> },
+      { path: 'settings', element: <div className="p-8 text-center">Money Trail Settings - Coming Soon</div> },
+    ],
+  },
+  {
+    path: '/smarthome',
+    element: (
+      <ProtectedRoute>
+        <PersistLastVisitedPage>
+          <AppShell />
+        </PersistLastVisitedPage>
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <SmartHomeDashboard /> },
+      { path: 'dashboard', element: <SmartHomeDashboard /> },
+      { path: 'settings', element: <div className="p-8 text-center">Smart Home Settings - Coming Soon</div> },
     ],
   },
   { path: '*', element: <Navigate to="/" replace /> }

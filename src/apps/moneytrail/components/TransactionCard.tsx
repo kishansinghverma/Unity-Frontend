@@ -4,7 +4,7 @@ import {
   Building2,
   CheckCircle2,
   Clock,
-  FileText, // Added for description icon
+  FileText
 } from 'lucide-react';
 
 // Type Definitions
@@ -201,15 +201,15 @@ const TransactionCard: React.FC = () => {
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
               {/* Date display updated to a single line */}
-              <div className="flex items-center space-x-2 mb-2">
-                <Calendar className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0" />
-                <div className="font-medium text-sm text-gray-700 dark:text-gray-200">{dateInfo.fullDateWithDay}</div>
+              <div className="flex items-center space-x-2 mb-2 text-slate-800 dark:text-slate-100">
+                <Calendar className="w-4 h-4 flex-shrink-0" />
+                <div className="font-medium text-sm">{dateInfo.fullDateWithDay}</div>
               </div>
 
               {/* Description label removed, icon added */}
-              <div className="flex items-start space-x-2"> {/* Changed to items-start for icon alignment */}
-                <FileText className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0 mt-0.5" /> {/* Icon added, mt-0.5 for slight alignment adjustment */}
-                <div className="text-sm font-mono text-gray-700 dark:text-gray-300 break-all leading-relaxed">
+              <div className="flex items-start space-x-2 text-slate-500 dark:text-slate-400"> {/* Changed to items-start for icon alignment */}
+                <FileText className="w-4 h-4 flex-shrink-0 mt-0.5" /> {/* Icon added, mt-0.5 for slight alignment adjustment */}
+                <div className="text-sm font-medium break-all leading-relaxed">
                   {currentTransaction.description}
                 </div>
               </div>
