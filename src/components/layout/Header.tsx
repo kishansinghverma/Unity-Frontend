@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
       setAppsDropdownOpen(false);
 
       // Navigate to the appropriate app route
-      if (app.id === 'crud-app') {
+      if (app.id === 'emandi') {
         navigate('/emandi');
       } else if (app.id === 'second-app') {
         navigate('/moneytrail');

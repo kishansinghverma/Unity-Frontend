@@ -17,7 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
 
   // Define navigation items based on current app
   const getNavItems = () => {
-    if (currentApp?.id === 'crud-app') {
+    if (currentApp?.id === 'emandi') {
       return [
         { name: 'New Gate Pass', path: '/emandi/gatepasses/new', icon: <ClipboardList className="w-5 h-5" /> },
         { name: 'Queued', path: '/emandi/gatepasses/queued', icon: <ListChecks className="w-5 h-5" /> },

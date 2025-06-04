@@ -12,13 +12,13 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import AppSelection from './pages/AppSelection';
 
-// CRUD App
-import Dashboard from './apps/crudApp/pages/Dashboard';
-import GatePassForm from './apps/crudApp/pages/GatePassForm';
-import GatePassList from './apps/crudApp/pages/GatePassList';
-import ProcessedRecordsList from './apps/crudApp/pages/ProcessedRecordsList';
-import PartyList from './apps/crudApp/pages/PartyList';
-import PartyForm from './apps/crudApp/pages/PartyForm';
+// eMandi App
+import Dashboard from './apps/emandi/pages/Dashboard';
+import GatePassForm from './apps/emandi/pages/GatePassForm';
+import GatePassList from './apps/emandi/pages/GatePassList';
+import ProcessedRecordsList from './apps/emandi/pages/ProcessedRecordsList';
+import PartyList from './apps/emandi/pages/PartyList';
+import PartyForm from './apps/emandi/pages/PartyForm';
 
 // MoneyTrail App
 import Overview from './apps/moneyTrailApp/pages/Overview';

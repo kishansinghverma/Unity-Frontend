@@ -21,7 +21,7 @@ const AppSelection: React.FC = () => {
     dispatch(setCurrentApp(app));
     
     // Navigate to the appropriate path
-    const appPath = app.id === 'crud-app' ? '/emandi' : '/moneytrail';
+    const appPath = app.id === 'emandi' ? '/emandi' : '/moneytrail';
     navigate(appPath);
   };
 

@@ -2,7 +2,7 @@ import { AppInfo } from '../types';
 
 export const APPS: AppInfo[] = [
   {
-    id: 'crud-app',
+    id: 'emandi',
     name: 'eMandi Portal',
     description: 'Manage gate passes, processed records, and parties',
     icon: 'Wheat',

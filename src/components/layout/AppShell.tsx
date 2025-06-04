@@ -14,8 +14,8 @@ const AppShell: React.FC = () => {
   // Ensure we have a default app set (important for direct access to /emandi without authentication)
   useEffect(() => {
     if (!currentApp) {
-      // Find the eMandi app (crud-app) from APPS and set it as the current app
-      const emandiApp = APPS.find(app => app.id === 'crud-app');
+      // Find the eMandi app from APPS and set it as the current app
+      const emandiApp = APPS.find(app => app.id === 'emandi');
       if (emandiApp) {
         dispatch(setCurrentApp(emandiApp));
       }
