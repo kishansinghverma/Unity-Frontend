@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Wheat, CandlestickChart, LogOut, Home } from 'lucide-react';
+import { Wheat, CandlestickChart, LogOut, Home, Package } from 'lucide-react';
 import { APPS } from '../constants/apps';
 import { useAuth } from '../context/AuthContext';
 import { useAppDispatch } from '../store/hooks';
@@ -14,6 +14,8 @@ const getAppIcon = (iconName: string) => {
       return <CandlestickChart className="w-8 h-8 text-purple-600" />;
     case 'Home':
       return <Home className="w-8 h-8 text-blue-600" />;
+    case 'Package':
+      return <Package className="w-8 h-8 text-amber-700" />;
     default:
       return null;
   }
@@ -44,6 +46,9 @@ const AppSelection: React.FC = () => {
         break;
       case 'smarthome':
         appPath = '/smarthome';
+        break;
+      case 'potatostock':
+        appPath = '/potatostock';
         break;
     }
     navigate(appPath);
