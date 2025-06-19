@@ -26,6 +26,7 @@ import MoneyTrailDashboard from './apps/moneytrail/pages/Dashboard';
 
 // Smart Home App
 import SmartHomeDashboard from './apps/smarthome/pages/Dashboard';
+import DevicesPage from './apps/smarthome/pages/DevicesPage';
 
 // Potato Stock App
 import PotatoStockDashboard from './apps/potatostock/pages/Dashboard';
@@ -107,6 +108,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <SmartHomeDashboard /> },
       { path: 'dashboard', element: <SmartHomeDashboard /> },
+      { path: 'devices', element: <DevicesPage /> },
       { path: 'settings', element: <div className="p-8 text-center">Smart Home Settings - Coming Soon</div> },
     ],
   },
