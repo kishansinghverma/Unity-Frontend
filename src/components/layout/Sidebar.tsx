@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat, LogIn, DollarSign, CandlestickChart, Home, Thermometer } from 'lucide-react';
+import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat, LogIn, DollarSign, CandlestickChart, Home, Thermometer, Package, PlusCircle, ListFilter, ArrowRightLeft, DollarSign as PriceIcon } from 'lucide-react';
 import { useAppSelector } from '../../store/hooks';
 import { selectCurrentApp } from '../../store/slices/appSlice';
 import { useAuth } from '../../context/AuthContext';
@@ -38,6 +38,15 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
         { name: 'Dashboard', path: '/smarthome', icon: <Home className="w-5 h-5" /> },
         { name: 'Devices', path: '/smarthome/devices', icon: <Thermometer className="w-5 h-5" /> },
         { name: 'Settings', path: '/smarthome/settings', icon: <Settings className="w-5 h-5" /> },
+      ];
+    } else if (currentApp?.id === 'potatostock') {
+      return [
+        { name: 'Dashboard', path: '/potatostock', icon: <LayoutDashboard className="w-5 h-5" /> },
+        { name: 'View Inventory', path: '/potatostock/inventory', icon: <ListFilter className="w-5 h-5" /> },
+        { name: 'Add Stock', path: '/potatostock/inventory/new', icon: <PlusCircle className="w-5 h-5" /> },
+        { name: 'Transfer Stock', path: '/potatostock/inventory/transfer', icon: <ArrowRightLeft className="w-5 h-5" /> },
+        { name: 'Update Prices', path: '/potatostock/inventory/price-update', icon: <PriceIcon className="w-5 h-5" /> },
+        { name: 'Settings', path: '/potatostock/settings', icon: <Settings className="w-5 h-5" /> },
       ];
     }
     return [];

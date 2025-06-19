@@ -19,4 +19,10 @@ export const APPS: AppInfo[] = [
     description: 'Control and monitor your smart home devices',
     icon: 'Home',
   },
+  {
+    id: 'potatostock',
+    name: 'Potato Stock',
+    description: 'Manage potato inventory, transfers, and pricing',
+    icon: 'Package',
+  },
 ];

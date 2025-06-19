@@ -27,6 +27,13 @@ import MoneyTrailDashboard from './apps/moneytrail/pages/Dashboard';
 // Smart Home App
 import SmartHomeDashboard from './apps/smarthome/pages/Dashboard';
 
+// Potato Stock App
+import PotatoStockDashboard from './apps/potatostock/pages/Dashboard';
+import StockList from './apps/potatostock/pages/StockList';
+import StockForm from './apps/potatostock/pages/StockForm';
+import TransferPage from './apps/potatostock/pages/TransferPage';
+import PriceUpdatePage from './apps/potatostock/pages/PriceUpdatePage';
+
 const PersistLastVisitedPage: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
 
@@ -101,6 +108,27 @@ const router = createBrowserRouter([
       { index: true, element: <SmartHomeDashboard /> },
       { path: 'dashboard', element: <SmartHomeDashboard /> },
       { path: 'settings', element: <div className="p-8 text-center">Smart Home Settings - Coming Soon</div> },
+    ],
+  },
+  {
+    path: '/potatostock',
+    element: (
+      <ProtectedRoute>
+        <PersistLastVisitedPage>
+          <AppShell />
+        </PersistLastVisitedPage>
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <PotatoStockDashboard /> },
+      { path: 'dashboard', element: <PotatoStockDashboard /> },
+      { path: 'inventory', element: <StockList /> },
+      { path: 'inventory/new', element: <StockForm /> },
+      { path: 'inventory/:id', element: <StockForm /> },
+      { path: 'inventory/edit/:id', element: <StockForm /> },
+      { path: 'inventory/transfer', element: <TransferPage /> },
+      { path: 'inventory/price-update', element: <PriceUpdatePage /> },
+      { path: 'settings', element: <div className="p-8 text-center">Potato Stock Settings - Coming Soon</div> },
     ],
   },
   { path: '*', element: <Navigate to="/" replace /> }
