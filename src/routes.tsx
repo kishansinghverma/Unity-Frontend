@@ -21,8 +21,9 @@ import PartyList from './apps/emandi/pages/PartyList';
 import PartyForm from './apps/emandi/pages/PartyForm';
 
 // Money Trail App
-import Overview from './apps/moneytrail/pages/Overview';
 import MoneyTrailDashboard from './apps/moneytrail/pages/Dashboard';
+import ReviewExpense from './apps/moneytrail/pages/Review';
+import Splitwise from './apps/moneytrail/pages/Splitwise';
 
 // Smart Home App
 import SmartHomeDashboard from './apps/smarthome/pages/Dashboard';
@@ -90,8 +91,10 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <Overview /> },
+      { index: true, element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <MoneyTrailDashboard /> },
+      { path: 'splitwise-groups', element: <Splitwise /> },
+      { path: 'empty', element: <ReviewExpense /> },
       { path: 'reports', element: <div className="p-8 text-center">Money Trail Reports - Coming Soon</div> },
       { path: 'settings', element: <div className="p-8 text-center">Money Trail Settings - Coming Soon</div> },
     ],

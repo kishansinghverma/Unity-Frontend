@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat, LogIn, DollarSign, CandlestickChart, Home, Thermometer, Package, PlusCircle, ListFilter, ArrowRightLeft, DollarSign as PriceIcon } from 'lucide-react';
+import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat, LogIn, DollarSign, CandlestickChart, Home, Thermometer, Package, PlusCircle, ListFilter, ArrowRightLeft, DollarSign as PriceIcon, Archive } from 'lucide-react';
 import { useAppSelector } from '../../store/hooks';
 import { selectCurrentApp } from '../../store/slices/appSlice';
 import { useAuth } from '../../context/AuthContext';
@@ -28,8 +28,9 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       ];
     } else if (currentApp?.id === 'moneytrail') {
       return [
-        { name: 'Overview', path: '/moneytrail', icon: <CandlestickChart className="w-5 h-5" /> },
         { name: 'Dashboard', path: '/moneytrail/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
+        { name: 'Splitwise', path: '/moneytrail/splitwise-groups', icon: <User className="w-5 h-5" /> },
+        { name: 'Review Expense', path: '/moneytrail/empty', icon: <Archive className="w-5 h-5" /> },
         { name: 'Reports', path: '/moneytrail/reports', icon: <BarChart3 className="w-5 h-5" /> },
         { name: 'Settings', path: '/moneytrail/settings', icon: <Settings className="w-5 h-5" /> },
       ];
