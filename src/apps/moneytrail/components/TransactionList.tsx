@@ -196,3 +196,5 @@ export const TransactionList: FC<TransactionListProps> = ({ title, subtitle, ico
     </>
   );
 };
+
+export default TransactionList;
