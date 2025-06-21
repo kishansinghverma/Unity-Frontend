@@ -1,6 +1,6 @@
 import React from 'react';
-import { ListItem, TransactionList } from '../components/TransactionList';
-import { Landmark } from 'lucide-react';
+import TransactionList, { ListItem } from '../components/TransactionList';
+import { Building2, FileSearch, Landmark, Smartphone, TabletSmartphone } from 'lucide-react';
 
 const personalAccountItems: ListItem[] = [
     {
@@ -82,27 +82,27 @@ const ReviewExpense: React.FC = () => {
     <div className="flex flex-col md:flex-row gap-8 p-4 md:p-8">
       <div className="flex-1 min-w-0">
         <TransactionList 
-          title="Personal Account"
-          subtitle="Your recent transaction history"
-          icon={Landmark}
+          title="Bank Transactions"
+          subtitle="Aggregated recent bank transactions"
+          icon={Building2}
           gradientColors={{ from: 'from-violet-500', to: 'to-indigo-600' }}
           initialItems={personalAccountItems}
         />
       </div>
       <div className="flex-1 min-w-0">
         <TransactionList 
-          title="Family Account"
-          subtitle="Shared family expenses"
-          icon={Landmark}
+          title="PhonePe Transactions"
+          subtitle="List of all PhonePe transactions"
+          icon={TabletSmartphone}
           gradientColors={{ from: 'from-green-500', to: 'to-emerald-600' }}
           initialItems={personalAccountItems}
         />
       </div>
       <div className="flex-1 min-w-0">
         <TransactionList 
-          title="Business Account"
-          subtitle="Business-related transactions"
-          icon={Landmark}
+          title="Draft Transactions"
+          subtitle="Meta transactions for identification"
+          icon={FileSearch}
           gradientColors={{ from: 'from-orange-500', to: 'to-yellow-500' }}
           initialItems={personalAccountItems}
         />
