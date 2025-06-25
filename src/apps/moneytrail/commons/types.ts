@@ -1,4 +1,4 @@
-import { ReactNode, ElementType } from "react";
+import { ElementType } from "react";
 
 export type ListItem = {
     id: number;
@@ -10,11 +10,6 @@ export type ListItem = {
     type: 'credit' | 'debit';
     processed: boolean;
     bank: string
-}
-
-export type IconWrapperProps = {
-    children: ReactNode;
-    className?: string;
 }
 
 export type TransactionListProps = {
