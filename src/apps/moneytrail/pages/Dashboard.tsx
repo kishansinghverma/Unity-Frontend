@@ -1,7 +1,8 @@
 import { RefreshCw } from 'lucide-react';
-import { mockRecords, RecordItem } from '../data/mockData';
+import { mockRecords } from '../data/mockData';
 import { useState } from 'react';
-import { TaskModal } from '../components/TaskModal';
+import { TaskModal } from '../components/modals/reviewexpense/TaskModal';
+import { RecordItem } from '../commons/Types';
 
 function Dashboard() {
   const [selectedTransaction, setSelectedTransaction] = useState<RecordItem | null>(null);

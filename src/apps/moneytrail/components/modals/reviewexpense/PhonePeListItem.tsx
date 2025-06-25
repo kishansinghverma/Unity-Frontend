@@ -1,6 +1,6 @@
 import React, { ReactNode, FC } from 'react'; // Removed useState as it's not used in this isolated module
 import { CheckCircle, Clock } from 'lucide-react';
-import { formatDateTime } from '../../../services/utils';
+import { getDateComponent, parseDate } from '../../../../../services/utils';
 
 // --- Type Definitions ---
 interface IconProps {
@@ -41,7 +41,7 @@ export const TransactionItem: FC<TransactionItemProps> = ({
   onSelect,
   currency = '₹', // Default currency to Rupee symbol
 }) => {
-  const { time } = formatDateTime(dateString);
+  const { time } = getDateComponent(parseDate(dateString));
   const isCredit = type === 'Credit';
 
   // Base styling for the item

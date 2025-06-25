@@ -1,10 +1,10 @@
 import { ReactNode, useState, useEffect } from 'react';
 import { X, CreditCard, Smartphone, FileText, Check, Phone } from 'lucide-react';
-import { RecordItem } from '../data/mockData';
 import { TransactionData, TransactionItem } from './PhonePeListItem';
 import TransactionCard from './TransactionCard';
 import { LocationHistoryData, LocationHistoryItem } from './DraftListItem';
 import React from 'react';
+import { RecordItem } from '../../../commons/Types';
 
 interface TaskModalProps {
   task: RecordItem | null;

@@ -1,6 +1,6 @@
 import React, { ReactNode, FC } from 'react';
 import { CheckCircle, Clock } from 'lucide-react';
-import { formatDateTime } from '../../../services/utils';
+import { formatDate, getDateComponent, parseDate } from '../../../../../services/utils';
 
 // Data structure for a single location history entry
 export interface LocationHistoryData {
@@ -53,7 +53,7 @@ export const LocationHistoryItem: FC<LocationHistoryItemProps> = ({
     isSelected,
     onSelect,
 }) => {
-    const { time } = formatDateTime(dateTimeString);
+    const { time } = getDateComponent(parseDate( dateTimeString));
     const singleLineLocation = location.split('\n').join(', ');
     const firstLetter = singleLineLocation.charAt(0).toUpperCase() || '?';
 

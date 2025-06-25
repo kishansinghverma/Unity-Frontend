@@ -1,24 +1,31 @@
 import { ElementType } from "react";
+import { WithId } from "../../../commons/types";
 
-export type ListItem = {
-    id: number;
-    title: string;
+export type BankEntry = {
+    date: Date;
     description: string;
-    tag: string;
+    amount: number;
+    processed?: boolean;
+    type: "Credit" | "Debit";
+    bank: string;
+}
+
+export interface RecordItem {
+    id: string;
+    title: string;
+    subtitle: string;
     date: string;
-    amount: string;
-    type: 'credit' | 'debit';
-    processed: boolean;
-    bank: string
+    icon?: string;
 }
 
 export type TransactionListProps = {
     title: string;
     subtitle: string;
+    isLoading: boolean;
+    items: WithId<BankEntry>[];
     icon: ElementType;
     gradientColors: {
         from: string;
         to: string;
     };
-    initialItems: ListItem[];
 }
