@@ -1,6 +1,7 @@
 import React from 'react';
-import TransactionList, { ListItem } from '../components/TransactionList';
 import { Building2, FileSearch, Landmark, Smartphone, TabletSmartphone } from 'lucide-react';
+import { ListItem } from '../commons/types';
+import TransactionList from '../components/TransactionList';
 
 const personalAccountItems: ListItem[] = [
     {
@@ -9,8 +10,10 @@ const personalAccountItems: ListItem[] = [
     description: 'Direct deposit from employer.',
     tag: 'Income',
     date: 'June 15',
-    amount: '+₹3,50,000.00',
+    amount: '3,50,000.00',
     type: 'credit',
+    processed: true,
+    bank: 'HDFC'
   },
   {
     id: 2,
@@ -18,8 +21,10 @@ const personalAccountItems: ListItem[] = [
     description: 'Morning coffee with the team.',
     tag: 'Food',
     date: 'June 19',
-    amount: '-₹450.75',
+    amount: '450.75',
     type: 'debit',
+    processed: true,
+    bank: 'SBI'
   },
    {
     id: 3,
@@ -27,8 +32,10 @@ const personalAccountItems: ListItem[] = [
     description: 'Recurring payment for design software.',
     tag: 'Software',
     date: 'June 18',
-    amount: '-₹1,250.00',
+    amount: '1,250.00',
     type: 'debit',
+     processed: true,
+    bank: 'HDFC'
   },
   {
     id: 4,
@@ -36,8 +43,10 @@ const personalAccountItems: ListItem[] = [
     description: 'Dinner order.',
     tag: 'Food',
     date: 'June 18',
-    amount: '-₹850.00',
+    amount: '850.00',
     type: 'debit',
+    processed: true,
+    bank: 'SBI'
   },
   {
     id: 5,
@@ -45,8 +54,10 @@ const personalAccountItems: ListItem[] = [
     description: 'Shared cost of movie tickets.',
     tag: 'Entertainment',
     date: 'June 17',
-    amount: '-₹700.00',
+    amount: '700.00',
     type: 'debit',
+    processed: true,
+    bank: 'HDFC'
   },
   {
     id: 6,
@@ -54,8 +65,10 @@ const personalAccountItems: ListItem[] = [
     description: 'Fuel for the car.',
     tag: 'Transport',
     date: 'June 17',
-    amount: '-₹3,500.50',
+    amount: '3,500.50',
     type: 'debit',
+    processed: false,
+    bank: 'HDFC'
   },
   {
     id: 7,
@@ -63,17 +76,21 @@ const personalAccountItems: ListItem[] = [
     description: 'Monthly cloud infrastructure costs.',
     tag: 'Utilities',
     date: 'June 15',
-    amount: '-₹9,500.30',
+    amount: '9,500.30',
     type: 'debit',
+    processed: false,
+    bank: 'SBI'
   },
   {
     id: 8,
-    title: 'BookMyShow Movie Tickets',
+    title: 'BookMyShow Movie Tickets.................................',
     description: 'Weekend movie plan.',
     tag: 'Entertainment',
     date: 'June 14',
-    amount: '-₹1400.00',
+    amount: '1400.00',
     type: 'debit',
+    processed: false,
+    bank: 'HDFC'
   },
 ];
 
@@ -82,8 +99,8 @@ const ReviewExpense: React.FC = () => {
     <div className="flex flex-col md:flex-row gap-8 p-4 md:p-8">
       <div className="flex-1 min-w-0">
         <TransactionList 
-          title="Bank Transactions"
-          subtitle="Aggregated recent bank transactions"
+          title="Bank Entries"
+          subtitle="Aggregated bank transactions"
           icon={Building2}
           gradientColors={{ from: 'from-violet-500', to: 'to-indigo-600' }}
           initialItems={personalAccountItems}
@@ -91,8 +108,8 @@ const ReviewExpense: React.FC = () => {
       </div>
       <div className="flex-1 min-w-0">
         <TransactionList 
-          title="PhonePe Transactions"
-          subtitle="List of all PhonePe transactions"
+          title="PhonePe Records"
+          subtitle="PhonePe transaction records"
           icon={TabletSmartphone}
           gradientColors={{ from: 'from-green-500', to: 'to-emerald-600' }}
           initialItems={personalAccountItems}
@@ -100,8 +117,8 @@ const ReviewExpense: React.FC = () => {
       </div>
       <div className="flex-1 min-w-0">
         <TransactionList 
-          title="Draft Transactions"
-          subtitle="Meta transactions for identification"
+          title="Draft Logs"
+          subtitle="Metadata for identification"
           icon={FileSearch}
           gradientColors={{ from: 'from-orange-500', to: 'to-yellow-500' }}
           initialItems={personalAccountItems}
