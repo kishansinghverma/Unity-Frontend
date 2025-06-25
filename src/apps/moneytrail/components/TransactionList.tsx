@@ -6,8 +6,8 @@ import HdfcLogo from '../../../static/hdfc.svg';
 import SbiLogo from '../../../static/sbi.svg';
 
 const bankLogo: { [key: string]: JSX.Element } = {
-  HDFC: <img src={ HdfcLogo} width={28} height={28} />,
-  SBI: <img src={ SbiLogo} width={28} height={28} />
+  HDFC: <img src={ HdfcLogo} width={24} height={24} />,
+  SBI: <img src={ SbiLogo} width={24} height={24} />
 }
 
 const IconWrapper: FC<IconWrapperProps> = ({ children }) => (
@@ -191,16 +191,16 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
                                   onMouseLeave={() => { if (isDragging) handleGestureEnd(item); }}
                                   className={`relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-transform duration-300 ease-out cursor-pointer ${openItemId === item.id ? '-translate-x-20' : 'translate-x-0'}`}
                                 >
-                                  <div className="flex items-center gap-3 flex-grow min-w-0">
+                                  <div className="flex items-center flex-shrink-0">
                                     <IconWrapper>
                                       {bankLogo[item.bank]}
                                     </IconWrapper>
-                                    <div className="grow-0 min-w-4">
-                                      <h3 className="font-semibold text-gray-800 dark:text-gray-200 line-clamp-2">{item.title}</h3>
-                                    </div>
                                   </div>
-                                  <div className="text-right flex-shrink-0 ml-4">
-                                    <p className={`font-semibold text-[15px] ${item.type === 'credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>₹{item.amount}</p>
+                                  <div className="flex-grow pr-2 pl-4 min-w-4">
+                                    <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2">{item.title}</h3>
+                                  </div>
+                                  <div className="text-right">
+                                    <p className={`font-semibold ${item.type === 'credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>₹{item.amount}</p>
                                     <p className="text-sm text-gray-500 dark:text-gray-400">{item.date}</p>
                                   </div>
                                 </div>
