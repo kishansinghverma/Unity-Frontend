@@ -30,7 +30,7 @@ const bankEntries: WithId<BankEntry>[] = [
     amount: 100.00,
     processed: true,
     type: 'Debit',
-    bank: 'ABC Bank'
+    bank: 'HDFC'
   },
   {
     _id: 'bke_004',
@@ -65,7 +65,7 @@ const bankEntries: WithId<BankEntry>[] = [
     amount: 25.50,
     processed: true,
     type: 'Credit',
-    bank: 'PQR Credit Union'
+    bank: 'HDFC'
   },
   {
     _id: 'bke_008',
@@ -115,7 +115,7 @@ const ReviewExpense: React.FC = () => {
           subtitle="PhonePe transaction records"
           icon={TabletSmartphone}
           gradientColors={{ from: 'from-green-500', to: 'to-emerald-600' }}
-          initialItems={personalAccountItems}
+          initialItems={phonepeEntries}
         />
       </div>
       <div className="flex-1 min-w-0">
@@ -124,7 +124,7 @@ const ReviewExpense: React.FC = () => {
           subtitle="Metadata for identification"
           icon={FileSearch}
           gradientColors={{ from: 'from-orange-500', to: 'to-yellow-500' }}
-          initialItems={personalAccountItems}
+          initialItems={draftEntries}
         />
       </div> */}
     </div>

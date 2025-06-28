@@ -19,7 +19,8 @@
     "react-swipeable": "^7.0.2",
     "react-transition-group": "^4.4.5",
     "redux": "^5.0.1",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "dayjs": "^1.11.9"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

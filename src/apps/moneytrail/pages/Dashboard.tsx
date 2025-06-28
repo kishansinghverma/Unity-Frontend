@@ -1,7 +1,7 @@
 import { RefreshCw } from 'lucide-react';
 import { mockRecords } from '../data/mockData';
 import { useState } from 'react';
-import { TaskModal } from '../components/modals/reviewexpense/TaskModal';
+import { ReviewModal } from '../components/modals/reviewexpense/ReviewModal';
 import { RecordItem } from '../commons/Types';
 
 function Dashboard() {
@@ -88,12 +88,12 @@ function Dashboard() {
         </button>
       </div>
 
-      {selectedTransaction && (
-        <TaskModal
-          task={selectedTransaction}
+      {/* {selectedTransaction && (
+        <ReviewModal
+          item={selectedTransaction}
           onClose={() => setSelectedTransaction(null)}
         />
-      )}
+      )} */}
     </main>
   );
 }

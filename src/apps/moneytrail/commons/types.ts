@@ -10,6 +10,16 @@ export type BankEntry = {
     bank: string;
 }
 
+export type PhonepeEntry = {
+  date: Date
+  recipient: string;
+  transactionId: string;
+  utr: string;
+  bank: string;
+  type: "Credit" | "Debit";
+  amount: number;
+};
+
 export interface RecordItem {
     id: string;
     title: string;
@@ -28,4 +38,11 @@ export type TransactionListProps = {
         from: string;
         to: string;
     };
+}
+
+export type ReviewModalProps = {
+    itemId: string | null;
+    bankEntries: Array<WithId<BankEntry>>;
+    phonepeEntries: Array<WithId<PhonepeEntry>>;
+    onClose: () => void;
 }

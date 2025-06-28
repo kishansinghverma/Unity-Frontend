@@ -1,37 +1,20 @@
-import { ReactNode, useState, useEffect } from 'react';
-import { X, CreditCard, Smartphone, FileText, Check, Phone } from 'lucide-react';
-import { TransactionData, TransactionItem } from './PhonePeListItem';
+import { useState, useEffect } from 'react';
+import { X, CreditCard, Smartphone, FileText, Check } from 'lucide-react';
+import { TransactionItem } from './PhonePeListItem';
 import TransactionCard from './TransactionCard';
 import { LocationHistoryData, LocationHistoryItem } from './DraftListItem';
 import React from 'react';
-import { RecordItem } from '../../../commons/Types';
+import { ReviewModalProps } from '../../../commons/Types';
+import { getPhonePeMatches } from '../../../commons/Utils';
 
-interface TaskModalProps {
-  task: RecordItem | null;
-  onClose: () => void;
-}
 
-const PlaceholderBankIcon: React.FC = () => ( // No className prop needed if not used
-  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="rounded-xl">
-    <rect width="48" height="48" rx="12" fill="url(#iconGradientDef)" />
-    <defs>
-      <linearGradient id="iconGradientDef" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#E0E7FF" /> {/* Light Indigo */}
-        <stop offset="100%" stopColor="#C7D2FE" /> {/* Indigo */}
-      </linearGradient>
-    </defs>
-    <path d="M18 36V22H14V36H18ZM24 36V22H20V36H24ZM30 36V22H26V36H30ZM12 19L24 12L36 19V20H12V19Z" fill="#4338CA" /> {/* Indigo-700 */}
-  </svg>
-);
-
-export function TaskModal({ task, onClose }: TaskModalProps) {
-  if (!task) return null;
+export function ReviewModal({ itemId, bankEntries, phonepeEntries, onClose }: ReviewModalProps) {
+  if (!itemId) return null;
 
   const [location, setLocation] = useState('Settlement');
   const [amount, setAmount] = useState('1000');
   const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null);
 
-  // Effect to set the first column's height
   useEffect(() => {
     const updateHeight = () => {
       const firstColumn = document.querySelector('[data-first-column]');
@@ -41,10 +24,8 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
       }
     };
 
-    // Initial calculation
     updateHeight();
 
-    // Set up observer for dynamic content changes
     const observer = new ResizeObserver(updateHeight);
     const firstColumn = document.querySelector('[data-first-column]');
     if (firstColumn) {
@@ -54,43 +35,11 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
     return () => {
       observer.disconnect();
     };
-  }, []);  // Run once on mount
+  }, []);
 
-  const initialTransactions = [
+  const bankEntry = bankEntries.find(entry => entry._id === itemId) ?? bankEntries[0];
+  const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries)
 
-    {
-      id: 'txn1',
-      date: '2025-05-26T10:30:00.000Z',
-      recipient: 'Amazon Inc.',
-      bank: 'HDFC',
-      type: 'Debit',
-      amount: 1250.75,
-    },
-    {
-      id: 'txn2',
-      date: '2025-05-25T15:45:00.000Z',
-      recipient: 'Salary Deposit',
-      bank: 'ICICI',
-      type: 'Credit',
-      amount: 75000,
-    },
-    {
-      id: 'txn3',
-      date: '2025-05-24T08:00:00.000Z',
-      recipient: 'Grocery Store Purchase -1234',
-      bank: 'SBI',
-      type: 'Debit',
-      amount: 340.50,
-    },
-  ];
-
-  const transactionDetails = {
-    date: '24/Feb/2025',
-    description: 'NEFT CR-BOFA0MM6205-ACCENTURE SOLUTIONS PVT LTD -SINGH KISHAN-BOFAN52025022401533583',
-    utr: 'BOFAN52025022401533583',
-    recipient: 'SINGH KISHAN',
-    bank: 'HDFC'
-  };
 
   const historyItems: LocationHistoryData[] = [
     { id: 'loc1', dateTime: "2025-02-22T17:42:48+05:30", location: "Sector 40\nGurugram 122001\nHaryana\nIndia" },
@@ -133,7 +82,6 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
           <div className="max-w-7xl mx-auto p-6">
             {/* Three Column Layout */}
             <div className="grid grid-cols-3 gap-4 mb-6">
-
               {/* Bank Transaction Column */}
               <div data-first-column className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
@@ -143,7 +91,7 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
                   </div>
                 </div>
                 <div className="p-4 flex-1 overflow-y-auto">
-                  <TransactionCard />
+                  <TransactionCard {...bankEntry} />
                 </div>
               </div>
 
@@ -156,7 +104,7 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
                   </div>
                 </div>
 
-                {initialTransactions.length === 0 && (
+                {phonepeMatches.length === 0 && (
                   <div className="p-4 flex-1 flex items-center justify-center">
                     <div className="text-center">
                       <FileText className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
@@ -166,21 +114,13 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
                   </div>
                 )}
 
-                {initialTransactions.length > 0 && (
+                {phonepeMatches.length > 0 && (
                   <div className="p-4 flex-1 overflow-y-auto">
-                    {initialTransactions.map((transaction) => (
+                    {phonepeMatches.map((transaction) => (
                       <TransactionItem
-                        key={transaction.id}
-                        id={transaction.id}
-                        date={transaction.date}
-                        recipient={transaction.recipient}
-                        bank={transaction.bank}
-                        type={transaction.type === 'Credit' ? 'Credit' : 'Debit'}
-                        amount={transaction.amount}
-                        iconDisplay={<PlaceholderBankIcon />} // Pass the icon component
-                        isSelected={selectedTransactionId === transaction.id}
+                        isSelected={selectedTransactionId === transaction._id}
                         onSelect={handleSelectTransaction}
-                        currency="₹"
+                        {...transaction}
                       />
                     ))}
                   </div>
@@ -218,7 +158,6 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
                     ))}
                   </div>
                 )}
-
               </div>
             </div>
 
@@ -242,7 +181,7 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
                   </thead>
                   <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     <tr className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                      {/* <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                         {transactionDetails.date}
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs">
@@ -267,7 +206,7 @@ export function TaskModal({ task, onClose }: TaskModalProps) {
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                         {transactionDetails.bank}
-                      </td>
+                      </td> */}
                     </tr>
                   </tbody>
                 </table>

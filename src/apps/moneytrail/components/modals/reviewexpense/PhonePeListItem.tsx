@@ -1,48 +1,13 @@
-import React, { ReactNode, FC } from 'react'; // Removed useState as it's not used in this isolated module
+import { ReactNode, FC } from 'react'; // Removed useState as it's not used in this isolated module
 import { CheckCircle, Clock } from 'lucide-react';
-import { getDateComponent, parseDate } from '../../../../../services/utils';
+import { getDateComponent } from '../../../../../services/utils';
+import { PhonepeEntry } from '../../../commons/Types';
+import { WithId } from '../../../../../commons/types';
 
-// --- Type Definitions ---
-interface IconProps {
-  className?: string;
-  title?: string;
-}
 
-// Data structure for a single transaction
-export interface TransactionData {
-  id: string;
-  date: string;       // ISO date string e.g., "2025-02-07T13:49:00.000Z"
-  recipient: string;  // e.g., "XXXXXX0041" or "Payment to..."
-  bank: string;       // e.g., "SBI" - used for tooltips or mapping to specific bank icons
-  type: 'Debit' | 'Credit'; // Type of transaction
-  amount: number;
-  // icon prop is part of TransactionData if you want to pass it with the data object.
-  // Alternatively, iconDisplay in TransactionItemProps handles the actual icon to render.
-  icon?: ReactNode;   // Optional: The icon component or element for the bank/transaction type
-}
-
-// Props for the TransactionItem component
-export interface TransactionItemProps extends Omit<TransactionData, 'icon'> {
-  iconDisplay: ReactNode; // The actual icon ReactNode to render (e.g., <PlaceholderBankIcon />)
-  isSelected: boolean;
-  onSelect: (id: string) => void; // Callback function when item is selected
-  currency?: string;        // Currency symbol, defaults to '₹'
-}
-
-export const TransactionItem: FC<TransactionItemProps> = ({
-  id,
-  date: dateString,
-  recipient,
-  bank,
-  amount,
-  type,
-  iconDisplay, // This is the actual icon element to render
-  isSelected,
-  onSelect,
-  currency = '₹', // Default currency to Rupee symbol
-}) => {
-  const { time } = getDateComponent(parseDate(dateString));
-  const isCredit = type === 'Credit';
+export const TransactionItem: FC<WithId<PhonepeEntry> & { isSelected: boolean, onSelect: (id: string) => void }> = (item) => {
+  const { time } = getDateComponent(item.date);
+  const isCredit = item.type === 'Credit';
 
   // Base styling for the item
   const baseStyling = `w-full rounded-lg p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden group
@@ -61,7 +26,7 @@ export const TransactionItem: FC<TransactionItemProps> = ({
   let currentPrimaryTextColor = 'text-slate-500 dark:text-slate-400';
   let currentAmountColor = isCredit ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400';
 
-  if (isSelected) {
+  if (item.isSelected) {
     selectionSpecificClasses = `ring-1 ring-indigo-400 dark:ring-indigo-500 shadow-lg dark:shadow-indigo-900/50 bg-indigo-50/70 dark:bg-slate-800`;
     selectionIndicatorElement = <CheckCircle className="w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 dark:bg-indigo-400 rounded-full p-0.5 shadow" />;
     currentDateTimeColor = 'text-indigo-700 dark:text-indigo-300';
@@ -75,7 +40,7 @@ export const TransactionItem: FC<TransactionItemProps> = ({
   return (
     <div
       className={`${baseStyling} ${selectionSpecificClasses} ${hoverClasses} [&:not(:first-child)]:mt-2.5 [&:not(:last-child)]:mb-2.5`}
-      onClick={() => onSelect(id)} // Tooltip for accessibility
+      onClick={() => item.onSelect(item._id)} // Tooltip for accessibility
     >
       {selectionIndicatorElement}
       <div className={`flex items-center space-x-3`}>
@@ -84,14 +49,14 @@ export const TransactionItem: FC<TransactionItemProps> = ({
         </div>
 
         <div className="flex-grow min-w-0">
-          <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2`} title={recipient}>
-            {recipient}
+          <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2`} title={item.recipient}>
+            {item.recipient}
           </p>
         </div>
 
         <div className={`flex flex-col items-end flex-shrink-0 ml-auto text-right`}>
           <div className={`text-md font-semibold whitespace-nowrap ${currentAmountColor} mb-0.5`}>
-            {isCredit ? '+' : '-'} {currency}{parseFloat(amount.toString()).toFixed(2)}
+            {isCredit ? '+' : '-'}₹{parseFloat(item.amount.toString()).toFixed(2)}
           </div>
           <div className={`flex items-center text-xs font-semibold whitespace-nowrap ${currentDateTimeColor}`}>
             <Clock className="w-3.5 h-3.5 ml-1.5 mr-0.5 opacity-70" />

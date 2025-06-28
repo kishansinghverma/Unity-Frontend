@@ -6,8 +6,8 @@ export class SafeMap<K extends string | number, V> {
   }
 
   get(key: K): V {
-    const stringKey = String(key);
-    return stringKey in this.data ? this.data[stringKey] : this.data["Default"];
+    const strKey = String(key);
+    return strKey in this.data ? this.data[strKey] : this.data["Default"];
   }
 
   set(key: K, value: V): void {
@@ -19,8 +19,9 @@ export class SafeMap<K extends string | number, V> {
   }
 
   delete(key: K): void {
-    const stringKey = String(key);
-    if (stringKey === "Default") return;
-    delete this.data[stringKey];
+    const strKey = String(key);
+    if (strKey !== "Default") {
+      delete this.data[strKey];
+    }
   }
 }
