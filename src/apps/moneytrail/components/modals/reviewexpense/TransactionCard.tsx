@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Calendar,
-  Building2,
   CheckCircle2,
   Clock,
   FileText
 } from 'lucide-react';
 import { WithId } from '../../../../../commons/types';
-import { BankEntry } from '../../../commons/Types';
+import { BankEntry } from '../../../commons/types';
 import { BankLogo } from '../../Resoures';
-import { getIconBackground } from '../../../commons/Utils';
+import { getBankIcon } from '../../common';
+
 interface DescriptionInfo {
   platform: string;
   category: string;
@@ -24,8 +24,9 @@ interface BankTheme {
 
 const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
 
-  const getDate = (date: Date): string => {
-    const datePart = `${date.getDate()} ${date.toLocaleDateString('en-US', { month: 'long' })}, ${date.getFullYear()}`;
+  const getDate = (stringDate: string): string => {
+    const date = new Date(stringDate);
+    const datePart = `${date.getDate()} ${date.toLocaleDateString('en-US', { month: 'short' })}, ${date.getFullYear()}`;
     const weekdayPart = date.toLocaleDateString('en-US', { weekday: 'long' });
     return `${weekdayPart}, ${datePart}`;
   };
@@ -93,9 +94,7 @@ const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
       <div>
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className={`p-2 rounded-full ${getIconBackground(bankEntry.bank)}`} title={bankEntry.bank}>
-              {BankLogo.get(bankEntry.bank)}
-            </div>
+            {getBankIcon(bankEntry.bank)}
             <div className="font-semibold text-gray-800 dark:text-gray-100">{bankEntry.bank}</div>
           </div>
           <div className="text-right">
@@ -103,7 +102,7 @@ const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
               ? 'text-red-600 dark:text-red-400'
               : 'text-emerald-600 dark:text-emerald-400'
               }`}>
-              {isDebit ? '-' : '+'}₹{bankEntry.amount.toLocaleString()}
+              {isDebit ? '-' : '+'} ₹{bankEntry.amount.toLocaleString()}
             </div>
           </div>
         </div>

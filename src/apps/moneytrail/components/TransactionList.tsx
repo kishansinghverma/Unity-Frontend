@@ -1,12 +1,13 @@
-import { ListX, ListCheck } from "lucide-react";
+import { ListX, ListCheck, Calendar } from "lucide-react";
 import { useState, useRef, useEffect, FC, createRef } from "react";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { BankEntry, TransactionListProps } from "../commons/Types";
+import { BankEntry, TransactionListProps } from "../commons/types";
 import { WithId } from "../../../commons/types";
 import { formatDate } from "../../../services/utils";
 import { BankLogo } from "./Resoures";
 import { ReviewModal } from "./modals/reviewexpense/ReviewModal";
-import { getIconBackground } from "../commons/Utils";
+import { getIconBackground } from "../commons/utils";
+import { getBankIcon } from "./common";
 
 const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {
   const [listItems, setItems] = useState(items);
@@ -32,6 +33,10 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
       document.removeEventListener('touchstart', handleClickOutside);
     };
   }, [openItemId]);
+
+  useEffect(() => {
+    setItems(items);
+  }, [items]);
 
   const handleDelete = (id: string) => {
     setItems(items.filter(item => item._id !== id));
@@ -155,16 +160,19 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
                               className={`relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-transform duration-300 ease-out cursor-pointer ${openItemId === item._id ? '-translate-x-20' : 'translate-x-0'}`}
                             >
                               <div className="flex items-center flex-shrink-0">
-                                <div className={`p-2 rounded ${getIconBackground(item.bank)}`} title={item.bank}>
-                                  {BankLogo.get(item.bank)}
-                                </div>
+                                {getBankIcon(item.bank)}
                               </div>
-                              <div className="flex-grow pr-2 pl-4 min-w-4">
+                              <div className="flex-grow pr-6 pl-4 min-w-4">
                                 <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all">{item.description}</h3>
                               </div>
-                              <div className="text-right">
-                                <p className={`font-semibold ${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>₹{item.amount}</p>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">{formatDate(item.date)}</p>
+                              <div className="text-right min-w-fit">
+                                <p className={`font-semibold ${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</p>
+                                <div className="text-sm flex justify-end font-semibold text-gray-400 dark:text-gray-400">
+                                  <div className="flex">
+                                    <div className="mr-1 text-slate-500"><Calendar width={18} height={18} /></div>
+                                    <div>{formatDate(item.date)}</div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </li>

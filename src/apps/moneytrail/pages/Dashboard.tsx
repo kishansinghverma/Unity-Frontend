@@ -1,12 +1,12 @@
 import { RefreshCw } from 'lucide-react';
-import { mockRecords } from '../data/mockData';
 import { useState } from 'react';
 import { ReviewModal } from '../components/modals/reviewexpense/ReviewModal';
-import { RecordItem } from '../commons/Types';
+import { RecordItem } from '../commons/types';
 
 function Dashboard() {
   const [selectedTransaction, setSelectedTransaction] = useState<RecordItem | null>(null);
 
+  const mockRecords: any[] = []
   const totalTasks = mockRecords.length;
   const completedTasks = Math.floor(totalTasks * 0.6); // Example: 60% completed
   const pendingTasks = totalTasks - completedTasks;

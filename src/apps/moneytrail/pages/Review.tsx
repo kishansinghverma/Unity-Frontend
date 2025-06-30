@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react';
 import { Building2 } from 'lucide-react';
-import { BankEntry } from '../commons/Types';
+import { BankEntry } from '../commons/types';
 import TransactionList from '../components/TransactionList';
 import { WithId } from '../../../commons/types';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { fetchBankEntries } from '../store/reviewSlice';
+import { fetchBankEntries, fetchDraftEntries, fetchPhonePeEntries } from '../store/reviewSlice';
 
 const ReviewExpense: React.FC = () => {
 
   const dispatch = useAppDispatch();
-  const { bankEntries, loading, error } = useAppSelector(state => state.moneytrail);
+  const bankEntries = useAppSelector(state => state.moneytrail.bankEntries);
 
   useEffect(() => {
     dispatch(fetchBankEntries());
+    dispatch(fetchPhonePeEntries())
+    dispatch(fetchDraftEntries());
   }, []);
 
   return (
@@ -23,8 +25,8 @@ const ReviewExpense: React.FC = () => {
           subtitle="Aggregated bank transactions"
           icon={Building2}
           gradientColors={{ from: 'from-violet-500', to: 'to-indigo-600' }}
-          items={bankEntries}
-          isLoading={false}
+          items={bankEntries.contents}
+          isLoading={bankEntries.isLoading}
         />
       </div>
       {/* <div className="flex-1 min-w-0">

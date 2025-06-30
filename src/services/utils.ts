@@ -6,13 +6,14 @@ export const parseDate = (dateString: string) => {
     return date;
 };
 
-export const formatDate = (date: Date) => {
-    const { day, month, year } = getDateComponent(date);
-    return `${day}-${month}-${year}`;
+export const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const { day, month } = getDateComponent(date);
+    return `${day} ${month} `;
 }
 
 export const getDateComponent = (date: Date) => {
-    const day = date.getDate().toString();
+    const day = date.getDate().toString().padStart(2, '0');
     const month = date.toLocaleString('default', { month: 'short' });
     const year = date.getFullYear().toString()
     const time = date.toLocaleTimeString('en-US', {

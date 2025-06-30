@@ -2,7 +2,7 @@ import { ElementType } from "react";
 import { WithId } from "../../../commons/types";
 
 export type BankEntry = {
-    date: Date;
+    date: string;
     description: string;
     amount: number;
     processed?: boolean;
@@ -19,14 +19,6 @@ export type PhonepeEntry = {
   type: "Credit" | "Debit";
   amount: number;
 };
-
-export interface RecordItem {
-    id: string;
-    title: string;
-    subtitle: string;
-    date: string;
-    icon?: string;
-}
 
 export type TransactionListProps = {
     title: string;

@@ -1,12 +1,14 @@
 import { ReactNode, FC } from 'react'; // Removed useState as it's not used in this isolated module
 import { CheckCircle, Clock } from 'lucide-react';
 import { getDateComponent } from '../../../../../services/utils';
-import { PhonepeEntry } from '../../../commons/Types';
+import { PhonepeEntry } from '../../../commons/types';
 import { WithId } from '../../../../../commons/types';
+import { BankLogo } from '../../Resoures';
+import { getBankIcon } from '../../common';
 
 
 export const TransactionItem: FC<WithId<PhonepeEntry> & { isSelected: boolean, onSelect: (id: string) => void }> = (item) => {
-  const { time } = getDateComponent(item.date);
+  const { time } = getDateComponent(new Date(item.date));
   const isCredit = item.type === 'Credit';
 
   // Base styling for the item
@@ -44,9 +46,7 @@ export const TransactionItem: FC<WithId<PhonepeEntry> & { isSelected: boolean, o
     >
       {selectionIndicatorElement}
       <div className={`flex items-center space-x-3`}>
-        <div className={`flex-shrink-0 flex items-center justify-center w-11 h-11 bg-slate-100 dark:bg-slate-700/80 rounded-lg p-0.5`}>
-          {/* Render the passed iconDisplay prop */}
-        </div>
+        {getBankIcon(item.bank)}
 
         <div className="flex-grow min-w-0">
           <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2`} title={item.recipient}>

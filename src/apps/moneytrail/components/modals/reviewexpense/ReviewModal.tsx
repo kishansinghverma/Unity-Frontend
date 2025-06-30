@@ -4,12 +4,15 @@ import { TransactionItem } from './PhonePeListItem';
 import TransactionCard from './TransactionCard';
 import { LocationHistoryData, LocationHistoryItem } from './DraftListItem';
 import React from 'react';
-import { ReviewModalProps } from '../../../commons/Types';
-import { getPhonePeMatches } from '../../../commons/Utils';
+import { ReviewModalProps } from '../../../commons/types';
+import { getPhonePeMatches } from '../../../commons/utils';
+import { useAppSelector } from '../../../../../store/hooks';
 
 
-export function ReviewModal({ itemId, bankEntries, phonepeEntries, onClose }: ReviewModalProps) {
+export function ReviewModal({ itemId, bankEntries, onClose }: ReviewModalProps) {
   if (!itemId) return null;
+
+  const phonepeEntries = useAppSelector(state => state.moneytrail.phonepeEntries)
 
   const [location, setLocation] = useState('Settlement');
   const [amount, setAmount] = useState('1000');
@@ -38,8 +41,7 @@ export function ReviewModal({ itemId, bankEntries, phonepeEntries, onClose }: Re
   }, []);
 
   const bankEntry = bankEntries.find(entry => entry._id === itemId) ?? bankEntries[0];
-  const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries)
-
+  const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries.contents)
 
   const historyItems: LocationHistoryData[] = [
     { id: 'loc1', dateTime: "2025-02-22T17:42:48+05:30", location: "Sector 40\nGurugram 122001\nHaryana\nIndia" },
