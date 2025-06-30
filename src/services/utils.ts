@@ -1,23 +1,12 @@
-export const parseDate = (dateString: string) => {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-        throw new Error("Invalid date value");
-    }
-    return date;
-};
 
-export const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const { day, month } = getDateComponent(date);
-    return `${day} ${month} `;
-}
 
-export const getDateComponent = (date: Date) => {
+export const getDateComponent = (dateValue: string | Date) => {
+    const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
     const day = date.getDate().toString().padStart(2, '0');
     const month = date.toLocaleString('default', { month: 'short' });
     const year = date.getFullYear().toString()
     const time = date.toLocaleTimeString('en-US', {
-        hour: 'numeric',
+        hour: '2-digit',
         minute: '2-digit',
         hour12: true
     });

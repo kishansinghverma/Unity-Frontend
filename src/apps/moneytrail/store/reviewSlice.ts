@@ -1,27 +1,20 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Fetchable, WithId } from '../../../commons/types';
 import { Routes } from '../../../constants/constant';
-import { FetchJson, handleError, handleJsonResponse } from '../../../commons/httpHelper';
+import { FetchJson } from '../../../commons/httpHelper';
 import { FetchableDefault } from '../../../commons/defaults';
-import { BankEntry, PhonepeEntry } from '../commons/types';
-
-// Types for draft entries (replace with actual type if available)
-type DraftEntry = any;
+import { BankEntry, DraftEntry, PhonepeEntry } from '../commons/types';
 
 interface MoneytrailState {
   bankEntries: Fetchable<WithId<BankEntry>[]>;
   phonepeEntries: Fetchable<WithId<PhonepeEntry>[]>;
-  draftEntries: DraftEntry[];
-  loading: boolean;
-  error: string | null;
+  draftEntries: Fetchable<WithId<DraftEntry>[]>;
 }
 
 const initialState: MoneytrailState = {
   bankEntries: FetchableDefault,
   phonepeEntries: FetchableDefault,
-  draftEntries: [],
-  loading: false,
-  error: null,
+  draftEntries: FetchableDefault
 };
 
 
@@ -32,17 +25,12 @@ export const fetchBankEntries = createAsyncThunk<WithId<BankEntry>[]>(
 
 export const fetchPhonePeEntries = createAsyncThunk<WithId<PhonepeEntry>[]>(
   'moneytrail/fetchPhonePeEntries',
-  ()=> FetchJson(Routes.PhonePeStatement)
+  () => FetchJson(Routes.PhonePeStatement)
 );
 
-export const fetchDraftEntries = createAsyncThunk<DraftEntry[]>(
+export const fetchDraftEntries = createAsyncThunk<WithId<DraftEntry>[]>(
   'moneytrail/fetchDraftEntries',
-  async () => {
-    // Replace with actual API call
-    const response = await fetch('/api/draft-entries');
-    if (!response.ok) throw new Error('Failed to fetch draft entries');
-    return response.json();
-  }
+  () => FetchJson(Routes.DraftExpenses)
 );
 
 const reviewSlice = createSlice({
@@ -60,7 +48,7 @@ const reviewSlice = createSlice({
       })
       .addCase(fetchBankEntries.rejected, (state, action) => {
         state.bankEntries.isLoading = false;
-        state.error = action.error.message ?? 'Failed to fetch Bank entries'
+        state.bankEntries.error = action.error.message ?? 'Failed to fetch Bank entries'
       })
       .addCase(fetchPhonePeEntries.pending, (state) => {
         state.bankEntries.isLoading = true;
@@ -74,16 +62,15 @@ const reviewSlice = createSlice({
         state.phonepeEntries.error = action.error.message || 'Failed to fetch PhonePe entries';
       })
       .addCase(fetchDraftEntries.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.draftEntries.isLoading = true;
       })
-      .addCase(fetchDraftEntries.fulfilled, (state, action: PayloadAction<DraftEntry[]>) => {
-        state.draftEntries = action.payload;
-        state.loading = false;
+      .addCase(fetchDraftEntries.fulfilled, (state, action: PayloadAction<WithId<DraftEntry>[]>) => {
+        state.draftEntries.contents = action.payload;
+        state.draftEntries.isLoading = false;
       })
       .addCase(fetchDraftEntries.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Failed to fetch draft entries';
+        state.draftEntries.isLoading = false;
+        state.draftEntries.error = action.error.message || 'Failed to fetch draft entries';
       });
   },
 });

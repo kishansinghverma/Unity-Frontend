@@ -3,7 +3,6 @@ import { CheckCircle, Clock } from 'lucide-react';
 import { getDateComponent } from '../../../../../services/utils';
 import { PhonepeEntry } from '../../../commons/types';
 import { WithId } from '../../../../../commons/types';
-import { BankLogo } from '../../Resoures';
 import { getBankIcon } from '../../common';
 
 

@@ -5,14 +5,16 @@ import TransactionCard from './TransactionCard';
 import { LocationHistoryData, LocationHistoryItem } from './DraftListItem';
 import React from 'react';
 import { ReviewModalProps } from '../../../commons/types';
-import { getPhonePeMatches } from '../../../commons/utils';
+import { getDraftMatches, getPhonePeMatches } from '../../../commons/utils';
 import { useAppSelector } from '../../../../../store/hooks';
 
 
-export function ReviewModal({ itemId, bankEntries, onClose }: ReviewModalProps) {
+export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
   if (!itemId) return null;
 
-  const phonepeEntries = useAppSelector(state => state.moneytrail.phonepeEntries)
+  const bankEntries = useAppSelector(state => state.moneytrail.bankEntries).contents;
+  const phonepeEntries = useAppSelector(state => state.moneytrail.phonepeEntries).contents;
+  const draftEntries = useAppSelector(state => state.moneytrail.draftEntries).contents;
 
   const [location, setLocation] = useState('Settlement');
   const [amount, setAmount] = useState('1000');
@@ -41,18 +43,8 @@ export function ReviewModal({ itemId, bankEntries, onClose }: ReviewModalProps) 
   }, []);
 
   const bankEntry = bankEntries.find(entry => entry._id === itemId) ?? bankEntries[0];
-  const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries.contents)
-
-  const historyItems: LocationHistoryData[] = [
-    { id: 'loc1', dateTime: "2025-02-22T17:42:48+05:30", location: "Sector 40\nGurugram 122001\nHaryana\nIndia" },
-    { id: 'loc2', dateTime: "2025-02-21T10:15:00+05:30", location: "Connaught Place\nNew Delhi 110001\nDelhi\nIndia\nThis is a very long additional line to test truncation." },
-    { id: 'loc3', dateTime: "2025-02-20T08:30:12Z", location: "Times Square\nNew York, NY 10036\nUSA" },
-    { id: 'loc4', dateTime: "2025-02-19T14:00:00+05:30", location: "Short Location" },
-    { id: 'loc5', dateTime: "2025-02-18T14:00:00+05:30", location: "" },
-    { id: 'loc6', dateTime: "2025-02-17T11:00:00+05:30", location: "Another Place" },
-    { id: 'loc7', dateTime: "2025-02-16T09:20:00+05:30", location: "Zyzzva Street" },
-    { id: 'loc8', dateTime: "2025-02-15T18:00:00+05:30", location: "Blue Mountain" },
-  ];
+  const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
+  const draftMatches = getDraftMatches(phonepeMatches[0], draftEntries);
 
   const handleSelectTransaction = (id: string) => {
     setSelectedTransactionId(prevId => prevId === id ? null : id);
@@ -138,7 +130,7 @@ export function ReviewModal({ itemId, bankEntries, onClose }: ReviewModalProps) 
                   </div>
                 </div>
 
-                {historyItems.length === 0 ? (<div className="p-4 flex-1 flex items-center justify-center">
+                {draftMatches.length === 0 ? (<div className="p-4 flex-1 flex items-center justify-center">
                   <div className="text-center">
                     <FileText className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
                     <p className="text-gray-500 dark:text-gray-400 font-medium text-sm">No Transaction Identified.</p>
@@ -146,13 +138,13 @@ export function ReviewModal({ itemId, bankEntries, onClose }: ReviewModalProps) 
                   </div>
                 </div>) : (
                   <div className="p-4 flex-1 overflow-y-auto">
-                    {historyItems.map((item) => (
+                    {draftMatches.map((item) => (
                       <LocationHistoryItem
-                        key={item.id}
-                        id={item.id}
+                        key={item._id}
+                        id={item._id}
                         dateTime={item.dateTime}
                         location={item.location}
-                        isSelected={selectedItemId === item.id}
+                        isSelected={selectedItemId === item._id}
                         onSelect={(id: string) => {
                           setSelectedItemId(prevId => prevId === id ? null : id);
                         }}

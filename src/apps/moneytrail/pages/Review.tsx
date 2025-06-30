@@ -1,15 +1,20 @@
 import React, { useEffect } from 'react';
-import { Building2 } from 'lucide-react';
+import { Building2, FileSearch, TabletSmartphone } from 'lucide-react';
 import { BankEntry } from '../commons/types';
 import TransactionList from '../components/TransactionList';
 import { WithId } from '../../../commons/types';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { fetchBankEntries, fetchDraftEntries, fetchPhonePeEntries } from '../store/reviewSlice';
+import PhonepeList from '../components/PhonePeList';
+import DraftList from '../components/DraftList';
 
 const ReviewExpense: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const bankEntries = useAppSelector(state => state.moneytrail.bankEntries);
+  const phonepeEntries = useAppSelector(state => state.moneytrail.phonepeEntries);
+  const draftEntries = useAppSelector(state => state.moneytrail.draftEntries);
+
 
   useEffect(() => {
     dispatch(fetchBankEntries());
@@ -29,24 +34,26 @@ const ReviewExpense: React.FC = () => {
           isLoading={bankEntries.isLoading}
         />
       </div>
-      {/* <div className="flex-1 min-w-0">
-        <TransactionList 
+      <div className="flex-1 min-w-0">
+        <PhonepeList
           title="PhonePe Records"
           subtitle="PhonePe transaction records"
           icon={TabletSmartphone}
           gradientColors={{ from: 'from-green-500', to: 'to-emerald-600' }}
-          initialItems={phonepeEntries}
+          items={phonepeEntries.contents}
+          isLoading={phonepeEntries.isLoading}
         />
       </div>
       <div className="flex-1 min-w-0">
-        <TransactionList 
+        <DraftList
           title="Draft Logs"
           subtitle="Metadata for identification"
           icon={FileSearch}
           gradientColors={{ from: 'from-orange-500', to: 'to-yellow-500' }}
-          initialItems={draftEntries}
+          items={draftEntries.contents}
+          isLoading={draftEntries.isLoading}
         />
-      </div> */}
+      </div>
     </div>
   );
 };

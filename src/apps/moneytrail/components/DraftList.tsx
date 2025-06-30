@@ -1,13 +1,12 @@
-import { ListX, ListCheck, Calendar } from "lucide-react";
+import { ListX, ListCheck, Clock, Calendar } from "lucide-react";
 import { useState, useRef, useEffect, FC, createRef } from "react";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { BankEntry, TransactionListProps } from "../commons/types";
+import { DraftEntry, DraftListProps } from "../commons/types";
 import { WithId } from "../../../commons/types";
-import { ReviewModal } from "./modals/reviewexpense/ReviewModal";
-import { getBankIcon } from "./common";
+import { getAlphabetIcon } from "./common";
 import { getDateComponent } from "../../../services/utils";
 
-const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {
+const DraftList: FC<DraftListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {
   const [listItems, setItems] = useState(items);
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -46,7 +45,7 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
     setOpenItemId(null);
   };
 
-  const handleItemClick = (item: WithId<BankEntry>) => {
+  const handleItemClick = (item: WithId<DraftEntry>) => {
     if (!openItemId) {
       setSelectedItem(item._id);
     }
@@ -61,7 +60,7 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
     gestureEndX.current = clientX;
   };
 
-  const handleGestureEnd = (item: WithId<BankEntry>) => {
+  const handleGestureEnd = (item: WithId<DraftEntry>) => {
     const swipeDistance = gestureStartX.current - gestureEndX.current;
     const clickThreshold = 10;
     const swipeThreshold = 20;
@@ -162,18 +161,19 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
                               onMouseLeave={() => { if (isDragging) handleGestureEnd(item); }}
                               className={`relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-transform duration-300 ease-out cursor-pointer ${openItemId === item._id ? '-translate-x-20' : 'translate-x-0'}`}
                             >
-                              <div className="flex items-center flex-shrink-0">
-                                {getBankIcon(item.bank)}
-                              </div>
+                              {getAlphabetIcon(item.location[0], item._id)}
                               <div className="flex-grow pr-6 pl-4 min-w-4">
-                                <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all">{item.description}</h3>
+                                <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all">{item.location}</h3>
                               </div>
                               <div className="text-right min-w-fit">
-                                <p className={`font-semibold ${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</p>
-                                <div className="text-sm flex justify-end font-semibold text-gray-400 dark:text-gray-400">
+                                <div className="text-sm font-semibold text-gray-400 dark:text-gray-300">
                                   <div className="flex items-center">
-                                    <div className="mr-1"><Calendar width={16} height={16} strokeWidth={2.5} /></div>
-                                    <div>{formatDate(item.date)}</div>
+                                    <div className="mr-1"><Calendar width={16} height={16} strokeWidth={2.5}/></div>
+                                    <div>{formatDate(item.dateTime)}</div>
+                                  </div>
+                                  <div className="flex items-center">
+                                    <div className="mr-1"><Clock width={16} height={16} strokeWidth={2.5}/></div>
+                                    <div>{getDateComponent(item.dateTime).time}</div>
                                   </div>
                                 </div>
                               </div>
@@ -189,7 +189,7 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
           </ul>
         </div>
       </div>
-      <ReviewModal itemId={selectedItem} bankEntries={items} phonepeEntries={[]} onClose={() => setSelectedItem(null)} />
+      {/* <ReviewModal itemId={selectedItem} bankEntries={items} phonepeEntries={[]} onClose={() => setSelectedItem(null)} /> */}
     </>
   );
 };
@@ -210,4 +210,4 @@ const SkeletonItem: FC = () => (
   </div>
 );
 
-export default TransactionList;
+export default DraftList;

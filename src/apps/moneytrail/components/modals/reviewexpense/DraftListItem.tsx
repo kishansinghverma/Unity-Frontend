@@ -1,6 +1,7 @@
 import React, { ReactNode, FC } from 'react';
 import { CheckCircle, Clock } from 'lucide-react';
-import { formatDate, getDateComponent, parseDate } from '../../../../../services/utils';
+import { getDateComponent } from '../../../../../services/utils';
+import { getAlphabetIcon } from '../../common';
 
 // Data structure for a single location history entry
 export interface LocationHistoryData {
@@ -15,34 +16,7 @@ export interface LocationHistoryItemProps extends LocationHistoryData {
     onSelect: (id: string) => void; // Callback function when item is selected
 }
 
-// Palette of subtle color pairs for icons
-const subtleColorPairs = [
-    { text: 'text-slate-600 dark:text-slate-300', bg: 'bg-slate-100 dark:bg-slate-700/60' },
-    { text: 'text-sky-600 dark:text-sky-400', bg: 'bg-sky-100 dark:bg-sky-800/50' },
-    { text: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-800/50' },
-    { text: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-100 dark:bg-amber-800/50' },
-    { text: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-100 dark:bg-rose-800/50' },
-    { text: 'text-violet-600 dark:text-violet-400', bg: 'bg-violet-100 dark:bg-violet-800/50' },
-    { text: 'text-cyan-600 dark:text-cyan-400', bg: 'bg-cyan-100 dark:bg-cyan-800/50' },
-    { text: 'text-lime-600 dark:text-lime-400', bg: 'bg-lime-100 dark:bg-lime-800/50' },
-    { text: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-100 dark:bg-pink-800/50' },
-    { text: 'text-teal-600 dark:text-teal-400', bg: 'bg-teal-100 dark:bg-teal-800/50' },
-];
 
-// Generates Tailwind CSS classes for icon text and background based on a seed string
-const generateSubtleIconColors = (seed: string): { textClass: string, bgClass: string } => {
-    let hash = 0;
-    for (let i = 0; i < seed.length; i++) {
-        const char = seed.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash |= 0; // Convert to 32bit integer
-    }
-    const index = Math.abs(hash) % subtleColorPairs.length;
-    return {
-        textClass: subtleColorPairs[index].text,
-        bgClass: subtleColorPairs[index].bg
-    };
-};
 
 
 // --- LocationHistoryItem Component ---
@@ -53,12 +27,9 @@ export const LocationHistoryItem: FC<LocationHistoryItemProps> = ({
     isSelected,
     onSelect,
 }) => {
-    const { time } = getDateComponent(parseDate( dateTimeString));
+    const { time } = getDateComponent(dateTimeString);
     const singleLineLocation = location.split('\n').join(', ');
     const firstLetter = singleLineLocation.charAt(0).toUpperCase() || '?';
-
-    // Generate unique subtle colors for the icon based on item ID for unselected state
-    const { textClass: generatedIconTextColor, bgClass: generatedIconBgColor } = generateSubtleIconColors(id);
 
     const baseStyling = `w-full rounded-lg p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden group
                        border border-gray-100 dark:border-gray-700
@@ -73,17 +44,14 @@ export const LocationHistoryItem: FC<LocationHistoryItemProps> = ({
     let currentPrimaryTextColor = 'text-slate-500 dark:text-slate-400';
 
     // Initialize icon colors with generated subtle colors
-    let iconContainerBg = generatedIconBgColor;
-    let iconTextColor = generatedIconTextColor;
+    let iconStyle = null;
 
     if (isSelected) {
         selectionSpecificClasses = `ring-1 ring-indigo-400 dark:ring-indigo-500 shadow-lg dark:shadow-indigo-900/50 bg-indigo-50/70 dark:bg-slate-800`;
         selectionIndicatorElement = <CheckCircle className="w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 dark:bg-indigo-400 rounded-full p-0.5 shadow" />;
         currentDateTimeColor = 'text-indigo-700 dark:text-indigo-300';
         currentPrimaryTextColor = 'text-indigo-600 dark:text-indigo-400';
-
-        iconContainerBg = 'bg-indigo-100 dark:bg-indigo-700/50';
-        iconTextColor = 'text-indigo-600 dark:text-indigo-300';
+        iconStyle = 'bg-indigo-100 dark:bg-indigo-700/50 text-indigo-600 dark:text-indigo-300';
     } else {
         // Default styling for unselected items
         selectionSpecificClasses = "bg-gray-50 dark:bg-slate-800/60 shadow-sm dark:shadow-slate-900/30";
@@ -97,11 +65,7 @@ export const LocationHistoryItem: FC<LocationHistoryItemProps> = ({
             {selectionIndicatorElement}
 
             <div className="flex items-start space-x-3">
-                <div className={`flex-shrink-0 flex items-center justify-center w-11 h-11 rounded-lg p-0.5 ${iconContainerBg}`}>
-                    <span className={`text-lg sm:text-xl font-bold ${iconTextColor}`}>
-                        {firstLetter}
-                    </span>
-                </div>
+                {getAlphabetIcon(firstLetter, id, iconStyle)}
 
                 <div className="flex-grow min-w-0 py-0.5">
                     <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2`} title={singleLineLocation}>

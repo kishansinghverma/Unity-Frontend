@@ -11,20 +11,52 @@ export type BankEntry = {
 }
 
 export type PhonepeEntry = {
-  date: Date
-  recipient: string;
-  transactionId: string;
-  utr: string;
-  bank: string;
-  type: "Credit" | "Debit";
-  amount: number;
+    date: string
+    recipient: string;
+    transactionId: string;
+    utr: string;
+    bank: string;
+    type: "Credit" | "Debit";
+    amount: number;
+    processed: boolean;
 };
+
+export type DraftEntry = {
+    dateTime: string,
+    location: string,
+    coordinate: string,
+    processed: boolean,
+}
 
 export type TransactionListProps = {
     title: string;
     subtitle: string;
     isLoading: boolean;
     items: WithId<BankEntry>[];
+    icon: ElementType;
+    gradientColors: {
+        from: string;
+        to: string;
+    };
+}
+
+export type PhonepeListProps = {
+    title: string;
+    subtitle: string;
+    isLoading: boolean;
+    items: WithId<PhonepeEntry>[];
+    icon: ElementType;
+    gradientColors: {
+        from: string;
+        to: string;
+    };
+}
+
+export type DraftListProps = {
+    title: string;
+    subtitle: string;
+    isLoading: boolean;
+    items: WithId<DraftEntry>[];
     icon: ElementType;
     gradientColors: {
         from: string;
