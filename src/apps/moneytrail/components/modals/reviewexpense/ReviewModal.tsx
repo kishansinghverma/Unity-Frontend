@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { X, CreditCard, Smartphone, FileText, Check } from 'lucide-react';
 import { TransactionItem } from './PhonePeListItem';
 import TransactionCard from './TransactionCard';
-import { LocationHistoryData, LocationHistoryItem } from './DraftListItem';
+import { LocationHistoryItem } from './DraftListItem';
 import React from 'react';
 import { ReviewModalProps } from '../../../commons/types';
 import { getDraftMatches, getPhonePeMatches } from '../../../commons/utils';
@@ -16,35 +16,23 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
   const phonepeEntries = useAppSelector(state => state.moneytrail.phonepeEntries).contents;
   const draftEntries = useAppSelector(state => state.moneytrail.draftEntries).contents;
 
-  const [location, setLocation] = useState('Settlement');
   const [amount, setAmount] = useState('1000');
   const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const updateHeight = () => {
-      const firstColumn = document.querySelector('[data-first-column]');
-      if (firstColumn) {
-        const height = firstColumn.clientHeight;
-        document.documentElement.style.setProperty('--first-col-height', `${height}px`);
-      }
-    };
-
-    updateHeight();
-
-    const observer = new ResizeObserver(updateHeight);
-    const firstColumn = document.querySelector('[data-first-column]');
+  const setColumnHeight = () => {
+    const firstColumn: HTMLElement | null = document.querySelector('[data-first-column]');
     if (firstColumn) {
-      observer.observe(firstColumn);
+      const height = firstColumn.offsetHeight;
+      document.documentElement.style.setProperty('--first-col-height', `${height}px`);
     }
+  };
 
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
+  useEffect(setColumnHeight, []);
 
   const bankEntry = bankEntries.find(entry => entry._id === itemId) ?? bankEntries[0];
   const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
-  const draftMatches = getDraftMatches(phonepeMatches[0], draftEntries);
+  //const draftMatches = getDraftMatches(phonepeMatches[0], draftEntries);
+  const draftMatches = draftEntries;
 
   const handleSelectTransaction = (id: string) => {
     setSelectedTransactionId(prevId => prevId === id ? null : id);
@@ -110,13 +98,15 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
 
                 {phonepeMatches.length > 0 && (
                   <div className="p-4 flex-1 overflow-y-auto">
-                    {phonepeMatches.map((transaction) => (
-                      <TransactionItem
-                        isSelected={selectedTransactionId === transaction._id}
-                        onSelect={handleSelectTransaction}
-                        {...transaction}
-                      />
-                    ))}
+                    <div>
+                      {phonepeMatches.map((transaction) => (
+                        <TransactionItem
+                          isSelected={selectedTransactionId === transaction._id}
+                          onSelect={handleSelectTransaction}
+                          {...transaction}
+                        />
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
@@ -138,18 +128,20 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
                   </div>
                 </div>) : (
                   <div className="p-4 flex-1 overflow-y-auto">
-                    {draftMatches.map((item) => (
-                      <LocationHistoryItem
-                        key={item._id}
-                        id={item._id}
-                        dateTime={item.dateTime}
-                        location={item.location}
-                        isSelected={selectedItemId === item._id}
-                        onSelect={(id: string) => {
-                          setSelectedItemId(prevId => prevId === id ? null : id);
-                        }}
-                      />
-                    ))}
+                    <div>
+                      {draftMatches.map((item) => (
+                        <LocationHistoryItem
+                          key={item._id}
+                          id={item._id}
+                          dateTime={item.dateTime}
+                          location={item.location}
+                          isSelected={selectedItemId === item._id}
+                          onSelect={(id: string) => {
+                            setSelectedItemId(prevId => prevId === id ? null : id);
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

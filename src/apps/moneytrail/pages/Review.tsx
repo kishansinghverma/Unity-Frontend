@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import { Building2, FileSearch, TabletSmartphone } from 'lucide-react';
-import { BankEntry } from '../commons/types';
-import TransactionList from '../components/TransactionList';
-import { WithId } from '../../../commons/types';
+import TransactionList from '../components/BankList';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { fetchBankEntries, fetchDraftEntries, fetchPhonePeEntries } from '../store/reviewSlice';
 import PhonepeList from '../components/PhonePeList';

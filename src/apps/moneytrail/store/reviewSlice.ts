@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Fetchable, WithId } from '../../../commons/types';
 import { Routes } from '../../../constants/constant';
-import { FetchJson } from '../../../commons/httpHelper';
+import { FetchJson, handleError } from '../../../commons/httpHelper';
 import { FetchableDefault } from '../../../commons/defaults';
 import { BankEntry, DraftEntry, PhonepeEntry } from '../commons/types';
 
@@ -69,6 +69,7 @@ const reviewSlice = createSlice({
         state.draftEntries.isLoading = false;
       })
       .addCase(fetchDraftEntries.rejected, (state, action) => {
+        handleError(action.error.message || 'Failed to fetch draft entries');
         state.draftEntries.isLoading = false;
         state.draftEntries.error = action.error.message || 'Failed to fetch draft entries';
       });

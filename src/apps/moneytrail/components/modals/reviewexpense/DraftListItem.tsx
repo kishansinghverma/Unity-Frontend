@@ -1,7 +1,7 @@
 import React, { ReactNode, FC } from 'react';
 import { CheckCircle, Clock } from 'lucide-react';
 import { getDateComponent } from '../../../../../services/utils';
-import { getAlphabetIcon } from '../../common';
+import { getAlphabetIcon } from '../../Common';
 
 // Data structure for a single location history entry
 export interface LocationHistoryData {

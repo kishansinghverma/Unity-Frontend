@@ -8,7 +8,7 @@ import {
 import { WithId } from '../../../../../commons/types';
 import { BankEntry } from '../../../commons/types';
 import { BankLogo } from '../../Resoures';
-import { getBankIcon } from '../../common';
+import { getBankIcon } from '../../Common';
 
 interface DescriptionInfo {
   platform: string;

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root{
+    --first-col-height: 0px;
+}
+
 .expense-item-enter {
     filter: blur(10px);
     opacity: 0;

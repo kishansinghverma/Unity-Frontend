@@ -1,5 +1,14 @@
 import { getColorPair, getIconBackground } from "../commons/utils";
-import { BankLogo } from "./Resoures";
+import { CircleDollarSign } from "lucide-react";
+import HdfcLogo from '../../../static/hdfc.svg';
+import SbiLogo from '../../../static/sbi.svg';
+import { SafeMap } from "../commons/SafeMap";
+
+export const BankLogo = new SafeMap<string, JSX.Element>({
+    HDFC: <img src={HdfcLogo} width={24} height={24} />,
+    SBI: <img src={SbiLogo} width={24} height={24} />,
+    Default: <CircleDollarSign size={24} />
+});
 
 export const getBankIcon = (bankName: string) => (
     <div className={`p-2 rounded ${getIconBackground(bankName)}`} title={bankName}>

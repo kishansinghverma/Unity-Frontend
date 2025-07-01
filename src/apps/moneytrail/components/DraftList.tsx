@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, FC, createRef } from "react";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { DraftEntry, DraftListProps } from "../commons/types";
 import { WithId } from "../../../commons/types";
-import { getAlphabetIcon } from "./common";
+import { getAlphabetIcon } from "./Common";
 import { getDateComponent } from "../../../services/utils";
 
 const DraftList: FC<DraftListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {

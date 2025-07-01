@@ -13,4 +13,4 @@ export const handleJsonResponse = (response: Response, errorMessage?: string) =>
     return response.json();
 }
 
-export const handleError = (error: Error) => toast.error(error.message);
+export const handleError = (error: Error | string) => toast.error(error instanceof Error ? error.message : error);

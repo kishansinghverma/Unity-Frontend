@@ -4,7 +4,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { BankEntry, TransactionListProps } from "../commons/types";
 import { WithId } from "../../../commons/types";
 import { ReviewModal } from "./modals/reviewexpense/ReviewModal";
-import { getBankIcon } from "./common";
+import { getBankIcon } from "./Common";
 import { getDateComponent } from "../../../services/utils";
 
 const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {

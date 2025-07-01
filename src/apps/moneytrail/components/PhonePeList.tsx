@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, FC, createRef } from "react";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { PhonepeEntry, PhonepeListProps } from "../commons/types";
 import { WithId } from "../../../commons/types";
-import { getBankIcon } from "./common";
+import { getBankIcon } from "./Common";
 import { getDateComponent } from "../../../services/utils";
 
 const PhonepeList: FC<PhonepeListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {
