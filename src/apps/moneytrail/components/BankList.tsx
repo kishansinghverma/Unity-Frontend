@@ -4,8 +4,8 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { BankEntry, TransactionListProps } from "../commons/types";
 import { WithId } from "../../../commons/types";
 import { ReviewModal } from "./modals/reviewexpense/ReviewModal";
-import { getBankIcon } from "./Common";
 import { getDateComponent } from "../../../services/utils";
+import { BankIcon } from "./Common";
 
 const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {
   const [listItems, setItems] = useState(items);
@@ -163,7 +163,7 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
                               className={`relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-transform duration-300 ease-out cursor-pointer ${openItemId === item._id ? '-translate-x-20' : 'translate-x-0'}`}
                             >
                               <div className="flex items-center flex-shrink-0">
-                                {getBankIcon(item.bank)}
+                                <BankIcon bankName={item.bank} />
                               </div>
                               <div className="flex-grow pr-6 pl-4 min-w-4">
                                 <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all">{item.description}</h3>

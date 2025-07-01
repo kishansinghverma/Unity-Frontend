@@ -3,7 +3,7 @@ import { CheckCircle, Clock } from 'lucide-react';
 import { getDateComponent } from '../../../../../services/utils';
 import { PhonepeEntry } from '../../../commons/types';
 import { WithId } from '../../../../../commons/types';
-import { getBankIcon } from '../../Common';
+import { BankIcon } from '../../Common';
 
 
 export const TransactionItem: FC<WithId<PhonepeEntry> & { isSelected: boolean, onSelect: (id: string) => void }> = (item) => {
@@ -45,8 +45,7 @@ export const TransactionItem: FC<WithId<PhonepeEntry> & { isSelected: boolean, o
     >
       {selectionIndicatorElement}
       <div className={`flex items-center space-x-3`}>
-        {getBankIcon(item.bank)}
-
+        <BankIcon bankName={item.bank} />
         <div className="flex-grow min-w-0">
           <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2`} title={item.recipient}>
             {item.recipient}

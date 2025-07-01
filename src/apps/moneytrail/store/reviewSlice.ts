@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Fetchable, WithId } from '../../../commons/types';
 import { Routes } from '../../../constants/constant';
-import { FetchJson, handleError } from '../../../commons/httpHelper';
+import { FetchJson } from '../../../commons/httpHelper';
 import { FetchableDefault } from '../../../commons/defaults';
 import { BankEntry, DraftEntry, PhonepeEntry } from '../commons/types';
 
@@ -47,8 +47,8 @@ const reviewSlice = createSlice({
         state.bankEntries.isLoading = false;
       })
       .addCase(fetchBankEntries.rejected, (state, action) => {
-        state.bankEntries.isLoading = false;
         state.bankEntries.error = action.error.message ?? 'Failed to fetch Bank entries'
+        state.bankEntries.isLoading = false;
       })
       .addCase(fetchPhonePeEntries.pending, (state) => {
         state.bankEntries.isLoading = true;
@@ -58,8 +58,8 @@ const reviewSlice = createSlice({
         state.phonepeEntries.isLoading = false;
       })
       .addCase(fetchPhonePeEntries.rejected, (state, action) => {
-        state.phonepeEntries.isLoading = false;
         state.phonepeEntries.error = action.error.message || 'Failed to fetch PhonePe entries';
+        state.phonepeEntries.isLoading = false;
       })
       .addCase(fetchDraftEntries.pending, (state) => {
         state.draftEntries.isLoading = true;
@@ -69,9 +69,8 @@ const reviewSlice = createSlice({
         state.draftEntries.isLoading = false;
       })
       .addCase(fetchDraftEntries.rejected, (state, action) => {
-        handleError(action.error.message || 'Failed to fetch draft entries');
-        state.draftEntries.isLoading = false;
         state.draftEntries.error = action.error.message || 'Failed to fetch draft entries';
+        state.draftEntries.isLoading = false;
       });
   },
 });

@@ -7,8 +7,7 @@ import {
 } from 'lucide-react';
 import { WithId } from '../../../../../commons/types';
 import { BankEntry } from '../../../commons/types';
-import { BankLogo } from '../../Resoures';
-import { getBankIcon } from '../../Common';
+import { BankIcon } from '../../Common';
 
 interface DescriptionInfo {
   platform: string;
@@ -94,7 +93,7 @@ const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
       <div>
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
-            {getBankIcon(bankEntry.bank)}
+            <BankIcon bankName={bankEntry.bank} />
             <div className="font-semibold text-gray-800 dark:text-gray-100">{bankEntry.bank}</div>
           </div>
           <div className="text-right">

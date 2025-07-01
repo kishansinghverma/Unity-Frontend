@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, FC, createRef } from "react";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { DraftEntry, DraftListProps } from "../commons/types";
 import { WithId } from "../../../commons/types";
-import { getAlphabetIcon } from "./Common";
+import { AlphabetIcon } from "./Common";
 import { getDateComponent } from "../../../services/utils";
 
 const DraftList: FC<DraftListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {
@@ -161,7 +161,7 @@ const DraftList: FC<DraftListProps> = ({ title, subtitle, icon: Icon, gradientCo
                               onMouseLeave={() => { if (isDragging) handleGestureEnd(item); }}
                               className={`relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-transform duration-300 ease-out cursor-pointer ${openItemId === item._id ? '-translate-x-20' : 'translate-x-0'}`}
                             >
-                              {getAlphabetIcon(item.location[0], item._id)}
+                              <AlphabetIcon seed={item._id} firstLetter={ item.location.charAt(0).toUpperCase()} />
                               <div className="flex-grow pr-6 pl-4 min-w-4">
                                 <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all">{item.location}</h3>
                               </div>

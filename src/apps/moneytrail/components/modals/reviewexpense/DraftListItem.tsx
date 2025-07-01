@@ -1,7 +1,7 @@
 import React, { ReactNode, FC } from 'react';
 import { CheckCircle, Clock } from 'lucide-react';
 import { getDateComponent } from '../../../../../services/utils';
-import { getAlphabetIcon } from '../../Common';
+import { AlphabetIcon } from '../../Common';
 
 // Data structure for a single location history entry
 export interface LocationHistoryData {
@@ -44,7 +44,7 @@ export const LocationHistoryItem: FC<LocationHistoryItemProps> = ({
     let currentPrimaryTextColor = 'text-slate-500 dark:text-slate-400';
 
     // Initialize icon colors with generated subtle colors
-    let iconStyle = null;
+    let iconStyle;
 
     if (isSelected) {
         selectionSpecificClasses = `ring-1 ring-indigo-400 dark:ring-indigo-500 shadow-lg dark:shadow-indigo-900/50 bg-indigo-50/70 dark:bg-slate-800`;
@@ -65,7 +65,7 @@ export const LocationHistoryItem: FC<LocationHistoryItemProps> = ({
             {selectionIndicatorElement}
 
             <div className="flex items-start space-x-3">
-                {getAlphabetIcon(firstLetter, id, iconStyle)}
+                <AlphabetIcon {...{ firstLetter, seed: id, overrideStyle: iconStyle }} />
 
                 <div className="flex-grow min-w-0 py-0.5">
                     <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2`} title={singleLineLocation}>
