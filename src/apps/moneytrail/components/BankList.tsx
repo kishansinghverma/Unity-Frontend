@@ -3,16 +3,18 @@ import { useState, useRef, useEffect, FC, createRef } from "react";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { BankEntry, TransactionListProps } from "../engine/models/types";
 import { WithId } from "../../../engine/models/types";
-import { ReviewModal } from "./modals/reviewExpense/ReviewModal";
 import { getDateComponent } from "../../../engine/helpers/dateTimeHelper";
 import { BankIcon } from "./Common";
+import { useAppDispatch } from "../../../store/hooks";
+import { setBankItemId } from "../store/reviewModalSlice";
 
 const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {
   const [listItems, setItems] = useState(items);
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);
+
+  const dispatch = useAppDispatch();
 
   const gestureStartX = useRef(0);
   const gestureEndX = useRef(0);
@@ -48,7 +50,7 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
 
   const handleItemClick = (item: WithId<BankEntry>) => {
     if (!openItemId) {
-      setSelectedItem(item._id);
+      dispatch(setBankItemId(item._id))
     }
   };
 
@@ -189,7 +191,6 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
           </ul>
         </div>
       </div>
-      <ReviewModal itemId={selectedItem} bankEntries={items} phonepeEntries={[]} onClose={() => setSelectedItem(null)} />
     </>
   );
 };

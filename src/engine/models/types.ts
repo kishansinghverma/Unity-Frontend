@@ -4,6 +4,8 @@ export type WithId<T> = {
     _id: string;
 } & T;
 
+export type Nullable<T> = T | null | undefined;
+
 export type Fetchable<T> = {
     contents: T;
     isLoading: boolean

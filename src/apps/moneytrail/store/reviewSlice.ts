@@ -5,38 +5,39 @@ import { FetchableDefault } from '../../../engine/defaults';
 import { fetchJson } from '../../../engine/helpers/httpHelper';
 import { BankEntry, DraftEntry, PhonepeEntry } from '../engine/models/types';
 
-interface MoneytrailState {
+interface ReviewPageState {
   bankEntries: Fetchable<WithId<BankEntry>[]>;
   phonepeEntries: Fetchable<WithId<PhonepeEntry>[]>;
   draftEntries: Fetchable<WithId<DraftEntry>[]>;
 }
 
-const initialState: MoneytrailState = {
+const initialState: ReviewPageState = {
   bankEntries: FetchableDefault,
   phonepeEntries: FetchableDefault,
   draftEntries: FetchableDefault
 };
 
-
 export const fetchBankEntries = createAsyncThunk<WithId<BankEntry>[]>(
-  'moneytrail/fetchBankEntries',
+  'fetch/bankEntries',
   () => fetchJson(Routes.BankStatement)
 );
 
 export const fetchPhonePeEntries = createAsyncThunk<WithId<PhonepeEntry>[]>(
-  'moneytrail/fetchPhonePeEntries',
+  'fetch/phonePeEntries',
   () => fetchJson(Routes.PhonePeStatement)
 );
 
 export const fetchDraftEntries = createAsyncThunk<WithId<DraftEntry>[]>(
-  'moneytrail/fetchDraftEntries',
+  'fetch/draftEntries',
   () => fetchJson(Routes.DraftExpenses)
 );
 
-const reviewSlice = createSlice({
-  name: 'moneytrail',
+export const reviewSlice = createSlice({
+  name: 'review',
   initialState,
-  reducers: {},
+  reducers: {
+
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchBankEntries.pending, (state) => {
@@ -72,7 +73,5 @@ const reviewSlice = createSlice({
         state.draftEntries.error = action.error.message || 'Failed to fetch draft entries';
         state.draftEntries.isLoading = false;
       });
-  },
+  }
 });
-
-export default reviewSlice.reducer;

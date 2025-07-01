@@ -5,14 +5,14 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { fetchBankEntries, fetchDraftEntries, fetchPhonePeEntries } from '../store/reviewSlice';
 import PhonepeList from '../components/PhonePeList';
 import DraftList from '../components/DraftList';
+import { ReviewModal } from '../components/modals/reviewExpense/ReviewModal';
 
 const ReviewExpense: React.FC = () => {
 
   const dispatch = useAppDispatch();
-  const bankEntries = useAppSelector(state => state.moneytrail.bankEntries);
-  const phonepeEntries = useAppSelector(state => state.moneytrail.phonepeEntries);
-  const draftEntries = useAppSelector(state => state.moneytrail.draftEntries);
-
+  const bankEntries = useAppSelector(state => state.moneyTrail.review.bankEntries);
+  const phonepeEntries = useAppSelector(state => state.moneyTrail.review.phonepeEntries);
+  const draftEntries = useAppSelector(state => state.moneyTrail.review.draftEntries);
 
   useEffect(() => {
     dispatch(fetchBankEntries());
@@ -52,6 +52,7 @@ const ReviewExpense: React.FC = () => {
           isLoading={draftEntries.isLoading}
         />
       </div>
+      <ReviewModal />
     </div>
   );
 };

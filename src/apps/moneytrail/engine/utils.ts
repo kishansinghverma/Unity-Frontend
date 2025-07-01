@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { WithId } from "../../../engine/models/types";
+import { Nullable, WithId } from "../../../engine/models/types";
 import { BankEntry, DraftEntry, PhonepeEntry } from "./models/types";
 
 const colorPair = [

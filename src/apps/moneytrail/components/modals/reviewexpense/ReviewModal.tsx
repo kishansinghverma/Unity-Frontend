@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { X, CreditCard, Smartphone, FileText, Check } from 'lucide-react';
 import TransactionCard from './TransactionCard';
 import { DraftItem } from './DraftItem';
-import { ReviewModalProps } from '../../../engine/models/types';
 import { getDraftMatches, getPhonePeMatches } from '../../../engine/utils';
 import { useAppSelector } from '../../../../../store/hooks';
 import { useReactState } from '../../../../../engine/hooks/useStateExtension';
@@ -10,15 +9,13 @@ import { PhonePeItem } from './PhonePeItem';
 import { TransactionContainer } from './TransactionContainer';
 
 
-export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
-  if (!itemId) return null;
+export const ReviewModal: React.FC = () => {
+  const bankItemId = useAppSelector(state => state.moneyTrail.reviewModal.bankItemId);
+  if (!bankItemId) return null;
 
-  const bankEntries = useAppSelector(state => state.moneytrail.bankEntries).contents;
-  const phonepeEntries = useAppSelector(state => state.moneytrail.phonepeEntries).contents;
-  const draftEntries = useAppSelector(state => state.moneytrail.draftEntries).contents;
-
-  const [amount, setAmount] = useState('1000');
-  const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null);
+  const bankEntries = useAppSelector(state => state.moneyTrail.review.bankEntries).contents;
+  const phonepeEntries = useAppSelector(state => state.moneyTrail.review.phonepeEntries).contents;
+  const draftEntries = useAppSelector(state => state.moneyTrail.review.draftEntries).contents;
 
   const setColumnHeight = () => {
     const firstColumn: HTMLElement | null = document.querySelector('[data-first-column]');
@@ -31,17 +28,16 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
 
   useEffect(setColumnHeight, []);
 
-  const bankEntry = bankEntries.find(entry => entry._id === itemId) ?? bankEntries[0];
+  const bankEntry = bankEntries.find(entry => entry._id === bankItemId)!;
   const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
   const draftMatches = getDraftMatches(phonepeMatches[0], draftEntries);
-  //const draftMatches = draftEntries;
 
   const selectedPhonepeId = useReactState<string | null>(null);
   const selectedDraftId = useReactState<string | null>(null);
 
   return (
     // Modal overlay - handles outside clicks
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={()=>alert()}>
       {/* Modal Container */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden" onClick={e => e.stopPropagation()}>
         {/* Modal Header */}
@@ -51,7 +47,7 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
             <p className="text-sm text-gray-600 dark:text-gray-400">Review and approve your transactions</p>
           </div>
           <button
-            onClick={onClose}
+            // onClick={onClose}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
             <X className="w-6 h-6 text-gray-500 dark:text-gray-400" />
@@ -155,8 +151,8 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
                       <span className="text-lg font-bold text-gray-700 dark:text-gray-300">₹</span>
                       <input
                         type="text"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
+                        // value={amount}
+                        // onChange={(e) => setAmount(e.target.value)}
                         className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-lg font-bold text-green-600 dark:text-green-400 w-20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700"
                       />
                     </div>
@@ -164,7 +160,7 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
 
                   <div className="flex gap-2">
                     <button
-                      onClick={onClose}
+                      // onClick={onClose}
                       className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors font-medium text-sm"
                     >
                       <X className="w-4 h-4" />
@@ -174,7 +170,7 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
                       onClick={() => {
                         // Handle approval logic here
                         alert('Transaction Approved!');
-                        onClose();
+                        // onClose();
                       }}
                       className="flex items-center gap-2 px-6 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition-colors font-medium shadow-sm text-sm"
                     >
@@ -187,7 +183,7 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
             </div>
           </div>
         </div>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 }
