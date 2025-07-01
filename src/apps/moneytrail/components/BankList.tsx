@@ -1,8 +1,8 @@
 import { ListX, ListCheck, Calendar } from "lucide-react";
 import { useState, useRef, useEffect, FC, createRef } from "react";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { BankEntry, TransactionListProps } from "../engine/types";
-import { WithId } from "../../../engine/types";
+import { BankEntry, TransactionListProps } from "../engine/models/types";
+import { WithId } from "../../../engine/models/types";
 import { ReviewModal } from "./modals/reviewExpense/ReviewModal";
 import { getDateComponent } from "../../../engine/helpers/dateTimeHelper";
 import { BankIcon } from "./Common";

@@ -5,8 +5,8 @@ import {
   Clock,
   FileText
 } from 'lucide-react';
-import { WithId } from '../../../../../engine/types';
-import { BankEntry } from '../../../engine/types';
+import { WithId } from '../../../../../engine/models/types';
+import { BankEntry } from '../../../engine/models/types';
 import { BankIcon } from '../../Common';
 
 interface DescriptionInfo {

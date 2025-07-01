@@ -1,5 +1,5 @@
 import { ElementType } from "react";
-import { WithId } from "../../../engine/types";
+import { WithId } from "../../../../engine/models/types";
 
 export type BankEntry = {
     date: string;

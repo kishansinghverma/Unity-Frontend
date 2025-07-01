@@ -1,4 +1,4 @@
-import { Fetchable } from "./types";
+import { Fetchable } from "./models/types";
 
 export const StringDefault = '';
 

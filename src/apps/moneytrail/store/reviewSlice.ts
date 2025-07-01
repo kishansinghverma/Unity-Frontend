@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Fetchable, WithId } from '../../../engine/types';
+import { Fetchable, WithId } from '../../../engine/models/types';
 import { Routes } from '../../../engine/constant';
 import { FetchableDefault } from '../../../engine/defaults';
 import { fetchJson } from '../../../engine/helpers/httpHelper';
-import { BankEntry, DraftEntry, PhonepeEntry } from '../engine/types';
+import { BankEntry, DraftEntry, PhonepeEntry } from '../engine/models/types';
 
 interface MoneytrailState {
   bankEntries: Fetchable<WithId<BankEntry>[]>;

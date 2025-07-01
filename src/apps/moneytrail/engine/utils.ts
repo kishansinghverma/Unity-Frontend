@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import { WithId } from "../../../engine/types";
-import { BankEntry, DraftEntry, PhonepeEntry } from "./types";
+import { WithId } from "../../../engine/models/types";
+import { BankEntry, DraftEntry, PhonepeEntry } from "./models/types";
 
 const colorPair = [
     'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700/60',

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { X, CreditCard, Smartphone, FileText, Check } from 'lucide-react';
-import { TransactionItem } from './PhonePeListItem';
 import TransactionCard from './TransactionCard';
-import { LocationHistoryItem } from './DraftListItem';
-import React from 'react';
-import { ReviewModalProps } from '../../../engine/types';
+import { DraftItem } from './DraftItem';
+import { ReviewModalProps } from '../../../engine/models/types';
 import { getDraftMatches, getPhonePeMatches } from '../../../engine/utils';
 import { useAppSelector } from '../../../../../store/hooks';
+import { useReactState } from '../../../../../engine/hooks/useStateExtension';
+import { PhonePeItem } from './PhonePeItem';
+import { TransactionContainer } from './TransactionContainer';
 
 
 export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
@@ -22,8 +23,9 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
   const setColumnHeight = () => {
     const firstColumn: HTMLElement | null = document.querySelector('[data-first-column]');
     if (firstColumn) {
-      const height = firstColumn.offsetHeight;
-      document.documentElement.style.setProperty('--first-col-height', `${height}px`);
+      const style = document.documentElement.style;
+      style.setProperty('--first-col-height', '0px');
+      style.setProperty('--first-col-height', `${firstColumn.offsetHeight}px`);
     }
   };
 
@@ -32,12 +34,10 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
   const bankEntry = bankEntries.find(entry => entry._id === itemId) ?? bankEntries[0];
   const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
   const draftMatches = getDraftMatches(phonepeMatches[0], draftEntries);
+  //const draftMatches = draftEntries;
 
-  const handleSelectTransaction = (id: string) => {
-    setSelectedTransactionId(prevId => prevId === id ? null : id);
-  };
-
-  const [selectedItemId, setSelectedItemId] = React.useState<string | null>(null);
+  const selectedPhonepeId = useReactState<string | null>(null);
+  const selectedDraftId = useReactState<string | null>(null);
 
   return (
     // Modal overlay - handles outside clicks
@@ -63,87 +63,37 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
           <div className="max-w-7xl mx-auto p-6">
             {/* Three Column Layout */}
             <div className="grid grid-cols-3 gap-4 mb-6">
-              {/* Bank Transaction Column */}
-              <div data-first-column className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center gap-2">
-                    <CreditCard className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Bank Transaction</h2>
-                  </div>
-                </div>
-                <div className="p-4 flex-1 overflow-y-auto">
-                  <TransactionCard {...bankEntry} />
-                </div>
-              </div>
+              <TransactionContainer
+                isFirst
+                icon={CreditCard}
+                type="Bank"
+                headerStyle="from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20"
+                iconStyle="text-blue-600 dark:text-blue-400"
+              >
+                <TransactionCard {...bankEntry} />
+              </TransactionContainer>
 
-              {/* PhonePe Transaction Column */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-[var(--first-col-height,auto)]">
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center gap-2">
-                    <Smartphone className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white">PhonePe Transactions</h2>
-                  </div>
-                </div>
+              <TransactionContainer
+                icon={Smartphone}
+                type="PhonePe"
+                headerStyle="from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20"
+                iconStyle="text-purple-600 dark:text-purple-400"
+              >
+                {phonepeMatches.map((item) => (
+                  <PhonePeItem key={item._id} {...item} selectedItem={selectedPhonepeId} />
+                ))}
+              </TransactionContainer>
 
-                {phonepeMatches.length === 0 && (
-                  <div className="p-4 flex-1 flex items-center justify-center">
-                    <div className="text-center">
-                      <FileText className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-                      <p className="text-gray-500 dark:text-gray-400 font-medium text-sm">No Transaction Identified.</p>
-                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">PhonePe transactions will appear here</p>
-                    </div>
-                  </div>
-                )}
-
-                {phonepeMatches.length > 0 && (
-                  <div className="p-4 flex-1 overflow-y-auto">
-                    <div>
-                      {phonepeMatches.map((transaction) => (
-                        <TransactionItem
-                          isSelected={selectedTransactionId === transaction._id}
-                          onSelect={handleSelectTransaction}
-                          {...transaction}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Draft Transactions Column */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-[var(--first-col-height,auto)]">
-                <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-                    <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Draft Transactions</h2>
-                  </div>
-                </div>
-
-                {draftMatches.length === 0 ? (<div className="p-4 flex-1 flex items-center justify-center">
-                  <div className="text-center">
-                    <FileText className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-                    <p className="text-gray-500 dark:text-gray-400 font-medium text-sm">No Transaction Identified.</p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Draft transactions will appear here</p>
-                  </div>
-                </div>) : (
-                  <div className="p-4 flex-1 overflow-y-auto">
-                    <div>
-                      {draftMatches.map((item) => (
-                        <LocationHistoryItem
-                          key={item._id}
-                          id={item._id}
-                          dateTime={item.dateTime}
-                          location={item.location}
-                          isSelected={selectedItemId === item._id}
-                          onSelect={(id: string) => {
-                            setSelectedItemId(prevId => prevId === id ? null : id);
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <TransactionContainer
+                icon={FileText}
+                type="Draft"
+                headerStyle="from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20"
+                iconStyle="text-orange-600 dark:text-orange-400"
+              >
+                {draftMatches.map((item) => (
+                  <DraftItem key={item._id} {...item} selectedItem={selectedDraftId} />
+                ))}
+              </TransactionContainer>
             </div>
 
             {/* Transaction Details Table */}

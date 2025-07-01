@@ -1,8 +1,8 @@
 import { ListX, ListCheck, Clock, Calendar } from "lucide-react";
 import { useState, useRef, useEffect, FC, createRef } from "react";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { DraftEntry, DraftListProps } from "../engine/types";
-import { WithId } from "../../../engine/types";
+import { DraftEntry, DraftListProps } from "../engine/models/types";
+import { WithId } from "../../../engine/models/types";
 import { AlphabetIcon } from "./Common";
 import { getDateComponent } from "../../../engine/helpers/dateTimeHelper";
 
