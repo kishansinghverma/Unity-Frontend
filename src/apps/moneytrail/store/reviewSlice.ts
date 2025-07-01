@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Fetchable, WithId } from '../../../commons/types';
-import { Routes } from '../../../constants/constant';
-import { FetchJson } from '../../../commons/httpHelper';
-import { FetchableDefault } from '../../../commons/defaults';
-import { BankEntry, DraftEntry, PhonepeEntry } from '../commons/types';
+import { Fetchable, WithId } from '../../../engine/types';
+import { Routes } from '../../../engine/constant';
+import { FetchableDefault } from '../../../engine/defaults';
+import { fetchJson } from '../../../engine/helpers/httpHelper';
+import { BankEntry, DraftEntry, PhonepeEntry } from '../engine/types';
 
 interface MoneytrailState {
   bankEntries: Fetchable<WithId<BankEntry>[]>;
@@ -20,17 +20,17 @@ const initialState: MoneytrailState = {
 
 export const fetchBankEntries = createAsyncThunk<WithId<BankEntry>[]>(
   'moneytrail/fetchBankEntries',
-  () => FetchJson(Routes.BankStatement)
+  () => fetchJson(Routes.BankStatement)
 );
 
 export const fetchPhonePeEntries = createAsyncThunk<WithId<PhonepeEntry>[]>(
   'moneytrail/fetchPhonePeEntries',
-  () => FetchJson(Routes.PhonePeStatement)
+  () => fetchJson(Routes.PhonePeStatement)
 );
 
 export const fetchDraftEntries = createAsyncThunk<WithId<DraftEntry>[]>(
   'moneytrail/fetchDraftEntries',
-  () => FetchJson(Routes.DraftExpenses)
+  () => fetchJson(Routes.DraftExpenses)
 );
 
 const reviewSlice = createSlice({

@@ -1,7 +1,7 @@
 import { RefreshCw } from 'lucide-react';
 import { useState } from 'react';
-import { ReviewModal } from '../components/modals/reviewexpense/ReviewModal';
-import { RecordItem } from '../commons/types';
+import { ReviewModal } from '../components/modals/reviewExpense/ReviewModal';
+import { RecordItem } from '../engine/types';
 
 function Dashboard() {
   const [selectedTransaction, setSelectedTransaction] = useState<RecordItem | null>(null);

@@ -1,8 +1,8 @@
 import { ReactNode, FC } from 'react'; // Removed useState as it's not used in this isolated module
 import { CheckCircle, Clock } from 'lucide-react';
-import { getDateComponent } from '../../../../../services/utils';
-import { PhonepeEntry } from '../../../commons/types';
-import { WithId } from '../../../../../commons/types';
+import { getDateComponent } from '../../../../../engine/helpers/dateTimeHelper';
+import { PhonepeEntry } from '../../../engine/types';
+import { WithId } from '../../../../../engine/types';
 import { BankIcon } from '../../Common';
 
 

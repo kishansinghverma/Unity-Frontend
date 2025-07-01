@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const ReactState = <T>(value: T) => {
+export const useReactState = <T>(value: T) => {
     const state = useState<T>(value);
     return {
         get: () => state[0],
@@ -8,9 +8,9 @@ export const ReactState = <T>(value: T) => {
     }
 };
 
-export const FetchableContent = <T>(value: T, isLoading = true) => {
-    const contentState = ReactState(value);
-    const loadingState = ReactState(isLoading)
+export const useAsyncState = <T>(value: T, isLoading = true) => {
+    const contentState = useReactState(value);
+    const loadingState = useReactState(isLoading)
 
     return {
         content: contentState.get(),

@@ -1,8 +1,8 @@
-import { getColorPair, getIconBackground } from "../commons/utils";
+import { getColorPair, getIconBackground } from "../engine/utils";
 import { CircleDollarSign } from "lucide-react";
 import HdfcLogo from '../../../static/hdfc.svg';
 import SbiLogo from '../../../static/sbi.svg';
-import { SafeMap } from "../commons/SafeMap";
+import { SafeMap } from "../../../engine/containers/safeMap";
 
 export const BankLogo = new SafeMap<string, JSX.Element>({
     HDFC: <img src={HdfcLogo} width={24} height={24} />,
