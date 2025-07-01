@@ -31,8 +31,7 @@ export function ReviewModal({ itemId, onClose }: ReviewModalProps) {
 
   const bankEntry = bankEntries.find(entry => entry._id === itemId) ?? bankEntries[0];
   const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
-  //const draftMatches = getDraftMatches(phonepeMatches[0], draftEntries);
-  const draftMatches = draftEntries;
+  const draftMatches = getDraftMatches(phonepeMatches[0], draftEntries);
 
   const handleSelectTransaction = (id: string) => {
     setSelectedTransactionId(prevId => prevId === id ? null : id);
