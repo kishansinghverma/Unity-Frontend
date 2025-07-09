@@ -4,7 +4,7 @@ import dayjs from "dayjs"
 import React, { memo, useEffect } from "react";
 import { WithId } from "../../../engine/models/types";
 import { BankEntry } from "../engine/models/types";
-import { motion, useAnimation, PanInfo } from "framer-motion";
+import { motion, PanInfo, useMotionValue, animate } from "framer-motion";
 
 export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
     item: WithId<BankEntry>;
@@ -12,21 +12,31 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
     onOpen: (id: string | null) => void;
     setItems: React.Dispatch<React.SetStateAction<WithId<BankEntry>[]>>
 }) => {
-    const controls = useAnimation();
     const dragThreshold = -50;
+    const motionValue = useMotionValue(0);
 
     useEffect(() => {
-        if (isOpen) {
-            controls.start({ x: -80 });
-        } else {
-            controls.start({ x: 0 });
-        }
-    }, [isOpen, controls]);
+        animate(motionValue, isOpen ? -80 : 0, {
+            type: "spring",
+            stiffness: 300,
+            damping: 30,
+        });
+    }, [isOpen, motionValue]);
 
-    const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
         if (info.offset.x < dragThreshold) {
+            animate(motionValue, -80, {
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+            });
             onOpen(item._id);
         } else {
+            animate(motionValue, 0, {
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+            });
             onOpen(null);
         }
     };
@@ -51,8 +61,7 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={handleDragEnd}
-                animate={controls}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                style={{ x: motionValue }}
                 className="relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
             >
                 <div className="flex items-center flex-shrink-0"> <BankIcon bankName={item.bank} /></div>
