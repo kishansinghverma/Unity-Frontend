@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react';
-import { Building2, FileSearch, TabletSmartphone } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { fetchBankEntries, fetchDraftEntries, fetchPhonePeEntries } from '../store/reviewSlice';
-import PhonepeList from '../components/PhonePeList';
-import DraftList from '../components/DraftList';
 import { ReviewModal } from '../components/modals/reviewExpense/ReviewModal';
 import { BankList } from '../components/BankList';
 import { AnimatePresence } from 'framer-motion';
+import { Nullable } from '../../../engine/models/types';
 
 const ReviewExpense: React.FC = () => {
 
@@ -15,7 +13,7 @@ const ReviewExpense: React.FC = () => {
   const phonepeEntries = useAppSelector(state => state.moneyTrail.review.phonepeEntries);
   const draftEntries = useAppSelector(state => state.moneyTrail.review.draftEntries);
 
-  const bankItemId = useAppSelector(state => state.moneyTrail.reviewModal.bankItemId);
+  const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
 
   useEffect(() => {
     dispatch(fetchBankEntries());
@@ -26,7 +24,7 @@ const ReviewExpense: React.FC = () => {
   return (
     <div className="flex flex-col md:flex-row gap-8 p-4 md:p-8">
       <div className="flex-1 min-w-0">
-        <BankList {...bankEntries} />
+        <BankList {...{ ...bankEntries, setBankItemId }} />
       </div>
       {/* <div className="flex-1 min-w-0">
         <PhonepeList
@@ -50,13 +48,14 @@ const ReviewExpense: React.FC = () => {
       </div>*/}
       <AnimatePresence>
         {bankItemId && (
-          <ReviewModal
-            key={bankItemId}
-            bankItemId={bankItemId}
-            bankEntries={bankEntries.contents}
-            phonepeEntries={phonepeEntries.contents}
-            draftEntries={draftEntries.contents}
-          />
+          <ReviewModal {...{
+            key: bankItemId,
+            bankEntries: bankEntries.contents,
+            phonepeEntries: phonepeEntries.contents,
+            draftEntries: draftEntries.contents,
+            bankItemId,
+            setBankItemId
+          }}/>
         )}
       </AnimatePresence>
     </div>

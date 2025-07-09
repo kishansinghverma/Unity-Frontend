@@ -2,20 +2,17 @@ import { Calendar, CircleCheckBigIcon } from "lucide-react"
 import { BankIcon } from "./Common"
 import dayjs from "dayjs"
 import React, { memo, useEffect } from "react";
-import { WithId } from "../../../engine/models/types";
+import { Nullable, WithId } from "../../../engine/models/types";
 import { BankEntry } from "../engine/models/types";
 import { motion, PanInfo, useMotionValue, animate } from "framer-motion";
-import { useAppDispatch } from "../../../store/hooks";
-import { setBankItemId } from "../store/reviewModalSlice";
 
-export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
+export const BankItem = memo(({ isOpen, onOpen, setItems, item, setBankItemId }: {
     item: WithId<BankEntry>;
     isOpen: boolean;
     onOpen: (id: string | null) => void;
-    setItems: React.Dispatch<React.SetStateAction<WithId<BankEntry>[]>>
+    setItems: React.Dispatch<React.SetStateAction<WithId<BankEntry>[]>>;
+    setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
 }) => {
-    const dispatch = useAppDispatch();
-
     const dragThreshold = -50;
     const motionValue = useMotionValue(0);
 
@@ -27,7 +24,8 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
         if (info.offset.x < dragThreshold) {
             animate(motionValue, -80, { type: "spring", stiffness: 300, damping: 30, });
             onOpen(item._id);
-        } else {
+        }
+        else {
             animate(motionValue, 0, { type: "spring", stiffness: 300, damping: 30, });
             onOpen(null);
         }
@@ -42,7 +40,7 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
         const offset = motionValue.get();
         const epsilon = 2;
         if (Math.abs(offset - 0) > epsilon && Math.abs(offset + 80) > epsilon) return;
-        dispatch(setBankItemId(id));
+        setBankItemId(id);
     }
 
     return (

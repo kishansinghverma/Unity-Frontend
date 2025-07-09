@@ -6,22 +6,22 @@ import { DraftItem } from './DraftItem';
 import { getDraftMatches, getPhonePeMatches } from '../../../engine/utils';
 import { useReactState } from '../../../../../engine/hooks/useStateExtension';
 import { TransactionContainer } from './TransactionContainer';
-import { WithId } from '../../../../../engine/models/types';
+import { Nullable, WithId } from '../../../../../engine/models/types';
 import { BankEntry, DraftEntry, PhonepeEntry } from '../../../engine/models/types';
 import { PhonePeItem } from './PhonepeItem';
-import { useAppDispatch } from '../../../../../store/hooks';
-import { setBankItemId } from '../../../store/reviewModalSlice';
 
 export const ReviewModal: FC<{
   bankItemId: string;
   bankEntries: WithId<BankEntry>[];
   phonepeEntries: WithId<PhonepeEntry>[];
   draftEntries: WithId<DraftEntry>[];
+  setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
 }> = ({
   bankItemId,
   bankEntries,
   phonepeEntries,
-  draftEntries
+  draftEntries,
+  setBankItemId
 }) => {
     const setColumnHeight = () => {
       const firstColumn: HTMLElement | null = document.querySelector('[data-first-column]');
@@ -46,13 +46,10 @@ export const ReviewModal: FC<{
     const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
     const draftMatches = getDraftMatches(phonepeMatches[0], draftEntries);
 
-    const dispatch = useAppDispatch();
     const selectedPhonepeId = useReactState<string | null>(null);
     const selectedDraftId = useReactState<string | null>(null);
 
-    const onModalClose = () => {
-      dispatch(setBankItemId(null));
-    }
+    const onModalClose = () => setBankItemId(null);
 
     return (
       <motion.div

@@ -8,6 +8,7 @@ import {
 import { WithId } from '../../../../../engine/models/types';
 import { BankEntry } from '../../../engine/models/types';
 import { BankIcon } from '../../Common';
+import dayjs from 'dayjs';
 
 interface DescriptionInfo {
   platform: string;
@@ -22,13 +23,6 @@ interface BankTheme {
 }
 
 const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
-
-  const getDate = (stringDate: string): string => {
-    const date = new Date(stringDate);
-    const datePart = `${date.getDate()} ${date.toLocaleDateString('en-US', { month: 'short' })}, ${date.getFullYear()}`;
-    const weekdayPart = date.toLocaleDateString('en-US', { weekday: 'long' });
-    return `${weekdayPart}, ${datePart}`;
-  };
 
   const parseDescription = (desc: string): DescriptionInfo => {
     const description = desc.trim();
@@ -126,31 +120,21 @@ const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
             ? 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800'
             : 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800'
             }`}>
-            {bankEntry.processed ? (
-              <CheckCircle2 className="w-3 h-3 mr-1.5" />
-            ) : (
-              <Clock className="w-3 h-3 mr-1.5" />
-            )}
+            {bankEntry.processed ? <CheckCircle2 className="w-3 h-3 mr-1.5" /> : <Clock className="w-3 h-3 mr-1.5" />}
             {bankEntry.processed ? 'Processed' : 'Pending'}
           </span>
         </div>
 
-        {/* Description Section */}
         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
-              {/* Date display updated to a single line */}
               <div className="flex items-center space-x-2 mb-2 text-slate-800 dark:text-slate-100">
                 <Calendar className="w-4 h-4 flex-shrink-0" />
-                <div className="font-medium text-sm">{getDate(bankEntry.date)}</div>
+                <div className="font-medium text-sm">{dayjs(bankEntry.date).format('dddd, DD MMM, YYYY')}</div>
               </div>
-
-              {/* Description label removed, icon added */}
-              <div className="flex items-start space-x-2 text-slate-500 dark:text-slate-400"> {/* Changed to items-start for icon alignment */}
-                <FileText className="w-4 h-4 flex-shrink-0 mt-0.5" /> {/* Icon added, mt-0.5 for slight alignment adjustment */}
-                <div className="text-sm font-medium break-all leading-relaxed">
-                  {bankEntry.description}
-                </div>
+              <div className="flex items-start space-x-2 text-slate-500 dark:text-slate-400">
+                <FileText className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                <div className="text-sm font-medium break-all leading-relaxed">{bankEntry.description}</div>
               </div>
             </div>
           </div>
