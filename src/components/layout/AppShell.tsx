@@ -11,16 +11,6 @@ const AppShell: React.FC = () => {
   const dispatch = useAppDispatch();
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
 
-  // Ensure we have a default app set (important for direct access to /emandi without authentication)
-  useEffect(() => {
-    if (!currentApp) {
-      // Find the eMandi app from APPS and set it as the current app
-      const emandiApp = APPS.find(app => app.id === 'emandi');
-      if (emandiApp) {
-        dispatch(setCurrentApp(emandiApp));
-      }
-    }
-  }, [currentApp, dispatch]);
 
   // Display a loading state until the app is set
   if (!currentApp) {

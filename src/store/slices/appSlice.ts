@@ -9,7 +9,7 @@ interface AppState {
 }
 
 const initialState: AppState = {
-  currentApp: APPS[0] || null,
+  currentApp: null,
   availableApps: APPS,
 };
 

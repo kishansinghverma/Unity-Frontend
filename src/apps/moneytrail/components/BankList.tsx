@@ -7,87 +7,26 @@ import { getDateComponent } from "../../../engine/helpers/dateTimeHelper";
 import { BankIcon } from "./Common";
 import { useAppDispatch } from "../../../store/hooks";
 import { setBankItemId } from "../store/reviewModalSlice";
+import { BankItem } from "./BankItem";
 
 const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {
   const [listItems, setItems] = useState(items);
   const [openItemId, setOpenItemId] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
   const [showProcessed, setShowProcessed] = useState(false);
-
-  const dispatch = useAppDispatch();
-
-  const gestureStartX = useRef(0);
-  const gestureEndX = useRef(0);
   const listContainerRef = useRef<HTMLDivElement>(null);
 
-  const formatDate = (date: string) => {
-    const { day, month } = getDateComponent(date);
-    return `${day} ${month}`;
-  }
+  const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+    if (openItemId !== null && listContainerRef.current && !listContainerRef.current.contains(event.target as Node)) {
+      setOpenItemId(null);
+    }
+  };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (openItemId !== null && listContainerRef.current && !listContainerRef.current.contains(event.target as Node)) {
-        setOpenItemId(null);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-    };
-  }, [openItemId]);
+  document.addEventListener('mousedown', handleClickOutside);
+  document.addEventListener('touchstart', handleClickOutside);
 
   useEffect(() => {
     setItems(items);
   }, [items]);
-
-  const handleDelete = (id: string) => {
-    setItems(items.filter(item => item._id !== id));
-    setOpenItemId(null);
-  };
-
-  const handleItemClick = (item: WithId<BankEntry>) => {
-    if (!openItemId) {
-      dispatch(setBankItemId(item._id))
-    }
-  };
-
-  const handleGestureStart = (clientX: number) => {
-    gestureStartX.current = clientX;
-    gestureEndX.current = clientX;
-  };
-
-  const handleGestureMove = (clientX: number) => {
-    gestureEndX.current = clientX;
-  };
-
-  const handleGestureEnd = (item: WithId<BankEntry>) => {
-    const swipeDistance = gestureStartX.current - gestureEndX.current;
-    const clickThreshold = 10;
-    const swipeThreshold = 20;
-
-    if (Math.abs(swipeDistance) < clickThreshold) {
-      setIsDragging(false);
-      if (openItemId) {
-        setOpenItemId(null);
-      } else {
-        handleItemClick(item);
-      }
-      return;
-    }
-
-    setIsDragging(false);
-
-    if (swipeDistance > swipeThreshold) {
-      setOpenItemId(item._id);
-    } else if (swipeDistance < -swipeThreshold) {
-      if (openItemId === item._id) {
-        setOpenItemId(null);
-      }
-    }
-  };
 
   const itemsToRender = listItems.filter(item => (!item.processed || showProcessed))
 
@@ -133,59 +72,14 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
                   <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Your transactions will appear here.</p>
                 </div>
               ) : (
-                <TransitionGroup className="todo-list">
-                  {
-                    itemsToRender.map(item => {
-                      const ref = createRef<HTMLLIElement>();
-                      return (
-                        <CSSTransition
-                          key={item._id}
-                          nodeRef={ref}
-                          timeout={400}
-                          classNames="expense-item"
-                        >
-                          <li ref={ref} key={item._id} className="relative overflow-hidden border-b border-gray-200 dark:border-gray-700 last:border-b-0">
-                            <div className="absolute top-0 right-0 h-full flex items-center">
-                              <button
-                                className="bg-green-500 text-white h-full w-20 flex items-center justify-center hover:bg-green-600 transition-colors"
-                                onClick={() => handleDelete(item._id)}
-                                title="Mark Complete"
-                              >
-                                <ListCheck size={28} />
-                              </button>
-                            </div>
-                            <div
-                              onTouchStart={(e: React.TouchEvent<HTMLDivElement>) => handleGestureStart(e.targetTouches[0].clientX)}
-                              onTouchMove={(e: React.TouchEvent<HTMLDivElement>) => handleGestureMove(e.targetTouches[0].clientX)}
-                              onTouchEnd={() => handleGestureEnd(item)}
-                              onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => { setIsDragging(true); handleGestureStart(e.clientX); }}
-                              onMouseMove={(e: React.MouseEvent<HTMLDivElement>) => { if (isDragging) handleGestureMove(e.clientX); }}
-                              onMouseUp={() => handleGestureEnd(item)}
-                              onMouseLeave={() => { if (isDragging) handleGestureEnd(item); }}
-                              className={`relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-transform duration-300 ease-out cursor-pointer ${openItemId === item._id ? '-translate-x-20' : 'translate-x-0'}`}
-                            >
-                              <div className="flex items-center flex-shrink-0">
-                                <BankIcon bankName={item.bank} />
-                              </div>
-                              <div className="flex-grow pr-6 pl-4 min-w-4">
-                                <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all">{item.description}</h3>
-                              </div>
-                              <div className="text-right min-w-fit">
-                                <p className={`font-semibold ${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</p>
-                                <div className="text-sm flex justify-end font-semibold text-gray-400 dark:text-gray-400">
-                                  <div className="flex items-center">
-                                    <div className="mr-1"><Calendar width={16} height={16} strokeWidth={2.5} /></div>
-                                    <div>{formatDate(item.date)}</div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </li>
-                        </CSSTransition>
-                      )
-                    })
-                  }
-                </TransitionGroup>
+                itemsToRender.map(item => {
+                  return (
+                    <BankItem {...item}
+                      openItemId={openItemId}
+                      setOpenItemId={setOpenItemId}
+                    />
+                  )
+                })
               )
             }
           </ul>

@@ -63,9 +63,11 @@ const router = createBrowserRouter([
   {
     path: '/emandi',
     element: (
-      <PersistLastVisitedPage>
-        <AppShell />
-      </PersistLastVisitedPage>
+      <ProtectedRoute appId="emandi">
+        <PersistLastVisitedPage>
+          <AppShell />
+        </PersistLastVisitedPage>
+      </ProtectedRoute>
     ),
     children: [
       { index: true, element: <GatePassForm /> },
@@ -84,7 +86,7 @@ const router = createBrowserRouter([
   {
     path: '/moneytrail',
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute appId="moneytrail">
         <PersistLastVisitedPage>
           <AppShell />
         </PersistLastVisitedPage>
@@ -94,7 +96,7 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <MoneyTrailDashboard /> },
       { path: 'splitwise-groups', element: <Splitwise /> },
-      { path: 'empty', element: <ReviewExpense /> },
+      { path: 'review', element: <ReviewExpense /> },
       { path: 'reports', element: <div className="p-8 text-center">Money Trail Reports - Coming Soon</div> },
       { path: 'settings', element: <div className="p-8 text-center">Money Trail Settings - Coming Soon</div> },
     ],
@@ -102,7 +104,7 @@ const router = createBrowserRouter([
   {
     path: '/smarthome',
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute appId="smarthome">
         <PersistLastVisitedPage>
           <AppShell />
         </PersistLastVisitedPage>
@@ -118,7 +120,7 @@ const router = createBrowserRouter([
   {
     path: '/potatostock',
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute appId="potatostock">
         <PersistLastVisitedPage>
           <AppShell />
         </PersistLastVisitedPage>
