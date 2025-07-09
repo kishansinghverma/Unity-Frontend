@@ -16,27 +16,15 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
     const motionValue = useMotionValue(0);
 
     useEffect(() => {
-        animate(motionValue, isOpen ? -80 : 0, {
-            type: "spring",
-            stiffness: 300,
-            damping: 30,
-        });
+        animate(motionValue, isOpen ? -80 : 0, { type: "spring", stiffness: 300, damping: 30, });
     }, [isOpen, motionValue]);
 
     const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
         if (info.offset.x < dragThreshold) {
-            animate(motionValue, -80, {
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-            });
+            animate(motionValue, -80, { type: "spring", stiffness: 300, damping: 30, });
             onOpen(item._id);
         } else {
-            animate(motionValue, 0, {
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-            });
+            animate(motionValue, 0, { type: "spring", stiffness: 300, damping: 30, });
             onOpen(null);
         }
     };
