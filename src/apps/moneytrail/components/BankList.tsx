@@ -4,13 +4,13 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { BankEntry, TransactionListProps } from "../engine/models/types";
 import { WithId } from "../../../engine/models/types";
 import { getDateComponent } from "../../../engine/helpers/dateTimeHelper";
-import { BankIcon } from "./Common";
+import { BankIcon, EmptyList, SkeletonItem } from "./Common";
 import { useAppDispatch } from "../../../store/hooks";
 import { setBankItemId } from "../store/reviewModalSlice";
 import { BankItem } from "./BankItem";
 import { AnimatePresence, motion } from "framer-motion";
 
-const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {
+export const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {
   const [listItems, setItems] = useState(items);
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);
@@ -72,14 +72,8 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
         <div className="select-none flex-grow overflow-y-auto">
           <ul>
             {isLoading ?
-              (Array.from({ length: 5 }).map((_, index) => <SkeletonItem key={index} />)) :
-              itemsToRender.length === 0 ? (
-                <div className="text-center py-12 px-6 flex flex-col items-center justify-center h-full">
-                  <ListX className="mx-auto h-12 w-12 text-gray-400" />
-                  <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-300">No Transactions</h3>
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Your transactions will appear here.</p>
-                </div>
-              ) : (
+              Array.from({ length: 5 }).map((_, index) => <SkeletonItem key={index} />) :
+              itemsToRender.length === 0 ? <EmptyList /> : (
                 <AnimatePresence mode="popLayout">
                   {
                     itemsToRender.map((item, index) => (
@@ -131,21 +125,3 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
     </>
   );
 };
-
-const SkeletonItem: FC = () => (
-  <div className="flex items-center justify-between p-3.5 border-b border-gray-200 dark:border-gray-700">
-    <div className="flex items-center gap-4 flex-grow min-w-0">
-      <div className="h-10 w-10 rounded bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
-      <div className="flex-grow space-y-2">
-        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 animate-pulse"></div>
-        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-1/2 animate-pulse"></div>
-      </div>
-    </div>
-    <div className="text-right flex-shrink-0 ml-4 space-y-2">
-      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-20 animate-pulse"></div>
-      <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-12 animate-pulse"></div>
-    </div>
-  </div>
-);
-
-export default TransactionList;
