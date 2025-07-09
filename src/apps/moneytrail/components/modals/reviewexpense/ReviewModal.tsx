@@ -32,7 +32,15 @@ export const ReviewModal: FC<{
       }
     };
 
-    useEffect(setColumnHeight, []);
+    const handleKeyDown = ({ key }: KeyboardEvent) => {
+      if (key === 'Escape') onModalClose();
+    };
+
+    useEffect(() => {
+      setColumnHeight();
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }, []);
 
     const bankEntry = bankEntries.find(entry => entry._id === bankItemId)!;
     const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
