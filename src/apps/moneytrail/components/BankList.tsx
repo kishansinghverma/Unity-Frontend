@@ -79,31 +79,10 @@ export const TransactionList: FC<TransactionListProps> = ({ title, subtitle, ico
                     itemsToRender.map((item, index) => (
                       <motion.div
                         layout
-                        initial={{
-                          opacity: 0,
-                          scale: 0.9,
-                          y: 30,
-                          x: -20
-                        }}
-                        animate={{
-                          opacity: 1,
-                          scale: 1,
-                          y: 0,
-                          x: 0
-                        }}
-                        exit={{
-                          opacity: 0,
-                          scale: 0.95,
-                          y: -15,
-                          x: 20,
-                          transition: { duration: 0.2, ease: "easeInOut" }
-                        }}
-                        transition={{
-                          duration: 0.3,
-                          delay: index * 0.05, // Staggered animation
-                          ease: "easeOut",
-                          layout: { duration: 0.2 }
-                        }}
+                        initial={{ opacity: 0, scale: 0.9, y: 30, x: -20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -15, x: 20, transition: { duration: 0.2, ease: "easeInOut" } }}
+                        transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
                         key={item._id}
                         className="border-b border-gray-200 dark:border-gray-700 last:border-b-0 relative overflow-hidden origin-left"
                       >
