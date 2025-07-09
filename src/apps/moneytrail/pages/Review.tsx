@@ -32,7 +32,7 @@ const ReviewExpense: React.FC = () => {
           isLoading={bankEntries.isLoading}
         />
       </div>
-      <div className="flex-1 min-w-0">
+      {/* <div className="flex-1 min-w-0">
         <PhonepeList
           title="PhonePe Records"
           subtitle="PhonePe transaction records"
@@ -52,7 +52,7 @@ const ReviewExpense: React.FC = () => {
           isLoading={draftEntries.isLoading}
         />
       </div>
-      <ReviewModal />
+      <ReviewModal /> */}
     </div>
   );
 };
