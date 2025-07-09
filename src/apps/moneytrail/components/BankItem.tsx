@@ -39,6 +39,9 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
     }
 
     const onItemClick = (id: string) => {
+        const offset = motionValue.get();
+        const epsilon = 2;
+        if (Math.abs(offset - 0) > epsilon && Math.abs(offset + 80) > epsilon) return;
         dispatch(setBankItemId(id));
     }
 
