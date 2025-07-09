@@ -47,7 +47,12 @@ const ReviewExpense: React.FC = () => {
           isLoading={draftEntries.isLoading}
         />
       </div>*/}
-      {bankItemId && <ReviewModal />} 
+      {bankItemId && <ReviewModal {...{
+        bankItemId,
+        bankEntries: bankEntries.contents,
+        phonepeEntries: phonepeEntries.contents,
+        draftEntries: draftEntries.contents
+      }} />}
     </div>
   );
 };

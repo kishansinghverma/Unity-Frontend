@@ -6,7 +6,7 @@ import { EmptyList, ListHeader, SkeletonItem } from "./Common";
 import { BankItem } from "./BankItem";
 import { AnimatePresence, motion } from "framer-motion";
 
-export const BankList: FC<Fetchable<WithId<BankEntry>[]>> = ({ isLoading, contents: items}) => {
+export const BankList: FC<Fetchable<WithId<BankEntry>[]>> = ({ isLoading, contents: items }) => {
   const [listItems, setItems] = useState(items);
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);
@@ -63,11 +63,12 @@ export const BankList: FC<Fetchable<WithId<BankEntry>[]>> = ({ isLoading, conten
                         transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
                         className="border-b border-gray-200 dark:border-gray-700 last:border-b-0 relative overflow-hidden origin-left"
                       >
-                        <BankItem
-                          item={item}
-                          isOpen={openItemId === item._id}
-                          onOpen={setOpenItemId}
-                          setItems={setItems}
+                        <BankItem {...{
+                          item,
+                          setItems,
+                          isOpen: openItemId === item._id,
+                          onOpen: setOpenItemId
+                        }}
                         />
                       </motion.div>
                     ))
