@@ -1,22 +1,19 @@
 import { ListCheck, Calendar } from "lucide-react"
 import { BankIcon } from "./Common"
 import dayjs from "dayjs"
-import { useRef, useEffect, useState } from "react";
+import React, { useRef, useState, memo } from "react";
 import { WithId } from "../../../engine/models/types";
 import { BankEntry } from "../engine/models/types";
 
-export const BankItem = ({ openItemId, setOpenItemId, ...item }: any) => {
+interface BankItemProps extends WithId<BankEntry> {
+    isOpen: boolean;
+    onSwipe: (id: string | null) => void;
+}
 
+export const BankItem = memo(({ isOpen, onSwipe, ...item }: BankItemProps) => {
     const gestureStartX = useRef(0);
     const gestureEndX = useRef(0);
     const [isDragging, setIsDragging] = useState(false);
-    const listContainerRef = useRef<HTMLDivElement>(null);
-
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-        if (openItemId !== null && listContainerRef.current && !listContainerRef.current.contains(event.target as Node)) {
-            setOpenItemId(null);
-        }
-    };
 
     const handleGestureStart = (clientX: number) => {
         gestureStartX.current = clientX;
@@ -24,25 +21,24 @@ export const BankItem = ({ openItemId, setOpenItemId, ...item }: any) => {
     };
 
     const handleDelete = (id: string) => {
-        //setItems(items.filter(item => item._id !== id));
-        setOpenItemId(null);
+        onSwipe(null);
     };
 
     const handleGestureMove = (clientX: number) => {
         gestureEndX.current = clientX;
     };
 
-    const handleGestureEnd = (item: WithId<BankEntry>) => {
+    const handleGestureEnd = () => {
         const swipeDistance = gestureStartX.current - gestureEndX.current;
         const clickThreshold = 10;
-        const swipeThreshold = 20;
+        const swipeThreshold = 50;
 
         if (Math.abs(swipeDistance) < clickThreshold) {
             setIsDragging(false);
-            if (openItemId) {
-                setOpenItemId(null);
+            if (isOpen) {
+                onSwipe(null);
             } else {
-                handleItemClick(item);
+                handleItemClick();
             }
             return;
         }
@@ -50,17 +46,18 @@ export const BankItem = ({ openItemId, setOpenItemId, ...item }: any) => {
         setIsDragging(false);
 
         if (swipeDistance > swipeThreshold) {
-            setOpenItemId(item._id);
+            onSwipe(item._id);
         } else if (swipeDistance < -swipeThreshold) {
-            if (openItemId === item._id) {
-                setOpenItemId(null);
+            if (isOpen) {
+                onSwipe(null);
             }
         }
     };
 
-    const handleItemClick = (item: WithId<BankEntry>) => {
-        if (!openItemId) {
-            //dispatch(setBankItemId(item._id))
+    const handleItemClick = () => {
+        if (!isOpen) {
+            console.log("Clicked");
+            // dispatch(setBankItemId(item._id))
         }
     };
 
@@ -78,12 +75,12 @@ export const BankItem = ({ openItemId, setOpenItemId, ...item }: any) => {
             <div
                 onTouchStart={(e: React.TouchEvent<HTMLDivElement>) => handleGestureStart(e.targetTouches[0].clientX)}
                 onTouchMove={(e: React.TouchEvent<HTMLDivElement>) => handleGestureMove(e.targetTouches[0].clientX)}
-                onTouchEnd={() => handleGestureEnd(item)}
+                onTouchEnd={handleGestureEnd}
                 onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => { setIsDragging(true); handleGestureStart(e.clientX); }}
                 onMouseMove={(e: React.MouseEvent<HTMLDivElement>) => { if (isDragging) handleGestureMove(e.clientX); }}
-                onMouseUp={() => handleGestureEnd(item)}
-                onMouseLeave={() => { if (isDragging) handleGestureEnd(item); }}
-                className={`relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-transform duration-300 ease-out cursor-pointer ${openItemId === item._id ? '-translate-x-20' : 'translate-x-0'}`}
+                onMouseUp={handleGestureEnd}
+                onMouseLeave={() => { if (isDragging) handleGestureEnd(); }}
+                className={`relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-transform duration-300 ease-out cursor-pointer ${isOpen ? '-translate-x-20' : 'translate-x-0'}`}
             >
                 <div className="flex items-center flex-shrink-0">
                     <BankIcon bankName={item.bank} />
@@ -102,5 +99,5 @@ export const BankItem = ({ openItemId, setOpenItemId, ...item }: any) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+});

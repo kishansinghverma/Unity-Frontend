@@ -21,8 +21,15 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
     }
   };
 
-  document.addEventListener('mousedown', handleClickOutside);
-  document.addEventListener('touchstart', handleClickOutside);
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [openItemId]);
 
   useEffect(() => {
     setItems(items);
@@ -74,9 +81,11 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
               ) : (
                 itemsToRender.map(item => {
                   return (
-                    <BankItem {...item}
-                      openItemId={openItemId}
-                      setOpenItemId={setOpenItemId}
+                    <BankItem
+                      key={item._id}
+                      {...item}
+                      isOpen={openItemId === item._id}
+                      onSwipe={setOpenItemId}
                     />
                   )
                 })
