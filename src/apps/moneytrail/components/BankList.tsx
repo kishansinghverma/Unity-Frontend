@@ -8,6 +8,7 @@ import { BankIcon } from "./Common";
 import { useAppDispatch } from "../../../store/hooks";
 import { setBankItemId } from "../store/reviewModalSlice";
 import { BankItem } from "./BankItem";
+import { AnimatePresence, motion } from "framer-motion";
 
 const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon, gradientColors, isLoading, items }) => {
   const [listItems, setItems] = useState(items);
@@ -79,16 +80,27 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
                   <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Your transactions will appear here.</p>
                 </div>
               ) : (
-                itemsToRender.map(item => {
-                  return (
-                    <BankItem
-                      key={item._id}
-                      {...item}
-                      isOpen={openItemId === item._id}
-                      onSwipe={setOpenItemId}
-                    />
-                  )
-                })
+                <AnimatePresence mode="popLayout">
+                  {
+                    itemsToRender.map(item => (
+                      <motion.div
+                        layout
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.8, opacity: 0 }}
+                        transition={{ type: "spring" }}
+                        key={item._id}
+                        className="border-b border-gray-200 dark:border-gray-700 last:border-b-0 relative overflow-hidden"
+                      >
+                        <BankItem
+                          {...item}
+                          isOpen={openItemId === item._id}
+                          onSwipe={setOpenItemId}
+                          onProcess={setItems}
+                        />
+                      </motion.div>
+                    ))
+                  }
+                </AnimatePresence>
               )
             }
           </ul>

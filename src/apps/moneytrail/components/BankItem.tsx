@@ -4,13 +4,15 @@ import dayjs from "dayjs"
 import React, { useRef, useState, memo } from "react";
 import { WithId } from "../../../engine/models/types";
 import { BankEntry } from "../engine/models/types";
+import { motion } from "framer-motion";
 
 interface BankItemProps extends WithId<BankEntry> {
     isOpen: boolean;
     onSwipe: (id: string | null) => void;
+    onProcess: React.Dispatch<React.SetStateAction<WithId<BankEntry>[]>>
 }
 
-export const BankItem = memo(({ isOpen, onSwipe, ...item }: BankItemProps) => {
+export const BankItem = memo(({ isOpen, onSwipe, onProcess, ...item }: BankItemProps) => {
     const gestureStartX = useRef(0);
     const gestureEndX = useRef(0);
     const [isDragging, setIsDragging] = useState(false);
@@ -56,13 +58,17 @@ export const BankItem = memo(({ isOpen, onSwipe, ...item }: BankItemProps) => {
 
     const handleItemClick = () => {
         if (!isOpen) {
-            console.log("Clicked");
+            markProcessed()
             // dispatch(setBankItemId(item._id))
         }
     };
 
+    const markProcessed = () => {
+        onProcess(items => items.filter(x => x._id !== item._id));
+    }
+
     return (
-        <div className="relative overflow-hidden border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+        <>
             <div className="absolute top-0 right-0 h-full flex items-center">
                 <button
                     className="bg-green-500 text-white h-full w-20 flex items-center justify-center hover:bg-green-600 transition-colors"
@@ -98,6 +104,6 @@ export const BankItem = memo(({ isOpen, onSwipe, ...item }: BankItemProps) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 });
