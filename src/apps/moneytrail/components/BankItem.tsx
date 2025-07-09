@@ -5,6 +5,8 @@ import React, { memo, useEffect } from "react";
 import { WithId } from "../../../engine/models/types";
 import { BankEntry } from "../engine/models/types";
 import { motion, PanInfo, useMotionValue, animate } from "framer-motion";
+import { useAppDispatch } from "../../../store/hooks";
+import { setBankItemId } from "../store/reviewModalSlice";
 
 export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
     item: WithId<BankEntry>;
@@ -12,6 +14,8 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
     onOpen: (id: string | null) => void;
     setItems: React.Dispatch<React.SetStateAction<WithId<BankEntry>[]>>
 }) => {
+    const dispatch = useAppDispatch();
+
     const dragThreshold = -50;
     const motionValue = useMotionValue(0);
 
@@ -34,6 +38,10 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
         onOpen(null);
     }
 
+    const onItemClick = (id: string) => {
+        dispatch(setBankItemId(id));
+    }
+
     return (
         <>
             <div className="absolute top-0 right-0 h-full flex items-center">
@@ -47,9 +55,10 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
             </div>
             <motion.div
                 drag="x"
+                style={{ x: motionValue }}
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={handleDragEnd}
-                style={{ x: motionValue }}
+                onClick={()=>onItemClick(item._id)}
                 className="relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
             >
                 <div className="flex items-center flex-shrink-0"> <BankIcon bankName={item.bank} /></div>

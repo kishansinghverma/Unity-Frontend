@@ -14,6 +14,8 @@ const ReviewExpense: React.FC = () => {
   const phonepeEntries = useAppSelector(state => state.moneyTrail.review.phonepeEntries);
   const draftEntries = useAppSelector(state => state.moneyTrail.review.draftEntries);
 
+  const bankItemId = useAppSelector(state => state.moneyTrail.reviewModal.bankItemId);
+
   useEffect(() => {
     dispatch(fetchBankEntries());
     dispatch(fetchPhonePeEntries())
@@ -44,8 +46,8 @@ const ReviewExpense: React.FC = () => {
           items={draftEntries.contents}
           isLoading={draftEntries.isLoading}
         />
-      </div>
-      <ReviewModal /> */}
+      </div>*/}
+      {bankItemId && <ReviewModal />} 
     </div>
   );
 };
