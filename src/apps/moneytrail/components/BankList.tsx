@@ -36,7 +36,7 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
     setItems(items);
   }, [items]);
 
-  const itemsToRender = listItems.filter(item => (!item.processed || showProcessed)).slice(0, 10)
+  const itemsToRender = listItems.filter(item => (!item.processed || showProcessed));
 
   return (
     <>
