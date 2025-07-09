@@ -9,7 +9,8 @@ import { TransactionContainer } from './TransactionContainer';
 import { WithId } from '../../../../../engine/models/types';
 import { BankEntry, DraftEntry, PhonepeEntry } from '../../../engine/models/types';
 import { PhonePeItem } from './PhonepeItem';
-
+import { useAppDispatch } from '../../../../../store/hooks';
+import { setBankItemId } from '../../../store/reviewModalSlice';
 
 export const ReviewModal: FC<{
   bankItemId: string;
@@ -37,17 +38,22 @@ export const ReviewModal: FC<{
     const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
     const draftMatches = getDraftMatches(phonepeMatches[0], draftEntries);
 
+    const dispatch = useAppDispatch();
     const selectedPhonepeId = useReactState<string | null>(null);
     const selectedDraftId = useReactState<string | null>(null);
 
+    const onModalClose = () => {
+      dispatch(setBankItemId(null));
+    }
+
     return (
       <motion.div
-        onClick={() => alert()}
+        onClick={onModalClose}
         className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur backdrop-saturate-[0.8] "
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.18, ease: "easeOut" }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
       >
         {/* Modal Container */}
         <motion.div
@@ -65,7 +71,7 @@ export const ReviewModal: FC<{
               <p className="text-sm text-gray-600 dark:text-gray-400">Review and approve your transactions</p>
             </div>
             <button
-              // onClick={onClose}
+              onClick={onModalClose}
               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
               <X className="w-6 h-6 text-gray-500 dark:text-gray-400" />
