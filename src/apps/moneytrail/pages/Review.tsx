@@ -5,7 +5,7 @@ import { fetchBankEntries, fetchDraftEntries, fetchPhonePeEntries } from '../sto
 import PhonepeList from '../components/PhonePeList';
 import DraftList from '../components/DraftList';
 import { ReviewModal } from '../components/modals/reviewExpense/ReviewModal';
-import { TransactionList } from '../components/BankList';
+import { BankList } from '../components/BankList';
 
 const ReviewExpense: React.FC = () => {
 
@@ -23,14 +23,7 @@ const ReviewExpense: React.FC = () => {
   return (
     <div className="flex flex-col md:flex-row gap-8 p-4 md:p-8">
       <div className="flex-1 min-w-0">
-        <TransactionList
-          title="Bank Entries"
-          subtitle="Aggregated bank transactions"
-          icon={Building2}
-          gradientColors={{ from: 'from-violet-500', to: 'to-indigo-600' }}
-          items={bankEntries.contents}
-          isLoading={bankEntries.isLoading}
-        />
+        <BankList {...bankEntries} />
       </div>
       {/* <div className="flex-1 min-w-0">
         <PhonepeList

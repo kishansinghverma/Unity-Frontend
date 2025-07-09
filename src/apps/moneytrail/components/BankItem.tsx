@@ -1,18 +1,16 @@
-import { ListCheck, Calendar } from "lucide-react"
+import { Calendar, CircleCheckBigIcon } from "lucide-react"
 import { BankIcon } from "./Common"
 import dayjs from "dayjs"
 import React, { useRef, useState, memo } from "react";
 import { WithId } from "../../../engine/models/types";
 import { BankEntry } from "../engine/models/types";
-import { motion } from "framer-motion";
 
-interface BankItemProps extends WithId<BankEntry> {
+export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
+    item: WithId<BankEntry>;
     isOpen: boolean;
-    onSwipe: (id: string | null) => void;
-    onProcess: React.Dispatch<React.SetStateAction<WithId<BankEntry>[]>>
-}
-
-export const BankItem = memo(({ isOpen, onSwipe, onProcess, ...item }: BankItemProps) => {
+    onOpen: (id: string | null) => void;
+    setItems: React.Dispatch<React.SetStateAction<WithId<BankEntry>[]>>
+}) => {
     const gestureStartX = useRef(0);
     const gestureEndX = useRef(0);
     const [isDragging, setIsDragging] = useState(false);
@@ -22,60 +20,45 @@ export const BankItem = memo(({ isOpen, onSwipe, onProcess, ...item }: BankItemP
         gestureEndX.current = clientX;
     };
 
-    const handleDelete = (id: string) => {
-        onSwipe(null);
-    };
-
     const handleGestureMove = (clientX: number) => {
         gestureEndX.current = clientX;
     };
 
     const handleGestureEnd = () => {
         const swipeDistance = gestureStartX.current - gestureEndX.current;
-        const clickThreshold = 10;
+        const clickThreshold = 0;
         const swipeThreshold = 50;
 
         if (Math.abs(swipeDistance) < clickThreshold) {
             setIsDragging(false);
-            if (isOpen) {
-                onSwipe(null);
-            } else {
-                handleItemClick();
-            }
+            isOpen ? onOpen(null) : handleItemClick();
             return;
         }
 
         setIsDragging(false);
-
-        if (swipeDistance > swipeThreshold) {
-            onSwipe(item._id);
-        } else if (swipeDistance < -swipeThreshold) {
-            if (isOpen) {
-                onSwipe(null);
-            }
-        }
+        if (swipeDistance > swipeThreshold) onOpen(item._id);
+        else if (swipeDistance < -swipeThreshold && isOpen) onOpen(null);
     };
 
     const handleItemClick = () => {
         if (!isOpen) {
-            markProcessed()
             // dispatch(setBankItemId(item._id))
         }
     };
 
-    const markProcessed = () => {
-        onProcess(items => items.filter(x => x._id !== item._id));
+    const markProcessed = (id: string) => {
+        setItems(items => items.filter(item => item._id !== id));
     }
 
     return (
         <>
             <div className="absolute top-0 right-0 h-full flex items-center">
                 <button
-                    className="bg-green-500 text-white h-full w-20 flex items-center justify-center hover:bg-green-600 transition-colors"
-                    onClick={() => handleDelete(item._id)}
                     title="Mark Complete"
+                    onClick={() => markProcessed(item._id)}
+                    className="bg-green-500 text-white h-full w-20 flex items-center justify-center hover:bg-green-600 transition-colors"
                 >
-                    <ListCheck size={28} />
+                    <CircleCheckBigIcon />
                 </button>
             </div>
             <div
@@ -88,9 +71,7 @@ export const BankItem = memo(({ isOpen, onSwipe, onProcess, ...item }: BankItemP
                 onMouseLeave={() => { if (isDragging) handleGestureEnd(); }}
                 className={`relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-transform duration-300 ease-out cursor-pointer ${isOpen ? '-translate-x-20' : 'translate-x-0'}`}
             >
-                <div className="flex items-center flex-shrink-0">
-                    <BankIcon bankName={item.bank} />
-                </div>
+                <div className="flex items-center flex-shrink-0"> <BankIcon bankName={item.bank} /></div>
                 <div className="flex-grow pr-6 pl-4 min-w-4">
                     <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all">{item.description}</h3>
                 </div>

@@ -1,7 +1,8 @@
-import { FC } from "react";
+import { ElementType, FC } from "react";
 import { getColorPair, getIconBackground } from "../engine/utils";
 import { BankLogo } from "./Resources";
 import { ListX } from "lucide-react";
+import { ReactState } from "../../../engine/models/types";
 
 export const BankIcon: FC<{
     bankName: string
@@ -21,7 +22,46 @@ export const AlphabetIcon: FC<{
             {firstLetter}
         </span>
     </div>
-);
+    );
+
+export const ListHeader: FC<{
+    title: string;
+    subtitle: string;
+    Icon: ElementType;
+    headerBackground: { to: string, from: string };
+    showProcessed: boolean;
+    setShowProcessed: React.Dispatch<React.SetStateAction<boolean>>
+}> = ({
+    title, subtitle, Icon, headerBackground, showProcessed, setShowProcessed
+}) => (
+        <header className={`bg-gradient-to-r ${headerBackground.from} ${headerBackground.to} px-6 py-4 flex-shrink-0`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center justify-start gap-4">
+              <div className="bg-white/20 p-3 rounded-lg">
+                <Icon size={28} className="text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-white">{title}</h1>
+                <p className="text-slate-100 text-sm">{subtitle}</p>
+              </div>
+            </div>
+            <div className="relative group">
+              <button
+                type="button"
+                onClick={() => setShowProcessed(flag => !flag)}
+                className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 focus:ring-white ${showProcessed ? 'bg-green-500/90' : 'bg-white/30'}`}
+                role="switch"
+                aria-checked={showProcessed}
+              >
+                <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 ease-in-out ${showProcessed ? 'translate-x-6' : 'translate-x-1'}`} />
+              </button>
+              <div className="absolute top-8 right-0 w-max bg-gray-900 text-white dark:bg-gray-200 dark:text-black text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                Show Processed
+              </div>
+            </div>
+          </div>
+        </header>
+    )
 
 export const EmptyList: FC = () => (
     <div className="text-center py-12 px-6 flex flex-col items-center justify-center h-full">
