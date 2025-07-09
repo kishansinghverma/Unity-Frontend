@@ -40,7 +40,10 @@ export const ReviewModal: FC<{
     const selectedDraftId = useReactState<string | null>(null);
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={() => alert()}>
+      <div
+        onClick={() => alert()}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur backdrop-saturate-[0.8] "
+      >
         {/* Modal Container */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden" onClick={e => e.stopPropagation()}>
           {/* Modal Header */}
