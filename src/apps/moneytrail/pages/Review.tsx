@@ -6,6 +6,7 @@ import PhonepeList from '../components/PhonePeList';
 import DraftList from '../components/DraftList';
 import { ReviewModal } from '../components/modals/reviewExpense/ReviewModal';
 import { BankList } from '../components/BankList';
+import { AnimatePresence } from 'framer-motion';
 
 const ReviewExpense: React.FC = () => {
 
@@ -47,12 +48,17 @@ const ReviewExpense: React.FC = () => {
           isLoading={draftEntries.isLoading}
         />
       </div>*/}
-      {bankItemId && <ReviewModal {...{
-        bankItemId,
-        bankEntries: bankEntries.contents,
-        phonepeEntries: phonepeEntries.contents,
-        draftEntries: draftEntries.contents
-      }} />}
+      <AnimatePresence>
+        {bankItemId && (
+          <ReviewModal
+            key={bankItemId}
+            bankItemId={bankItemId}
+            bankEntries={bankEntries.contents}
+            phonepeEntries={phonepeEntries.contents}
+            draftEntries={draftEntries.contents}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
