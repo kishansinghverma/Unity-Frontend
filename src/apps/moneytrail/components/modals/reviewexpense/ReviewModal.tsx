@@ -49,20 +49,24 @@ export const ReviewModal: FC<{
     return (
       <motion.div
         onClick={onModalClose}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur backdrop-saturate-[0.8] "
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur backdrop-saturate-[0.8]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
+        transition={{ duration: 0.2 }}
       >
         {/* Modal Container */}
         <motion.div
           className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden"
           onClick={e => e.stopPropagation()}
-          initial={{ opacity: 0, scale: 0.96, y: 40 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.96, y: 40 }}
-          transition={{ type: "spring", stiffness: 260, damping: 30, duration: 0.28 }}
+          variants={{
+            hidden: { opacity: 0, scale: 0.8 },
+            visible: { opacity: 1, scale: 1, transition: { type: 'spring', damping: 15, stiffness: 350 } },
+            exit: { opacity: 0, scale: 0.8, transition: { duration: 0.15 } },
+          }}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
         >
           {/* Modal Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10">
