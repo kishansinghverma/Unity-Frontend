@@ -1,9 +1,10 @@
 import { Calendar, CircleCheckBigIcon } from "lucide-react"
 import { BankIcon } from "./Common"
 import dayjs from "dayjs"
-import React, { useRef, useState, memo } from "react";
+import React, { memo, useEffect } from "react";
 import { WithId } from "../../../engine/models/types";
 import { BankEntry } from "../engine/models/types";
+import { motion, useAnimation, PanInfo } from "framer-motion";
 
 export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
     item: WithId<BankEntry>;
@@ -11,43 +12,28 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
     onOpen: (id: string | null) => void;
     setItems: React.Dispatch<React.SetStateAction<WithId<BankEntry>[]>>
 }) => {
-    const gestureStartX = useRef(0);
-    const gestureEndX = useRef(0);
-    const [isDragging, setIsDragging] = useState(false);
+    const controls = useAnimation();
+    const dragThreshold = -50;
 
-    const handleGestureStart = (clientX: number) => {
-        gestureStartX.current = clientX;
-        gestureEndX.current = clientX;
-    };
-
-    const handleGestureMove = (clientX: number) => {
-        gestureEndX.current = clientX;
-    };
-
-    const handleGestureEnd = () => {
-        const swipeDistance = gestureStartX.current - gestureEndX.current;
-        const clickThreshold = 0;
-        const swipeThreshold = 50;
-
-        if (Math.abs(swipeDistance) < clickThreshold) {
-            setIsDragging(false);
-            isOpen ? onOpen(null) : handleItemClick();
-            return;
+    useEffect(() => {
+        if (isOpen) {
+            controls.start({ x: -80 });
+        } else {
+            controls.start({ x: 0 });
         }
+    }, [isOpen, controls]);
 
-        setIsDragging(false);
-        if (swipeDistance > swipeThreshold) onOpen(item._id);
-        else if (swipeDistance < -swipeThreshold && isOpen) onOpen(null);
-    };
-
-    const handleItemClick = () => {
-        if (!isOpen) {
-            // dispatch(setBankItemId(item._id))
+    const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+        if (info.offset.x < dragThreshold) {
+            onOpen(item._id);
+        } else {
+            onOpen(null);
         }
     };
 
     const markProcessed = (id: string) => {
         setItems(items => items.filter(item => item._id !== id));
+        onOpen(null);
     }
 
     return (
@@ -61,15 +47,13 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
                     <CircleCheckBigIcon />
                 </button>
             </div>
-            <div
-                onTouchStart={(e: React.TouchEvent<HTMLDivElement>) => handleGestureStart(e.targetTouches[0].clientX)}
-                onTouchMove={(e: React.TouchEvent<HTMLDivElement>) => handleGestureMove(e.targetTouches[0].clientX)}
-                onTouchEnd={handleGestureEnd}
-                onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => { setIsDragging(true); handleGestureStart(e.clientX); }}
-                onMouseMove={(e: React.MouseEvent<HTMLDivElement>) => { if (isDragging) handleGestureMove(e.clientX); }}
-                onMouseUp={handleGestureEnd}
-                onMouseLeave={() => { if (isDragging) handleGestureEnd(); }}
-                className={`relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-transform duration-300 ease-out cursor-pointer ${isOpen ? '-translate-x-20' : 'translate-x-0'}`}
+            <motion.div
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragEnd={handleDragEnd}
+                animate={controls}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
             >
                 <div className="flex items-center flex-shrink-0"> <BankIcon bankName={item.bank} /></div>
                 <div className="flex-grow pr-6 pl-4 min-w-4">
@@ -84,7 +68,7 @@ export const BankItem = memo(({ isOpen, onOpen, setItems, item }: {
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </>
     );
 });
