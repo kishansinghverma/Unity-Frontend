@@ -72,7 +72,7 @@ const TransactionList: FC<TransactionListProps> = ({ title, subtitle, icon: Icon
         <div className="select-none flex-grow overflow-y-auto">
           <ul>
             {isLoading ?
-              (Array.from({ length: 3 }).map((_, index) => <SkeletonItem key={index} />)) :
+              (Array.from({ length: 5 }).map((_, index) => <SkeletonItem key={index} />)) :
               itemsToRender.length === 0 ? (
                 <div className="text-center py-12 px-6 flex flex-col items-center justify-center h-full">
                   <ListX className="mx-auto h-12 w-12 text-gray-400" />
