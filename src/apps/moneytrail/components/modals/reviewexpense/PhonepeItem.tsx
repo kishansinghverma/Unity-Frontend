@@ -38,10 +38,14 @@ export const PhonePeItem: FC<{
       selectionSpecificClasses = "bg-gray-50 dark:bg-slate-800/60 shadow-sm dark:shadow-slate-900/30";
     }
 
+    const onSelect = (current: WithId<PhonepeEntry>) => {
+      isSelected ? setSelected(null) : setSelected(current);
+    }
+
     return (
       <div
         className={`${baseStyling} ${selectionSpecificClasses} ${hoverClasses} [&:not(:first-child)]:mt-2.5 [&:not(:last-child)]:mb-2.5`}
-        onClick={() => setSelected(item)}
+        onClick={() => onSelect(item)}
       >
         {selectionIndicatorElement}
         <div className={`flex items-center space-x-3`}>
