@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { X, CreditCard, Smartphone, FileText, Check } from 'lucide-react';
 import TransactionCard from './TransactionCard';
@@ -36,20 +36,20 @@ export const ReviewModal: FC<{
       if (key === 'Escape') onModalClose();
     };
 
+    const onModalClose = () => setBankItemId(null);
+
     useEffect(() => {
       setColumnHeight();
       document.addEventListener('keydown', handleKeyDown);
       return () => document.removeEventListener('keydown', handleKeyDown);
     }, []);
 
+    const [selectedPhonepe, setSelectedPhonePe] = useState<Nullable<WithId<PhonepeEntry>>>(null);
+    const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
+
     const bankEntry = bankEntries.find(entry => entry._id === bankItemId)!;
     const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
-    const draftMatches = getDraftMatches(phonepeMatches[0], draftEntries);
-
-    const selectedPhonepeId = useReactState<string | null>(null);
-    const selectedDraftId = useReactState<string | null>(null);
-
-    const onModalClose = () => setBankItemId(null);
+    const draftMatches = getDraftMatches(selectedPhonepe, draftEntries);
 
     return (
       <motion.div
@@ -109,7 +109,12 @@ export const ReviewModal: FC<{
                   iconStyle="text-purple-600 dark:text-purple-400"
                 >
                   {phonepeMatches.map((item) => (
-                    <PhonePeItem key={item._id} {...item} selectedItem={selectedPhonepeId} />
+                    <PhonePeItem {...{
+                      item,
+                      key: item._id,
+                      isSelected: selectedPhonepe?._id === item._id,
+                      setSelected: setSelectedPhonePe
+                    }} />
                   ))}
                 </TransactionContainer>
 
@@ -120,7 +125,12 @@ export const ReviewModal: FC<{
                   iconStyle="text-orange-600 dark:text-orange-400"
                 >
                   {draftMatches.map((item) => (
-                    <DraftItem key={item._id} {...item} selectedItem={selectedDraftId} />
+                    <DraftItem {...{
+                      item,
+                      key: item._id,
+                      isSelected: selectedDraft?._id === item._id,
+                      setSelected: setSelectedDraft
+                    }} />
                   ))}
                 </TransactionContainer>
               </div>

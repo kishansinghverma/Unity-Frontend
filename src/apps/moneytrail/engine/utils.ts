@@ -42,7 +42,7 @@ export const getColorPair = (seed: string) => {
     return colorPair[index];
 };
 
-export const getDraftMatches = (phonePeEntry: WithId<PhonepeEntry>, draftEntries: WithId<DraftEntry>[]) => {
+export const getDraftMatches = (phonePeEntry: Nullable<WithId<PhonepeEntry>>, draftEntries: WithId<DraftEntry>[]) => {
     const phonePeTimeNormalized = normalizeToMinute(phonePeEntry?.date)
     const draftEntry = draftEntries.find(t => phonePeTimeNormalized === normalizeToMinute(t.dateTime));
     if (draftEntry) return [draftEntry];

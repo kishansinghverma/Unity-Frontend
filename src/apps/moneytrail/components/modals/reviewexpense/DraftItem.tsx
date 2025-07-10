@@ -1,10 +1,19 @@
 import { ReactNode, FC } from 'react';
 import { CheckCircle, Clock } from 'lucide-react';
-import { getDateComponent } from '../../../../../engine/helpers/dateTimeHelper';
 import { AlphabetIcon } from '../../Common';
-import { DraftItemProps } from '../../../engine/models/props';
+import { Nullable, WithId } from '../../../../../engine/models/types';
+import { DraftEntry } from '../../../engine/models/types';
+import dayjs from 'dayjs';
 
-export const DraftItem: FC<DraftItemProps> = (item) => {
+export const DraftItem: FC<{
+    item: WithId<DraftEntry>;
+    isSelected: boolean;
+    setSelected: React.Dispatch<React.SetStateAction<Nullable<WithId<DraftEntry>>>>
+}> = ({
+    item,
+    isSelected,
+    setSelected
+}) => {
     const singleLineLocation = item.location.split('\n').join(', ');
     const firstLetter = singleLineLocation.charAt(0).toUpperCase() || '?';
 
@@ -22,7 +31,7 @@ export const DraftItem: FC<DraftItemProps> = (item) => {
 
     let iconStyle;
 
-    if (item.selectedItem.get() === item._id) {
+    if (isSelected) {
         selectionSpecificClasses = `ring-1 ring-indigo-400 dark:ring-indigo-500 shadow-lg dark:shadow-indigo-900/50 bg-indigo-50/70 dark:bg-slate-800`;
         selectionIndicatorElement = <CheckCircle className="w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 dark:bg-indigo-400 rounded-full p-0.5 shadow" />;
         currentDateTimeColor = 'text-indigo-700 dark:text-indigo-300';
@@ -35,13 +44,12 @@ export const DraftItem: FC<DraftItemProps> = (item) => {
     return (
         <div
             className={`${baseStyling} ${selectionSpecificClasses} ${hoverClasses} [&:not(:first-child)]:mt-3 [&:not(:last-child)]:mb-3`}
-            onClick={() => item.selectedItem.set(item._id)}
+            onClick={() => setSelected(item)}
         >
             {selectionIndicatorElement}
 
             <div className="flex items-start space-x-3">
                 <AlphabetIcon {...{ firstLetter, seed: item._id, overrideStyle: iconStyle }} />
-
                 <div className="flex-grow min-w-0 py-0.5">
                     <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2`} title={singleLineLocation}>
                         {singleLineLocation}
@@ -50,7 +58,7 @@ export const DraftItem: FC<DraftItemProps> = (item) => {
                         <div className='bg-gradient-to-r from-transparent via-gray-50 to-gray-50 dark:via-slate-800/60 dark:to-slate-800/60 px-3'>&nbsp;</div>
                         <div className={`${currentDateTimeColor} flex bg-gray-50 items-center  dark:bg-slate-800/60`}>
                             <Clock className="w-3.5 h-3.5 mr-0.5 opacity-85" />
-                            <span className="opacity-100">{getDateComponent(item.dateTime).time}</span>
+                            <span className="opacity-100">{dayjs(item.dateTime).format('HH:MM A')}</span>
                         </div>
                     </div>
                 </div>

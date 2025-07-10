@@ -1,4 +1,4 @@
-import { ReactState, WithId } from "../../../../engine/models/types";
+import { Nullable, ReactState, WithId } from "../../../../engine/models/types";
 import { DraftEntry, PhonepeEntry } from "./types";
 
 export type DraftItemProps = {
@@ -6,5 +6,5 @@ export type DraftItemProps = {
 } & WithId<DraftEntry>;
 
 export type PhonepeItemProps = {
-    selectedItem: ReactState<string | null>
+    selectedItem: Nullable<string>
 } & WithId<PhonepeEntry>;
