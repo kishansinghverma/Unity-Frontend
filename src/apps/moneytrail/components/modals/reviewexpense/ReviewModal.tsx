@@ -4,11 +4,11 @@ import { X, CreditCard, Smartphone, FileText, Check } from 'lucide-react';
 import TransactionCard from './TransactionCard';
 import { DraftItem } from './DraftItem';
 import { getDraftMatches, getPhonePeMatches } from '../../../engine/utils';
-import { useReactState } from '../../../../../engine/hooks/useStateExtension';
 import { TransactionContainer } from './TransactionContainer';
 import { Nullable, WithId } from '../../../../../engine/models/types';
 import { BankEntry, DraftEntry, PhonepeEntry } from '../../../engine/models/types';
 import { PhonePeItem } from './PhonepeItem';
+import dayjs from 'dayjs';
 
 export const ReviewModal: FC<{
   bankItemId: string;
@@ -146,41 +146,33 @@ export const ReviewModal: FC<{
                     <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Bank</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">UTR / Transaction #</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">UTR / Transaction #</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Recipient</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Bank</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                       <tr className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        {/* <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                        {transactionDetails.date}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-900 dark:text-white max-w-xs">
-                        {transactionDetails.description}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {transactionDetails.utr || '-'}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {transactionDetails.recipient || '-'}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        <select
-                          value={location}
-                          onChange={(e) => setLocation(e.target.value)}
-                          className="border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                        >
-                          <option value="Settlement">Settlement</option>
-                          <option value="Branch">Branch</option>
-                          <option value="ATM">ATM</option>
-                        </select>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                        {transactionDetails.bank}
-                      </td> */}
+                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          {dayjs(bankEntry.date).format('DD-MM-YYYY')}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          {bankEntry.bank}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          {bankEntry.description}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                          {selectedPhonepe?.utr || '-'}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                          {selectedPhonepe?.recipient || '-'}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                          {selectedDraft?.location}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
