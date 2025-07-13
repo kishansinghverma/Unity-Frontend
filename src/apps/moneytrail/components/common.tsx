@@ -168,9 +168,8 @@ export const SelectWithAdd: FC<{
         const filteredOptions = filterAddOption(options);
         const optionValue = item.value?.toString().trim().toLowerCase();
         const existingOption = filteredOptions.find(option => option.value?.toString().toLowerCase() === optionValue);
-        if (existingOption) {
-          selectedOption = existingOption;
-        }
+        
+        if (existingOption) selectedOption = existingOption;
         else {
           const formattedValue = StringUtils.capitalize(optionValue);
           selectedOption = { label: formattedValue, value: formattedValue };
@@ -182,9 +181,7 @@ export const SelectWithAdd: FC<{
       onOptionSelected(selectedOption);
     }
 
-    const onBlur = () => {
-      setOptions(options => options.filter(t => !t.label?.toString().startsWith('+ Add')));
-    }
+  const onOpenClose = () => setOptions(options => filterAddOption(options));
 
     return (
       <Space.Compact>
@@ -197,8 +194,7 @@ export const SelectWithAdd: FC<{
           placeholder={placeholder}
           onChange={onChange}
           onSearch={onSearch}
-          // filterOption={filterOption}
-          onOpenChange={onBlur}
+          onOpenChange={onOpenClose}
           className={className}
           placement={placement}
         />
