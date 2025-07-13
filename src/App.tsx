@@ -8,14 +8,12 @@ import type { ThemeConfig } from 'antd';
 
 function App() {
   const tailwindTheme = useAppSelector(selectTheme);
-  const algorithm = tailwindTheme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm;
 
   const themeConfig: ThemeConfig = {
-    algorithm,
-    components: {
-    }
+    algorithm: tailwindTheme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+    components: {}
   };
- 
+
   useEffect(() => {
     if (tailwindTheme === 'dark') {
       document.documentElement.classList.add('dark');
