@@ -1,4 +1,4 @@
-import { ElementType, FC, useState } from "react";
+import { ElementType, FC, useEffect, useState } from "react";
 import { getColorPair, getIconBackground } from "../engine/utils";
 import { BankLogo } from "./Resources";
 import { ListX } from "lucide-react";
@@ -108,10 +108,11 @@ export const CustomSelect: FC<{
 }) => {
     const [value, setValue] = useState<any>(null);
 
-    const onChange = (value: string, option: any) => {
-      setValue(option);
-      onOptionSelected(option);
-    }
+    const onClear = () => setValue(null);
+
+    const onChange = (value: string, option: any) => setValue(option);
+
+    useEffect(() => onOptionSelected(value), [value]);
 
     return (
       <Space.Compact>
@@ -122,7 +123,9 @@ export const CustomSelect: FC<{
           value={value}
           options={defaultOptions}
           placeholder={placeholder}
+          allowClear
           onChange={onChange}
+          onClear={onClear}
           className={className}
           placement={placement}
         />
@@ -151,6 +154,10 @@ export const SelectWithAdd: FC<{
 
     const filterAddOption = (items: DefaultOptionType[]) => items.filter(t => !t.label?.toString().startsWith('+ Add'));
 
+    const onOpenClose = () => setOptions(options => filterAddOption(options));
+
+    const onClear = () => setValue(null);
+
     const onSearch = (text: string) => {
       const filteredOptions = filterAddOption(options);
       if (!filteredOptions.some(option => option.label?.toString()?.toLowerCase() === text?.toLowerCase())) {
@@ -160,7 +167,7 @@ export const SelectWithAdd: FC<{
       setOptions(filteredOptions);
     }
 
-  const onChange = (value: string, item?: DefaultOptionType) => {
+    const onChange = (value: string, item?: DefaultOptionType) => {
       if (!item) return;
 
       let selectedOption = item;
@@ -168,7 +175,7 @@ export const SelectWithAdd: FC<{
         const filteredOptions = filterAddOption(options);
         const optionValue = item.value?.toString().trim().toLowerCase();
         const existingOption = filteredOptions.find(option => option.value?.toString().toLowerCase() === optionValue);
-        
+
         if (existingOption) selectedOption = existingOption;
         else {
           const formattedValue = StringUtils.capitalize(optionValue);
@@ -178,10 +185,9 @@ export const SelectWithAdd: FC<{
       }
 
       setValue(selectedOption);
-      onOptionSelected(selectedOption);
     }
 
-  const onOpenClose = () => setOptions(options => filterAddOption(options));
+    useEffect(() => onOptionSelected(value), [value]);
 
     return (
       <Space.Compact>
@@ -195,8 +201,10 @@ export const SelectWithAdd: FC<{
           onChange={onChange}
           onSearch={onSearch}
           onOpenChange={onOpenClose}
+          onClear={onClear}
           className={className}
           placement={placement}
+          allowClear
         />
       </Space.Compact>
     )
