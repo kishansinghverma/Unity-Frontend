@@ -23,7 +23,7 @@ export const TransactionContainer: React.FC<PropsWithChildren<{
         <div className={`px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r ${headerStyle}`}>
           <div className="flex items-center gap-2">
             <Icon className={`w-4 h-4 ${iconStyle}`} />
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-white">{type} Transactions</h2>
+            <h2 className="text-sm font-semibold text-gray-800 dark:text-white">{type} Transactions</h2>
           </div>
         </div>
 

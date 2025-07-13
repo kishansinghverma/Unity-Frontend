@@ -1,25 +1,35 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import AppRoutes from './routes';
 import { useAppSelector } from './store/hooks';
 import { selectTheme } from './store/slices/themeSlice';
 import { AuthProvider } from './context/AuthContext';
+import { ConfigProvider, theme as antdTheme } from 'antd';
+import type { ThemeConfig } from 'antd';
 
 function App() {
-  const theme = useAppSelector(selectTheme);
-  
-  // Apply theme class to document when theme changes
+  const tailwindTheme = useAppSelector(selectTheme);
+  const algorithm = tailwindTheme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm;
+
+  const themeConfig: ThemeConfig = {
+    algorithm,
+    components: {
+    }
+  };
+ 
   useEffect(() => {
-    if (theme === 'dark') {
+    if (tailwindTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [theme]);
-  
+  }, [tailwindTheme]);
+
   return (
-    <AuthProvider>
-      <AppRoutes />
-    </AuthProvider>
+    <ConfigProvider theme={themeConfig}  >
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </ConfigProvider>
   );
 }
 

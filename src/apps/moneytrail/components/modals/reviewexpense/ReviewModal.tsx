@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { X, CreditCard, Smartphone, FileText, Check } from 'lucide-react';
+import { InputNumber, Select } from 'antd';
+import { X, CreditCard, Smartphone, FileText, Check, IndianRupee, Layers2, ChartPie, Pencil } from 'lucide-react';
 import TransactionCard from './TransactionCard';
 import { DraftItem } from './DraftItem';
 import { getDraftMatches, getPhonePeMatches } from '../../../engine/utils';
@@ -9,6 +10,8 @@ import { Nullable, WithId } from '../../../../../engine/models/types';
 import { BankEntry, DraftEntry, PhonepeEntry } from '../../../engine/models/types';
 import { PhonePeItem } from './PhonepeItem';
 import dayjs from 'dayjs';
+import { DefaultOptionType } from 'antd/es/select';
+import { CustomSelect, SelectWithAdd } from '../../Common';
 
 export const ReviewModal: FC<{
   bankItemId: string;
@@ -23,6 +26,21 @@ export const ReviewModal: FC<{
   draftEntries,
   setBankItemId
 }) => {
+    const [selectedPhonepe, setSelectedPhonePe] = useState<Nullable<WithId<PhonepeEntry>>>(null);
+    const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
+
+    const bankEntry = bankEntries.find(entry => entry._id === bankItemId)!;
+    const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
+    const draftMatches = getDraftMatches(selectedPhonepe, draftEntries);
+
+    const [amount, setAmount] = useState<Nullable<number>>(bankEntry.amount);
+
+    const classes = {
+      tr: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap",
+      th: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap font-semibold tracking-wide",
+      iconColor: "text-gray-500 dark:text-gray-300"
+    }
+
     const setColumnHeight = () => {
       const firstColumn: HTMLElement | null = document.querySelector('[data-first-column]');
       if (firstColumn) {
@@ -32,11 +50,16 @@ export const ReviewModal: FC<{
       }
     };
 
-    const handleKeyDown = ({ key }: KeyboardEvent) => {
-      if (key === 'Escape') onModalClose();
-    };
+    const handleKeyDown = ({ key }: KeyboardEvent) => { if (key === 'Escape') onModalClose() };
 
     const onModalClose = () => setBankItemId(null);
+
+    const onAmountChange = ({ currentTarget: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+      const amount = parseFloat(value);
+      if (!isNaN(amount)) setAmount(amount);
+    }
+
+    const onApprove = () => { };
 
     useEffect(() => {
       setColumnHeight();
@@ -44,12 +67,35 @@ export const ReviewModal: FC<{
       return () => document.removeEventListener('keydown', handleKeyDown);
     }, []);
 
-    const [selectedPhonepe, setSelectedPhonePe] = useState<Nullable<WithId<PhonepeEntry>>>(null);
-    const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
 
-    const bankEntry = bankEntries.find(entry => entry._id === bankItemId)!;
-    const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
-    const draftMatches = getDraftMatches(selectedPhonepe, draftEntries);
+    const [description, onSelectDescription] = useState<DefaultOptionType>();
+
+    const defaultOptions: DefaultOptionType[] = [
+      { label: 'Apple', value: 'apple' },
+      { label: 'Banana', value: 'banana' },
+      { label: 'Cherry', value: 'cherry' },
+      { label: 'Date', value: 'date' },
+      { label: 'Elderberry', value: 'elderberry' },
+      { label: 'Fig', value: 'fig' },
+      { label: 'Grape', value: 'grape' },
+      { label: 'Honeydew', value: 'honeydew' },
+      { label: 'Indian Fig', value: 'indian_fig' },
+      { label: 'Jackfruit', value: 'jackfruit' },
+      { label: 'Kiwi', value: 'kiwi' },
+      { label: 'Lemon', value: 'lemon' },
+      { label: 'Mango', value: 'mango' },
+      { label: 'Nectarine', value: 'nectarine' },
+      { label: 'Orange', value: 'orange' },
+      { label: 'Papaya', value: 'papaya' },
+      { label: 'Quince', value: 'quince' },
+      { label: 'Raspberry', value: 'raspberry' },
+      { label: 'Strawberry', value: 'strawberry' },
+      { label: 'Tomato', value: 'tomato' },
+    ];
+
+    useEffect(() => {
+      console.log(`'${description?.label}'`)
+    }, [description]);
 
     return (
       <motion.div
@@ -137,80 +183,92 @@ export const ReviewModal: FC<{
 
               {/* Transaction Details Table */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Transaction Details</h3>
+                <div className="px-4 py-3 border-b bg-gradient-to-r from-rose-50 to-pink-50/60 dark:from-rose-500/30 dark:to-pink-500/10 border-gray-200 dark:border-gray-700">
+                  <h3 className="font-semibold text-gray-800 dark:text-white">Transaction Details</h3>
                 </div>
 
                 <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full table-fixed">
                     <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                      <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Bank</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">UTR / Transaction #</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">UTR / Transaction #</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Recipient</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
+                      <tr className="text-left text-gray-500 dark:text-gray-400 text-sm">
+                        <th className={`${classes.th} w-20`}>Date</th>
+                        <th className={`${classes.th} w-12`}>Bank</th>
+                        <th className={`${classes.th} w-52`}>Description</th>
+                        <th className={`${classes.th} w-28`}>UTR / Transaction #</th>
+                        <th className={`${classes.th} w-28`}>Recipient</th>
+                        <th className={`${classes.th} w-40`}>Location</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                      <tr className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                          {dayjs(bankEntry.date).format('DD-MM-YYYY')}
-                        </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                          {bankEntry.bank}
-                        </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                          {bankEntry.description}
-                        </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                          {selectedPhonepe?.utr || '-'}
-                        </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                          {selectedPhonepe?.recipient || '-'}
-                        </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                          {selectedDraft?.location}
-                        </td>
+                      <tr className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-900 dark:text-white text-sm">
+                        <td className={classes.tr}> {dayjs(bankEntry.date).format('DD-MM-YYYY')} </td>
+                        <td className={classes.tr}> {bankEntry.bank} </td>
+                        <td className={classes.tr}> {bankEntry.description} </td>
+                        <td className={classes.tr}> {selectedPhonepe?.utr || '-'} </td>
+                        <td className={classes.tr}> {selectedPhonepe?.recipient || '-'} </td>
+                        <td className={classes.tr}> {selectedDraft?.location || '-'} </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
 
                 {/* Amount and Action Row */}
-                <div className="bg-gray-50 dark:bg-gray-700 px-4 py-3 border-t border-gray-200 dark:border-gray-600">
+                <div className="bg-gray-50 dark:bg-gray-900 p-4 border-t border-gray-200 dark:border-gray-600">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold text-gray-700 dark:text-gray-300">₹</span>
-                        <input
-                          type="text"
-                          // value={amount}
-                          // onChange={(e) => setAmount(e.target.value)}
-                          className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-lg font-bold text-green-600 dark:text-green-400 w-20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700"
-                        />
-                      </div>
+                    <div className="flex items-center gap-4">
+                      <InputNumber
+                        value={amount}
+                        onChange={setAmount}
+                        addonBefore={<IndianRupee size={16} strokeWidth={3} className={classes.iconColor} />}
+                        placeholder="Amount"
+                        className="w-32 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!px-3 [&_input]:!py-2 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
+                      />
+                      <SelectWithAdd
+                        defaultOptions={defaultOptions}
+                        onOptionSelected={onSelectDescription}
+                        placeholder="Description"
+                        placement="topRight"
+                        className="w-64 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!py-3 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
+                        prefix={<span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 dark:border-[#424242] bg-gray-50 dark:bg-[#FFFFFF0A] text-gray-500 dark:text-gray-300">
+                          <Pencil size={16} strokeWidth={3} />
+                        </span>}
+                      />
+                      <SelectWithAdd
+                        defaultOptions={defaultOptions}
+                        onOptionSelected={onSelectDescription}
+                        placeholder="Category"
+                        placement="topRight"
+                        className="w-48 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!py-3 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
+                        prefix={<span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 dark:border-[#424242] bg-gray-50 dark:bg-[#FFFFFF0A] text-gray-500 dark:text-gray-300">
+                          <Layers2 size={16} strokeWidth={3} />
+                        </span>}
+                      />
+                      <CustomSelect
+                        defaultOptions={defaultOptions}
+                        onOptionSelected={onSelectDescription}
+                        placeholder="Category"
+                        placement="topRight"
+                        className="w-48 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!py-3 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
+                        prefix={<span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 dark:border-[#424242] bg-gray-50 dark:bg-[#FFFFFF0A] text-gray-500 dark:text-gray-300">
+                          <ChartPie size={16} strokeWidth={3} />
+                        </span>}
+                      />
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <button
-                        // onClick={onClose}
-                        className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors font-medium text-sm"
+                        onClick={onModalClose}
+                        className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-gray-600 bg-gray-200 dark:bg-gray-500 hover:bg-gray-300 dark:hover:bg-gray-500 dark:text-gray-200"
                       >
                         <X className="w-4 h-4" />
-                        Reject
+                        <span>Reject</span>
                       </button>
                       <button
-                        onClick={() => {
-                          // Handle approval logic here
-                          alert('Transaction Approved!');
-                          // onClose();
-                        }}
-                        className="flex items-center gap-2 px-6 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition-colors font-medium shadow-sm text-sm"
+                        onClick={onApprove}
+                        className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600"
                       >
                         <Check className="w-4 h-4" />
-                        Approve
+                        <span>Approve</span>
                       </button>
                     </div>
                   </div>
