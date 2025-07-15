@@ -1,8 +1,6 @@
-import { combineSlices } from "@reduxjs/toolkit";
-import { reviewSlice } from "./reviewSlice";
-import { reviewModalSlice } from "./reviewModalSlice";
+import { reviewApi, reviewSlice } from "./reviewSlice";
 
-export const moneyTrailReducer = combineSlices(
-    reviewSlice,
-    reviewModalSlice
-);
+export const moneyTrailReducer = [
+    reviewApi,
+    reviewSlice
+];

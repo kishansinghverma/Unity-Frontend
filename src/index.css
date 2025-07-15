@@ -1,25 +1,8 @@
-@tailwind base;
+@layer tailwind-base, antd;
+
+@layer tailwind-base {
+    @tailwind base;
+}
+
 @tailwind components;
 @tailwind utilities;
-
-.expense-item-enter {
-    filter: blur(10px);
-    opacity: 0;
-}
-
-.expense-item-enter-active {
-    filter: blur(0);
-    opacity: 1;
-    transition: filter 400ms ease-out, opacity 400ms ease-out;
-}
-
-.expense-item-exit {
-    filter: blur(0);
-    opacity: 1;
-}
-
-.expense-item-exit-active {
-    filter: blur(10px);
-    opacity: 0;
-    transition: filter 400ms ease-in, opacity 400ms ease-in;
-}

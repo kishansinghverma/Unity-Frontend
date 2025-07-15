@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { fetchBankEntries, fetchDraftEntries, fetchPhonePeEntries } from '../store/reviewSlice';
 import { ReviewModal } from '../components/modals/reviewExpense/ReviewModal';
 import { BankList } from '../components/BankList';
 import { AnimatePresence } from 'framer-motion';
 import { Nullable } from '../../../engine/models/types';
+import { useBankEntryQuery, useDraftEntryQuery, usePhonepeEntryQuery } from '../store/reviewSlice';
 
 const ReviewExpense: React.FC = () => {
 
   const dispatch = useAppDispatch();
-  const bankEntries = useAppSelector(state => state.moneyTrail.review.bankEntries);
-  const phonepeEntries = useAppSelector(state => state.moneyTrail.review.phonepeEntries);
-  const draftEntries = useAppSelector(state => state.moneyTrail.review.draftEntries);
+
+  const bankEntries = useBankEntryQuery();
+  const phonepeEntries = usePhonepeEntryQuery();
+  const draftEntries = useDraftEntryQuery();
 
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
 
   useEffect(() => {
-    dispatch(fetchBankEntries());
-    dispatch(fetchPhonePeEntries())
-    dispatch(fetchDraftEntries());
   }, []);
 
   return (
     <div className="flex flex-col md:flex-row gap-8 p-4 md:p-8">
       <div className="flex-1 min-w-0">
-        <BankList {...{ ...bankEntries, setBankItemId }} />
+        <BankList {...{ ...{items: bankEntries.data, isLoading: bankEntries.isLoading}, setBankItemId }} />
       </div>
       {/* <div className="flex-1 min-w-0">
         <PhonepeList
@@ -48,14 +46,13 @@ const ReviewExpense: React.FC = () => {
       </div>*/}
       <AnimatePresence>
         {bankItemId && (
-          <ReviewModal {...{
-            key: bankItemId,
-            bankEntries: bankEntries.contents,
-            phonepeEntries: phonepeEntries.contents,
-            draftEntries: draftEntries.contents,
+          <ReviewModal key={bankItemId} {...{
+            bankEntries: bankEntries.data!,
+            phonepeEntries: phonepeEntries.data!,
+            draftEntries: draftEntries.data!,
             bankItemId,
             setBankItemId
-          }}/>
+          }} />
         )}
       </AnimatePresence>
     </div>

@@ -12,6 +12,7 @@ import { PhonePeItem } from './PhonepeItem';
 import dayjs from 'dayjs';
 import { DefaultOptionType } from 'antd/es/select';
 import { CustomSelect, SelectWithAdd } from '../../Common';
+import { useDescriptionsQuery } from '../../../store/reviewSlice';
 
 export const ReviewModal: FC<{
   bankItemId: string;
@@ -34,6 +35,9 @@ export const ReviewModal: FC<{
     const draftMatches = getDraftMatches(selectedPhonepe, draftEntries);
 
     const [amount, setAmount] = useState<Nullable<number>>(bankEntry.amount);
+
+  const descriptions = useDescriptionsQuery();
+
 
     const classes = {
       tr: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap",
@@ -69,33 +73,13 @@ export const ReviewModal: FC<{
 
 
     const [description, onSelectDescription] = useState<DefaultOptionType>();
-
-    const defaultOptions: DefaultOptionType[] = [
-      { label: 'Apple', value: 'apple' },
-      { label: 'Banana', value: 'banana' },
-      { label: 'Cherry', value: 'cherry' },
-      { label: 'Date', value: 'date' },
-      { label: 'Elderberry', value: 'elderberry' },
-      { label: 'Fig', value: 'fig' },
-      { label: 'Grape', value: 'grape' },
-      { label: 'Honeydew', value: 'honeydew' },
-      { label: 'Indian Fig', value: 'indian_fig' },
-      { label: 'Jackfruit', value: 'jackfruit' },
-      { label: 'Kiwi', value: 'kiwi' },
-      { label: 'Lemon', value: 'lemon' },
-      { label: 'Mango', value: 'mango' },
-      { label: 'Nectarine', value: 'nectarine' },
-      { label: 'Orange', value: 'orange' },
-      { label: 'Papaya', value: 'papaya' },
-      { label: 'Quince', value: 'quince' },
-      { label: 'Raspberry', value: 'raspberry' },
-      { label: 'Strawberry', value: 'strawberry' },
-      { label: 'Tomato', value: 'tomato' },
-    ];
+    const [descriptionOptions, setDescriptionOptions] = useState<DefaultOptionType[]>([]);
 
     useEffect(() => {
-      console.log(`'${description?.label}'`)
-    }, [description]);
+      const options: DefaultOptionType[] = descriptions?.data?.value?.map(item => ({ label: item, value: item })) ?? [];
+      console.log(options);
+      setDescriptionOptions(options);
+    }, [descriptions.data])
 
     return (
       <motion.div
@@ -155,9 +139,8 @@ export const ReviewModal: FC<{
                   iconStyle="text-purple-600 dark:text-purple-400"
                 >
                   {phonepeMatches.map((item) => (
-                    <PhonePeItem {...{
+                    <PhonePeItem key={item._id} {...{
                       item,
-                      key: item._id,
                       isSelected: selectedPhonepe?._id === item._id,
                       setSelected: setSelectedPhonePe
                     }} />
@@ -171,9 +154,8 @@ export const ReviewModal: FC<{
                   iconStyle="text-orange-600 dark:text-orange-400"
                 >
                   {draftMatches.map((item) => (
-                    <DraftItem {...{
+                    <DraftItem key={item._id} {...{
                       item,
-                      key: item._id,
                       isSelected: selectedDraft?._id === item._id,
                       setSelected: setSelectedDraft
                     }} />
@@ -224,7 +206,7 @@ export const ReviewModal: FC<{
                         className="w-32 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!px-3 [&_input]:!py-2 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
                       />
                       <SelectWithAdd
-                        defaultOptions={defaultOptions}
+                        defaultOptions={descriptionOptions}
                         onOptionSelected={onSelectDescription}
                         placeholder="Description"
                         placement="topRight"
@@ -234,7 +216,7 @@ export const ReviewModal: FC<{
                         </span>}
                       />
                       <SelectWithAdd
-                        defaultOptions={defaultOptions}
+                        defaultOptions={descriptionOptions}
                         onOptionSelected={onSelectDescription}
                         placeholder="Category"
                         placement="topRight"
@@ -244,9 +226,9 @@ export const ReviewModal: FC<{
                         </span>}
                       />
                       <CustomSelect
-                        defaultOptions={defaultOptions}
+                        defaultOptions={descriptionOptions}
                         onOptionSelected={onSelectDescription}
-                        placeholder="Category"
+                        placeholder="Splitwise"
                         placement="topRight"
                         className="w-48 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!py-3 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
                         prefix={<span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 dark:border-[#424242] bg-gray-50 dark:bg-[#FFFFFF0A] text-gray-500 dark:text-gray-300">

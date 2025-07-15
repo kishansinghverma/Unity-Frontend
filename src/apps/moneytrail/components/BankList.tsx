@@ -1,19 +1,20 @@
 import { Building2 } from "lucide-react";
 import { useState, useRef, useEffect, FC } from "react";
 import { BankEntry } from "../engine/models/types";
-import { Fetchable, Nullable, WithId } from "../../../engine/models/types";
+import { Nullable, WithId } from "../../../engine/models/types";
 import { EmptyList, ListHeader, SkeletonItem } from "./Common";
 import { BankItem } from "./BankItem";
 import { AnimatePresence, motion } from "framer-motion";
 
-export const BankList: FC<Fetchable<WithId<BankEntry>[]> & {
+export const BankList: FC<{
+  items: Nullable<WithId<BankEntry>[]>;
+  isLoading: boolean;
   setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
 }> = ({
   isLoading,
-  contents: items,
+  items,
   setBankItemId
 }) => {
-    const [listItems, setItems] = useState(items);
     const [openItemId, setOpenItemId] = useState<string | null>(null);
     const [showProcessed, setShowProcessed] = useState(false);
     const listContainerRef = useRef<HTMLDivElement>(null);
@@ -34,11 +35,11 @@ export const BankList: FC<Fetchable<WithId<BankEntry>[]> & {
       };
     }, [openItemId]);
 
-    useEffect(() => {
-      setItems(items);
-    }, [items]);
+    const setItems = () => {
 
-    const itemsToRender = listItems.filter(item => (!item.processed || showProcessed));
+    }
+
+    const itemsToRender = items?.filter(item => (!item.processed || showProcessed)) ?? [];
 
     return (
       <>

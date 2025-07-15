@@ -1,7 +1,7 @@
-import toast from "react-hot-toast";
 import { HttpStatusCode } from "../constant";
+import { notifyError } from "../services/notificationService";
 
-export const fetchJson = (route: string) => fetch(route).then(handleJsonResponse);
+export const fetchJson = (route: string) => fetch(route).then(handleJsonResponse).catch(error => handleError(error, true));
 
 export const handleResponse = (response: Response, errorMessage?: string) => {
     if (!response.ok)
@@ -13,4 +13,14 @@ export const handleJsonResponse = (response: Response, errorMessage?: string) =>
     return response.json();
 }
 
-export const handleError = (error: Error | string) => toast.error(error instanceof Error ? error.message : error); 
+export const handleError = (error: Error | string, rethrow = false) => {
+    notifyError({
+        showProgress: true,
+        pauseOnHover: true,
+        duration: 5,
+        message: 'Data Fetch Error',
+        description: error instanceof Error ? error.message : error,
+    });
+
+    if (rethrow) throw error;
+}
