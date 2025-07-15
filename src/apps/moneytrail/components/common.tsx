@@ -137,6 +137,7 @@ export const SelectWithAdd: FC<{
   defaultOptions: Array<DefaultOptionType>;
   placeholder: string;
   className: string;
+  isLoading: boolean;
   placement?: "bottomLeft" | "bottomRight" | "topLeft" | "topRight";
   prefix: React.ReactNode;
   onOptionSelected: React.Dispatch<React.SetStateAction<DefaultOptionType>>;
@@ -145,6 +146,7 @@ export const SelectWithAdd: FC<{
   placeholder,
   className,
   placement,
+  isLoading,
   onOptionSelected,
   prefix,
 }) => {
@@ -188,6 +190,7 @@ export const SelectWithAdd: FC<{
     }
 
     useEffect(() => onOptionSelected(value), [value]);
+    useEffect(() => setOptions(defaultOptions), [defaultOptions]);
 
     return (
       <Space.Compact>
@@ -204,6 +207,7 @@ export const SelectWithAdd: FC<{
           onClear={onClear}
           className={className}
           placement={placement}
+          loading={isLoading}
           allowClear
         />
       </Space.Compact>

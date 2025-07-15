@@ -79,7 +79,7 @@ export const ReviewModal: FC<{
       const options: DefaultOptionType[] = descriptions?.data?.value?.map(item => ({ label: item, value: item })) ?? [];
       console.log(options);
       setDescriptionOptions(options);
-    }, [descriptions.data])
+    }, [descriptions.isLoading])
 
     return (
       <motion.div
@@ -208,6 +208,7 @@ export const ReviewModal: FC<{
                       <SelectWithAdd
                         defaultOptions={descriptionOptions}
                         onOptionSelected={onSelectDescription}
+                        isLoading={ descriptions.isLoading}
                         placeholder="Description"
                         placement="topRight"
                         className="w-64 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!py-3 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
@@ -218,6 +219,7 @@ export const ReviewModal: FC<{
                       <SelectWithAdd
                         defaultOptions={descriptionOptions}
                         onOptionSelected={onSelectDescription}
+                        isLoading={ descriptions.isLoading}
                         placeholder="Category"
                         placement="topRight"
                         className="w-48 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!py-3 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
