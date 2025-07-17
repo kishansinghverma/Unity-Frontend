@@ -19,6 +19,9 @@ export const Routes = {
     SplitWiseExpenses: "/api/splitwise/transactions",
     BankStatement: "/api/expenses/statement/bank",
     PhonePeStatement: "/api/expenses/statement/phonepe",
+    ProcessBank: "/api/expenses/process/bank",
+    ProcessPhonepe: "/api/expenses/process/phonepe",
+    ProcessDraft: "/api/expenses/process/draft",
     Distance: "https://dev.virtualearth.net/REST/V1/Routes/Driving?o=json&wp.0=sadabad&key=AhWAWkHKZZ0JtpBDWvq2_vZqrtmAgf3prbe31w7FbepXyGzvHoWzvpetsQIA7DpL&wp.1"
 }
 

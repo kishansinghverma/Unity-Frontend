@@ -1,4 +1,4 @@
-import { ElementType, FC, useEffect, useState } from 'react';
+import { ElementType, FC, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Form, InputNumber, Space } from 'antd';
 import { X, CreditCard, Smartphone, FileText, Check, IndianRupee, Layers2, Pencil, PieChart } from 'lucide-react';
@@ -107,17 +107,31 @@ export const ReviewModal: FC<{
     const onModalClose = () => setBankItemId(null);
 
     const onComplete = () => {
-      notifySuccess({ message: "Success", description: "Expense Created Successfully!" });
+      notifySuccess({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
+      dispatch(reviewApi.util.updateQueryData('bankEntry', undefined, (data) => {
+        data.forEach(entry => { if (entry._id === bankEntry._id) entry.processed = true });
+      }));
+      onModalClose();
     }
 
     const saveTransaction = (formState: FormState) => {
       const selectedGroup = groups.data?.find(group => group.id === formState.group);
 
-      let payload = {};
+      let payload = {
+        group_id: selectedGroup?.id,
+        cost: formState.amount,
+        date: bankEntry.date,
+        description: formState.description,
+        parties: selectedGroup?.members.map(m => m.id),
+        category: formState.category
+      };
 
       if (bankEntry.type === 'Debit') {
-        payload = {
-          group_id: selectedGroup?.id,
+        const debitPayload = {
+          shared: selectedGroup?.sharing,
+          bankTxnId: bankEntry?._id,
+          phonePeTxnId: selectedPhonepe?._id,
+          draftTxnId: selectedDraft?._id,
           details: Object.entries({
             Bank: bankEntry.bank ?? StringUtils.empty,
             Description: bankEntry.description ?? StringUtils.empty,
@@ -127,34 +141,23 @@ export const ReviewModal: FC<{
             Location: selectedDraft?.location.replaceAll('\n', ', ') ?? 'N/A',
             Coordinates: selectedDraft?.coordinate ? `https://www.google.com/maps?q=${selectedDraft.coordinate}` : 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
-          description: formState.description,
-          cost: formState.amount,
-          date: bankEntry.date,
-          parties: selectedGroup?.members.map(m => m.id),
-          shared: selectedGroup?.sharing,
-          bankTxnId: bankEntry?._id,
-          phonePeTxnId: selectedPhonepe?._id,
-          draftTxnId: selectedDraft?._id
         };
+
+        payload = { ...payload, ...debitPayload };
       }
       else {
-        payload = {
-          group_id: selectedGroup?.id,
-          cost: formState.amount,
-          date: bankEntry.date,
+        const creditPayload = {
           details: Object.entries({
             Bank: bankEntry.bank ?? StringUtils.empty,
             Description: bankEntry.description ?? StringUtils.empty,
             UTR: selectedPhonepe?.utr ?? 'N/A',
             TransactionNo: selectedPhonepe?.transactionId ?? 'N/A',
             Payer: selectedPhonepe?.recipient ?? 'N/A'
-          }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
-          parties: selectedGroup?.members.map(m => m.id),
-          description: formState.description
+          }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n')
         }
-      }
 
-      console.log(payload);
+        payload = { ...payload, ...creditPayload };
+      }
 
       const url = bankEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
 

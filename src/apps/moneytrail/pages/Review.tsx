@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import React, { useState } from 'react';
 import { ReviewModal } from '../components/modals/reviewExpense/ReviewModal';
 import { BankList } from '../components/BankList';
 import { AnimatePresence } from 'framer-motion';
 import { Nullable } from '../../../engine/models/types';
 import { useBankEntryQuery, useDraftEntryQuery, usePhonepeEntryQuery } from '../store/reviewSlice';
 import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
+import { TabletSmartphone, FileSearch } from 'lucide-react';
+import DraftList from '../components/DraftList';
+import PhonepeList from '../components/PhonePeList';
 
 const ReviewExpense: React.FC = () => {
   const bankEntries = useBankEntryQuery();
@@ -14,40 +16,31 @@ const ReviewExpense: React.FC = () => {
 
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
 
-  useEffect(() => {
-  }, []);
-
   return (
     <div className="flex flex-col md:flex-row gap-8 p-4 md:p-8">
       <div className="flex-1 min-w-0">
-        <BankList {...{
-          ...{
-            items: getArrayOrDefault(bankEntries),
-            isLoading: bankEntries.isLoading
-          },
-          setBankItemId
-        }} />
+        <BankList
+          items={getArrayOrDefault(bankEntries)}
+          isLoading={bankEntries.isLoading}
+          setBankItemId={setBankItemId}
+        />
       </div>
-      {/* <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0">
         <PhonepeList
-          title="PhonePe Records"
-          subtitle="PhonePe transaction records"
-          icon={TabletSmartphone}
-          gradientColors={{ from: 'from-green-500', to: 'to-emerald-600' }}
-          items={phonepeEntries.contents}
+          items={getArrayOrDefault(phonepeEntries)}
           isLoading={phonepeEntries.isLoading}
         />
       </div>
       <div className="flex-1 min-w-0">
-        <DraftList
+        {/* <DraftList
           title="Draft Logs"
           subtitle="Metadata for identification"
           icon={FileSearch}
           gradientColors={{ from: 'from-orange-500', to: 'to-yellow-500' }}
-          items={draftEntries.contents}
+          items={getArrayOrDefault(draftEntries)}
           isLoading={draftEntries.isLoading}
-        />
-      </div>*/}
+        /> */}
+      </div>
       <AnimatePresence>
         {bankItemId && (
           <ReviewModal key={bankItemId} {...{

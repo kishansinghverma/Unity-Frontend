@@ -3,8 +3,13 @@ import { useState, useRef, useEffect, FC } from "react";
 import { BankEntry } from "../engine/models/types";
 import { Nullable, WithId } from "../../../engine/models/types";
 import { EmptyList, ListHeader, SkeletonItem } from "./Common";
-import { BankItem } from "./BankItem";
+import { BankItem } from "./ListItem";
 import { AnimatePresence, motion } from "framer-motion";
+import { useAppDispatch } from "../../../store/hooks";
+import { reviewApi } from "../store/reviewSlice";
+import { PostParams, Routes } from "../../../engine/constant";
+import { handleError, handleResponse } from "../../../engine/helpers/httpHelper";
+import { notifySuccess } from "../../../engine/services/notificationService";
 
 export const BankList: FC<{
   items: WithId<BankEntry>[];
@@ -15,6 +20,7 @@ export const BankList: FC<{
   items,
   setBankItemId
 }) => {
+    const dispatch = useAppDispatch();
     const [openItemId, setOpenItemId] = useState<string | null>(null);
     const [showProcessed, setShowProcessed] = useState(false);
     const listContainerRef = useRef<HTMLDivElement>(null);
@@ -35,8 +41,15 @@ export const BankList: FC<{
       };
     }, [openItemId]);
 
-    const setItems = () => {
+    const setProcessed = (id: string) => {
+      dispatch(reviewApi.util.updateQueryData('bankEntry', undefined, (data) => {
+        data.forEach(entry => { if (entry._id === id) entry.processed = true });
+      }));
 
+      fetch(`${Routes.ProcessBank}/${id}`, PostParams)
+        .then(handleResponse)
+        .then(() => notifySuccess({ message: "Success", description: "Transaction Marked as Proccessed!" }))
+        .catch(handleError);
     }
 
     const itemsToRender = items?.filter(item => (!item.processed || showProcessed)) ?? [];
@@ -72,7 +85,7 @@ export const BankList: FC<{
                         >
                           <BankItem {...{
                             item,
-                            setItems,
+                            setProcessed,
                             setBankItemId,
                             isOpen: openItemId === item._id,
                             onOpen: setOpenItemId,
