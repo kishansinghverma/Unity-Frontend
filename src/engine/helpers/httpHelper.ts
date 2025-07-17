@@ -18,7 +18,7 @@ export const handleError = (error: Error | string, rethrow = false) => {
         showProgress: true,
         pauseOnHover: true,
         duration: 5,
-        message: 'Data Fetch Error',
+        message: 'Request Error',
         description: error instanceof Error ? error.message : error,
     });
 

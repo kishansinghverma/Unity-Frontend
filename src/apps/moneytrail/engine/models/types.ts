@@ -70,3 +70,30 @@ export type ReviewModalProps = {
     phonepeEntries: Array<WithId<PhonepeEntry>>;
     onClose: () => void;
 }
+
+export type Group = {
+    id: number;
+    name: string;
+    simplified_debts: Array<{
+        from: number;
+        to: number;
+        amount: string;
+    }>
+    whiteboard: null;
+    group_type: string;
+    avatar: {
+        large: string;
+    };
+    members: Array<Member>;
+    sharing: boolean;
+}
+
+export type Member = {
+    id: number;
+    first_name: string;
+    email: string;
+}
+
+export type SplitwiseGroupResponse = Group;
+
+export type SplitwiseGroupsResponse = Array<Group>;

@@ -7,7 +7,7 @@ import { BankItem } from "./BankItem";
 import { AnimatePresence, motion } from "framer-motion";
 
 export const BankList: FC<{
-  items: Nullable<WithId<BankEntry>[]>;
+  items: WithId<BankEntry>[];
   isLoading: boolean;
   setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
 }> = ({

@@ -14,6 +14,7 @@ export const Routes = {
     SettleExpense: "/api/splitwise/settlement",
     NotificationUrl: "/api/whatsapp/sendtext/unityhub",
     SplitWiseGroups: "/api/splitwise/groups",
+    SplitWiseCategories: "/api/splitwise/categories",
     SplitWiseGroup: "/api/splitwise/group",
     SplitWiseExpenses: "/api/splitwise/transactions",
     BankStatement: "/api/expenses/statement/bank",
@@ -30,4 +31,24 @@ export const HttpStatusCode: { [key: number]: string } = {
     404: 'Resource Not Found!',
     400: 'Bad Request!',
     409: 'Duplicate Record!'
+}
+
+export const PostParams = {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+}
+
+export const PatchParams = {
+    method: 'PATCH',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+}
+
+export const DeleteParams = {
+    method: 'DELETE'
 }

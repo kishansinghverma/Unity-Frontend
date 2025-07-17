@@ -5,11 +5,9 @@ import { BankList } from '../components/BankList';
 import { AnimatePresence } from 'framer-motion';
 import { Nullable } from '../../../engine/models/types';
 import { useBankEntryQuery, useDraftEntryQuery, usePhonepeEntryQuery } from '../store/reviewSlice';
+import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
 
 const ReviewExpense: React.FC = () => {
-
-  const dispatch = useAppDispatch();
-
   const bankEntries = useBankEntryQuery();
   const phonepeEntries = usePhonepeEntryQuery();
   const draftEntries = useDraftEntryQuery();
@@ -22,7 +20,13 @@ const ReviewExpense: React.FC = () => {
   return (
     <div className="flex flex-col md:flex-row gap-8 p-4 md:p-8">
       <div className="flex-1 min-w-0">
-        <BankList {...{ ...{items: bankEntries.data, isLoading: bankEntries.isLoading}, setBankItemId }} />
+        <BankList {...{
+          ...{
+            items: getArrayOrDefault(bankEntries),
+            isLoading: bankEntries.isLoading
+          },
+          setBankItemId
+        }} />
       </div>
       {/* <div className="flex-1 min-w-0">
         <PhonepeList
@@ -47,9 +51,9 @@ const ReviewExpense: React.FC = () => {
       <AnimatePresence>
         {bankItemId && (
           <ReviewModal key={bankItemId} {...{
-            bankEntries: bankEntries.data!,
-            phonepeEntries: phonepeEntries.data!,
-            draftEntries: draftEntries.data!,
+            bankEntries: getArrayOrDefault(bankEntries),
+            phonepeEntries: getArrayOrDefault(phonepeEntries),
+            draftEntries: getArrayOrDefault(draftEntries),
             bankItemId,
             setBankItemId
           }} />

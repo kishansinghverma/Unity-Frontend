@@ -4,8 +4,8 @@ import { BankLogo } from "./Resources";
 import { ListX } from "lucide-react";
 import { DefaultOptionType } from "antd/es/select";
 import { StringUtils } from "../../../engine/helpers/stringHelper";
-import { FilterFunc } from 'rc-select/lib/Select';
-import { Space, Select } from "antd";
+import { Space, Select, Form } from "antd";
+import { Rule } from "antd/es/form";
 
 
 export const BankIcon: FC<{
@@ -94,41 +94,46 @@ export const SkeletonItem: FC = () => (
 export const CustomSelect: FC<{
   defaultOptions: Array<DefaultOptionType>;
   placeholder: string;
+  name: string;
+  rules?: Rule[];
   className: string;
   placement?: "bottomLeft" | "bottomRight" | "topLeft" | "topRight"
   prefix: React.ReactNode;
-  onOptionSelected: React.Dispatch<React.SetStateAction<DefaultOptionType>>;
+  isLoading: boolean;
 }> = ({
   defaultOptions,
   placeholder,
+  name,
+  rules,
   className,
   placement,
-  onOptionSelected,
+  isLoading,
   prefix,
 }) => {
     const [value, setValue] = useState<any>(null);
 
     const onClear = () => setValue(null);
-
     const onChange = (value: string, option: any) => setValue(option);
-
-    useEffect(() => onOptionSelected(value), [value]);
 
     return (
       <Space.Compact>
         {prefix}
-        <Select
-          style={{ height: 38 }}
-          showSearch
-          value={value}
-          options={defaultOptions}
-          placeholder={placeholder}
-          allowClear
-          onChange={onChange}
-          onClear={onClear}
-          className={className}
-          placement={placement}
-        />
+        <Form.Item noStyle name={name} rules={rules}>
+          <Select
+            style={{ height: 38 }}
+            showSearch
+            allowClear
+            value={value}
+            options={defaultOptions}
+            placeholder={placeholder}
+            onChange={onChange}
+            onClear={onClear}
+            className={className}
+            placement={placement}
+            loading={isLoading}
+            optionFilterProp="title"
+          />
+        </Form.Item>
       </Space.Compact>
     )
   }
@@ -136,25 +141,29 @@ export const CustomSelect: FC<{
 export const SelectWithAdd: FC<{
   defaultOptions: Array<DefaultOptionType>;
   placeholder: string;
+  name: string;
+  rules?: Rule[];
   className: string;
   isLoading: boolean;
   placement?: "bottomLeft" | "bottomRight" | "topLeft" | "topRight";
   prefix: React.ReactNode;
-  onOptionSelected: React.Dispatch<React.SetStateAction<DefaultOptionType>>;
+  onAddOption: (option: DefaultOptionType) => void
 }> = ({
   defaultOptions,
   placeholder,
+  name,
+  rules,
   className,
   placement,
   isLoading,
-  onOptionSelected,
-  prefix,
+  onAddOption,
+  prefix
 }) => {
 
     const [value, setValue] = useState<any>();
     const [options, setOptions] = useState<DefaultOptionType[]>(defaultOptions);
 
-    const filterAddOption = (items: DefaultOptionType[]) => items.filter(t => !t.label?.toString().startsWith('+ Add'));
+    const filterAddOption = (items: DefaultOptionType[]) => items.filter(t => !t.title?.toString().startsWith('+ Add'));
 
     const onOpenClose = () => setOptions(options => filterAddOption(options));
 
@@ -162,18 +171,26 @@ export const SelectWithAdd: FC<{
 
     const onSearch = (text: string) => {
       const filteredOptions = filterAddOption(options);
-      if (!filteredOptions.some(option => option.label?.toString()?.toLowerCase() === text?.toLowerCase())) {
-        filteredOptions.push({ label: `+ Add ${text}`, value: text });
+
+      if (!StringUtils.isNullOrEmpty(text)) {
+        if (!filteredOptions.some(option => option.title?.toString()?.toLowerCase() === text.toLowerCase())) {
+          const formattedValue = StringUtils.capitalize(text);
+          filteredOptions.push({
+            label: <span className='text-gray-600 dark:text-gray-200 font-medium'>{`+ Add ${formattedValue}`}</span>,
+            value: formattedValue,
+            title: `+ Add ${formattedValue}`
+          });
+        }
       }
 
       setOptions(filteredOptions);
     }
 
     const onChange = (value: string, item?: DefaultOptionType) => {
-      if (!item) return;
+      if (StringUtils.isNullOrEmpty(item?.title)) return;
 
       let selectedOption = item;
-      if (item?.label?.toString()?.startsWith('+ Add')) {
+      if (item?.title?.toString()?.startsWith('+ Add')) {
         const filteredOptions = filterAddOption(options);
         const optionValue = item.value?.toString().trim().toLowerCase();
         const existingOption = filteredOptions.find(option => option.value?.toString().toLowerCase() === optionValue);
@@ -181,35 +198,41 @@ export const SelectWithAdd: FC<{
         if (existingOption) selectedOption = existingOption;
         else {
           const formattedValue = StringUtils.capitalize(optionValue);
-          selectedOption = { label: formattedValue, value: formattedValue };
-          setOptions(([...filteredOptions, selectedOption]));
+          selectedOption = {
+            label: <span className='text-gray-600 dark:text-gray-200 font-medium'>{formattedValue}</span>,
+            title: formattedValue,
+            value: formattedValue
+          };
+
+          onAddOption(selectedOption);
         }
       }
 
       setValue(selectedOption);
     }
 
-    useEffect(() => onOptionSelected(value), [value]);
     useEffect(() => setOptions(defaultOptions), [defaultOptions]);
 
     return (
       <Space.Compact>
         {prefix}
-        <Select
-          style={{ height: 38 }}
-          showSearch
-          value={value?.value}
-          options={options}
-          placeholder={placeholder}
-          onChange={onChange}
-          onSearch={onSearch}
-          onOpenChange={onOpenClose}
-          onClear={onClear}
-          className={className}
-          placement={placement}
-          loading={isLoading}
-          allowClear
-        />
+        <Form.Item noStyle name={name} rules={rules}>
+          <Select
+            style={{ height: 38 }}
+            showSearch
+            value={value?.value}
+            options={options}
+            placeholder={placeholder}
+            onChange={onChange}
+            onSearch={onSearch}
+            onOpenChange={onOpenClose}
+            onClear={onClear}
+            className={className}
+            placement={placement}
+            loading={isLoading}
+            allowClear
+          />
+        </Form.Item>
       </Space.Compact>
     )
   }

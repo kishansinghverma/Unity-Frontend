@@ -1,7 +1,7 @@
-import { FC, useEffect, useState } from 'react';
+import { ElementType, FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { InputNumber, Select } from 'antd';
-import { X, CreditCard, Smartphone, FileText, Check, IndianRupee, Layers2, ChartPie, Pencil } from 'lucide-react';
+import { Form, InputNumber, Space } from 'antd';
+import { X, CreditCard, Smartphone, FileText, Check, IndianRupee, Layers2, Pencil, PieChart } from 'lucide-react';
 import TransactionCard from './TransactionCard';
 import { DraftItem } from './DraftItem';
 import { getDraftMatches, getPhonePeMatches } from '../../../engine/utils';
@@ -12,7 +12,19 @@ import { PhonePeItem } from './PhonepeItem';
 import dayjs from 'dayjs';
 import { DefaultOptionType } from 'antd/es/select';
 import { CustomSelect, SelectWithAdd } from '../../Common';
-import { useDescriptionsQuery } from '../../../store/reviewSlice';
+import { reviewApi, useCategoriesQuery, useDescriptionsQuery, useGroupsQuery } from '../../../store/reviewSlice';
+import { useAppDispatch } from '../../../../../store/hooks';
+import { PostParams, Routes } from '../../../../../engine/constant';
+import { handleError, handleResponse } from '../../../../../engine/helpers/httpHelper';
+import { notifyError, notifySuccess } from '../../../../../engine/services/notificationService';
+import { StringUtils } from '../../../../../engine/helpers/stringHelper';
+
+type FormState = {
+  amount: number,
+  description: string,
+  category: number,
+  group: number
+};
 
 export const ReviewModal: FC<{
   bankItemId: string;
@@ -27,6 +39,12 @@ export const ReviewModal: FC<{
   draftEntries,
   setBankItemId
 }) => {
+    const dispatch = useAppDispatch();
+
+    const descriptions = useDescriptionsQuery();
+    const groups = useGroupsQuery();
+    const categories = useCategoriesQuery();
+
     const [selectedPhonepe, setSelectedPhonePe] = useState<Nullable<WithId<PhonepeEntry>>>(null);
     const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
 
@@ -34,15 +52,45 @@ export const ReviewModal: FC<{
     const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
     const draftMatches = getDraftMatches(selectedPhonepe, draftEntries);
 
-    const [amount, setAmount] = useState<Nullable<number>>(bankEntry.amount);
+    const [form] = Form.useForm<FormState>();
 
-  const descriptions = useDescriptionsQuery();
+    const descriptionOptions: DefaultOptionType[] = descriptions.data ?
+      descriptions.data.value.map(item => ({
+        label: <div className='text-gray-600 dark:text-gray-200 font-medium'>{item}</div>,
+        value: item,
+        title: item
+      })) : [];
 
+    const categoryOptions: DefaultOptionType[] = categories.data ?
+      categories.data.categories.reduce((accumulator: any[], category: any) => {
+        accumulator.push(category);
+        if (category.subcategories.length)
+          accumulator.push(...category.subcategories);
+        return accumulator;
+      }, []).map((category: any) => ({
+        title: category.name,
+        value: category.id,
+        label: <div className='flex gap-2 items-center w-full'>
+          <img src={category.icon_types.square.large} className='rounded-full w-6 h-6' />
+          <span className='text-gray-600 dark:text-gray-200 font-medium'>{category.name}</span>
+        </div>
+      })) : [];
+
+    const groupOptions: DefaultOptionType[] = groups.data ?
+      groups.data.map(group => ({
+        title: group.name,
+        value: group.id,
+        label: <div className='flex gap-2 items-center w-full'>
+          <img src={group.avatar.large} className='rounded-full w-6 h-6' />
+          <span className='text-gray-600 dark:text-gray-200 font-medium'>{group.name}</span>
+        </div>
+      })) : [];
 
     const classes = {
       tr: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap",
       th: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap font-semibold tracking-wide",
-      iconColor: "text-gray-500 dark:text-gray-300"
+      input: "flex items-center [&_input]:font-medium [&_input]:px-3 [&_input]:text-gray-600 dark:[&_input]:text-gray-200",
+      select: "[&_.ant-select-selection-placeholder]:font-medium [&_input]:!caret-transparent"
     }
 
     const setColumnHeight = () => {
@@ -58,28 +106,89 @@ export const ReviewModal: FC<{
 
     const onModalClose = () => setBankItemId(null);
 
-    const onAmountChange = ({ currentTarget: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-      const amount = parseFloat(value);
-      if (!isNaN(amount)) setAmount(amount);
+    const onComplete = () => {
+      notifySuccess({ message: "Success", description: "Expense Created Successfully!" });
     }
 
-    const onApprove = () => { };
+    const saveTransaction = (formState: FormState) => {
+      const selectedGroup = groups.data?.find(group => group.id === formState.group);
+
+      let payload = {};
+
+      if (bankEntry.type === 'Debit') {
+        payload = {
+          group_id: selectedGroup?.id,
+          details: Object.entries({
+            Bank: bankEntry.bank ?? StringUtils.empty,
+            Description: bankEntry.description ?? StringUtils.empty,
+            UTR: selectedPhonepe?.utr ?? "N/A",
+            TransactionNo: selectedPhonepe?.transactionId ?? 'N/A',
+            Recipient: selectedPhonepe?.recipient ?? 'N/A',
+            Location: selectedDraft?.location.replaceAll('\n', ', ') ?? 'N/A',
+            Coordinates: selectedDraft?.coordinate ? `https://www.google.com/maps?q=${selectedDraft.coordinate}` : 'N/A'
+          }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
+          description: formState.description,
+          cost: formState.amount,
+          date: bankEntry.date,
+          parties: selectedGroup?.members.map(m => m.id),
+          shared: selectedGroup?.sharing,
+          bankTxnId: bankEntry?._id,
+          phonePeTxnId: selectedPhonepe?._id,
+          draftTxnId: selectedDraft?._id
+        };
+      }
+      else {
+        payload = {
+          group_id: selectedGroup?.id,
+          cost: formState.amount,
+          date: bankEntry.date,
+          details: Object.entries({
+            Bank: bankEntry.bank ?? StringUtils.empty,
+            Description: bankEntry.description ?? StringUtils.empty,
+            UTR: selectedPhonepe?.utr ?? 'N/A',
+            TransactionNo: selectedPhonepe?.transactionId ?? 'N/A',
+            Payer: selectedPhonepe?.recipient ?? 'N/A'
+          }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
+          parties: selectedGroup?.members.map(m => m.id),
+          description: formState.description
+        }
+      }
+
+      console.log(payload);
+
+      const url = bankEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
+
+      fetch(url, { ...PostParams, body: JSON.stringify(payload) })
+        .then(handleResponse)
+        .then(onComplete)
+        .catch(handleError)
+    }
+
+    const onApprove = () => {
+      form.validateFields()
+        .then(saveTransaction)
+        .catch(() => notifyError({
+          message: "Failed to Save",
+          description: "Provide the required details!"
+        }));
+    };
+
+    const onAddDescription = (option: DefaultOptionType) => {
+      dispatch(reviewApi.util.updateQueryData("descriptions", undefined, (data) => {
+        data.value.push(option.value as unknown as string);
+      }));
+
+      fetch(Routes.AddDescriptions, { ...PostParams, body: JSON.stringify({ item: option.value }) })
+        .then(handleResponse)
+        .then(() => notifySuccess({ message: "Success", description: "New description added!" }))
+        .catch(handleError);
+    }
 
     useEffect(() => {
       setColumnHeight();
       document.addEventListener('keydown', handleKeyDown);
       return () => document.removeEventListener('keydown', handleKeyDown);
     }, []);
-
-
-    const [description, onSelectDescription] = useState<DefaultOptionType>();
-    const [descriptionOptions, setDescriptionOptions] = useState<DefaultOptionType[]>([]);
-
-    useEffect(() => {
-      const options: DefaultOptionType[] = descriptions?.data?.value?.map(item => ({ label: item, value: item })) ?? [];
-      console.log(options);
-      setDescriptionOptions(options);
-    }, [descriptions.isLoading])
 
     return (
       <motion.div
@@ -165,7 +274,7 @@ export const ReviewModal: FC<{
 
               {/* Transaction Details Table */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div className="px-4 py-3 border-b bg-gradient-to-r from-rose-50 to-pink-50/60 dark:from-rose-500/30 dark:to-pink-500/10 border-gray-200 dark:border-gray-700">
+                <div className="px-4 py-3 border-b bg-gradient-to-r from-green-50 to-blue-50/60 dark:from-green-500/20 dark:to-blue-500/10 border-gray-200 dark:border-gray-700">
                   <h3 className="font-semibold text-gray-800 dark:text-white">Transaction Details</h3>
                 </div>
 
@@ -196,49 +305,50 @@ export const ReviewModal: FC<{
 
                 {/* Amount and Action Row */}
                 <div className="bg-gray-50 dark:bg-gray-900 p-4 border-t border-gray-200 dark:border-gray-600">
-                  <div className="flex items-center justify-between">
+                  <Form form={form} className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <InputNumber
-                        value={amount}
-                        onChange={setAmount}
-                        addonBefore={<IndianRupee size={16} strokeWidth={3} className={classes.iconColor} />}
-                        placeholder="Amount"
-                        className="w-32 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!px-3 [&_input]:!py-2 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
-                      />
+                      <Space.Compact>
+                        <PrefixIcon icon={IndianRupee} size={16} strokeWidth={3} />
+                        <Form.Item initialValue={bankEntry.amount} name="amount" noStyle rules={[{ required: true }]}>
+                          <InputNumber
+                            placeholder="Amount"
+                            className={`w-32 ${classes.input}`}
+                          />
+                        </Form.Item>
+                      </Space.Compact>
+
                       <SelectWithAdd
+                        name="description"
                         defaultOptions={descriptionOptions}
-                        onOptionSelected={onSelectDescription}
-                        isLoading={ descriptions.isLoading}
+                        onAddOption={onAddDescription}
+                        isLoading={descriptions.isLoading}
+                        rules={[{ required: true }]}
                         placeholder="Description"
-                        placement="topRight"
-                        className="w-64 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!py-3 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
-                        prefix={<span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 dark:border-[#424242] bg-gray-50 dark:bg-[#FFFFFF0A] text-gray-500 dark:text-gray-300">
-                          <Pencil size={16} strokeWidth={3} />
-                        </span>}
-                      />
-                      <SelectWithAdd
-                        defaultOptions={descriptionOptions}
-                        onOptionSelected={onSelectDescription}
-                        isLoading={ descriptions.isLoading}
-                        placeholder="Category"
-                        placement="topRight"
-                        className="w-48 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!py-3 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
-                        prefix={<span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 dark:border-[#424242] bg-gray-50 dark:bg-[#FFFFFF0A] text-gray-500 dark:text-gray-300">
-                          <Layers2 size={16} strokeWidth={3} />
-                        </span>}
+                        placement="bottomRight"
+                        className={`w-56 ${classes.select}`}
+                        prefix={<PrefixIcon icon={Pencil} size={16} strokeWidth={3} />}
                       />
                       <CustomSelect
-                        defaultOptions={descriptionOptions}
-                        onOptionSelected={onSelectDescription}
+                        name="category"
+                        defaultOptions={categoryOptions}
+                        isLoading={categories.isLoading}
+                        rules={[{ required: true }]}
+                        placeholder="Category"
+                        placement="bottomRight"
+                        className={`w-40 ${classes.select}`}
+                        prefix={<PrefixIcon icon={Layers2} size={16} strokeWidth={3} />}
+                      />
+                      <CustomSelect
+                        name="group"
+                        defaultOptions={groupOptions}
+                        isLoading={groups.isLoading}
+                        rules={[{ required: true }]}
                         placeholder="Splitwise"
-                        placement="topRight"
-                        className="w-48 [&_input]:!text-sm [&_input]:!font-medium [&_input]:!py-3 [&_input]:!text-gray-600 dark:[&_input]:!text-gray-200"
-                        prefix={<span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 dark:border-[#424242] bg-gray-50 dark:bg-[#FFFFFF0A] text-gray-500 dark:text-gray-300">
-                          <ChartPie size={16} strokeWidth={3} />
-                        </span>}
+                        placement="bottomRight"
+                        className={`w-52 ${classes.select}`}
+                        prefix={<PrefixIcon size={16} strokeWidth={3} icon={PieChart} />}
                       />
                     </div>
-
                     <div className="flex gap-3">
                       <button
                         onClick={onModalClose}
@@ -249,13 +359,14 @@ export const ReviewModal: FC<{
                       </button>
                       <button
                         onClick={onApprove}
+                        type="submit"
                         className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600"
                       >
                         <Check className="w-4 h-4" />
                         <span>Approve</span>
                       </button>
                     </div>
-                  </div>
+                  </Form>
                 </div>
               </div>
             </div>
@@ -264,3 +375,9 @@ export const ReviewModal: FC<{
       </motion.div>
     );
   }
+
+const PrefixIcon: FC<{ size: number, strokeWidth: number, icon: ElementType }> = ({ size, strokeWidth, icon: Icon }) => (
+  <span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 dark:border-[#424242] bg-gray-50 dark:bg-[#FFFFFF0A] text-gray-500 dark:text-gray-300">
+    <Icon size={size} strokeWidth={strokeWidth} />
+  </span>
+)
