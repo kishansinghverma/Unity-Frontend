@@ -54,7 +54,7 @@ export const DraftList: FC<{
 
     return (
       <>
-        <div ref={listContainerRef} className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col border dark:border-gray-700 max-h-[85vh]">
+        <div ref={listContainerRef} className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col border dark:border-gray-700 max-h-[85vh]">
           <ListHeader {...{
             title: "Draft Logs",
             subtitle: "Metadata for identification",

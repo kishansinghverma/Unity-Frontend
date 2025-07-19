@@ -8,7 +8,7 @@ import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
 import PhonepeList from '../components/PhonePeList';
 import { DraftList } from '../components/DraftList';
 import dayjs, { Dayjs } from 'dayjs';
-import { ArrowUpFromLine, Plus } from 'lucide-react';
+import { ArrowUpFromLine, CalendarArrowUp, CalendarCheck, CalendarSync, CircleArrowUp, CircleFadingArrowUp, CircleFadingPlus, ClockArrowUp, ClockFadingIcon, Plus, PlusCircle } from 'lucide-react';
 
 const ReviewExpense: React.FC = () => {
   const bankEntries = useBankEntryQuery();
@@ -20,35 +20,44 @@ const ReviewExpense: React.FC = () => {
   return (
     <>
       <div className="px-8">
-        <div className="flex px-4 py-2 mb-6 justify-between items-center text-sm font-medium bg-white shadow-md rounded duration-200">
+        <div className="flex px-4 py-3 mb-6 justify-between items-center text-sm font-medium bg-white shadow-md rounded duration-200 rounded-xl">
           <div className="flex gap-2">
             <button className="text-gray-600 flex gap-1 hover:text-gray-900 hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-32">
-              <Plus size={20} />
+              <PlusCircle size={20} />
               <span>Add Expense</span>
             </button>
-            <button className="text-gray-600 flex gap-2 hover:text-gray-900 hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-50">
-              <ArrowUpFromLine size={20} />
+            <button className="text-gray-600 flex gap-1 hover:text-gray-900 hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-50">
+              <CircleArrowUp size={20} />
               <span>Upload Statement</span>
             </button>
           </div>
-          <div className="py-2 px-4">Last Refined At: {dayjs(Date.now()).format('DD/MM/YYYY')}</div>
+          <div className="flex gap-3">
+            <div className="flex gap-1">
+              <CalendarArrowUp size={20} />
+              <div> {dayjs(Date.now()).format('DD-MMM-YYYY')} </div>
+            </div>
+            <div className="flex gap-1">
+              <ClockArrowUp size={20} />
+              <div> {dayjs(Date.now()).format('hh:mm A')} </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-row justify-between">
-          <div className="min-w-0">
+          <div className="w-full min-w-0">
             <BankList
               items={getArrayOrDefault(bankEntries)}
               isLoading={bankEntries.isLoading}
               setBankItemId={setBankItemId}
             />
           </div>
-          <div className="min-w-0 px-10">
+          <div className="w-full px-10 min-w-0">
             <PhonepeList
               items={getArrayOrDefault(phonepeEntries)}
               isLoading={phonepeEntries.isLoading}
             />
           </div>
-          <div className="min-w-0">
+          <div className="w-full min-w-0">
             <DraftList
               items={getArrayOrDefault(draftEntries)}
               isLoading={draftEntries.isLoading}
