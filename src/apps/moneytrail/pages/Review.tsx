@@ -34,21 +34,21 @@ const ReviewExpense: React.FC = () => {
           <div className="py-2 px-4">Last Refined At: {dayjs(Date.now()).format('DD/MM/YYYY')}</div>
         </div>
 
-        <div className="flex flex-row gap-8">
-          <div className="flex-1 min-w-0">
+        <div className="flex flex-row justify-between">
+          <div className="min-w-0">
             <BankList
               items={getArrayOrDefault(bankEntries)}
               isLoading={bankEntries.isLoading}
               setBankItemId={setBankItemId}
             />
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 px-10">
             <PhonepeList
               items={getArrayOrDefault(phonepeEntries)}
               isLoading={phonepeEntries.isLoading}
             />
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0">
             <DraftList
               items={getArrayOrDefault(draftEntries)}
               isLoading={draftEntries.isLoading}
