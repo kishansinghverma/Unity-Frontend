@@ -20,52 +20,52 @@ const ReviewExpense: React.FC = () => {
   return (
     <>
       <div className="px-8">
-        <div className="flex py-1 px-6 justify-between items-center text-sm font-medium bg-gray-200/50 rounded">
-          <div className="flex gap-4">
-            <button className="text-gray-600 flex gap-1">
+        <div className="flex px-4 py-2 mb-6 justify-between items-center text-sm font-medium bg-white shadow-md rounded duration-200">
+          <div className="flex gap-2">
+            <button className="text-gray-600 flex gap-1 hover:text-gray-900 hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-32">
               <Plus size={20} />
               <span>Add Expense</span>
             </button>
-            <button className="text-gray-600 flex gap-2">
+            <button className="text-gray-600 flex gap-2 hover:text-gray-900 hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-50">
               <ArrowUpFromLine size={20} />
               <span>Upload Statement</span>
             </button>
           </div>
           <div className="py-2 px-4">Last Refined At: {dayjs(Date.now()).format('DD/MM/YYYY')}</div>
         </div>
-      </div>
 
-      <div className="flex flex-col md:flex-row gap-8 p-4 md:p-8">
-        <div className="flex-1 min-w-0">
-          <BankList
-            items={getArrayOrDefault(bankEntries)}
-            isLoading={bankEntries.isLoading}
-            setBankItemId={setBankItemId}
-          />
+        <div className="flex flex-row gap-8">
+          <div className="flex-1 min-w-0">
+            <BankList
+              items={getArrayOrDefault(bankEntries)}
+              isLoading={bankEntries.isLoading}
+              setBankItemId={setBankItemId}
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <PhonepeList
+              items={getArrayOrDefault(phonepeEntries)}
+              isLoading={phonepeEntries.isLoading}
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <DraftList
+              items={getArrayOrDefault(draftEntries)}
+              isLoading={draftEntries.isLoading}
+            />
+          </div>
+          <AnimatePresence>
+            {bankItemId && (
+              <ReviewModal key={bankItemId} {...{
+                bankEntries: getArrayOrDefault(bankEntries),
+                phonepeEntries: getArrayOrDefault(phonepeEntries),
+                draftEntries: getArrayOrDefault(draftEntries),
+                bankItemId,
+                setBankItemId
+              }} />
+            )}
+          </AnimatePresence>
         </div>
-        <div className="flex-1 min-w-0">
-          <PhonepeList
-            items={getArrayOrDefault(phonepeEntries)}
-            isLoading={phonepeEntries.isLoading}
-          />
-        </div>
-        <div className="flex-1 min-w-0">
-          <DraftList
-            items={getArrayOrDefault(draftEntries)}
-            isLoading={draftEntries.isLoading}
-          />
-        </div>
-        <AnimatePresence>
-          {bankItemId && (
-            <ReviewModal key={bankItemId} {...{
-              bankEntries: getArrayOrDefault(bankEntries),
-              phonepeEntries: getArrayOrDefault(phonepeEntries),
-              draftEntries: getArrayOrDefault(draftEntries),
-              bankItemId,
-              setBankItemId
-            }} />
-          )}
-        </AnimatePresence>
       </div>
     </>
   );
