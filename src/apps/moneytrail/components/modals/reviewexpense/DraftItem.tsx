@@ -62,7 +62,7 @@ export const DraftItem: FC<{
                             <div className='bg-gradient-to-r from-transparent via-gray-50 to-gray-50 dark:via-slate-800/60 dark:to-slate-800/60 px-3'>&nbsp;</div>
                             <div className={`${currentDateTimeColor} flex bg-gray-50 items-center  dark:bg-slate-800/60`}>
                                 <Clock className="w-3.5 h-3.5 mr-0.5 opacity-85" />
-                                <span className="opacity-100">{dayjs(item.dateTime).format('HH:MM A')}</span>
+                                <span className="opacity-100">{dayjs(item.dateTime).format('hh:mm A')}</span>
                             </div>
                         </div>
                     </div>

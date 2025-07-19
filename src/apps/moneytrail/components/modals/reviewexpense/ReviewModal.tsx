@@ -108,9 +108,23 @@ export const ReviewModal: FC<{
 
     const onComplete = () => {
       notifySuccess({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
+
       dispatch(reviewApi.util.updateQueryData('bankEntry', undefined, (data) => {
         data.forEach(entry => { if (entry._id === bankEntry._id) entry.processed = true });
       }));
+
+      if (selectedPhonepe?._id) {
+        dispatch(reviewApi.util.updateQueryData('phonepeEntry', undefined, (data) => {
+          data.forEach(entry => { if (entry._id === selectedPhonepe._id) entry.processed = true });
+        }));
+      }
+
+      if (selectedDraft?._id) {
+        dispatch(reviewApi.util.updateQueryData('draftEntry', undefined, (data) => {
+          data.forEach(entry => { if (entry._id === selectedDraft._id) entry.processed = true });
+        }));
+      }
+
       onModalClose();
     }
 

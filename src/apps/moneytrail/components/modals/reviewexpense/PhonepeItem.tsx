@@ -62,7 +62,7 @@ export const PhonePeItem: FC<{
             </div>
             <div className={`flex items-center text-xs font-semibold whitespace-nowrap ${currentDateTimeColor}`}>
               <Clock className="w-3.5 h-3.5 ml-1.5 mr-0.5 opacity-70" />
-              <span className="opacity-90">{dayjs(item.date).format('HH:MM A')}</span>
+              <span className="opacity-90">{dayjs(item.date).format('hh:mm A')}</span>
             </div>
           </div>
         </div>
