@@ -8,6 +8,7 @@ import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
 import PhonepeList from '../components/PhonePeList';
 import { DraftList } from '../components/DraftList';
 import dayjs, { Dayjs } from 'dayjs';
+import { ArrowUpFromLine, Plus } from 'lucide-react';
 
 const ReviewExpense: React.FC = () => {
   const bankEntries = useBankEntryQuery();
@@ -18,15 +19,22 @@ const ReviewExpense: React.FC = () => {
 
   return (
     <>
-      <div className="pr-16 pl-8 py-2">
-        <div className="flex justify-between flex-row-reverse bg-gray-200 border rounded">
+      <div className="px-8">
+        <div className="flex py-1 px-6 justify-between items-center text-sm font-medium bg-gray-200/50 rounded">
           <div className="flex gap-4">
-            <button>+ Add Expense</button>
-            <button>+ Upload Staement</button>
+            <button className="text-gray-600 flex gap-1">
+              <Plus size={20} />
+              <span>Add Expense</span>
+            </button>
+            <button className="text-gray-600 flex gap-2">
+              <ArrowUpFromLine size={20} />
+              <span>Upload Statement</span>
+            </button>
           </div>
-          <div>Last Refined At: {dayjs(Date.now()).format('DD/MM/YYYY')}</div>
+          <div className="py-2 px-4">Last Refined At: {dayjs(Date.now()).format('DD/MM/YYYY')}</div>
         </div>
       </div>
+
       <div className="flex flex-col md:flex-row gap-8 p-4 md:p-8">
         <div className="flex-1 min-w-0">
           <BankList

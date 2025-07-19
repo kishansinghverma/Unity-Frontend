@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { selectCurrentApp, setCurrentApp } from '../../store/slices/appSlice';
-import { APPS } from '../../constants/apps';
+import { selectCurrentApp } from '../../store/slices/appSlice';
 
 const AppShell: React.FC = () => {
   const currentApp = useAppSelector(selectCurrentApp);
@@ -20,10 +19,10 @@ const AppShell: React.FC = () => {
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-      
+
       <div className="flex flex-col flex-1 overflow-hidden">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        
+
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <Outlet />
         </main>
