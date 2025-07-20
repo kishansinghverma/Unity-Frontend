@@ -1,12 +1,14 @@
-import { ElementType, FC, useEffect, useState } from "react";
+import { ElementType, FC, useEffect, useRef, useState } from "react";
 import { getColorPair, getIconBackground } from "../engine/utils";
 import { BankLogo } from "./Resources";
-import { ListX } from "lucide-react";
+import { CircleArrowUp, ListX } from "lucide-react";
 import { DefaultOptionType } from "antd/es/select";
 import { StringUtils } from "../../../engine/helpers/stringHelper";
-import { Space, Select, Form } from "antd";
+import { Space, Select, Form, Popover, List } from "antd";
 import { Rule } from "antd/es/form";
-
+import { parsePhonePeStatement, extractDataFromExcel, extractDataFromHtml } from "../engine/parser";
+import { PostParams, Routes } from "../../../engine/constant";
+import { handleJsonResponse } from "../../../engine/helpers/httpHelper";
 
 export const BankIcon: FC<{
   bankName: string
@@ -97,15 +99,17 @@ export const CustomSelect: FC<{
   name: string;
   rules?: Rule[];
   className: string;
+  width?: string
   placement?: "bottomLeft" | "bottomRight" | "topLeft" | "topRight"
   prefix: React.ReactNode;
-  isLoading: boolean;
+  isLoading?: boolean;
 }> = ({
   defaultOptions,
   placeholder,
   name,
   rules,
   className,
+  width,
   placement,
   isLoading,
   prefix,
@@ -116,11 +120,11 @@ export const CustomSelect: FC<{
     const onChange = (value: string, option: any) => setValue(option);
 
     return (
-      <Space.Compact>
+      <Space.Compact style={{ width: width }}>
         {prefix}
         <Form.Item noStyle name={name} rules={rules}>
           <Select
-            style={{ height: 38 }}
+            style={{ height: 38, width: width }}
             showSearch
             allowClear
             value={value}
@@ -144,6 +148,7 @@ export const SelectWithAdd: FC<{
   name: string;
   rules?: Rule[];
   className: string;
+  width?: string;
   isLoading: boolean;
   placement?: "bottomLeft" | "bottomRight" | "topLeft" | "topRight";
   prefix: React.ReactNode;
@@ -154,6 +159,7 @@ export const SelectWithAdd: FC<{
   name,
   rules,
   className,
+  width,
   placement,
   isLoading,
   onAddOption,
@@ -214,11 +220,11 @@ export const SelectWithAdd: FC<{
     useEffect(() => setOptions(defaultOptions), [defaultOptions]);
 
     return (
-      <Space.Compact>
+      <Space.Compact style={{ width: width }}>
         {prefix}
         <Form.Item noStyle name={name} rules={rules}>
           <Select
-            style={{ height: 38 }}
+            style={{ height: 38, width: width }}
             showSearch
             value={value?.value}
             options={options}
@@ -236,3 +242,98 @@ export const SelectWithAdd: FC<{
       </Space.Compact>
     )
   }
+
+type BankEntry = {
+  date: Date,
+  description: string,
+  amount: number,
+  processed?: boolean,
+  type: "Credit" | "Debit",
+  bank: "SBI" | "HDFC"
+}
+
+type PhonePeEntry = {
+  date: Date,
+  recipient: string,
+  transactionId: string,
+  utr: string,
+  processed?: boolean,
+  bank: string | "SBI" | "HDFC"
+  type: string | "Credit" | "Debit",
+  amount: number
+}
+
+export const UploadStatement: React.FC = () => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const uploadBankStatement = async (transactions: Array<BankEntry>) => {
+    return fetch(`${Routes.BankStatement}`, { ...PostParams, body: JSON.stringify(transactions) })
+      .then(handleJsonResponse);
+  }
+
+  const uploadPhonePeStatement = async (transactions: Array<PhonePeEntry>) => {
+    return fetch(`${Routes.PhonePeStatement}`, { ...PostParams, body: JSON.stringify(transactions) })
+      .then(handleJsonResponse);
+  }
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    console.log(file.type);
+
+    if (file.type === 'application/pdf') {
+      const response = parsePhonePeStatement(file).then(uploadPhonePeStatement)
+      // toast.promise(response, {
+      //   pending: { render: () => ("Uploading PhonePe Statement...") },
+      //   success: { render: ({ data }) => (`Uploaded ${data.insertedCount}/${data.totalCount} records.`) },
+      //   error: { render: ({ data }: any) => (data.message) }
+      // });
+    }
+    else if (file.type === 'application/vnd.ms-excel') {
+      const response = extractDataFromExcel(file).then(uploadBankStatement);
+      // toast.promise(response, {
+      //   pending: { render: () => ("Uploading Bank Statement...") },
+      //   success: { render: ({ data }) => (`Uploaded ${data.insertedCount}/${data.totalCount} records.`) },
+      //   error: { render: ({ data }: any) => (data.message) }
+      // });
+    }
+    else if (file.type === 'text/html') {
+      extractDataFromHtml(file).then(console.log);
+    }
+    else {
+      // toast.error("File type not supported.");
+    }
+  };
+
+  const infoData = [
+    'PhonePe Statement :: Download the PDF statement from PhonePe App',
+    'SBI Statement :: Download Excel File from Netbanking',
+    'HDFC Statement :: Download Excel File from App/Netbanking',
+    'SBI CC :: Get <tbody> from Web App as Html File using VS Code'
+  ];
+
+  const infoList = <List
+    size="small"
+    header={<div className="font-medium">Supported File Types</div>}
+    bordered
+    dataSource={infoData}
+    renderItem={(item) => <List.Item>{item}</List.Item>}
+  />
+
+  return (
+    <>
+      <input type="file" ref={fileInputRef} hidden onChange={handleFileChange} />
+      <Popover content={infoList}>
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="flex gap-1 hover:text-gray-900 dark:hover:text-white hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-50"
+        >
+          <CircleArrowUp size={20} />
+          <span>Upload Statement</span>
+        </button>
+      </Popover>
+
+    </>
+  );
+};

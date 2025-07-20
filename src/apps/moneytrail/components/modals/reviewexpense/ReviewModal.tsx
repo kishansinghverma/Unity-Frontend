@@ -1,4 +1,4 @@
-import { ElementType, FC, useEffect, useRef, useState } from 'react';
+import { ElementType, FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Form, InputNumber, Space } from 'antd';
 import { X, CreditCard, Smartphone, FileText, Check, IndianRupee, Layers2, Pencil, PieChart } from 'lucide-react';
@@ -89,7 +89,7 @@ export const ReviewModal: FC<{
     const classes = {
       tr: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap",
       th: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap font-semibold tracking-wide",
-      input: "flex items-center [&_input]:font-medium [&_input]:px-3 [&_input]:text-gray-600 dark:[&_input]:text-gray-200",
+      input: "flex items-center [&_input]:font-medium [&_input]:text-gray-600 dark:[&_input]:text-gray-200",
       select: "[&_.ant-select-selection-placeholder]:font-medium [&_input]:!caret-transparent"
     }
 

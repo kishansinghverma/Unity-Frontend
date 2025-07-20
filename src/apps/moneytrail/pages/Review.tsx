@@ -8,7 +8,9 @@ import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
 import PhonepeList from '../components/PhonePeList';
 import { DraftList } from '../components/DraftList';
 import dayjs from 'dayjs';
-import { CalendarArrowUp, CircleArrowUp, ClockArrowUp, PlusCircle } from 'lucide-react';
+import { CalendarArrowUp, ClockArrowUp, PlusCircle } from 'lucide-react';
+import { ManualEntryModal } from '../components/modals/manualEntry/ManualEntryModal';
+import { UploadStatement } from '../components/Common';
 
 const ReviewExpense: React.FC = () => {
   const bankEntries = useBankEntryQuery();
@@ -16,20 +18,20 @@ const ReviewExpense: React.FC = () => {
   const draftEntries = useDraftEntryQuery();
 
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
+  const [isManualEntryModalVisible, setManualEntryModalVisible] = useState(false);
 
   return (
     <>
       <div className="px-8">
         <div className="flex px-4 py-3 mb-6 justify-between items-center text-sm font-medium text-gray-600 dark:text-gray-300 duration-200 rounded-xl bg-white dark:bg-gray-800 shadow-md dark:shadow-none border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <div className="flex gap-2">
-            <button className="flex gap-1 hover:text-gray-900 dark:hover:text-white hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-32">
+            <button onClick={() => setManualEntryModalVisible(true)} className="flex gap-1 hover:text-gray-900 dark:hover:text-white hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-32">
               <PlusCircle size={20} />
               <span>Add Expense</span>
             </button>
-            <button className="flex gap-1 hover:text-gray-900 dark:hover:text-white hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-50">
-              <CircleArrowUp size={20} />
-              <span>Upload Statement</span>
-            </button>
+           
+              <UploadStatement />
+
           </div>
           <div className="flex gap-3">
             <div className="flex gap-1">
@@ -71,6 +73,15 @@ const ReviewExpense: React.FC = () => {
                 draftEntries: getArrayOrDefault(draftEntries),
                 bankItemId,
                 setBankItemId
+              }} />
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {isManualEntryModalVisible && (
+              <ManualEntryModal key={bankItemId} {...{
+                draftEntries: getArrayOrDefault(draftEntries),
+                setVisible: setManualEntryModalVisible,
               }} />
             )}
           </AnimatePresence>
