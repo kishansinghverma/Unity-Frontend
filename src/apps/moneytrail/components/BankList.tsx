@@ -83,13 +83,12 @@ export const BankList: FC<{
                           transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
                           className="border-b border-gray-200 dark:border-gray-700 last:border-b-0 relative overflow-hidden origin-left"
                         >
-                          <BankItem {...{
-                            item,
-                            setProcessed,
-                            setBankItemId,
-                            isOpen: openItemId === item._id,
-                            onOpen: setOpenItemId,
-                          }}
+                          <BankItem
+                            item={item}
+                            setProcessed={setProcessed}
+                            setBankItemId={setBankItemId}
+                            isOpen={openItemId === item._id}
+                            onOpen={setOpenItemId}
                           />
                         </motion.div>
                       ))
