@@ -64,7 +64,7 @@ export const BankItem = memo(({ isOpen, onOpen, setProcessed, item, setBankItemI
             >
                 <div className="flex items-center flex-shrink-0"> <BankIcon bankName={item.bank} /></div>
                 <div className="flex-grow pr-6 pl-4 min-w-4">
-                    <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all">{item.description}</h3>
+                    <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all capitalize">{item.description}</h3>
                 </div>
                 <div className="text-right min-w-fit">
                     <p className={`font-semibold ${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</p>
@@ -140,7 +140,7 @@ export const PhonepeItem = memo(({ isOpen, onOpen, setProcessed, item, setPhonep
                     <BankIcon bankName={item.bank} />
                 </div>
                 <div className="flex-grow pr-6 pl-4 min-w-4">
-                    <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all">{item.recipient}</h3>
+                    <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all capitalize">{item.recipient}</h3>
                 </div>
                 <div className="text-right min-w-fit">
                     <p className={`font-semibold ${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</p>
@@ -158,12 +158,12 @@ export const PhonepeItem = memo(({ isOpen, onOpen, setProcessed, item, setPhonep
     );
 });
 
-export const DraftItem = memo(({ isOpen, onOpen, setProcessed, item, setDrafttemId }: {
+export const DraftItem = memo(({ isOpen, onOpen, setProcessed, item, setDraftItem }: {
     item: WithId<DraftEntry>;
     isOpen: boolean;
     onOpen: (id: string | null) => void;
     setProcessed: (id: string) => void;
-    setDrafttemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
+    setDraftItem: React.Dispatch<React.SetStateAction<Nullable<WithId<DraftEntry>>>>;
 }) => {
     const dragThreshold = -50;
     const motionValue = useMotionValue(0);
@@ -188,11 +188,11 @@ export const DraftItem = memo(({ isOpen, onOpen, setProcessed, item, setDrafttem
         onOpen(null);
     }
 
-    const onItemClick = (id: string) => {
+    const onItemClick = () => {
         const offset = motionValue.get();
         const epsilon = 2;
         if (Math.abs(offset - 0) > epsilon && Math.abs(offset + 80) > epsilon) return;
-        setDrafttemId(id);
+        setDraftItem(item);
     }
 
     return (
@@ -211,12 +211,20 @@ export const DraftItem = memo(({ isOpen, onOpen, setProcessed, item, setDrafttem
                 style={{ x: motionValue }}
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={handleDragEnd}
-                // onClick={() => onItemClick(item._id)}
+                onClick={onItemClick}
                 className="relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
             >
-                <AlphabetIcon seed={item._id} firstLetter={item.location.charAt(0).toUpperCase()} />
+                <a
+                    target="_blank"
+                    href={`https://www.google.com/maps?q=${item.coordinate}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="cursor-default"
+                >
+                    <AlphabetIcon seed={item._id} firstLetter={item.location.charAt(0).toUpperCase()} />
+                </a>
+
                 <div className="flex-grow pr-6 pl-4 min-w-4">
-                    <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all">{item.location}</h3>
+                    <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all capitalize">{item.location}</h3>
                 </div>
                 <div className="text-right min-w-fit">
                     <div className="text-sm font-semibold text-gray-400 dark:text-gray-300">

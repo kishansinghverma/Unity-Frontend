@@ -134,7 +134,7 @@ const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
               </div>
               <div className="flex items-start space-x-2 text-slate-500 dark:text-slate-400">
                 <FileText className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                <div className="text-sm font-medium break-all leading-relaxed">{bankEntry.description}</div>
+                <div className="text-sm font-medium break-all leading-relaxed capitalize">{bankEntry.description}</div>
               </div>
             </div>
           </div>

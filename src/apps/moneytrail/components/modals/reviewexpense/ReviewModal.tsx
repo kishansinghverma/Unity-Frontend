@@ -311,10 +311,10 @@ export const ReviewModal: FC<{
                       <tr className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-900 dark:text-white text-sm">
                         <td className={classes.tr}> {dayjs(bankEntry.date).format('DD-MM-YYYY')} </td>
                         <td className={classes.tr}> {bankEntry.bank} </td>
-                        <td className={classes.tr}> {bankEntry.description} </td>
+                        <td className={`${classes.tr} capitalize`}> {bankEntry.description} </td>
                         <td className={classes.tr}> {selectedPhonepe?.utr || '-'} </td>
-                        <td className={classes.tr}> {selectedPhonepe?.recipient || '-'} </td>
-                        <td className={classes.tr}> {selectedDraft?.location || '-'} </td>
+                        <td className={`${classes.tr} capitalize`}> {selectedPhonepe?.recipient || '-'} </td>
+                        <td className={`${classes.tr} capitalize`}> {selectedDraft?.location.replaceAll('\n', ', ') || '-'} </td>
                       </tr>
                     </tbody>
                   </table>

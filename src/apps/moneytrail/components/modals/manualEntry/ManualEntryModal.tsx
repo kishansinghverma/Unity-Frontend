@@ -1,7 +1,7 @@
 import { ElementType, FC, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { DatePicker, Form, InputNumber, Radio, Space } from 'antd';
-import { X, IndianRupee, Layers2, Pencil, PieChart, Save, CalendarClock, CreditCard } from 'lucide-react';
+import { DatePicker, Form, Input, InputNumber, Radio, Space } from 'antd';
+import { X, IndianRupee, Layers2, Pencil, PieChart, Save, CalendarClock, CreditCard, MapPinned, MapPin } from 'lucide-react';
 import { DefaultOptionType } from 'antd/es/select';
 import { CustomSelect, SelectWithAdd } from '../../Common';
 import { reviewApi, useCategoriesQuery, useDescriptionsQuery, useGroupsQuery } from '../../../store/reviewSlice';
@@ -11,6 +11,8 @@ import { handleError, handleResponse } from '../../../../../engine/helpers/httpH
 import { notify } from '../../../../../engine/services/notificationService';
 import HdfcLogo from '../../../../../static/hdfc.svg';
 import SbiLogo from '../../../../../static/sbi.svg';
+import { DraftEntry } from '../../../engine/models/types';
+import { Nullable, WithId } from '../../../../../engine/models/types';
 
 type FormState = {
   amount: number;
@@ -19,13 +21,18 @@ type FormState = {
   group: number;
   date: Date;
   source: string;
+  location: string;
   type: "Credit" | "Debit";
 };
 
 export const ManualEntryModal: FC<{
+  draftEntry: Nullable<WithId<DraftEntry>>;
   setVisible: (isVisible: boolean) => void;
+  setDraftItem: React.Dispatch<React.SetStateAction<Nullable<WithId<DraftEntry>>>>;
 }> = ({
-  setVisible
+  draftEntry,
+  setVisible,
+  setDraftItem
 }) => {
     const dispatch = useAppDispatch();
 
@@ -91,15 +98,17 @@ export const ManualEntryModal: FC<{
 
     const handleKeyDown = ({ key }: KeyboardEvent) => { if (key === 'Escape') onModalClose() };
 
-    const onModalClose = () => setVisible(false);
+    const onModalClose = () => {
+      setVisible(false);
+      setDraftItem(null);
+    }
 
     const onComplete = () => {
       notify.success({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
       onModalClose();
     }
 
-  const saveTransaction = (formState: FormState) => {
-    console.log(formState);
+    const saveTransaction = (formState: FormState) => {
       const selectedGroup = groups.data?.find(group => group.id === formState.group);
 
       let payload = {
@@ -109,13 +118,16 @@ export const ManualEntryModal: FC<{
         description: formState.description,
         parties: selectedGroup?.members.map(m => m.id),
         category: formState.category,
-        details: Object.entries({Source: formState.source}).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
-        ...(formState.type === 'Debit' ? { shared: selectedGroup?.sharing } : { })
+        draftTxnId: draftEntry?._id,
+        details: Object.entries({
+          Source: formState.source,
+          Location: formState.location ?? 'N/A',
+          Coordinates: draftEntry?.coordinate ? `https://www.google.com/maps?q=${draftEntry.coordinate}` : 'N/A'
+        }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
+        ...(formState.type === 'Debit' ? { shared: selectedGroup?.sharing } : {})
       };
 
       const url = formState.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
-
-      console.log(payload);
 
       fetch(url, { ...PostParams, body: JSON.stringify(payload) })
         .then(handleResponse)
@@ -190,6 +202,7 @@ export const ManualEntryModal: FC<{
               {/* Transaction Details Table */}
               <div className=" bg-gray-100/20 p-6 dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <Form form={form} className="flex items-center flex-col gap-4">
+
                   <Space.Compact style={{ width: "100%" }}>
                     <PrefixIcon icon={CalendarClock} size={16} strokeWidth={3} />
                     <Form.Item name="date" noStyle rules={[{ required: true }]}>
@@ -237,6 +250,7 @@ export const ManualEntryModal: FC<{
                     width="100%"
                     prefix={<PrefixIcon icon={Pencil} size={16} strokeWidth={3} />}
                   />
+
                   <CustomSelect
                     name="category"
                     defaultOptions={categoryOptions}
@@ -248,6 +262,7 @@ export const ManualEntryModal: FC<{
                     width="100%"
                     prefix={<PrefixIcon icon={Layers2} size={16} strokeWidth={3} />}
                   />
+
                   <CustomSelect
                     name="group"
                     defaultOptions={groupOptions}
@@ -259,6 +274,18 @@ export const ManualEntryModal: FC<{
                     width="100%"
                     prefix={<PrefixIcon size={16} strokeWidth={3} icon={PieChart} />}
                   />
+
+                  <Space.Compact style={{ width: "100%" }}>
+                    <PrefixIcon icon={MapPin} size={16} strokeWidth={3} />
+                    <Form.Item name="location" initialValue={draftEntry?.location.replaceAll('\n', ', ')} noStyle rules={[{ required: true }]}>
+                      <Input
+                        style={{ width: "100%" }}
+                        placeholder="Location"
+                        className={`${classes.input}`}
+                      />
+                    </Form.Item>
+                  </Space.Compact>
+
                   <Space.Compact style={{ width: "100%" }} className="font-medium">
                     <label className="text-gray-500 dark:text-gray-300">Transaction Type</label>
                     <span className="text-gray-300 dark:text-gray-600 px-2">⎜</span>
@@ -271,6 +298,7 @@ export const ManualEntryModal: FC<{
                       />
                     </Form.Item>
                   </Space.Compact>
+
                 </Form>
               </div>
             </div>

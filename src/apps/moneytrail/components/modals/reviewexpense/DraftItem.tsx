@@ -1,5 +1,5 @@
 import { ReactNode, FC } from 'react';
-import { CheckCircle, Clock } from 'lucide-react';
+import { CheckCircle, Clock, ExternalLink } from 'lucide-react';
 import { AlphabetIcon } from '../../Common';
 import { Nullable, WithId } from '../../../../../engine/models/types';
 import { DraftEntry } from '../../../engine/models/types';
@@ -53,13 +53,20 @@ export const DraftItem: FC<{
                 {selectionIndicatorElement}
 
                 <div className="flex items-start space-x-3">
-                    <AlphabetIcon {...{ firstLetter, seed: item._id, overrideStyle: iconStyle }} />
+                    <a
+                        target="_blank"
+                        href={`https://www.google.com/maps?q=${item.coordinate}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="cursor-default"
+                    >
+                        <AlphabetIcon {...{ firstLetter, seed: item._id, overrideStyle: iconStyle }} />
+                    </a>
                     <div className="flex-grow min-w-0 py-0.5">
-                        <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2`} title={singleLineLocation}>
+                        <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2 flex capitalize`} title={singleLineLocation}>
                             {singleLineLocation}
                         </p>
                         <div className={`flex items-center text-xs font-semibold absolute bottom-2 right-2 px-1.5 py-1`}>
-                            <div className='bg-gradient-to-r from-transparent via-gray-50 to-gray-50 dark:via-slate-800/60 dark:to-slate-800/60 px-3'>&nbsp;</div>
+                            <div className='bg-gradient-to-r from-transparent via-gray-50 to-gray-50 dark:via-slate-800/60 dark:to-slate-800/60 px-3'></div>
                             <div className={`${currentDateTimeColor} flex bg-gray-50 items-center  dark:bg-slate-800/60`}>
                                 <Clock className="w-3.5 h-3.5 mr-0.5 opacity-85" />
                                 <span className="opacity-100">{dayjs(item.dateTime).format('hh:mm A')}</span>

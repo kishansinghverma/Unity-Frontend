@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ReviewModal } from '../components/modals/reviewExpense/ReviewModal';
 import { BankList } from '../components/BankList';
 import { AnimatePresence } from 'framer-motion';
-import { Nullable } from '../../../engine/models/types';
+import { Nullable, WithId } from '../../../engine/models/types';
 import { useBankEntryQuery, useDraftEntryQuery, usePhonepeEntryQuery } from '../store/reviewSlice';
 import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
 import PhonepeList from '../components/PhonePeList';
@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { CalendarArrowUp, ClockArrowUp, PlusCircle } from 'lucide-react';
 import { ManualEntryModal } from '../components/modals/manualEntry/ManualEntryModal';
 import { UploadStatement } from '../components/Common';
+import { DraftEntry } from '../engine/models/types';
 
 const ReviewExpense: React.FC = () => {
   const bankEntries = useBankEntryQuery();
@@ -18,6 +19,8 @@ const ReviewExpense: React.FC = () => {
   const draftEntries = useDraftEntryQuery();
 
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
+  const [draftItem, setDraftItem] = useState<Nullable<WithId<DraftEntry>>>(null);
+
   const [isManualEntryModalVisible, setManualEntryModalVisible] = useState(false);
 
   return (
@@ -61,6 +64,7 @@ const ReviewExpense: React.FC = () => {
             <DraftList
               items={getArrayOrDefault(draftEntries)}
               isLoading={draftEntries.isLoading}
+              setDraftItem={setDraftItem}
             />
           </div>
           <AnimatePresence>
@@ -76,11 +80,13 @@ const ReviewExpense: React.FC = () => {
           </AnimatePresence>
 
           <AnimatePresence>
-            {isManualEntryModalVisible && (
-              <ManualEntryModal key={bankItemId} {...{
-                draftEntries: getArrayOrDefault(draftEntries),
-                setVisible: setManualEntryModalVisible,
-              }} />
+            {(isManualEntryModalVisible || !!draftItem) && (
+              <ManualEntryModal
+                key={bankItemId}
+                draftEntry={draftItem}
+                setDraftItem={setDraftItem}
+                setVisible={setManualEntryModalVisible}
+              />
             )}
           </AnimatePresence>
         </div>

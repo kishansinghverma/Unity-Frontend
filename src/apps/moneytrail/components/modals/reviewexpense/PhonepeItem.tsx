@@ -51,7 +51,7 @@ export const PhonePeItem: FC<{
         <div className={`flex items-center space-x-3`}>
           <BankIcon bankName={item.bank} />
           <div className="flex-grow min-w-0">
-            <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2`} title={item.recipient}>
+            <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2 capitalize`} title={item.recipient}>
               {item.recipient}
             </p>
           </div>

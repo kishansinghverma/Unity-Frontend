@@ -1,7 +1,7 @@
 import { FileSearch } from "lucide-react";
 import { useState, useRef, useEffect, FC } from "react";
 import { DraftEntry } from "../engine/models/types";
-import { WithId } from "../../../engine/models/types";
+import { Nullable, WithId } from "../../../engine/models/types";
 import { EmptyList, ListHeader, SkeletonItem } from "./Common";
 import { AnimatePresence, motion } from "framer-motion";
 import { PostParams, Routes } from "../../../engine/constant";
@@ -14,9 +14,11 @@ import { DraftItem } from "./ListItem";
 export const DraftList: FC<{
   items: WithId<DraftEntry>[];
   isLoading: boolean;
+  setDraftItem: React.Dispatch<React.SetStateAction<Nullable<WithId<DraftEntry>>>>
 }> = ({
   isLoading,
-  items
+  items,
+  setDraftItem
 }) => {
     const dispatch = useAppDispatch();
     const [openItemId, setOpenItemId] = useState<string | null>(null);
@@ -84,7 +86,7 @@ export const DraftList: FC<{
                           <DraftItem {...{
                             item,
                             setProcessed,
-                            setDrafttemId: () => { },
+                            setDraftItem,
                             isOpen: openItemId === item._id,
                             onOpen: setOpenItemId,
                           }}
