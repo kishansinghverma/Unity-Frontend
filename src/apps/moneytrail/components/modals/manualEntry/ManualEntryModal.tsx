@@ -297,7 +297,6 @@ export const ManualEntryModal: FC<{
                       />
                     </Form.Item>
                   </Space.Compact>
-
                 </Form>
               </div>
             </div>
