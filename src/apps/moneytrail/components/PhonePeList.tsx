@@ -7,14 +7,15 @@ import { handleResponse, handleError } from "../../../engine/helpers/httpHelper"
 import { notify } from "../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../store/hooks";
 import { reviewApi } from "../store/reviewSlice";
-import { WithId } from "../../../engine/models/types";
+import { Nullable, WithId } from "../../../engine/models/types";
 import { TabletSmartphone } from "lucide-react";
 import { PhonepeItem } from "./ListItem";
 
 const PhonepeList: FC<{
   items: WithId<PhonepeEntry>[];
   isLoading: boolean;
-}> = ({ isLoading, items }) => {
+  setPhonepeItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
+}> = ({ isLoading, items, setPhonepeItemId }) => {
   const dispatch = useAppDispatch();
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);
@@ -81,7 +82,7 @@ const PhonepeList: FC<{
                         <PhonepeItem {...{
                           item,
                           setProcessed,
-                          setPhonepeItemId: () => { },
+                          setPhonepeItemId,
                           isOpen: openItemId === item._id,
                           onOpen: setOpenItemId
                         }}

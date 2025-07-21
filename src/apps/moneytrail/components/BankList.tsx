@@ -14,7 +14,7 @@ import { notify } from "../../../engine/services/notificationService";
 export const BankList: FC<{
   items: WithId<BankEntry>[];
   isLoading: boolean;
-  setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
+  setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
 }> = ({
   isLoading,
   items,

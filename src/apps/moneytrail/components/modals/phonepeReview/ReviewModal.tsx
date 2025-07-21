@@ -1,14 +1,10 @@
 import { ElementType, FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Form, InputNumber, Space } from 'antd';
-import { X, CreditCard, Smartphone, FileText, Check, IndianRupee, Layers2, Pencil, PieChart } from 'lucide-react';
+import { X, CreditCard, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Smartphone } from 'lucide-react';
 import TransactionCard from './TransactionCard';
-import { DraftItem } from './DraftItem';
-import { getDraftMatches, getPhonePeMatches } from '../../../engine/utils';
-import { TransactionContainer } from './TransactionContainer';
 import { Nullable, WithId } from '../../../../../engine/models/types';
-import { BankEntry, DraftEntry, PhonepeEntry } from '../../../engine/models/types';
-import { PhonePeItem } from './PhonepeItem';
+import { DraftEntry, PhonepeEntry } from '../../../engine/models/types';
 import dayjs from 'dayjs';
 import { DefaultOptionType } from 'antd/es/select';
 import { CustomSelect, SelectWithAdd } from '../../Common';
@@ -18,6 +14,9 @@ import { PostParams, Routes } from '../../../../../engine/constant';
 import { handleError, handleResponse } from '../../../../../engine/helpers/httpHelper';
 import { notify } from '../../../../../engine/services/notificationService';
 import { StringUtils } from '../../../../../engine/helpers/stringHelper';
+import { getDraftMatches } from '../../../engine/utils';
+import { DraftItem } from '../bankReview/DraftItem';
+import { TransactionContainer } from '../bankReview/TransactionContainer';
 
 type FormState = {
   amount: number,
@@ -26,18 +25,16 @@ type FormState = {
   group: number
 };
 
-export const BankReviewModal: FC<{
-  bankItemId: string;
-  bankEntries: WithId<BankEntry>[];
+export const PhonepeReviewModal: FC<{
+  phonepeItemId: string;
   phonepeEntries: WithId<PhonepeEntry>[];
   draftEntries: WithId<DraftEntry>[];
-  setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
+  setPhonepeItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
 }> = ({
-  bankItemId,
-  bankEntries,
+  phonepeItemId,
   phonepeEntries,
   draftEntries,
-  setBankItemId
+  setPhonepeItemId
 }) => {
     const dispatch = useAppDispatch();
 
@@ -45,12 +42,10 @@ export const BankReviewModal: FC<{
     const groups = useGroupsQuery();
     const categories = useCategoriesQuery();
 
-    const [selectedPhonepe, setSelectedPhonePe] = useState<Nullable<WithId<PhonepeEntry>>>(null);
     const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
 
-    const bankEntry = bankEntries.find(entry => entry._id === bankItemId)!;
-    const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
-    const draftMatches = getDraftMatches(selectedPhonepe, draftEntries);
+    const phonepeEntry = phonepeEntries.find(entry => entry._id === phonepeItemId)!;
+    const draftMatches = getDraftMatches(phonepeEntry, draftEntries);
 
     const [form] = Form.useForm<FormState>();
 
@@ -104,18 +99,14 @@ export const BankReviewModal: FC<{
 
     const handleKeyDown = ({ key }: KeyboardEvent) => { if (key === 'Escape') onModalClose() };
 
-    const onModalClose = () => setBankItemId(null);
+    const onModalClose = () => setPhonepeItemId(null);
 
     const onComplete = () => {
       notify.success({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
 
-      dispatch(reviewApi.util.updateQueryData('bankEntry', undefined, (data) => {
-        data.forEach(entry => { if (entry._id === bankEntry._id) entry.processed = true });
-      }));
-
-      if (selectedPhonepe?._id) {
+      if (phonepeEntry?._id) {
         dispatch(reviewApi.util.updateQueryData('phonepeEntry', undefined, (data) => {
-          data.forEach(entry => { if (entry._id === selectedPhonepe._id) entry.processed = true });
+          data.forEach(entry => { if (entry._id === phonepeEntry._id) entry.processed = true });
         }));
       }
 
@@ -134,24 +125,22 @@ export const BankReviewModal: FC<{
       let payload = {
         group_id: selectedGroup?.id,
         cost: formState.amount,
-        date: bankEntry.date,
+        date: phonepeEntry.date,
         description: formState.description,
         parties: selectedGroup?.members.map(m => m.id),
         category: formState.category
       };
 
-      if (bankEntry.type === 'Debit') {
+      if (phonepeEntry.type === 'Debit') {
         const debitPayload = {
           shared: selectedGroup?.sharing,
-          bankTxnId: bankEntry?._id,
-          phonePeTxnId: selectedPhonepe?._id,
+          phonePeTxnId: phonepeEntry?._id,
           draftTxnId: selectedDraft?._id,
           details: Object.entries({
-            Bank: bankEntry.bank ?? StringUtils.empty,
-            Description: bankEntry.description ?? StringUtils.empty,
-            UTR: selectedPhonepe?.utr ?? "N/A",
-            TransactionNo: selectedPhonepe?.transactionId ?? 'N/A',
-            Recipient: selectedPhonepe?.recipient ?? 'N/A',
+            Bank: phonepeEntry.bank ?? StringUtils.empty,
+            UTR: phonepeEntry?.utr ?? "N/A",
+            TransactionNo: phonepeEntry?.transactionId ?? 'N/A',
+            Recipient: phonepeEntry?.recipient ?? 'N/A',
             Location: selectedDraft?.location.replaceAll('\n', ', ') ?? 'N/A',
             Coordinates: selectedDraft?.coordinate ? `https://www.google.com/maps?q=${selectedDraft.coordinate}` : 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
@@ -162,18 +151,17 @@ export const BankReviewModal: FC<{
       else {
         const creditPayload = {
           details: Object.entries({
-            Bank: bankEntry.bank ?? StringUtils.empty,
-            Description: bankEntry.description ?? StringUtils.empty,
-            UTR: selectedPhonepe?.utr ?? 'N/A',
-            TransactionNo: selectedPhonepe?.transactionId ?? 'N/A',
-            Payer: selectedPhonepe?.recipient ?? 'N/A'
+            Bank: phonepeEntry.bank ?? StringUtils.empty,
+            UTR: phonepeEntry?.utr ?? 'N/A',
+            TransactionNo: phonepeEntry?.transactionId ?? 'N/A',
+            Payer: phonepeEntry?.recipient ?? 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n')
         }
 
         payload = { ...payload, ...creditPayload };
       }
 
-      const url = bankEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
+      const url = phonepeEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
 
       fetch(url, { ...PostParams, body: JSON.stringify(payload) })
         .then(handleResponse)
@@ -232,7 +220,7 @@ export const BankReviewModal: FC<{
           {/* Modal Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Review Bank Transaction</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Review PhonePe Transaction</h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">Review and approve your transactions</p>
             </div>
             <button
@@ -247,46 +235,35 @@ export const BankReviewModal: FC<{
           <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
             <div className="max-w-7xl mx-auto p-6">
               {/* Three Column Layout */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <TransactionContainer
-                  isFirst
-                  icon={CreditCard}
-                  type="Bank"
-                  headerStyle="from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20"
-                  iconStyle="text-blue-600 dark:text-blue-400"
-                >
-                  <TransactionCard {...bankEntry} />
-                </TransactionContainer>
+              <div className="flex gap-8 mb-6">
+                <div className="w-[35%]">
+                  <TransactionContainer
+                    isFirst
+                    icon={Smartphone}
+                    type="PhonePe"
+                    headerStyle="from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20"
+                    iconStyle="text-blue-600 dark:text-blue-400"
+                  >
+                    <TransactionCard {...phonepeEntry} />
+                  </TransactionContainer>
+                </div>
 
-                <TransactionContainer
-                  icon={Smartphone}
-                  type="PhonePe"
-                  headerStyle="from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20"
-                  iconStyle="text-purple-600 dark:text-purple-400"
-                >
-                  {phonepeMatches.map((item) => (
-                    <PhonePeItem key={item._id} {...{
-                      item,
-                      isSelected: selectedPhonepe?._id === item._id,
-                      setSelected: setSelectedPhonePe
-                    }} />
-                  ))}
-                </TransactionContainer>
-
-                <TransactionContainer
-                  icon={FileText}
-                  type="Draft"
-                  headerStyle="from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20"
-                  iconStyle="text-orange-600 dark:text-orange-400"
-                >
-                  {draftMatches.map((item) => (
-                    <DraftItem key={item._id} {...{
-                      item,
-                      isSelected: selectedDraft?._id === item._id,
-                      setSelected: setSelectedDraft
-                    }} />
-                  ))}
-                </TransactionContainer>
+                <div className="w-[65%]">
+                  <TransactionContainer
+                    icon={FileText}
+                    type="Draft"
+                    headerStyle="from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20"
+                    iconStyle="text-orange-600 dark:text-orange-400"
+                  >
+                    {draftMatches.map((item) => (
+                      <DraftItem key={item._id} {...{
+                        item,
+                        isSelected: selectedDraft?._id === item._id,
+                        setSelected: setSelectedDraft
+                      }} />
+                    ))}
+                  </TransactionContainer>
+                </div>
               </div>
 
               {/* Transaction Details Table */}
@@ -301,7 +278,6 @@ export const BankReviewModal: FC<{
                       <tr className="text-left text-gray-500 dark:text-gray-400 text-sm">
                         <th className={`${classes.th} w-20`}>Date</th>
                         <th className={`${classes.th} w-12`}>Bank</th>
-                        <th className={`${classes.th} w-52`}>Description</th>
                         <th className={`${classes.th} w-28`}>UTR / Transaction #</th>
                         <th className={`${classes.th} w-28`}>Recipient</th>
                         <th className={`${classes.th} w-40`}>Location</th>
@@ -309,11 +285,10 @@ export const BankReviewModal: FC<{
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                       <tr className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-900 dark:text-white text-sm">
-                        <td className={classes.tr}> {dayjs(bankEntry.date).format('DD-MM-YYYY')} </td>
-                        <td className={classes.tr}> {bankEntry.bank} </td>
-                        <td className={`${classes.tr} capitalize`}> {bankEntry.description} </td>
-                        <td className={classes.tr}> {selectedPhonepe?.utr || '-'} </td>
-                        <td className={`${classes.tr} capitalize`}> {selectedPhonepe?.recipient || '-'} </td>
+                        <td className={classes.tr}> {dayjs(phonepeEntry.date).format('DD-MM-YYYY')} </td>
+                        <td className={classes.tr}> {phonepeEntry.bank} </td>
+                        <td className={classes.tr}> {phonepeEntry?.utr || '-'} </td>
+                        <td className={`${classes.tr} capitalize`}> {phonepeEntry?.recipient || '-'} </td>
                         <td className={`${classes.tr} capitalize`}> {selectedDraft?.location.replaceAll('\n', ', ') || '-'} </td>
                       </tr>
                     </tbody>
@@ -326,7 +301,7 @@ export const BankReviewModal: FC<{
                     <div className="flex items-center gap-4">
                       <Space.Compact>
                         <PrefixIcon icon={IndianRupee} size={16} strokeWidth={3} />
-                        <Form.Item initialValue={bankEntry.amount} name="amount" noStyle rules={[{ required: true }]}>
+                        <Form.Item initialValue={phonepeEntry.amount} name="amount" noStyle rules={[{ required: true }]}>
                           <InputNumber
                             placeholder="Amount"
                             className={`w-32 ${classes.input}`}

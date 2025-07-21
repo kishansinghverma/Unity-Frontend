@@ -133,7 +133,7 @@ export const PhonepeItem = memo(({ isOpen, onOpen, setProcessed, item, setPhonep
                 style={{ x: motionValue }}
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={handleDragEnd}
-                // onClick={() => onItemClick(item._id)}
+                onClick={() => onItemClick(item._id)}
                 className="relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
             >
                 <div className="flex items-center flex-shrink-0">

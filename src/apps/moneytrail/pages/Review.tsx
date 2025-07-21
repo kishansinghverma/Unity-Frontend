@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ReviewModal } from '../components/modals/bankReview/ReviewModal';
+import { BankReviewModal } from '../components/modals/bankReview/ReviewModal';
 import { BankList } from '../components/BankList';
 import { AnimatePresence } from 'framer-motion';
 import { Nullable, WithId } from '../../../engine/models/types';
@@ -12,6 +12,7 @@ import { CalendarArrowUp, ClockArrowUp, PlusCircle } from 'lucide-react';
 import { ManualEntryModal } from '../components/modals/manualEntry/ManualEntryModal';
 import { UploadStatement } from '../components/Common';
 import { DraftEntry } from '../engine/models/types';
+import { PhonepeReviewModal } from '../components/modals/phonepeReview/ReviewModal';
 
 const ReviewExpense: React.FC = () => {
   const bankEntries = useBankEntryQuery();
@@ -19,6 +20,7 @@ const ReviewExpense: React.FC = () => {
   const draftEntries = useDraftEntryQuery();
 
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
+  const [phonepeItemId, setPhonepeItemId] = useState<Nullable<string>>(null);
   const [draftItem, setDraftItem] = useState<Nullable<WithId<DraftEntry>>>(null);
 
   const [isManualEntryModalVisible, setManualEntryModalVisible] = useState(false);
@@ -58,6 +60,7 @@ const ReviewExpense: React.FC = () => {
             <PhonepeList
               items={getArrayOrDefault(phonepeEntries)}
               isLoading={phonepeEntries.isLoading}
+              setPhonepeItemId={setPhonepeItemId}
             />
           </div>
           <div className="w-full min-w-0">
@@ -69,13 +72,26 @@ const ReviewExpense: React.FC = () => {
           </div>
           <AnimatePresence>
             {bankItemId && (
-              <ReviewModal key={bankItemId} {...{
-                bankEntries: getArrayOrDefault(bankEntries),
-                phonepeEntries: getArrayOrDefault(phonepeEntries),
-                draftEntries: getArrayOrDefault(draftEntries),
-                bankItemId,
-                setBankItemId
-              }} />
+              <BankReviewModal
+                key={bankItemId}
+                bankEntries={getArrayOrDefault(bankEntries)}
+                phonepeEntries={getArrayOrDefault(phonepeEntries)}
+                draftEntries={getArrayOrDefault(draftEntries)}
+                bankItemId={bankItemId}
+                setBankItemId={setBankItemId}
+              />
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {(phonepeItemId) && (
+              <PhonepeReviewModal
+                key={phonepeItemId}
+                phonepeEntries={getArrayOrDefault(phonepeEntries)}
+                draftEntries={getArrayOrDefault(draftEntries)}
+                phonepeItemId={phonepeItemId}
+                setPhonepeItemId={setPhonepeItemId}
+              />
             )}
           </AnimatePresence>
 
