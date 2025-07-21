@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ReviewModal } from '../components/modals/reviewExpense/ReviewModal';
+import { ReviewModal } from '../components/modals/bankReview/ReviewModal';
 import { BankList } from '../components/BankList';
 import { AnimatePresence } from 'framer-motion';
 import { Nullable, WithId } from '../../../engine/models/types';

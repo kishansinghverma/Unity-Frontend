@@ -1,6 +1,6 @@
 import { RefreshCw } from 'lucide-react';
 import { useState } from 'react';
-import { ReviewModal } from '../components/modals/reviewExpense/ReviewModal';
+import { ReviewModal } from '../components/modals/bankReview/ReviewModal';
 import { RecordItem } from '../engine/models/types';
 
 function Dashboard() {
