@@ -16,7 +16,7 @@ import { reviewApi, useCategoriesQuery, useDescriptionsQuery, useGroupsQuery } f
 import { useAppDispatch } from '../../../../../store/hooks';
 import { PostParams, Routes } from '../../../../../engine/constant';
 import { handleError, handleResponse } from '../../../../../engine/helpers/httpHelper';
-import { notifyError, notifySuccess } from '../../../../../engine/services/notificationService';
+import { notify } from '../../../../../engine/services/notificationService';
 import { StringUtils } from '../../../../../engine/helpers/stringHelper';
 
 type FormState = {
@@ -107,7 +107,7 @@ export const ReviewModal: FC<{
     const onModalClose = () => setBankItemId(null);
 
     const onComplete = () => {
-      notifySuccess({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
+      notify.success({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
 
       dispatch(reviewApi.util.updateQueryData('bankEntry', undefined, (data) => {
         data.forEach(entry => { if (entry._id === bankEntry._id) entry.processed = true });
@@ -184,7 +184,7 @@ export const ReviewModal: FC<{
     const onApprove = () => {
       form.validateFields()
         .then(saveTransaction)
-        .catch(() => notifyError({
+        .catch(() => notify.error({
           message: "Failed to Save",
           description: "Provide the required details!"
         }));
@@ -197,7 +197,7 @@ export const ReviewModal: FC<{
 
       fetch(Routes.AddDescriptions, { ...PostParams, body: JSON.stringify({ item: option.value }) })
         .then(handleResponse)
-        .then(() => notifySuccess({ message: "Success", description: "New description added!" }))
+        .then(() => notify.success({ message: "Success", description: "New description added!" }))
         .catch(handleError);
     }
 

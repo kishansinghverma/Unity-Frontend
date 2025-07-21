@@ -4,7 +4,7 @@ import { EmptyList, ListHeader, SkeletonItem } from "./Common";
 import { AnimatePresence, motion } from "framer-motion";
 import { PostParams, Routes } from "../../../engine/constant";
 import { handleResponse, handleError } from "../../../engine/helpers/httpHelper";
-import { notifySuccess } from "../../../engine/services/notificationService";
+import { notify } from "../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../store/hooks";
 import { reviewApi } from "../store/reviewSlice";
 import { WithId } from "../../../engine/models/types";
@@ -43,7 +43,7 @@ const PhonepeList: FC<{
 
     fetch(`${Routes.ProcessPhonepe}/${id}`, PostParams)
       .then(handleResponse)
-      .then(() => notifySuccess({ message: "Success", description: "Transaction Marked as Proccessed!" }))
+      .then(() => notify.success({ message: "Success", description: "Transaction Marked as Proccessed!" }))
       .catch(handleError);
   }
 

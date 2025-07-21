@@ -9,7 +9,7 @@ import { useAppDispatch } from "../../../store/hooks";
 import { reviewApi } from "../store/reviewSlice";
 import { PostParams, Routes } from "../../../engine/constant";
 import { handleError, handleResponse } from "../../../engine/helpers/httpHelper";
-import { notifySuccess } from "../../../engine/services/notificationService";
+import { notify } from "../../../engine/services/notificationService";
 
 export const BankList: FC<{
   items: WithId<BankEntry>[];
@@ -48,7 +48,7 @@ export const BankList: FC<{
 
       fetch(`${Routes.ProcessBank}/${id}`, PostParams)
         .then(handleResponse)
-        .then(() => notifySuccess({ message: "Success", description: "Transaction Marked as Proccessed!" }))
+        .then(() => notify.success({ message: "Success", description: "Transaction Marked as Proccessed!" }))
         .catch(handleError);
     }
 

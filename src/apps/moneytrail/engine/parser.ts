@@ -14,7 +14,7 @@ type BankEntry = {
     amount: number,
     processed?: boolean,
     type: "Credit" | "Debit",
-    bank: "SBI" | "HDFC"
+    bank: "SBI" | "HDFC" | "SBI CC"
 }
 
 type PhonePeEntry = {
@@ -52,7 +52,7 @@ const getStringAt = (sheet: XLSX.WorkSheet, cellAddress: string): string | null 
 const parseHdfcStatement = (sheet: XLSX.WorkSheet) => {
     const transactions: Array<BankEntry> = [];
     const range = XLSX.utils.decode_range(sheet["!ref"] || "");
-    if (!range) throw new Error('Empty worksheet found!');
+    if (!range) throw new Error('Empty Worksheet Found!');
 
     for (let row = range.s.r + 1; row <= range.e.r + 1; row++) {
         const cellAddress = `A${row}`;
@@ -74,7 +74,7 @@ const parseHdfcStatement = (sheet: XLSX.WorkSheet) => {
 const parseSbiStatement = (sheet: XLSX.WorkSheet) => {
     const transactions: Array<BankEntry> = [];
     const range = XLSX.utils.decode_range(sheet["!ref"] || "");
-    if (!range) throw new Error('Empty worksheet found!');
+    if (!range) throw new Error('Empty Worksheet Found!');
 
     for (let row = range.s.r + 1; row <= range.e.r + 1; row++) {
         const cellAddress = `A${row}`;
@@ -106,7 +106,7 @@ export const extractDataFromExcel = async (file: File) => {
 
     if (getStringAt(sheet, 'A1')?.includes('HDFC BANK')) return parseHdfcStatement(sheet);
     else if (getStringAt(sheet, 'B8')?.includes('SBNCHQ-GEN')) return parseSbiStatement(sheet);
-    else throw Error("Unsupported Excel file provided.")
+    else throw Error("Unsupported Excel File Provided.")
 }
 
 export const parsePhonePeStatement = async (file: File) => {
@@ -123,7 +123,7 @@ export const parsePhonePeStatement = async (file: File) => {
     }
 
     if (!tokens[0].includes('Transaction Statement'))
-        throw new pdfjsLib.InvalidPDFException('Invalid PhonePe statement.');
+        throw new pdfjsLib.InvalidPDFException('Invalid PhonePe Statement.');
 
     tokens.forEach((item, index) => {
         if (item.includes('Transaction ID')) {
@@ -145,19 +145,23 @@ export const parsePhonePeStatement = async (file: File) => {
 };
 
 export const extractDataFromHtml = async (file: File) => {
+
+    function getHash(date: Date, amount: number, description?: string): number {
+        const input = `${date.toISOString()}|${description}|${amount}`;
+        let hash = 5381;
+        for (let i = 0; i < input.length; i++) {
+            hash = (hash * 33) ^ input.charCodeAt(i);
+        }
+        return hash >>> 0;
+    }
+
     const tableContents = await file.text();
-    console.log(tableContents);
     const htmlContents = `<table>${tableContents}</table>`;
     const parser = new DOMParser();
     const virtualDom = parser.parseFromString(htmlContents, 'text/html');
     const rows = virtualDom.querySelectorAll('tr');
 
-    const transactions: {
-        date: Date;
-        description: Nullable<string>;
-        type: string;
-        amount: number
-    }[] = [];
+    const transactions: BankEntry[] = [];
 
     const isValidDate = (dateString: string) => (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString));
     const isValidType = (type: string) => (type === "Debit" || type === "Credit");
@@ -172,9 +176,15 @@ export const extractDataFromHtml = async (file: File) => {
         const [day, month, year] = dateString.split('/').map(Number);
         const date = dayjs(`${year}-${month}-${day}`).toDate();
 
-        if (isValidDate(dateString) && isValidType(type) && !isNaN(amount) && !StringUtils.isNullOrEmpty(description))
-            transactions.push({ date, description, type, amount })
+        if (isValidDate(dateString) && isValidType(type) && !isNaN(amount) && !StringUtils.isNullOrEmpty(description)) {
+            transactions.push({
+                date, type, amount,
+                bank: "SBI CC",
+                description: `${description}/${getHash(date, amount, description)}`
+            })
+        }
     });
 
+    if (transactions.length === 0) throw new Error("No Record Extracted From HTML File.");
     return transactions;
 }

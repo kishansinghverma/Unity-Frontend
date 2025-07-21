@@ -9,6 +9,7 @@ import { Rule } from "antd/es/form";
 import { parsePhonePeStatement, extractDataFromExcel, extractDataFromHtml } from "../engine/parser";
 import { PostParams, Routes } from "../../../engine/constant";
 import { handleJsonResponse } from "../../../engine/helpers/httpHelper";
+import { notify } from "../../../engine/services/notificationService";
 
 export const BankIcon: FC<{
   bankName: string
@@ -249,7 +250,7 @@ type BankEntry = {
   amount: number,
   processed?: boolean,
   type: "Credit" | "Debit",
-  bank: "SBI" | "HDFC"
+  bank: "SBI" | "HDFC" | "SBI CC"
 }
 
 type PhonePeEntry = {
@@ -258,7 +259,7 @@ type PhonePeEntry = {
   transactionId: string,
   utr: string,
   processed?: boolean,
-  bank: string | "SBI" | "HDFC"
+  bank: string | "SBI" | "HDFC" 
   type: string | "Credit" | "Debit",
   amount: number
 }
@@ -278,31 +279,36 @@ export const UploadStatement: React.FC = () => {
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    event.target.value = StringUtils.empty;
 
-    console.log(file.type);
+    if (!file) return;
 
     if (file.type === 'application/pdf') {
       const response = parsePhonePeStatement(file).then(uploadPhonePeStatement)
-      // toast.promise(response, {
-      //   pending: { render: () => ("Uploading PhonePe Statement...") },
-      //   success: { render: ({ data }) => (`Uploaded ${data.insertedCount}/${data.totalCount} records.`) },
-      //   error: { render: ({ data }: any) => (data.message) }
-      // });
+      notify.promise(response, {
+        pending: { message: "Uploading Document", description: "Uploading PhonePe Statement..." },
+        success: { message: "Upload Success", render: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} PhonePe Records.`) },
+        error: { message: "Upload Failed" }
+      });
     }
     else if (file.type === 'application/vnd.ms-excel') {
       const response = extractDataFromExcel(file).then(uploadBankStatement);
-      // toast.promise(response, {
-      //   pending: { render: () => ("Uploading Bank Statement...") },
-      //   success: { render: ({ data }) => (`Uploaded ${data.insertedCount}/${data.totalCount} records.`) },
-      //   error: { render: ({ data }: any) => (data.message) }
-      // });
+      notify.promise(response, {
+        pending: { message: "Uploading Document", description: "Uploading Excel Sheet..." },
+        success: { message: "Upload Success", render: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`) },
+        error: { message: "Upload Failed" }
+      });
     }
     else if (file.type === 'text/html') {
-      extractDataFromHtml(file).then(console.log);
+      const response = extractDataFromHtml(file).then(uploadBankStatement);
+      notify.promise(response, {
+        pending: { message: "Uploading Document", description: "Uploading SBI Credit Card Statement..." },
+        success: { message: "Upload Success", render: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`) },
+        error: { message: "Upload Failed" }
+      });
     }
     else {
-      // toast.error("File type not supported.");
+      notify.error({ message: "Parsing Failed", description: "File Type Not Supported." });
     }
   };
 
@@ -323,7 +329,7 @@ export const UploadStatement: React.FC = () => {
 
   return (
     <>
-      <input type="file" ref={fileInputRef} hidden onChange={handleFileChange} />
+      <input type="file" ref={fileInputRef} hidden onChange={handleFileChange} onClick={(e) => { e.currentTarget.value = StringUtils.empty }} />
       <Popover content={infoList}>
         <button
           onClick={() => fileInputRef.current?.click()}
@@ -333,7 +339,6 @@ export const UploadStatement: React.FC = () => {
           <span>Upload Statement</span>
         </button>
       </Popover>
-
     </>
   );
 };

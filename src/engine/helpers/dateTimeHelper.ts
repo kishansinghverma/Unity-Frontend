@@ -1,5 +1,3 @@
-
-
 export const getDateComponent = (dateValue: string | Date) => {
     const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
     const day = date.getDate().toString().padStart(2, '0');

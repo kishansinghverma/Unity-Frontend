@@ -1,5 +1,5 @@
 import { HttpStatusCode } from "../constant";
-import { notifyError } from "../services/notificationService";
+import { notify } from "../services/notificationService";
 
 export const fetchJson = (route: string) => fetch(route).then(handleJsonResponse).catch(error => handleError(error, true));
 
@@ -14,10 +14,7 @@ export const handleJsonResponse = (response: Response, errorMessage?: string) =>
 }
 
 export const handleError = (error: Error | string, rethrow = false) => {
-    notifyError({
-        showProgress: true,
-        pauseOnHover: true,
-        duration: 5,
+    notify.error({
         message: 'Request Error',
         description: error instanceof Error ? error.message : error,
     });

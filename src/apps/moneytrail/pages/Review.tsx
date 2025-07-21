@@ -29,9 +29,7 @@ const ReviewExpense: React.FC = () => {
               <PlusCircle size={20} />
               <span>Add Expense</span>
             </button>
-           
-              <UploadStatement />
-
+            <UploadStatement />
           </div>
           <div className="flex gap-3">
             <div className="flex gap-1">
