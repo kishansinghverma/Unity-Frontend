@@ -171,7 +171,7 @@ export const ManualEntryModal: FC<{
       >
         {/* Modal Container */}
         <motion.div
-          className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-[500px] max-w-7xl max-h-[90vh] overflow-hidden"
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-[550px] max-w-7xl max-h-[90vh] overflow-hidden"
           onClick={e => e.stopPropagation()}
           variants={{
             hidden: { opacity: 0, scale: 0.8 },
@@ -198,9 +198,8 @@ export const ManualEntryModal: FC<{
 
           {/* Modal Content */}
           <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
-            <div className="max-w-7xl mx-auto px-12 py-8">
-              {/* Transaction Details Table */}
-              <div className=" bg-gray-100/20 p-6 dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="mx-auto px-14 py-12">
+              <div className=" bg-gray-100/20 p-8 dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <Form form={form} className="flex items-center flex-col gap-4">
 
                   <Space.Compact style={{ width: "100%" }}>
@@ -303,7 +302,7 @@ export const ManualEntryModal: FC<{
               </div>
             </div>
           </div>
-          <div className="flex gap-3 border-t border-gray-200 dark:border-gray-700 px-12 py-4 justify-end">
+          <div className="flex gap-3 border-t border-gray-200 dark:border-gray-700 px-14 py-6 justify-end">
             <button
               onClick={onModalClose}
               className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-gray-600 bg-gray-200 dark:bg-gray-500 hover:bg-gray-300 dark:hover:bg-gray-500 dark:text-gray-200"
