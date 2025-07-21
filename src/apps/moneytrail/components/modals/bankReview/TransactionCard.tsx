@@ -69,6 +69,12 @@ const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
         text: 'text-orange-700 dark:text-orange-300',
         border: 'border-orange-200 dark:border-orange-800'
       };
+      case 'SBI CC': return {
+        gradient: 'from-purple-500 to-purple-600',
+        bg: 'bg-purple-50 dark:bg-purple-900/20',
+        text: 'text-purple-700 dark:text-purple-300',
+        border: 'border-purple-200 dark:border-purple-800'
+      };
       default: return {
         gradient: 'from-gray-500 to-gray-600',
         bg: 'bg-gray-50 dark:bg-gray-800/50',
