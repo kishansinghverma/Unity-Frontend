@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { StringUtils } from "../../../engine/helpers/stringHelper";
-import { Nullable } from "../../../engine/models/types";
+import { getHash } from "./utils";
 dayjs.extend(customParseFormat);
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs`;
@@ -14,7 +14,7 @@ type BankEntry = {
     amount: number,
     processed?: boolean,
     type: "Credit" | "Debit",
-    bank: "SBI" | "HDFC" | "SBI CC"
+    bank: "SBI" | "HDFC" | "SBI CC" | "ICICI CC"
 }
 
 type PhonePeEntry = {
@@ -145,16 +145,6 @@ export const parsePhonePeStatement = async (file: File) => {
 };
 
 export const extractDataFromHtml = async (file: File) => {
-
-    function getHash(date: Date, amount: number, description?: string): number {
-        const input = `${date.toISOString()}|${description}|${amount}`;
-        let hash = 5381;
-        for (let i = 0; i < input.length; i++) {
-            hash = (hash * 33) ^ input.charCodeAt(i);
-        }
-        return hash >>> 0;
-    }
-
     const tableContents = await file.text();
     const htmlContents = `<table>${tableContents}</table>`;
     const parser = new DOMParser();
@@ -173,10 +163,10 @@ export const extractDataFromHtml = async (file: File) => {
         const amount = parseFloat(cells[3]?.textContent?.trim() ?? StringUtils.empty);
         const description = cells[1]?.textContent?.trim();
 
-        const [day, month, year] = dateString.split('/').map(Number);
-        const date = dayjs(`${year}-${month}-${day}`).toDate();
-
         if (isValidDate(dateString) && isValidType(type) && !isNaN(amount) && !StringUtils.isNullOrEmpty(description)) {
+            const [day, month, year] = dateString.split('/').map(Number);
+            const date = dayjs(`${year}-${month}-${day}`).toDate();
+
             transactions.push({
                 date, type, amount,
                 bank: "SBI CC",
@@ -188,3 +178,36 @@ export const extractDataFromHtml = async (file: File) => {
     if (transactions.length === 0) throw new Error("No Record Extracted From HTML File.");
     return transactions;
 }
+
+export const extractDataFromCsv = async (file: File) => {
+    const isValidDate = (value: any) => (value instanceof Date && !isNaN(value.getTime()));
+
+    const csvData = await file.text();
+    const workbook = XLSX.read(csvData, { type: "string", cellDates: true, raw: false });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+    const transactions: BankEntry[] = [];
+
+    rows.forEach(row => {
+        const rowData = row as Array<any>;
+        const date = rowData[0];
+        const description = rowData[2];
+        const amount = rowData[5];
+
+        if (isValidDate(date) && !isNaN(amount) && amount !== 0) {
+            const type = amount < 0 ? "Credit" : "Debit";
+            const amountAbsolute = Math.abs(amount);
+
+            transactions.push({
+                date, type,
+                bank: "ICICI CC",
+                amount: amountAbsolute,
+                description: `${description}/${getHash(date, amountAbsolute, description)}`
+            })
+        }
+    });
+
+    if (transactions.length === 0) throw new Error("No Record Extracted From CSV File.");
+    return transactions;
+} 

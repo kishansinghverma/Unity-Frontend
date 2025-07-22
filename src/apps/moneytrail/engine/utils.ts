@@ -52,3 +52,12 @@ export const getDraftMatches = (phonePeEntry: Nullable<WithId<PhonepeEntry>>, dr
     const lowerDelta = phonePeTimeNormalized - delta;
     return draftEntries.filter(t => normalizeToMinute(t.dateTime) >= lowerDelta && normalizeToMinute(t.dateTime) <= upperDelta);
 }
+
+export const getHash = (date: Date, amount: number, description?: string) => {
+    const input = `${date.toISOString()}|${description}|${amount}`;
+    let hash = 5381;
+    for (let i = 0; i < input.length; i++) {
+        hash = (hash * 33) ^ input.charCodeAt(i);
+    }
+    return hash >>> 0;
+}

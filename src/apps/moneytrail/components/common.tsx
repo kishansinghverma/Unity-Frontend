@@ -6,7 +6,7 @@ import { DefaultOptionType } from "antd/es/select";
 import { StringUtils } from "../../../engine/helpers/stringHelper";
 import { Space, Select, Form, Popover, List } from "antd";
 import { Rule } from "antd/es/form";
-import { parsePhonePeStatement, extractDataFromExcel, extractDataFromHtml } from "../engine/parser";
+import { parsePhonePeStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../engine/parser";
 import { PostParams, Routes } from "../../../engine/constant";
 import { handleJsonResponse } from "../../../engine/helpers/httpHelper";
 import { notify } from "../../../engine/services/notificationService";
@@ -250,7 +250,7 @@ type BankEntry = {
   amount: number,
   processed?: boolean,
   type: "Credit" | "Debit",
-  bank: "SBI" | "HDFC" | "SBI CC"
+  bank: "SBI" | "HDFC" | "SBI CC" | "ICICI CC"
 }
 
 type PhonePeEntry = {
@@ -259,7 +259,7 @@ type PhonePeEntry = {
   transactionId: string,
   utr: string,
   processed?: boolean,
-  bank: string | "SBI" | "HDFC" 
+  bank: string | "SBI" | "HDFC"
   type: string | "Credit" | "Debit",
   amount: number
 }
@@ -307,6 +307,14 @@ export const UploadStatement: React.FC = () => {
         error: { message: "Upload Failed" }
       });
     }
+    else if (file.type === 'text/csv') {
+      const response = extractDataFromCsv(file).then(uploadBankStatement);
+      notify.promise(response, {
+        pending: { message: "Uploading Document", description: "Uploading ICICI Credit Card Statement..." },
+        success: { message: "Upload Success", render: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`) },
+        error: { message: "Upload Failed" }
+      });
+    }
     else {
       notify.error({ message: "Parsing Failed", description: "File Type Not Supported." });
     }
@@ -316,7 +324,8 @@ export const UploadStatement: React.FC = () => {
     'PhonePe Statement :: Download the PDF statement from PhonePe App',
     'SBI Statement :: Download Excel File from Netbanking',
     'HDFC Statement :: Download Excel File from App/Netbanking',
-    'SBI CC :: Get <tbody> from Web App as Html File using VS Code'
+    'SBI CC :: Get <tbody> from Web App as HTML File using VS Code',
+    'ICICI CC :: Get Yearly E-Statement CSV File from WebApp'
   ];
 
   const infoList = <List
