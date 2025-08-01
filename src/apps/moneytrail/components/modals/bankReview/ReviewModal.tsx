@@ -137,15 +137,15 @@ export const BankReviewModal: FC<{
         date: bankEntry.date,
         description: formState.description,
         parties: selectedGroup?.members.map(m => m.id),
-        category: formState.category
+        category: formState.category,
+        bankTxnId: bankEntry?._id,
+        phonePeTxnId: selectedPhonepe?._id,
+        draftTxnId: selectedDraft?._id,
       };
 
       if (bankEntry.type === 'Debit') {
         const debitPayload = {
           shared: selectedGroup?.sharing,
-          bankTxnId: bankEntry?._id,
-          phonePeTxnId: selectedPhonepe?._id,
-          draftTxnId: selectedDraft?._id,
           details: Object.entries({
             Bank: bankEntry.bank ?? StringUtils.empty,
             Description: bankEntry.description ?? StringUtils.empty,
@@ -360,7 +360,7 @@ export const BankReviewModal: FC<{
                         defaultOptions={groupOptions}
                         isLoading={groups.isLoading}
                         rules={[{ required: true }]}
-                        placeholder="Splitwise"
+                        placeholder="Group"
                         placement="bottomRight"
                         className={`w-52 ${classes.select}`}
                         prefix={<PrefixIcon size={16} strokeWidth={3} icon={PieChart} />}

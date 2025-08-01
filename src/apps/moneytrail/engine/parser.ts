@@ -32,7 +32,11 @@ const TransactionMetaData: { [key: string]: { Account: string, Type: string } } 
     "Debited from XX0041": { Account: "HDFC", Type: "Debit" },
     "Debited from XX6026": { Account: "SBI", Type: "Debit" },
     "Credited to XX0041": { Account: "HDFC", Type: "Credit" },
-    "Credited to XX6026": { Account: "SBI", Type: "Credit" }
+    "Credited to XX6026": { Account: "SBI", Type: "Credit" },
+    "Debited from XXXX38": { Account: "SBI CC", Type: "Debit" },
+    "Debited from XX1133": { Account: "IOB", Type: "Debit" },
+    "Credited to XX1133": { Account: "IOB", Type: "Credit" },
+    "Credited to Account": { Account: "Other", Type: "Credit" }
 }
 
 const isFloat = (number: number) => Number(number) === number && number % 1 !== 0;
@@ -127,9 +131,19 @@ export const parsePhonePeStatement = async (file: File) => {
 
     tokens.forEach((item, index) => {
         if (item.includes('Transaction ID')) {
+            const words = [tokens[index - 1], tokens[index - 2], tokens[index - 3], tokens[index - 4], tokens[index - 5], tokens[index - 6]];
+            const timeIndex = words.findIndex(word => /^\d{1,2}:\d{2} ?[APap][Mm]$/.test(word));
+
+            const time = words[timeIndex];
+            const recipient = words.slice(0, timeIndex).map(word => word.trim()).reverse().join(" ");
+
+            let date = words[timeIndex + 1].trim();
+            if (!(/^[a-z]{3} \d{1,2}, \d{4}$/i.test(date)))
+                date = `${words[timeIndex + 2].trim()} ${date}`;
+
             const transaction = {
-                date: dayjs(`${tokens[index - 3]} - ${tokens[index - 2]}`, 'MMM DD, YYYY - hh:mm A').toDate(),
-                recipient: tokens[index - 1].replace('Paid to', '').replace('Received from', '').replace('Bill paid -', '').trim(),
+                date: dayjs(`${date} - ${time}`, 'MMM DD, YYYY - hh:mm A').toDate(),
+                recipient: recipient.replace('Paid to', '').replace('Received from', '').replace('Bill paid -', '').trim(),
                 transactionId: tokens[index].split(':')[1].trim(),
                 utr: tokens[index + 1].split(':')[1].trim(),
                 bank: meta[tokens[index + 2].trim()]?.Account ?? 'Unknown',
@@ -140,7 +154,7 @@ export const parsePhonePeStatement = async (file: File) => {
             transactions.push(transaction);
         }
     });
-
+    
     return transactions;
 };
 

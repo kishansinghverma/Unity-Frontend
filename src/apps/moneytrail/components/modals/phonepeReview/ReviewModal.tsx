@@ -128,14 +128,14 @@ export const PhonepeReviewModal: FC<{
         date: phonepeEntry.date,
         description: formState.description,
         parties: selectedGroup?.members.map(m => m.id),
-        category: formState.category
+        category: formState.category,
+        phonePeTxnId: phonepeEntry?._id,
+        draftTxnId: selectedDraft?._id,
       };
 
       if (phonepeEntry.type === 'Debit') {
         const debitPayload = {
           shared: selectedGroup?.sharing,
-          phonePeTxnId: phonepeEntry?._id,
-          draftTxnId: selectedDraft?._id,
           details: Object.entries({
             Bank: phonepeEntry.bank ?? StringUtils.empty,
             UTR: phonepeEntry?.utr ?? "N/A",
@@ -335,7 +335,7 @@ export const PhonepeReviewModal: FC<{
                         defaultOptions={groupOptions}
                         isLoading={groups.isLoading}
                         rules={[{ required: true }]}
-                        placeholder="Splitwise"
+                        placeholder="Group"
                         placement="bottomRight"
                         className={`w-52 ${classes.select}`}
                         prefix={<PrefixIcon size={16} strokeWidth={3} icon={PieChart} />}

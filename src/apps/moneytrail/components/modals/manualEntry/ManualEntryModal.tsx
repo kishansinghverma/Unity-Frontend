@@ -267,7 +267,7 @@ export const ManualEntryModal: FC<{
                     defaultOptions={groupOptions}
                     isLoading={groups.isLoading}
                     rules={[{ required: true }]}
-                    placeholder="Splitwise"
+                    placeholder="Group"
                     placement="bottomRight"
                     className={`${classes.select}`}
                     width="100%"
