@@ -1,7 +1,8 @@
 import { ElementType, FC, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { DatePicker, Form, Input, InputNumber, Radio, Space } from 'antd';
-import { X, IndianRupee, Layers2, Pencil, PieChart, Save, CalendarClock, CreditCard, MapPinned, MapPin } from 'lucide-react';
+import { X, IndianRupee, Layers2, Pencil, PieChart, Save, CalendarClock, CreditCard, MapPinned, MapPin, Loader2 } from 'lucide-react';
 import { DefaultOptionType } from 'antd/es/select';
 import { CustomSelect, SelectWithAdd } from '../../Common';
 import { reviewApi, useCategoriesQuery, useDescriptionsQuery, useGroupsQuery } from '../../../store/reviewSlice';
@@ -36,6 +37,7 @@ export const ManualEntryModal: FC<{
   setDraftItem
 }) => {
     const dispatch = useAppDispatch();
+    const [isSaving, setIsSaving] = useState(false);
 
     const descriptions = useDescriptionsQuery();
     const groups = useGroupsQuery();
@@ -134,15 +136,22 @@ export const ManualEntryModal: FC<{
         .then(handleResponse)
         .then(onComplete)
         .catch(handleError)
+        .finally(() => setIsSaving(false));
     }
 
-  const onApprove = () => {
+    const onApprove = () => {
+      setIsSaving(true);
+
       form.validateFields()
         .then(saveTransaction)
-        .catch(() => notify.error({
-          message: "Failed to Save",
-          description: "Provide the required details!"
-        }));
+        .catch(() => {
+          notify.error({
+            message: "Failed to Save",
+            description: "Provide the required details!"
+          });
+
+          setIsSaving(false);
+        });
     };
 
     const onAddDescription = (option: DefaultOptionType) => {
@@ -307,10 +316,15 @@ export const ManualEntryModal: FC<{
             <button
               onClick={onApprove}
               type="submit"
-              className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600"
+              disabled={isSaving}
+              className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600 ${isSaving ? 'opacity-60 cursor-not-allowed' : ''}`}
             >
-              <Save className="w-4 h-4"/>
-              <span>Save</span>
+              {isSaving ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4" />
+              )}
+              <span>{isSaving ? 'Saving...' : 'Save'}</span>
             </button>
             <button
               onClick={onModalClose}
