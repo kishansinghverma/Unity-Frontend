@@ -13,6 +13,7 @@ import HdfcLogo from '../../../../../static/hdfc.svg';
 import SbiLogo from '../../../../../static/sbi.svg';
 import { DraftEntry } from '../../../engine/models/types';
 import { Nullable, WithId } from '../../../../../engine/models/types';
+import dayjs from 'dayjs';
 
 type FormState = {
   amount: number;
@@ -135,7 +136,7 @@ export const ManualEntryModal: FC<{
         .catch(handleError)
     }
 
-    const onApprove = () => {
+  const onApprove = () => {
       form.validateFields()
         .then(saveTransaction)
         .catch(() => notify.error({
@@ -204,16 +205,30 @@ export const ManualEntryModal: FC<{
 
                   <Space.Compact style={{ width: "100%" }}>
                     <PrefixIcon icon={CalendarClock} size={16} strokeWidth={3} />
-                    <Form.Item name="date" noStyle rules={[{ required: true }]}>
+                    <Form.Item name="date" noStyle rules={[{ required: true }]} initialValue={dayjs(draftEntry?.dateTime)}>
                       <DatePicker
                         showTime
                         style={{ width: "100%" }}
                         placeholder="Date"
                         format="DD-MMM-YYYY ↔ hh:mm A"
                         className={`${classes.input}`}
+
                       />
                     </Form.Item>
                   </Space.Compact>
+
+                  <SelectWithAdd
+                    name="description"
+                    defaultOptions={descriptionOptions}
+                    onAddOption={onAddDescription}
+                    isLoading={descriptions.isLoading}
+                    rules={[{ required: true }]}
+                    placeholder="Description"
+                    placement="bottomRight"
+                    className={`${classes.select}`}
+                    width="100%"
+                    prefix={<PrefixIcon icon={Pencil} size={16} strokeWidth={3} />}
+                  />
 
                   <Space.Compact style={{ width: "100%" }}>
                     <PrefixIcon icon={IndianRupee} size={16} strokeWidth={3} />
@@ -235,19 +250,6 @@ export const ManualEntryModal: FC<{
                     className={`${classes.select}`}
                     width="100%"
                     prefix={<PrefixIcon size={16} strokeWidth={3} icon={CreditCard} />}
-                  />
-
-                  <SelectWithAdd
-                    name="description"
-                    defaultOptions={descriptionOptions}
-                    onAddOption={onAddDescription}
-                    isLoading={descriptions.isLoading}
-                    rules={[{ required: true }]}
-                    placeholder="Description"
-                    placement="bottomRight"
-                    className={`${classes.select}`}
-                    width="100%"
-                    prefix={<PrefixIcon icon={Pencil} size={16} strokeWidth={3} />}
                   />
 
                   <CustomSelect
@@ -291,8 +293,8 @@ export const ManualEntryModal: FC<{
                     <Form.Item name="type" noStyle rules={[{ required: true }]}>
                       <Radio.Group
                         options={[
-                          { value: "Credit", label: 'Credit' },
-                          { value: "Debit", label: 'Debit' }
+                          { value: "Debit", label: 'Debit' },
+                          { value: "Credit", label: 'Credit' }
                         ]}
                       />
                     </Form.Item>
@@ -303,19 +305,19 @@ export const ManualEntryModal: FC<{
           </div>
           <div className="flex gap-3 border-t border-gray-200 dark:border-gray-700 px-14 py-6 justify-end">
             <button
+              onClick={onApprove}
+              type="submit"
+              className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600"
+            >
+              <Save className="w-4 h-4"/>
+              <span>Save</span>
+            </button>
+            <button
               onClick={onModalClose}
               className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-gray-600 bg-gray-200 dark:bg-gray-500 hover:bg-gray-300 dark:hover:bg-gray-500 dark:text-gray-200"
             >
               <X className="w-4 h-4" />
               <span>Cancel</span>
-            </button>
-            <button
-              onClick={onApprove}
-              type="submit"
-              className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600"
-            >
-              <Save className="w-4 h-4" />
-              <span>Save</span>
             </button>
           </div>
         </motion.div>

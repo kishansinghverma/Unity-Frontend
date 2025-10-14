@@ -1,5 +1,5 @@
 import { Building2 } from "lucide-react";
-import { useState, useRef, useEffect, FC } from "react";
+import { useState, useRef, useEffect, FC, memo } from "react";
 import { BankEntry } from "../engine/models/types";
 import { Nullable, WithId } from "../../../engine/models/types";
 import { EmptyList, ListHeader, SkeletonItem } from "./Common";
@@ -11,7 +11,7 @@ import { PostParams, Routes } from "../../../engine/constant";
 import { handleError, handleResponse } from "../../../engine/helpers/httpHelper";
 import { notify } from "../../../engine/services/notificationService";
 
-export const BankList: FC<{
+const BankListFC: FC<{
   items: WithId<BankEntry>[];
   isLoading: boolean;
   setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
@@ -102,3 +102,5 @@ export const BankList: FC<{
       </>
     );
   };
+
+export const BankList = memo(BankListFC);
