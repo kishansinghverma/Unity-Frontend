@@ -154,7 +154,7 @@ export const parsePhonePeStatement = async (file: File) => {
             transactions.push(transaction);
         }
     });
-    
+
     return transactions;
 };
 
@@ -193,11 +193,24 @@ export const extractDataFromHtml = async (file: File) => {
     return transactions;
 }
 
+// ICICI Statement Parser
 export const extractDataFromCsv = async (file: File) => {
-    const isValidDate = (value: any) => (value instanceof Date && !isNaN(value.getTime()));
+    const getDate = (value: any) => {
+        const invalidDate = dayjs('invalid');
+        if (StringUtils.isNullOrEmpty(value)) return invalidDate;
+
+        const dateStr = value.trim();
+        const parsedDate = dayjs(dateStr, ['DD/MM/YYYY', 'DD-MMM-YY'], true);
+        if (parsedDate.isValid()) return parsedDate;
+
+        const match = dateStr.match(/^(\d{1,2})[-/.]([A-Za-z]{3})[-/.](\d{2,4})$/);
+        if (!match) return invalidDate;
+
+        return dayjs(new Date(dateStr));
+    }
 
     const csvData = await file.text();
-    const workbook = XLSX.read(csvData, { type: "string", cellDates: true, raw: false });
+    const workbook = XLSX.read(csvData, { type: "string", raw: true });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
@@ -205,20 +218,27 @@ export const extractDataFromCsv = async (file: File) => {
 
     rows.forEach(row => {
         const rowData = row as Array<any>;
-        const date = rowData[0];
+        const parsedDate = getDate(rowData[0]);
         const description = rowData[2];
-        const amount = rowData[5];
+        const amount = rowData[5]?.replaceAll(',', '');
+        const amountSigned = rowData[6]?.replaceAll(',', '');
+        let type: 'Debit' | 'Credit' = 'Debit';
 
-        if (isValidDate(date) && !isNaN(amount) && amount !== 0) {
-            const type = amount < 0 ? "Credit" : "Debit";
+        if (isNaN(parseFloat(amountSigned)))
+            type = StringUtils.isNullOrEmpty(amountSigned) ? 'Debit' : 'Credit';
+        else
+            type = parseFloat(amountSigned) > 0 ? 'Debit' : 'Credit';
+
+        if (parsedDate.isValid() && !isNaN(amount) && amount !== 0) {
+            const date = parsedDate.toDate();
             const amountAbsolute = Math.abs(amount);
 
             transactions.push({
-                date, type,
+                date, type, 
                 bank: "ICICI CC",
                 amount: amountAbsolute,
                 description: `${description}/${getHash(date, amountAbsolute, description)}`
-            })
+            });
         }
     });
 
