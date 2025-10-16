@@ -305,6 +305,7 @@ export const PhonepeReviewModal: FC<{
                           <InputNumber
                             placeholder="Amount"
                             className={`w-32 ${classes.input}`}
+                            onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
                           />
                         </Form.Item>
                       </Space.Compact>
@@ -327,8 +328,10 @@ export const PhonepeReviewModal: FC<{
                         rules={[{ required: true }]}
                         placeholder="Category"
                         placement="bottomRight"
-                        className={`w-40 ${classes.select}`}
+                        className={`w-48 ${classes.select}`}
                         prefix={<PrefixIcon icon={Layers2} size={16} strokeWidth={3} />}
+                        initialValue={phonepeEntry.type === 'Credit' ? 2 : 1}
+                        disabled={phonepeEntry.type === 'Credit'}
                       />
                       <CustomSelect
                         name="group"

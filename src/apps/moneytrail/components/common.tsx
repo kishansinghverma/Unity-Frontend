@@ -104,6 +104,8 @@ export const CustomSelect: FC<{
   placement?: "bottomLeft" | "bottomRight" | "topLeft" | "topRight"
   prefix: React.ReactNode;
   isLoading?: boolean;
+  initialValue?: string | number;
+  disabled?: boolean;
 }> = ({
   defaultOptions,
   placeholder,
@@ -114,6 +116,8 @@ export const CustomSelect: FC<{
   placement,
   isLoading,
   prefix,
+  initialValue,
+  disabled
 }) => {
     const [value, setValue] = useState<any>(null);
 
@@ -123,7 +127,7 @@ export const CustomSelect: FC<{
     return (
       <Space.Compact style={{ width: width }}>
         {prefix}
-        <Form.Item noStyle name={name} rules={rules}>
+        <Form.Item noStyle name={name} rules={rules} initialValue={initialValue}>
           <Select
             style={{ height: 38, width: width }}
             showSearch
@@ -137,6 +141,7 @@ export const CustomSelect: FC<{
             placement={placement}
             loading={isLoading}
             optionFilterProp="title"
+            disabled={disabled}
           />
         </Form.Item>
       </Space.Compact>

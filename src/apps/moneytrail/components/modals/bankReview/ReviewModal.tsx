@@ -330,6 +330,7 @@ export const BankReviewModal: FC<{
                           <InputNumber
                             placeholder="Amount"
                             className={`w-32 ${classes.input}`}
+                            onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
                           />
                         </Form.Item>
                       </Space.Compact>
@@ -352,8 +353,10 @@ export const BankReviewModal: FC<{
                         rules={[{ required: true }]}
                         placeholder="Category"
                         placement="bottomRight"
-                        className={`w-40 ${classes.select}`}
+                        className={`w-48 ${classes.select}`}
                         prefix={<PrefixIcon icon={Layers2} size={16} strokeWidth={3} />}
+                        initialValue={bankEntry.type === 'Credit' ? 2 : 1}
+                        disabled={bankEntry.type === 'Credit'}
                       />
                       <CustomSelect
                         name="group"
