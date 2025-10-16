@@ -326,11 +326,11 @@ export const UploadStatement: React.FC = () => {
   };
 
   const infoData = [
-    'PhonePe Statement :: Download the PDF statement from PhonePe App',
-    'SBI Statement :: Download Excel File from Netbanking',
-    'HDFC Statement :: Download Excel File from App/Netbanking',
-    'SBI CC :: Get <tbody> from Web App as HTML File using VS Code',
-    'ICICI CC :: Get Yearly E-Statement CSV File from WebApp'
+    'PhonePe Statement :: Download the PDF statement from PhonePe App.',
+    'SBI Statement :: Download Excel File from Netbanking.',
+    'HDFC Statement :: Download Excel File from App/Netbanking.',
+    'SBI CC :: Get <tbody> from Web App as HTML File using VS Code.',
+    'ICICI CC :: Get Monthly / Yearly Statement as CSV File from WebApp.'
   ];
 
   const infoList = <List

@@ -229,7 +229,7 @@ export const extractDataFromCsv = async (file: File) => {
         else
             type = parseFloat(amountSigned) > 0 ? 'Debit' : 'Credit';
 
-        if (parsedDate.isValid() && !isNaN(amount) && amount !== 0) {
+        if (parsedDate.isValid() && !isNaN(amount) && parseFloat(amount) !== 0) {
             const date = parsedDate.toDate();
             const amountAbsolute = Math.abs(amount);
 
