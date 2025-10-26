@@ -50,7 +50,7 @@ export const BankReviewModal: FC<{
 
     const bankEntry = bankEntries.find(entry => entry._id === bankItemId)!;
     const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
-    const draftMatches = getDraftMatches(selectedPhonepe, draftEntries);
+    const draftMatches = getDraftMatches(bankEntry, selectedPhonepe, draftEntries);
 
     const [form] = Form.useForm<FormState>();
 

@@ -27,6 +27,10 @@ export const getIconBackground = (bankName: string) => {
         return 'bg-sky-100/80 dark:bg-sky-800/50'
     if (bankName === 'HDFC')
         return 'bg-pink-100 dark:bg-pink-800/40'
+    if (bankName === 'ICICI CC')
+        return 'bg-orange-100 dark:bg-orange-600/30'
+    if (bankName === 'SBI CC')
+        return 'bg-purple-100/80 dark:bg-purple-300/20'
 
     return colorPair[Math.floor(Math.random() * colorPair.length)]
 }
@@ -42,15 +46,20 @@ export const getColorPair = (seed: string) => {
     return colorPair[index];
 };
 
-export const getDraftMatches = (phonePeEntry: Nullable<WithId<PhonepeEntry>>, draftEntries: WithId<DraftEntry>[]) => {
-    const phonePeTimeNormalized = normalizeToMinute(phonePeEntry?.date)
-    const draftEntry = draftEntries.find(t => phonePeTimeNormalized === normalizeToMinute(t.dateTime));
-    if (draftEntry) return [draftEntry];
+export const getDraftMatches = (bankEntry: Nullable<WithId<BankEntry>>, phonePeEntry: Nullable<WithId<PhonepeEntry>>, draftEntries: WithId<DraftEntry>[]) => {
+    if (phonePeEntry?._id) {
+        const phonePeTimeNormalized = normalizeToMinute(phonePeEntry?.date)
+        const draftEntry = draftEntries.find(t => phonePeTimeNormalized === normalizeToMinute(t.dateTime));
+        if (draftEntry) return [draftEntry];
 
-    const delta = (5 * 60 * 1000);
-    const upperDelta = phonePeTimeNormalized + delta;
-    const lowerDelta = phonePeTimeNormalized - delta;
-    return draftEntries.filter(t => normalizeToMinute(t.dateTime) >= lowerDelta && normalizeToMinute(t.dateTime) <= upperDelta);
+        const delta = (5 * 60 * 1000);
+        const upperDelta = phonePeTimeNormalized + delta;
+        const lowerDelta = phonePeTimeNormalized - delta;
+        return draftEntries.filter(t => normalizeToMinute(t.dateTime) >= lowerDelta && normalizeToMinute(t.dateTime) <= upperDelta);
+    }
+    else {
+        return draftEntries.filter(t => dayjs(t.dateTime).isSame(bankEntry?.date, 'day'));
+    }
 }
 
 export const getHash = (date: Date, amount: number, description?: string) => {

@@ -34,14 +34,14 @@ export const BankItem = memo(({ isOpen, onOpen, setProcessed, item, setBankItemI
     const markProcessed = (id: string) => {
         setProcessed(id);
         onOpen(null);
-    }
+    };
 
     const onItemClick = (id: string) => {
         const offset = motionValue.get();
         const epsilon = 2;
         if (Math.abs(offset - 0) > epsilon && Math.abs(offset + 80) > epsilon) return;
         setBankItemId(id);
-    }
+    };
 
     return (
         <>
