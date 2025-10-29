@@ -3,7 +3,6 @@ import { useState, useRef, useEffect, FC, memo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { BankItem } from "./ListItem";
-import { ListHeader } from "./review/header";
 import { BankEntry } from "../engine/models/types";
 import { reviewApi } from "../store/reviewSlice";
 import { EmptyList, SkeletonItem } from "./Common";
@@ -12,6 +11,7 @@ import { Nullable, WithId } from "../../../engine/models/types";
 import { handleResponse } from "../../../engine/helpers/httpHelper";
 import { notify } from "../../../engine/services/notificationService";
 import { Constants, PostParams, Routes } from "../../../engine/constant";
+import { ListHeader } from "./review/Headers";
 
 type BankListProps = {
   items: WithId<BankEntry>[];

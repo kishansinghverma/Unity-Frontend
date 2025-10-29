@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState, useRef, useEffect, FC, memo } from "react";
 
 import { PhonepeItem } from "./ListItem";
-import { ListHeader } from "./review/header";
 import { EmptyList, SkeletonItem } from "./Common";
 import { PhonepeEntry } from "../engine/models/types";
 import { reviewApi } from "../store/reviewSlice";
@@ -12,6 +11,7 @@ import { Nullable, WithId } from "../../../engine/models/types";
 import { PostParams, Routes } from "../../../engine/constant";
 import { handleResponse, handleError } from "../../../engine/helpers/httpHelper";
 import { notify } from "../../../engine/services/notificationService";
+import { ListHeader } from "./review/Headers";
 
 const PhonepeListFC: FC<{
   items: WithId<PhonepeEntry>[];

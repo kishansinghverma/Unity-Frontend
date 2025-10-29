@@ -14,7 +14,7 @@ import { ManualEntryModal } from '../components/modals/manualEntry/ManualEntryMo
 import { UploadStatement } from '../components/Common';
 import { DraftEntry } from '../engine/models/types';
 import { PhonepeReviewModal } from '../components/modals/phonepeReview/ReviewModal';
-import { Header } from '../components/review/header';
+import { Header } from '../components/review/Headers';
 
 const ReviewExpense: React.FC = () => {
   const bankQuery = useBankEntryQuery();
