@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { APPS } from '../../constants/apps';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectCurrentApp, setCurrentApp } from '../../store/slices/appSlice';
-import ThemeToggle from '../ui/ThemeToggle';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -130,8 +129,6 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
             placeholder="Search..."
           />
         </div>
-
-        <ThemeToggle />
         <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
           <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
         </button>

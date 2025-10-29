@@ -1,14 +1,12 @@
 import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import appReducer from './slices/appSlice';
 import customersReducer from './slices/customersSlice';
-import themeReducer from './slices/themeSlice';
 import { moneyTrailReducer } from '../apps/moneytrail/store';
 import { reviewApi } from '../apps/moneytrail/store/reviewSlice';
 
 const combinedReducers = combineSlices(
   { app: appReducer },
   { customer: customersReducer },
-  { theme: themeReducer },
   ...moneyTrailReducer
 )
 

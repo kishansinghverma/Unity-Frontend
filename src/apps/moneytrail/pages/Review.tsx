@@ -15,6 +15,7 @@ import { UploadStatement } from '../components/Common';
 import { DraftEntry } from '../engine/models/types';
 import { PhonepeReviewModal } from '../components/modals/phonepeReview/ReviewModal';
 import { Header } from '../components/review/Headers';
+import { Modal } from 'antd';
 
 const ReviewExpense: React.FC = () => {
   const bankQuery = useBankEntryQuery();
@@ -86,7 +87,7 @@ const ReviewExpense: React.FC = () => {
           </AnimatePresence>
            */}
 
-          {/* <AnimatePresence>
+          <AnimatePresence>
             {(isManualEntryModalVisible || !!draftItem) && (
               <ManualEntryModal
                 key={bankItemId}
@@ -95,9 +96,25 @@ const ReviewExpense: React.FC = () => {
                 setVisible={setManualEntryModalVisible}
               />
             )}
-          </AnimatePresence> */}
+          </AnimatePresence>
+
+          {/* <Modal
+            title="Basic Modal"
+            open={isManualEntryModalVisible}
+            classNames={{
+              mask: 'bg-black/50 backdrop-blur backdrop-saturate-[0.8]',
+              content: 'rounded-xl shadow-2xl dark:shadow-slate-100 w-[550px] max-w-7xl max-h-[90vh] overflow-hidden'
+            }}
+            onCancel={() => setManualEntryModalVisible(false)}
+            maskClosable={true}
+          >
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+          </Modal> */}
+
         </div>
-      </div>
+      </div >
     </>
   );
 };
