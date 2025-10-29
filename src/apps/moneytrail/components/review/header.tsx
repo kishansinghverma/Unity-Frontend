@@ -20,7 +20,6 @@ const HeaderFC: FC<{ setModalVisible: React.Dispatch<React.SetStateAction<boolea
       <div className="flex gap-1">
         <ClockArrowUp size={20} />
         <div> {dayjs(Date.now()).format('hh:mm A')} </div>
-        <div> {Math.random()} </div>
       </div>
     </div>
   </div>
