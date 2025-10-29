@@ -1,10 +1,11 @@
-import { Calendar, CircleCheckBigIcon, Clock } from "lucide-react"
-import { AlphabetIcon, BankIcon } from "./Common"
 import dayjs from "dayjs"
-import React, { FC, memo, useEffect } from "react";
-import { Nullable, WithId } from "../../../engine/models/types";
-import { BankEntry, DraftEntry, PhonepeEntry } from "../engine/models/types";
 import { motion, PanInfo, useMotionValue, animate } from "framer-motion";
+import React, { FC, memo, useEffect } from "react";
+import { Calendar, CircleCheckBigIcon, Clock } from "lucide-react"
+
+import { AlphabetIcon, BankIcon } from "./Common"
+import { BankEntry, DraftEntry, PhonepeEntry } from "../engine/models/types";
+import { Nullable, WithId } from "../../../engine/models/types";
 
 export const BankItem = ({ isOpen, onOpen, setProcessed, item, setBankItemId }: {
     item: WithId<BankEntry>;

@@ -1,16 +1,17 @@
-import { ElementType, FC, useEffect, useRef, useState } from "react";
-import { getColorPair, getIconBackground } from "../engine/utils";
-import { BankLogo } from "./Resources";
 import { CircleArrowUp, ListX } from "lucide-react";
-import { DefaultOptionType } from "antd/es/select";
-import { StringUtils } from "../../../engine/helpers/stringHelper";
 import { Space, Select, Form, Popover, List } from "antd";
+import { ElementType, FC, useEffect, useRef, useState } from "react";
+import { DefaultOptionType } from "antd/es/select";
 import { Rule } from "antd/es/form";
+
+import { BankLogo } from "./Resources";
+import { getColorPair, getIconBackground } from "../engine/utils";
 import { parsePhonePeStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../engine/parser";
-import { PostParams, Routes } from "../../../engine/constant";
+import { StringUtils } from "../../../engine/helpers/stringHelper";
 import { handleJsonResponse } from "../../../engine/helpers/httpHelper";
 import { NotificationMessages, notify } from "../../../engine/services/notificationService";
 import { Nullable } from "../../../engine/models/types";
+import { PostParams, Routes } from "../../../engine/constant";
 
 export const BankIcon: FC<{
   bankName: string
