@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, FC } from "react";
+import { useState, useRef, useEffect, FC, memo } from "react";
 import { PhonepeEntry } from "../engine/models/types";
 import { EmptyList, ListHeader, SkeletonItem } from "./Common";
 import { AnimatePresence, motion } from "framer-motion";
@@ -11,7 +11,7 @@ import { Nullable, WithId } from "../../../engine/models/types";
 import { TabletSmartphone } from "lucide-react";
 import { PhonepeItem } from "./ListItem";
 
-const PhonepeList: FC<{
+const PhonepeListFC: FC<{
   items: WithId<PhonepeEntry>[];
   isLoading: boolean;
   setPhonepeItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
@@ -61,7 +61,6 @@ const PhonepeList: FC<{
           showProcessed,
           setShowProcessed
         }} />
-
         <div className="select-none flex-grow overflow-y-auto">
           <ul>
             {isLoading ?
@@ -100,4 +99,4 @@ const PhonepeList: FC<{
   );
 };
 
-export default PhonepeList;
+export const PhonepeList = memo(PhonepeListFC);

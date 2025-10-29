@@ -6,7 +6,7 @@ import { Nullable, WithId } from "../../../engine/models/types";
 import { BankEntry, DraftEntry, PhonepeEntry } from "../engine/models/types";
 import { motion, PanInfo, useMotionValue, animate } from "framer-motion";
 
-export const BankItem = memo(({ isOpen, onOpen, setProcessed, item, setBankItemId }: {
+export const BankItem = ({ isOpen, onOpen, setProcessed, item, setBankItemId }: {
     item: WithId<BankEntry>;
     isOpen: boolean;
     onOpen: (id: string | null) => void;
@@ -47,6 +47,7 @@ export const BankItem = memo(({ isOpen, onOpen, setProcessed, item, setBankItemI
         <>
             <div className="absolute top-0 right-0 h-full flex items-center">
                 <button
+                    disabled={item.processed}
                     title="Mark Complete"
                     onClick={() => markProcessed(item._id)}
                     className="bg-green-500 text-white h-full w-20 flex items-center justify-center hover:bg-green-600 transition-colors"
@@ -78,7 +79,7 @@ export const BankItem = memo(({ isOpen, onOpen, setProcessed, item, setBankItemI
             </motion.div>
         </>
     );
-});
+};
 
 export const PhonepeItem = memo(({ isOpen, onOpen, setProcessed, item, setPhonepeItemId }: {
     item: WithId<PhonepeEntry>;

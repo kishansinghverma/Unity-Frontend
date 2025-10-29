@@ -1,23 +1,29 @@
-import React, { useState } from 'react';
+
+import dayjs from 'dayjs';
+import React, { memo, useEffect, useState } from 'react';
 import { BankReviewModal } from '../components/modals/bankReview/ReviewModal';
 import { BankList } from '../components/BankList';
 import { AnimatePresence } from 'framer-motion';
 import { Nullable, WithId } from '../../../engine/models/types';
 import { useBankEntryQuery, useDraftEntryQuery, usePhonepeEntryQuery } from '../store/reviewSlice';
 import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
-import PhonepeList from '../components/PhonePeList';
+import { PhonepeList } from '../components/PhonePeList';
 import { DraftList } from '../components/DraftList';
-import dayjs from 'dayjs';
 import { CalendarArrowUp, ClockArrowUp, PlusCircle } from 'lucide-react';
 import { ManualEntryModal } from '../components/modals/manualEntry/ManualEntryModal';
 import { UploadStatement } from '../components/Common';
 import { DraftEntry } from '../engine/models/types';
 import { PhonepeReviewModal } from '../components/modals/phonepeReview/ReviewModal';
+import { Header } from '../components/review/header';
 
 const ReviewExpense: React.FC = () => {
-  const bankEntries = useBankEntryQuery();
-  const phonepeEntries = usePhonepeEntryQuery();
-  const draftEntries = useDraftEntryQuery();
+  const bankQuery = useBankEntryQuery();
+  const phonepeQuery = usePhonepeEntryQuery();
+  const draftQuery = useDraftEntryQuery();
+
+  const bankEntries = getArrayOrDefault(bankQuery).slice(20, 40);
+  const phonepeEntries = getArrayOrDefault(phonepeQuery);
+  const draftEntries = getArrayOrDefault(draftQuery);
 
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
   const [phonepeItemId, setPhonepeItemId] = useState<Nullable<string>>(null);
@@ -25,52 +31,36 @@ const ReviewExpense: React.FC = () => {
 
   const [isManualEntryModalVisible, setManualEntryModalVisible] = useState(false);
 
+  useEffect(() => console.log('Parent'));
+
   return (
     <>
       <div className="px-8">
-        <div className="flex px-4 py-3 mb-6 justify-between items-center text-sm font-medium text-gray-600 dark:text-gray-300 duration-200 rounded-xl bg-white dark:bg-gray-800 shadow-md dark:shadow-none border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-          <div className="flex gap-2">
-            <button onClick={() => setManualEntryModalVisible(true)} className="flex gap-1 hover:text-gray-900 dark:hover:text-white hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-32">
-              <PlusCircle size={20} />
-              <span>Add Expense</span>
-            </button>
-            <UploadStatement />
-          </div>
-          <div className="flex gap-3">
-            <div className="flex gap-1">
-              <CalendarArrowUp size={20} />
-              <div> {dayjs(Date.now()).format('DD-MMM-YYYY')} </div>
-            </div>
-            <div className="flex gap-1">
-              <ClockArrowUp size={20} />
-              <div> {dayjs(Date.now()).format('hh:mm A')} </div>
-            </div>
-          </div>
-        </div>
-
+        <Header setModalVisible={setManualEntryModalVisible} />
         <div className="flex flex-row justify-between">
           <div className="w-full min-w-0">
             <BankList
-              items={getArrayOrDefault(bankEntries)}
-              isLoading={bankEntries.isLoading}
+              items={bankEntries}
+              isLoading={bankQuery.isLoading}
               setBankItemId={setBankItemId}
             />
           </div>
-          <div className="w-full px-10 min-w-0">
+          {/* <div className="w-full px-10 min-w-0">
             <PhonepeList
-              items={getArrayOrDefault(phonepeEntries)}
-              isLoading={phonepeEntries.isLoading}
+              items={phonepeEntries}
+              isLoading={phonepeQuery.isLoading}
               setPhonepeItemId={setPhonepeItemId}
             />
           </div>
           <div className="w-full min-w-0">
             <DraftList
-              items={getArrayOrDefault(draftEntries)}
-              isLoading={draftEntries.isLoading}
+              items={draftEntries}
+              isLoading={draftQuery.isLoading}
               setDraftItem={setDraftItem}
             />
-          </div>
-          <AnimatePresence>
+          </div> */}
+
+          {/* <AnimatePresence>
             {bankItemId && (
               <BankReviewModal
                 key={bankItemId}
@@ -94,8 +84,9 @@ const ReviewExpense: React.FC = () => {
               />
             )}
           </AnimatePresence>
+           */}
 
-          <AnimatePresence>
+          {/* <AnimatePresence>
             {(isManualEntryModalVisible || !!draftItem) && (
               <ManualEntryModal
                 key={bankItemId}
@@ -104,7 +95,7 @@ const ReviewExpense: React.FC = () => {
                 setVisible={setManualEntryModalVisible}
               />
             )}
-          </AnimatePresence>
+          </AnimatePresence> */}
         </div>
       </div>
     </>

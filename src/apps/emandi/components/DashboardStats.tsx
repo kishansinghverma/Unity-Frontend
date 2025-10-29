@@ -1,6 +1,5 @@
 import React from 'react';
 import { UserSquare, ClipboardList, ClipboardCheck, DollarSign } from 'lucide-react';
-import Card from '../../../components/ui/Card';
 
 interface StatCardProps {
   title: string;

@@ -1,7 +1,7 @@
 import { ElementType, FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Form, InputNumber, Space } from 'antd';
-import { X, CreditCard, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Smartphone } from 'lucide-react';
+import { X, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Smartphone } from 'lucide-react';
 import TransactionCard from './TransactionCard';
 import { Nullable, WithId } from '../../../../../engine/models/types';
 import { DraftEntry, PhonepeEntry } from '../../../engine/models/types';
@@ -45,7 +45,7 @@ export const PhonepeReviewModal: FC<{
     const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
 
     const phonepeEntry = phonepeEntries.find(entry => entry._id === phonepeItemId)!;
-    const draftMatches = getDraftMatches(phonepeEntry, draftEntries);
+    const draftMatches = getDraftMatches(null, phonepeEntry, draftEntries);
 
     const [form] = Form.useForm<FormState>();
 

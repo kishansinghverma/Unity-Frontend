@@ -55,3 +55,13 @@ export const PatchParams = {
 export const DeleteParams = {
     method: 'DELETE'
 }
+
+export const Constants = {
+    Notifications: {
+        Request: {
+            pending: 'Sending Request',
+            success: 'Request Completed',
+            error: 'Request Failed'
+        }
+    }
+};

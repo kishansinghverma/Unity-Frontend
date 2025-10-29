@@ -2,7 +2,7 @@ import { ElementType, FC, useEffect } from 'react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { DatePicker, Form, Input, InputNumber, Radio, Space } from 'antd';
-import { X, IndianRupee, Layers2, Pencil, PieChart, Save, CalendarClock, CreditCard, MapPinned, MapPin, Loader2 } from 'lucide-react';
+import { X, IndianRupee, Layers2, Pencil, PieChart, Save, CalendarClock, CreditCard, MapPin, Loader2 } from 'lucide-react';
 import { DefaultOptionType } from 'antd/es/select';
 import { CustomSelect, SelectWithAdd } from '../../Common';
 import { reviewApi, useCategoriesQuery, useDescriptionsQuery, useGroupsQuery } from '../../../store/reviewSlice';
@@ -14,12 +14,12 @@ import { DraftEntry } from '../../../engine/models/types';
 import { Nullable, WithId } from '../../../../../engine/models/types';
 import dayjs from 'dayjs';
 
-import HdfcLogo from '../../../../../static/hdfc.svg';
-import SbiLogo from '../../../../../static/sbi.svg';
-import CashLogo from '../../../../../static/cash.svg';
-import ICICILogo from '../../../../../static/icici.svg';
-import SBICCLogo from '../../../../../static/sbicc.svg';
-import OtherPayLogo from '../../../../../static/otherpay.svg';
+import HdfcLogo from '../../../../../static/icons/hdfc.svg';
+import SbiLogo from '../../../../../static/icons/sbi.svg';
+import CashLogo from '../../../../../static/icons/cash.svg';
+import ICICILogo from '../../../../../static/icons/icici.svg';
+import SBICCLogo from '../../../../../static/icons/sbicc.svg';
+import OtherPayLogo from '../../../../../static/icons/otherpay.svg';
 
 type FormState = {
   amount: number;
@@ -349,4 +349,4 @@ const PrefixIcon: FC<{ size: number, strokeWidth: number, icon: ElementType }> =
   <span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 dark:border-[#424242] bg-gray-50 dark:bg-[#FFFFFF0A] text-gray-500 dark:text-gray-300">
     <Icon size={size} strokeWidth={strokeWidth} />
   </span>
-)
+);

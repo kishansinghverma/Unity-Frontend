@@ -9,7 +9,8 @@ import { Rule } from "antd/es/form";
 import { parsePhonePeStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../engine/parser";
 import { PostParams, Routes } from "../../../engine/constant";
 import { handleJsonResponse } from "../../../engine/helpers/httpHelper";
-import { notify } from "../../../engine/services/notificationService";
+import { NotificationMessages, notify } from "../../../engine/services/notificationService";
+import { Nullable } from "../../../engine/models/types";
 
 export const BankIcon: FC<{
   bankName: string
@@ -22,7 +23,7 @@ export const BankIcon: FC<{
 export const AlphabetIcon: FC<{
   firstLetter: string
   seed: string;
-  overrideStyle?: string;
+  overrideStyle?: Nullable<string>;
 }> = ({ firstLetter, seed, overrideStyle }) => (
   <div className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg ${overrideStyle ?? getColorPair(seed)}`}>
     <span className={`text-lg sm:text-xl font-bold`}>
@@ -30,45 +31,6 @@ export const AlphabetIcon: FC<{
     </span>
   </div>
 );
-
-export const ListHeader: FC<{
-  title: string;
-  subtitle: string;
-  Icon: ElementType;
-  headerBackground: { to: string, from: string };
-  showProcessed: boolean;
-  setShowProcessed: React.Dispatch<React.SetStateAction<boolean>>
-}> = ({
-  title, subtitle, Icon, headerBackground, showProcessed, setShowProcessed
-}) => (
-    <header className={`bg-gradient-to-r ${headerBackground.from} ${headerBackground.to} px-6 py-4 flex-shrink-0`}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center justify-start gap-4">
-          <div className="bg-white/20 p-3 rounded-lg">
-            <Icon size={28} className="text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-white">{title}</h1>
-            <p className="text-slate-100 text-sm">{subtitle}</p>
-          </div>
-        </div>
-        <div className="relative group">
-          <button
-            type="button"
-            onClick={() => setShowProcessed(flag => !flag)}
-            className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 focus:ring-white ${showProcessed ? 'bg-green-500/90' : 'bg-white/30'}`}
-            role="switch"
-            aria-checked={showProcessed}
-          >
-            <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 ease-in-out ${showProcessed ? 'translate-x-6' : 'translate-x-1'}`} />
-          </button>
-          <div className="absolute top-8 right-0 w-max bg-gray-900 text-white dark:bg-gray-200 dark:text-black text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-            Show Processed
-          </div>
-        </div>
-      </div>
-    </header>
-  )
 
 export const EmptyList: FC = () => (
   <div className="text-center py-12 px-6 flex flex-col items-center justify-center h-full">
@@ -288,36 +250,38 @@ export const UploadStatement: React.FC = () => {
 
     if (!file) return;
 
+    const notificationMessages: NotificationMessages = {
+      pending: 'Uploading Document',
+      success: 'Upload Success',
+      error: 'Upload Failed'
+    }
+
     if (file.type === 'application/pdf') {
       const response = parsePhonePeStatement(file).then(uploadPhonePeStatement)
-      notify.promise(response, {
-        pending: { message: "Uploading Document", description: "Uploading PhonePe Statement..." },
-        success: { message: "Upload Success", render: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} PhonePe Records.`) },
-        error: { message: "Upload Failed" }
+      notify.promise(response, notificationMessages, {
+        pending: 'Uploading PhonePe Statement...',
+        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} PhonePe Records.`)
       });
     }
     else if (file.type === 'application/vnd.ms-excel') {
       const response = extractDataFromExcel(file).then(uploadBankStatement);
-      notify.promise(response, {
-        pending: { message: "Uploading Document", description: "Uploading Excel Sheet..." },
-        success: { message: "Upload Success", render: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`) },
-        error: { message: "Upload Failed" }
+      notify.promise(response, notificationMessages, {
+        pending: 'Uploading Excel Sheet...',
+        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`)
       });
     }
     else if (file.type === 'text/html') {
       const response = extractDataFromHtml(file).then(uploadBankStatement);
-      notify.promise(response, {
-        pending: { message: "Uploading Document", description: "Uploading SBI Credit Card Statement..." },
-        success: { message: "Upload Success", render: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`) },
-        error: { message: "Upload Failed" }
+      notify.promise(response, notificationMessages, {
+        pending: 'Uploading SBI Credit Card Statement...',
+        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`),
       });
     }
     else if (file.type === 'text/csv') {
       const response = extractDataFromCsv(file).then(uploadBankStatement);
-      notify.promise(response, {
-        pending: { message: "Uploading Document", description: "Uploading ICICI Credit Card Statement..." },
-        success: { message: "Upload Success", render: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`) },
-        error: { message: "Upload Failed" }
+      notify.promise(response, notificationMessages, {
+        pending: 'Uploading ICICI Credit Card Statement...',
+        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`),
       });
     }
     else {
