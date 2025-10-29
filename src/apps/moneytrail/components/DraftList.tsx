@@ -2,7 +2,7 @@ import { FileSearch } from "lucide-react";
 import { useState, useRef, useEffect, FC, memo } from "react";
 import { DraftEntry } from "../engine/models/types";
 import { Nullable, WithId } from "../../../engine/models/types";
-import { EmptyList, ListHeader, SkeletonItem } from "./Common";
+import { EmptyList, SkeletonItem } from "./Common";
 import { AnimatePresence, motion } from "framer-motion";
 import { PostParams, Routes } from "../../../engine/constant";
 import { handleResponse, handleError } from "../../../engine/helpers/httpHelper";
@@ -10,6 +10,7 @@ import { notify } from "../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../store/hooks";
 import { reviewApi } from "../store/reviewSlice";
 import { DraftItem } from "./ListItem";
+import { ListHeader } from "./review/header";
 
 const DraftListFC: FC<{
   items: WithId<DraftEntry>[];
@@ -60,7 +61,7 @@ const DraftListFC: FC<{
           title: "Draft Logs",
           subtitle: "Metadata for identification",
           Icon: FileSearch,
-          headerBackground: { from: 'from-orange-500', to: 'to-yellow-500' },
+          className: 'from-orange-500 to-yellow-500',
           showProcessed,
           setShowProcessed
         }} />

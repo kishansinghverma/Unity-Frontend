@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, FC, memo } from "react";
 import { PhonepeEntry } from "../engine/models/types";
-import { EmptyList, ListHeader, SkeletonItem } from "./Common";
+import { EmptyList, SkeletonItem } from "./Common";
 import { AnimatePresence, motion } from "framer-motion";
 import { PostParams, Routes } from "../../../engine/constant";
 import { handleResponse, handleError } from "../../../engine/helpers/httpHelper";
@@ -10,6 +10,7 @@ import { reviewApi } from "../store/reviewSlice";
 import { Nullable, WithId } from "../../../engine/models/types";
 import { TabletSmartphone } from "lucide-react";
 import { PhonepeItem } from "./ListItem";
+import { ListHeader } from "./review/header";
 
 const PhonepeListFC: FC<{
   items: WithId<PhonepeEntry>[];
@@ -57,7 +58,7 @@ const PhonepeListFC: FC<{
           title: "PhonePe Records",
           subtitle: "PhonePe transaction records",
           Icon: TabletSmartphone,
-          headerBackground: { from: 'from-green-500', to: 'to-emerald-600' },
+          className: 'from-green-500 to-emerald-600',
           showProcessed,
           setShowProcessed
         }} />
