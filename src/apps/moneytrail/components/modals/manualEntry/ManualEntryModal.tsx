@@ -176,7 +176,7 @@ export const ManualEntryModal: FC<{
       return () => document.removeEventListener('keydown', handleKeyDown);
     }, []);
 
-    return (
+  return (
       <motion.div
         onClick={onModalClose}
         className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur backdrop-saturate-[0.8]"
@@ -259,6 +259,8 @@ export const ManualEntryModal: FC<{
                   <CustomSelect
                     name="source"
                     defaultOptions={sourceOptions}
+                    initialValue={"HDFC"}
+                    disabled={true}
                     rules={[{ required: true }]}
                     placeholder="Source"
                     placement="bottomRight"
@@ -345,7 +347,7 @@ export const ManualEntryModal: FC<{
     );
   }
 
-const PrefixIcon: FC<{ size: number, strokeWidth: number, icon: ElementType }> = ({ size, strokeWidth, icon: Icon }) => (
+export const PrefixIcon: FC<{ size: number, strokeWidth: number, icon: ElementType }> = ({ size, strokeWidth, icon: Icon }) => (
   <span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 dark:border-[#424242] bg-gray-50 dark:bg-[#FFFFFF0A] text-gray-500 dark:text-gray-300">
     <Icon size={size} strokeWidth={strokeWidth} />
   </span>

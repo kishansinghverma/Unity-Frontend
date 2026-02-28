@@ -250,7 +250,7 @@ export const UploadStatement: React.FC = () => {
     event.target.value = StringUtils.empty;
 
     if (!file) return;
-
+    
     const notificationMessages: NotificationMessages = {
       pending: 'Uploading Document',
       success: 'Upload Success',
@@ -264,7 +264,7 @@ export const UploadStatement: React.FC = () => {
         success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} PhonePe Records.`)
       });
     }
-    else if (file.type === 'application/vnd.ms-excel') {
+    else if (file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       const response = extractDataFromExcel(file).then(uploadBankStatement);
       notify.promise(response, notificationMessages, {
         pending: 'Uploading Excel Sheet...',
@@ -292,7 +292,7 @@ export const UploadStatement: React.FC = () => {
 
   const infoData = [
     'PhonePe Statement :: Download the PDF statement from PhonePe App.',
-    'SBI Statement :: Download Excel File from Netbanking.',
+    'SBI Statement :: Download Excel File from App/Netbanking.',
     'HDFC Statement :: Download Excel File from App/Netbanking.',
     'SBI CC :: Get <tbody> from Web App as HTML File using VS Code.',
     'ICICI CC :: Get Monthly / Yearly Statement as CSV File from WebApp.'

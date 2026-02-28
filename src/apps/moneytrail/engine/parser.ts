@@ -82,12 +82,13 @@ const parseSbiStatement = (sheet: XLSX.WorkSheet) => {
 
     for (let row = range.s.r + 1; row <= range.e.r + 1; row++) {
         const cellAddress = `A${row}`;
-        if (isFloat(getNumberAt(sheet, cellAddress) ?? 0)) {
-            const parsedDate = XLSX.SSF.parse_date_code(getNumberAt(sheet, cellAddress));
-            const date = new Date(parsedDate.y, parsedDate.m - 1, parsedDate.d);
-            const description = getStringAt(sheet, `C${row}`) ?? '** UNIDENTIFIED **';
-            const debit = getNumberAt(sheet, `E${row}`);
-            const credit = getNumberAt(sheet, `F${row}`)
+        const txnDate = dayjs(getStringAt(sheet, cellAddress), "DD/MM/YYYY", true);
+
+        if (txnDate.isValid()) {
+            const date = txnDate.toDate();
+            const description = getStringAt(sheet, `B${row}`)?.replace('\n ', '').replace(/\s+/g, " ").replace('AT 11649 SAHPAU (DISTT HATHRAS)', '') ?? '** UNIDENTIFIED **';
+            const debit = getNumberAt(sheet, `D${row}`);
+            const credit = getNumberAt(sheet, `E${row}`)
             const type = debit === null ? 'Credit' : 'Debit';
             const amount = credit ?? debit ?? 0;
             transactions.push({ date, description, amount, type, bank: 'SBI' })
@@ -109,7 +110,7 @@ export const extractDataFromExcel = async (file: File) => {
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
     if (getStringAt(sheet, 'A1')?.includes('HDFC BANK')) return parseHdfcStatement(sheet);
-    else if (getStringAt(sheet, 'B8')?.includes('SBNCHQ-GEN')) return parseSbiStatement(sheet);
+    else if (getStringAt(sheet, 'B2')?.includes('State Bank of India')) return parseSbiStatement(sheet);
     else throw Error("Unsupported Excel File Provided.")
 }
 

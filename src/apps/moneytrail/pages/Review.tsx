@@ -1,6 +1,5 @@
 
-import dayjs from 'dayjs';
-import React, { memo, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BankReviewModal } from '../components/modals/bankReview/ReviewModal';
 import { BankList } from '../components/BankList';
 import { AnimatePresence } from 'framer-motion';
@@ -9,20 +8,18 @@ import { useBankEntryQuery, useDraftEntryQuery, usePhonepeEntryQuery } from '../
 import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
 import { PhonepeList } from '../components/PhonePeList';
 import { DraftList } from '../components/DraftList';
-import { CalendarArrowUp, ClockArrowUp, PlusCircle } from 'lucide-react';
-import { ManualEntryModal } from '../components/modals/manualEntry/ManualEntryModal';
-import { UploadStatement } from '../components/Common';
+import {  ManualEntryModal } from '../components/modals/manualEntry/ManualEntryModal';
 import { DraftEntry } from '../engine/models/types';
 import { PhonepeReviewModal } from '../components/modals/phonepeReview/ReviewModal';
 import { Header } from '../components/review/Headers';
-import { Modal } from 'antd';
+import { } from '../components/modals/manualEntry/Modal';
 
 const ReviewExpense: React.FC = () => {
   const bankQuery = useBankEntryQuery();
   const phonepeQuery = usePhonepeEntryQuery();
   const draftQuery = useDraftEntryQuery();
 
-  const bankEntries = getArrayOrDefault(bankQuery).slice(20, 40);
+  const bankEntries = getArrayOrDefault(bankQuery);
   const phonepeEntries = getArrayOrDefault(phonepeQuery);
   const draftEntries = getArrayOrDefault(draftQuery);
 
@@ -46,12 +43,12 @@ const ReviewExpense: React.FC = () => {
               setBankItemId={setBankItemId}
             />
           </div>
-          {/* <div className="w-full px-10 min-w-0">
+          <div className="w-full px-10 min-w-0">
             <PhonepeList
               items={phonepeEntries}
               isLoading={phonepeQuery.isLoading}
               setPhonepeItemId={setPhonepeItemId}
-            />
+            /> 
           </div>
           <div className="w-full min-w-0">
             <DraftList
@@ -59,15 +56,15 @@ const ReviewExpense: React.FC = () => {
               isLoading={draftQuery.isLoading}
               setDraftItem={setDraftItem}
             />
-          </div> */}
+          </div>
 
-          {/* <AnimatePresence>
+          <AnimatePresence>
             {bankItemId && (
               <BankReviewModal
                 key={bankItemId}
-                bankEntries={getArrayOrDefault(bankEntries)}
-                phonepeEntries={getArrayOrDefault(phonepeEntries)}
-                draftEntries={getArrayOrDefault(draftEntries)}
+                bankEntries={bankEntries}
+                phonepeEntries={phonepeEntries}
+                draftEntries={draftEntries}
                 bankItemId={bankItemId}
                 setBankItemId={setBankItemId}
               />
@@ -78,15 +75,14 @@ const ReviewExpense: React.FC = () => {
             {(phonepeItemId) && (
               <PhonepeReviewModal
                 key={phonepeItemId}
-                phonepeEntries={getArrayOrDefault(phonepeEntries)}
-                draftEntries={getArrayOrDefault(draftEntries)}
+                phonepeEntries={phonepeEntries}
+                draftEntries={draftEntries}
                 phonepeItemId={phonepeItemId}
                 setPhonepeItemId={setPhonepeItemId}
               />
             )}
           </AnimatePresence>
-           */}
-
+          
           <AnimatePresence>
             {(isManualEntryModalVisible || !!draftItem) && (
               <ManualEntryModal
@@ -97,22 +93,6 @@ const ReviewExpense: React.FC = () => {
               />
             )}
           </AnimatePresence>
-
-          {/* <Modal
-            title="Basic Modal"
-            open={isManualEntryModalVisible}
-            classNames={{
-              mask: 'bg-black/50 backdrop-blur backdrop-saturate-[0.8]',
-              content: 'rounded-xl shadow-2xl dark:shadow-slate-100 w-[550px] max-w-7xl max-h-[90vh] overflow-hidden'
-            }}
-            onCancel={() => setManualEntryModalVisible(false)}
-            maskClosable={true}
-          >
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-          </Modal> */}
-
         </div>
       </div >
     </>
