@@ -24,7 +24,7 @@ interface BankTheme {
 
 const TransactionCard: React.FC<WithId<PhonepeEntry>> = (phonepeEntry) => {
   const isDebit: boolean = phonepeEntry.type === 'Debit';
-  
+
   // Common styling for the new tags
   const tagBaseStyle = "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border";
 
@@ -73,6 +73,8 @@ const TransactionCard: React.FC<WithId<PhonepeEntry>> = (phonepeEntry) => {
               <div className="flex items-center space-x-2 mb-2 text-slate-800 dark:text-slate-100">
                 <Calendar className="w-4 h-4 flex-shrink-0" />
                 <div className="font-medium text-sm">{dayjs(phonepeEntry.date).format('dddd, DD MMM, YYYY')}</div>
+                <Clock className="w-4 h-4 flex-shrink-0" />
+                <div className="font-medium text-sm">{dayjs(phonepeEntry.date).format('hh:mm A')}</div>
               </div>
               <div className="flex items-start space-x-2 text-slate-500 dark:text-slate-400">
                 <FileText className="w-4 h-4 flex-shrink-0 mt-0.5" />

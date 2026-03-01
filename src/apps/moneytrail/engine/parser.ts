@@ -36,15 +36,20 @@ const TransactionMetaData: { [key: string]: { Account: string, Type: string } } 
     "Debited from XXXX38": { Account: "SBI CC", Type: "Debit" },
     "Debited from XX1133": { Account: "IOB", Type: "Debit" },
     "Credited to XX1133": { Account: "IOB", Type: "Credit" },
-    "Credited to Account": { Account: "Other", Type: "Credit" }
+    "Credited to Account": { Account: "Other", Type: "Credit" },
+    "UPI Lite": { Account: "UPI Lite", Type: "Paytm" },
+    "HDFC Bank - 41": { Account: "HDFC", Type: "Paytm" },
+    "SBI Rupay Credit Card - 38": { Account: "SBI CC", Type: "Paytm" },
+    "State Bank Of India - 26": { Account: "SBI", Type: "Paytm" },
 }
 
 const isFloat = (number: number) => Number(number) === number && number % 1 !== 0;
 
 const getNumberAt = (sheet: XLSX.WorkSheet, cellAddress: string): number | null => {
     const data = sheet[cellAddress]?.v;
-    if (data === undefined || data === null) return null;
-    return isNaN(parseFloat(data)) ? null : parseFloat(data);
+    if (data === undefined || data === null || StringUtils.isNullOrEmpty(data)) return null;
+    const value = data.replace(',', '');
+    return isNaN(parseFloat(value)) ? null : parseFloat(value);
 };
 
 const getStringAt = (sheet: XLSX.WorkSheet, cellAddress: string): string | null => {
@@ -75,6 +80,35 @@ const parseHdfcStatement = (sheet: XLSX.WorkSheet) => {
     return transactions;
 }
 
+const parsePaytmStatement = (sheet: XLSX.WorkSheet) => {
+    const transactions: Array<PhonePeEntry> = [];
+    const range = XLSX.utils.decode_range(sheet["!ref"] || "");
+    if (!range) throw new Error('Empty Worksheet Found!');
+    const meta = TransactionMetaData;
+
+    for (let row = range.s.r + 1; row <= range.e.r + 1; row++) {
+        const dateVal = getStringAt(sheet, `A${row}`);
+        const timeVal = getStringAt(sheet, `B${row}`);
+        const txnDate = dayjs(dateVal, "DD/MM/YYYY", true);
+
+        console.log(getNumberAt(sheet, `F${row}`) ?? 0);
+
+        if (txnDate.isValid()) {
+            const date = dayjs(`${dateVal} - ${timeVal}`, 'DD/MM/YYYY - HH:mm:ss').toDate();
+            const recipient = getStringAt(sheet, `C${row}`)?.replace('Paid to', '').replace('Received from', '').replace('Recharge of', '').trim() ?? '** UNIDENTIFIED **';
+            const amount = getNumberAt(sheet, `F${row}`) ?? 0;
+            const transactionId = `${getHash(date, amount ?? 0, recipient)}`;
+            const utr = `${getStringAt(sheet, `D${row}`)}/${transactionId}`;
+            const bank = meta[getStringAt(sheet, `E${row}`) ?? StringUtils.empty]?.Account ?? 'Unknown';
+            const type = recipient === 'Automatic Add Money for UPI Lite' ? 'Debit' : amount > 0 ? 'Credit' : 'Debit';
+
+            transactions.push({ date, recipient: `Paytm - ${recipient}`, transactionId, utr, bank, type, amount: Math.abs(amount) });
+        }
+    }
+
+    return transactions;
+}
+
 const parseSbiStatement = (sheet: XLSX.WorkSheet) => {
     const transactions: Array<BankEntry> = [];
     const range = XLSX.utils.decode_range(sheet["!ref"] || "");
@@ -86,7 +120,7 @@ const parseSbiStatement = (sheet: XLSX.WorkSheet) => {
 
         if (txnDate.isValid()) {
             const date = txnDate.toDate();
-            const description = getStringAt(sheet, `B${row}`)?.replace('\n ', '').replace(/\s+/g, " ").replace('AT 11649 SAHPAU (DISTT HATHRAS)', '') ?? '** UNIDENTIFIED **';
+            const description = getStringAt(sheet, `B${row}`)?.replace('\n ', '').replace(/\s+/g, " ").replace('AT 11649 SAHPAU (DISTT HATHRAS)', '').trim() ?? '** UNIDENTIFIED **';
             const debit = getNumberAt(sheet, `D${row}`);
             const credit = getNumberAt(sheet, `E${row}`)
             const type = debit === null ? 'Credit' : 'Debit';
@@ -111,6 +145,7 @@ export const extractDataFromExcel = async (file: File) => {
 
     if (getStringAt(sheet, 'A1')?.includes('HDFC BANK')) return parseHdfcStatement(sheet);
     else if (getStringAt(sheet, 'B2')?.includes('State Bank of India')) return parseSbiStatement(sheet);
+    else if (getStringAt(sheet, 'A9')?.includes('Paytm Statement')) return parsePaytmStatement(workbook.Sheets[workbook.SheetNames[1]]);
     else throw Error("Unsupported Excel File Provided.")
 }
 
@@ -144,7 +179,7 @@ export const parsePhonePeStatement = async (file: File) => {
 
             const transaction = {
                 date: dayjs(`${date} - ${time}`, 'MMM DD, YYYY - hh:mm A').toDate(),
-                recipient: recipient.replace('Paid to', '').replace('Received from', '').replace('Bill paid -', '').trim(),
+                recipient: `Phonepe - ${recipient.replace('Paid to', '').replace('Received from', '').replace('Bill paid -', '').trim()}`,
                 transactionId: tokens[index].split(':')[1].trim(),
                 utr: tokens[index + 1].split(':')[1].trim(),
                 bank: meta[tokens[index + 2].trim()]?.Account ?? 'Unknown',
@@ -159,6 +194,7 @@ export const parsePhonePeStatement = async (file: File) => {
     return transactions;
 };
 
+// SBI CC Statement Parser
 export const extractDataFromHtml = async (file: File) => {
     const tableContents = await file.text();
     const htmlContents = `<table>${tableContents}</table>`;
@@ -194,7 +230,7 @@ export const extractDataFromHtml = async (file: File) => {
     return transactions;
 }
 
-// ICICI Statement Parser
+// ICICI CC Statement Parser
 export const extractDataFromCsv = async (file: File) => {
     const getDate = (value: any) => {
         const invalidDate = dayjs('invalid');
@@ -235,7 +271,7 @@ export const extractDataFromCsv = async (file: File) => {
             const amountAbsolute = Math.abs(amount);
 
             transactions.push({
-                date, type, 
+                date, type,
                 bank: "ICICI CC",
                 amount: amountAbsolute,
                 description: `${description}/${getHash(date, amountAbsolute, description)}`

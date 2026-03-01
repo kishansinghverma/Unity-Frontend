@@ -250,7 +250,7 @@ export const UploadStatement: React.FC = () => {
     event.target.value = StringUtils.empty;
 
     if (!file) return;
-    
+
     const notificationMessages: NotificationMessages = {
       pending: 'Uploading Document',
       success: 'Upload Success',
@@ -265,7 +265,10 @@ export const UploadStatement: React.FC = () => {
       });
     }
     else if (file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      const response = extractDataFromExcel(file).then(uploadBankStatement);
+      const response = extractDataFromExcel(file).then(res => {
+        return (res.length > 0 && 'transactionId' in res[0]) ?
+          uploadPhonePeStatement(res as PhonePeEntry[]) : uploadBankStatement(res as BankEntry[]);
+      });
       notify.promise(response, notificationMessages, {
         pending: 'Uploading Excel Sheet...',
         success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`)
