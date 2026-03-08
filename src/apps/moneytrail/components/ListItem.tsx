@@ -6,6 +6,7 @@ import { Calendar, CircleCheckBigIcon, Clock } from "lucide-react"
 import { AlphabetIcon, BankIcon } from "./Common"
 import { BankEntry, DraftEntry, PhonepeEntry } from "../engine/models/types";
 import { Nullable, WithId } from "../../../engine/models/types";
+import { StringUtils } from "../../../engine/helpers/stringHelper";
 
 export const BankItem = ({ isOpen, onOpen, setProcessed, item, setBankItemId }: {
     item: WithId<BankEntry>;
@@ -62,15 +63,15 @@ export const BankItem = ({ isOpen, onOpen, setProcessed, item, setBankItemId }: 
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={handleDragEnd}
                 onClick={() => onItemClick(item._id)}
-                className="relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                className="relative z-10 bg-white text-sm font-semibold dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
             >
                 <div className="flex items-center flex-shrink-0"> <BankIcon bankName={item.bank} /></div>
                 <div className="flex-grow pr-6 pl-4 min-w-4">
-                    <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all capitalize">{item.description}</h3>
+                    <h3 className="text-gray-800 dark:text-gray-200 line-clamp-2 break-all capitalize">{item.description}</h3>
                 </div>
                 <div className="text-right min-w-fit">
-                    <p className={`font-semibold ${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</p>
-                    <div className="text-sm flex justify-end font-semibold text-gray-400 dark:text-gray-400">
+                    <p className={`${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</p>
+                    <div className="flex justify-end text-gray-400 dark:text-gray-400">
                         <div className="flex items-center">
                             <div className="mr-1"><Calendar width={16} height={16} strokeWidth={2.5} /></div>
                             <div>{dayjs(item.date).format('DD MMM')}</div>
@@ -136,18 +137,16 @@ export const PhonepeItem = memo(({ isOpen, onOpen, setProcessed, item, setPhonep
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={handleDragEnd}
                 onClick={() => onItemClick(item._id)}
-                className="relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                className="relative z-10 bg-white text-sm font-semibold dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
             >
                 <div className="flex items-center flex-shrink-0">
                     <BankIcon bankName={item.bank} />
                 </div>
-                <div className="flex-grow pr-6 pl-4 min-w-4">
-                    <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all capitalize">{item.recipient}</h3>
-                </div>
-                <div className="text-right min-w-fit">
-                    <p className={`font-semibold ${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</p>
-                    <div className="text-sm flex justify-end font-semibold text-gray-400 dark:text-gray-300">
-                        <div className="flex items-center">
+                <div className="flex-grow pl-4 min-w-4">
+                    <div className="text-gray-800 dark:text-gray-200 line-clamp-1 break-all capitalize">{item.recipient}</div>
+                    <div className="flex justify-between">
+                        <div className={`flex items-center ${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</div>
+                        <div className="flex items-center text-gray-400">
                             <div className="mr-1"><Calendar width={16} height={16} strokeWidth={2.5} /></div>
                             <div>{dayjs(item.date).format('DD MMM')}</div>
                             <div className="m-1"><Clock width={16} height={16} strokeWidth={2.5} /></div>
@@ -155,7 +154,18 @@ export const PhonepeItem = memo(({ isOpen, onOpen, setProcessed, item, setPhonep
                         </div>
                     </div>
                 </div>
-            </motion.div>
+                {/* <div className="text-right min-w-fit">
+                    
+                    <div className="flex justify-end text-gray-400 dark:text-gray-300">
+                        <div className="flex items-center">
+                            <div className="mr-1"><Calendar width={16} height={16} strokeWidth={2.5} /></div>
+                            <div>{dayjs(item.date).format('DD MMM')}</div>
+                            <div className="m-1"><Clock width={16} height={16} strokeWidth={2.5} /></div>
+                            <div>{dayjs(item.date).format('hh:mm A')}</div>
+                        </div>
+                    </div>
+                </div> */}
+            </motion.div >
         </>
     );
 });
@@ -169,6 +179,7 @@ export const DraftItem = memo(({ isOpen, onOpen, setProcessed, item, setDraftIte
 }) => {
     const dragThreshold = -50;
     const motionValue = useMotionValue(0);
+    const location = StringUtils.isNullOrEmpty(item.location) ? 'Unidentified Location' : item.location;
 
     useEffect(() => {
         animate(motionValue, isOpen ? -80 : 0, { type: "spring", stiffness: 300, damping: 30, });
@@ -214,7 +225,7 @@ export const DraftItem = memo(({ isOpen, onOpen, setProcessed, item, setDraftIte
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={handleDragEnd}
                 onClick={onItemClick}
-                className="relative z-10 bg-white dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                className="relative z-10 bg-white text-sm font-semibold dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
             >
                 <a
                     target="_blank"
@@ -222,14 +233,14 @@ export const DraftItem = memo(({ isOpen, onOpen, setProcessed, item, setDraftIte
                     onClick={(e) => e.stopPropagation()}
                     className="cursor-default"
                 >
-                    <AlphabetIcon seed={item._id} firstLetter={item.location.charAt(0).toUpperCase()} />
+                    <AlphabetIcon seed={item._id} firstLetter={location.charAt(0).toUpperCase()} />
                 </a>
 
                 <div className="flex-grow pr-6 pl-4 min-w-4">
-                    <h3 className="font-semibold text-[15px] text-gray-800 dark:text-gray-200 line-clamp-2 break-all capitalize">{item.location}</h3>
+                    <h3 className="text-gray-800 dark:text-gray-200 line-clamp-2 break-all capitalize">{location}</h3>
                 </div>
                 <div className="text-right min-w-fit">
-                    <div className="text-sm font-semibold text-gray-400 dark:text-gray-300">
+                    <div className="text-gray-400 dark:text-gray-300">
                         <div className="flex items-center">
                             <div className="mr-1"><Calendar width={16} height={16} strokeWidth={2.5} /></div>
                             <div>{dayjs(item.dateTime).format('DD MMM')}</div>

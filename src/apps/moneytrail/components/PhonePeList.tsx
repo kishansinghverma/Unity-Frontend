@@ -56,8 +56,8 @@ const PhonepeListFC: FC<{
     <>
       <div ref={listContainerRef} className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col border dark:border-gray-700 max-h-[85vh]">
         <ListHeader {...{
-          title: "PhonePe Records",
-          subtitle: "PhonePe transaction records",
+          title: "App Records",
+          subtitle: "Payment app transaction records",
           Icon: TabletSmartphone,
           className: 'from-green-500 to-emerald-600',
           showProcessed,

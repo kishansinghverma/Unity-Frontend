@@ -31,6 +31,8 @@ export const getIconBackground = (bankName: string) => {
         return 'bg-orange-100 dark:bg-orange-600/30'
     if (bankName === 'SBI CC')
         return 'bg-purple-100/80 dark:bg-purple-300/20'
+    if (bankName === 'UPI Lite')
+        return 'bg-orange-100/70'
 
     return colorPair[Math.floor(Math.random() * colorPair.length)]
 }

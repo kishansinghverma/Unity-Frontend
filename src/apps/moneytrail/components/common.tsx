@@ -295,6 +295,7 @@ export const UploadStatement: React.FC = () => {
 
   const infoData = [
     'PhonePe Statement :: Download the PDF statement from PhonePe App.',
+    'Paytm Statement :: Download the Excel statement from Paytm App.',
     'SBI Statement :: Download Excel File from App/Netbanking.',
     'HDFC Statement :: Download Excel File from App/Netbanking.',
     'SBI CC :: Get <tbody> from Web App as HTML File using VS Code.',

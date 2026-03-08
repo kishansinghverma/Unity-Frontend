@@ -43,8 +43,6 @@ const TransactionMetaData: { [key: string]: { Account: string, Type: string } } 
     "State Bank Of India - 26": { Account: "SBI", Type: "Paytm" },
 }
 
-const isFloat = (number: number) => Number(number) === number && number % 1 !== 0;
-
 const getNumberAt = (sheet: XLSX.WorkSheet, cellAddress: string): number | null => {
     const data = sheet[cellAddress]?.v;
     if (data === undefined || data === null || StringUtils.isNullOrEmpty(data)) return null;
