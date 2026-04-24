@@ -161,7 +161,7 @@ export const SelectWithAdd: FC<{
       setOptions(filteredOptions);
     }
 
-    const onChange = (value: string, item?: DefaultOptionType) => {
+    const onChange = (_value: unknown, item?: DefaultOptionType) => {
       if (StringUtils.isNullOrEmpty(item?.title)) return;
 
       let selectedOption = item;

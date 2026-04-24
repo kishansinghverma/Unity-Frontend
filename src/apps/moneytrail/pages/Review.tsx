@@ -48,7 +48,7 @@ const PhonepeSection: React.FC<{
   const [phonepeItemId, setPhonepeItemId] = useState<Nullable<string>>(null);
 
   return (
-    <div className="w-full px-10 min-w-0">
+    <div className="w-full xl:px-10 min-w-0">
       <PhonepeList
         items={phonepeEntries}
         isLoading={isLoading}
