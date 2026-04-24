@@ -1,6 +1,5 @@
-import { ElementType, FC, useEffect } from 'react';
+import { ElementType, FC } from 'react';
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { DatePicker, Form, Input, InputNumber, Radio, Space } from 'antd';
 import { X, IndianRupee, Layers2, Pencil, PieChart, Save, CalendarClock, CreditCard, MapPin, Loader2 } from 'lucide-react';
 import { DefaultOptionType } from 'antd/es/select';
@@ -13,6 +12,7 @@ import { notify } from '../../../../../engine/services/notificationService';
 import { DraftEntry } from '../../../engine/models/types';
 import { Nullable, WithId } from '../../../../../engine/models/types';
 import dayjs from 'dayjs';
+import { AnimatedModal } from '../AnimatedModal';
 
 import HdfcLogo from '../../../../../static/icons/hdfc.svg';
 import SbiLogo from '../../../../../static/icons/sbi.svg';
@@ -43,6 +43,7 @@ export const ManualEntryModal: FC<{
 }) => {
     const dispatch = useAppDispatch();
     const [isSaving, setIsSaving] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
 
     const descriptions = useDescriptionsQuery();
     const groups = useGroupsQuery();
@@ -105,9 +106,11 @@ export const ManualEntryModal: FC<{
       select: "[&_.ant-select-selection-placeholder]:font-medium [&_input]:!caret-transparent"
     }
 
-    const handleKeyDown = ({ key }: KeyboardEvent) => { if (key === 'Escape') onModalClose() };
-
     const onModalClose = () => {
+      setIsOpen(false);
+    }
+
+    const onAfterClose = () => {
       setVisible(false);
       setDraftItem(null);
     }
@@ -171,33 +174,14 @@ export const ManualEntryModal: FC<{
         .catch(handleError);
     }
 
-    useEffect(() => {
-      document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
-    }, []);
-
   return (
-      <motion.div
-        onClick={onModalClose}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur backdrop-saturate-[0.8]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
+      <AnimatedModal
+        open={isOpen}
+        onCancel={onModalClose}
+        afterClose={onAfterClose}
+        width={550}
       >
-        {/* Modal Container */}
-        <motion.div
-          className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-[550px] max-w-7xl max-h-[90vh] overflow-hidden"
-          onClick={e => e.stopPropagation()}
-          variants={{
-            hidden: { opacity: 0, scale: 0.8 },
-            visible: { opacity: 1, scale: 1, transition: { type: 'spring', damping: 15, stiffness: 350 } },
-            exit: { opacity: 0, scale: 0.8, transition: { duration: 0.15 } },
-          }}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-        >
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-[550px] max-w-full max-h-[90vh] overflow-hidden">
           {/* Modal Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10">
             <div>
@@ -342,8 +326,8 @@ export const ManualEntryModal: FC<{
               <span>Cancel</span>
             </button>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </AnimatedModal>
     );
   }
 

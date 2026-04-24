@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { BankReviewModal } from '../components/modals/bankReview/ReviewModal';
 import { BankList } from '../components/BankList';
-import { AnimatePresence } from 'framer-motion';
 import { Nullable, WithId } from '../../../engine/models/types';
 import { useBankEntryQuery, useDraftEntryQuery, usePhonepeEntryQuery } from '../store/reviewSlice';
 import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
@@ -54,37 +53,35 @@ const ReviewExpense: React.FC = () => {
           />
         </div>
 
-        <AnimatePresence>
-          {bankItemId && (
-            <BankReviewModal
-              key={`bank-${bankItemId}`}
-              bankEntries={bankEntries}
-              phonepeEntries={phonepeEntries}
-              draftEntries={draftEntries}
-              bankItemId={bankItemId}
-              setBankItemId={setBankItemId}
-            />
-          )}
+        {bankItemId && (
+          <BankReviewModal
+            key={`bank-${bankItemId}`}
+            bankEntries={bankEntries}
+            phonepeEntries={phonepeEntries}
+            draftEntries={draftEntries}
+            bankItemId={bankItemId}
+            setBankItemId={setBankItemId}
+          />
+        )}
 
-          {phonepeItemId && (
-            <PhonepeReviewModal
-              key={`phonepe-${phonepeItemId}`}
-              phonepeEntries={phonepeEntries}
-              draftEntries={draftEntries}
-              phonepeItemId={phonepeItemId}
-              setPhonepeItemId={setPhonepeItemId}
-            />
-          )}
+        {phonepeItemId && (
+          <PhonepeReviewModal
+            key={`phonepe-${phonepeItemId}`}
+            phonepeEntries={phonepeEntries}
+            draftEntries={draftEntries}
+            phonepeItemId={phonepeItemId}
+            setPhonepeItemId={setPhonepeItemId}
+          />
+        )}
 
-          {(isManualEntryModalVisible || draftItem) && (
-            <ManualEntryModal
-              key={`manual-${draftItem?._id ?? 'new'}`}
-              draftEntry={draftItem}
-              setDraftItem={setDraftItem}
-              setVisible={setManualEntryModalVisible}
-            />
-          )}
-        </AnimatePresence>
+        {(isManualEntryModalVisible || draftItem) && (
+          <ManualEntryModal
+            key={`manual-${draftItem?._id ?? 'new'}`}
+            draftEntry={draftItem}
+            setDraftItem={setDraftItem}
+            setVisible={setManualEntryModalVisible}
+          />
+        )}
       </div>
     </div>
   );

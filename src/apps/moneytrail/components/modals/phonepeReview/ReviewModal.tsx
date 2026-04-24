@@ -1,5 +1,4 @@
 import { ElementType, FC, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Form, InputNumber, Space } from 'antd';
 import { X, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Smartphone } from 'lucide-react';
 import TransactionCard from './TransactionCard';
@@ -17,6 +16,7 @@ import { StringUtils } from '../../../../../engine/helpers/stringHelper';
 import { getDraftMatches } from '../../../engine/utils';
 import { DraftItem } from '../bankReview/DraftItem';
 import { TransactionContainer } from '../bankReview/TransactionContainer';
+import { AnimatedModal } from '../AnimatedModal';
 
 type FormState = {
   amount: number,
@@ -43,6 +43,7 @@ export const PhonepeReviewModal: FC<{
     const categories = useCategoriesQuery();
 
     const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
+    const [isOpen, setIsOpen] = useState(true);
 
     const phonepeEntry = phonepeEntries.find(entry => entry._id === phonepeItemId)!;
     const draftMatches = getDraftMatches(null, phonepeEntry, draftEntries);
@@ -97,9 +98,7 @@ export const PhonepeReviewModal: FC<{
       }
     };
 
-    const handleKeyDown = ({ key }: KeyboardEvent) => { if (key === 'Escape') onModalClose() };
-
-    const onModalClose = () => setPhonepeItemId(null);
+    const onModalClose = () => setIsOpen(false);
 
     const onComplete = () => {
       notify.success({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
@@ -191,32 +190,15 @@ export const PhonepeReviewModal: FC<{
 
     useEffect(() => {
       setColumnHeight();
-      document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
     }, []);
 
     return (
-      <motion.div
-        onClick={onModalClose}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur backdrop-saturate-[0.8]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
+      <AnimatedModal
+        open={isOpen}
+        onCancel={onModalClose}
+        afterClose={() => setPhonepeItemId(null)}
       >
-        {/* Modal Container */}
-        <motion.div
-          className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden"
-          onClick={e => e.stopPropagation()}
-          variants={{
-            hidden: { opacity: 0, scale: 0.8 },
-            visible: { opacity: 1, scale: 1, transition: { type: 'spring', damping: 15, stiffness: 350 } },
-            exit: { opacity: 0, scale: 0.8, transition: { duration: 0.15 } },
-          }}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-        >
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden">
           {/* Modal Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10">
             <div>
@@ -366,8 +348,8 @@ export const PhonepeReviewModal: FC<{
               </div>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </AnimatedModal>
     );
   }
 
