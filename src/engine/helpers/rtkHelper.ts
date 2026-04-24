@@ -1,5 +1,5 @@
-export const getArrayOrDefault = (result: {
-    data?: any;
+export const getArrayOrDefault = <T>(result: {
+    data?: T[];
     isLoading: boolean;
     isError: boolean
-}): any[] => (result.isLoading || result.isError ? [] : result.data)
+}): T[] => (result.isLoading || result.isError ? [] : (result.data ?? []))

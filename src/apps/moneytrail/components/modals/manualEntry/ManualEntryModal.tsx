@@ -9,7 +9,7 @@ import { useAppDispatch } from '../../../../../store/hooks';
 import { PostParams, Routes } from '../../../../../engine/constant';
 import { handleError, handleResponse } from '../../../../../engine/helpers/httpHelper';
 import { notify } from '../../../../../engine/services/notificationService';
-import { DraftEntry } from '../../../engine/models/types';
+import { DraftEntry, SplitwiseCategory } from '../../../engine/models/types';
 import { Nullable, WithId } from '../../../../../engine/models/types';
 import dayjs from 'dayjs';
 import { AnimatedModal } from '../AnimatedModal';
@@ -59,12 +59,12 @@ export const ManualEntryModal: FC<{
       })) : [];
 
     const categoryOptions: DefaultOptionType[] = categories.data ?
-      categories.data.categories.reduce((accumulator: any[], category: any) => {
+      categories.data.categories.reduce((accumulator: SplitwiseCategory[], category: SplitwiseCategory) => {
         accumulator.push(category);
         if (category.subcategories.length)
           accumulator.push(...category.subcategories);
         return accumulator;
-      }, []).map((category: any) => ({
+      }, []).map((category: SplitwiseCategory) => ({
         title: category.name,
         value: category.id,
         label: <div className='flex gap-2 items-center w-full'>

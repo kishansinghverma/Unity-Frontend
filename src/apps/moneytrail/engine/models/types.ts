@@ -97,3 +97,18 @@ export type Member = {
 export type SplitwiseGroupResponse = Group;
 
 export type SplitwiseGroupsResponse = Array<Group>;
+
+export type SplitwiseCategory = {
+    id: number;
+    name: string;
+    icon_types: {
+        square: {
+            large: string;
+        }
+    };
+    subcategories: SplitwiseCategory[];
+}
+
+export type SplitwiseCategoriesResponse = {
+    categories: SplitwiseCategory[];
+}

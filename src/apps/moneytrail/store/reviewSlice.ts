@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Routes } from '../../../engine/constant';
-import { BankEntry, DraftEntry, PhonepeEntry, SplitwiseGroupsResponse } from '../engine/models/types';
+import { BankEntry, DraftEntry, PhonepeEntry, SplitwiseGroupsResponse, SplitwiseCategoriesResponse } from '../engine/models/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { WithId } from '../../../engine/models/types';
 
@@ -19,7 +19,7 @@ export const reviewApi = createApi({
     draftEntry: builder.query<WithId<DraftEntry>[], void>({ query: () => Routes.DraftExpenses }),
     descriptions: builder.query<{ value: string[] }, void>({ query: () => Routes.ExpenseDescriptions }),
     groups: builder.query<SplitwiseGroupsResponse, void>({ query: () => Routes.SplitWiseGroups }),
-    categories: builder.query<any, void>({ query: () => Routes.SplitWiseCategories }),
+    categories: builder.query<SplitwiseCategoriesResponse, void>({ query: () => Routes.SplitWiseCategories }),
   }),
 });
 

@@ -6,7 +6,7 @@ import { DraftItem } from './DraftItem';
 import { getDraftMatches, getPhonePeMatches } from '../../../engine/utils';
 import { TransactionContainer } from './TransactionContainer';
 import { Nullable, WithId } from '../../../../../engine/models/types';
-import { BankEntry, DraftEntry, PhonepeEntry } from '../../../engine/models/types';
+import { BankEntry, DraftEntry, PhonepeEntry, SplitwiseCategory } from '../../../engine/models/types';
 import { PhonePeItem } from './PhonepeItem';
 import dayjs from 'dayjs';
 import { DefaultOptionType } from 'antd/es/select';
@@ -63,12 +63,12 @@ export const BankReviewModal: FC<{
       })) : [];
 
     const categoryOptions: DefaultOptionType[] = categories.data ?
-      categories.data.categories.reduce((accumulator: any[], category: any) => {
+      categories.data.categories.reduce((accumulator: SplitwiseCategory[], category: SplitwiseCategory) => {
         accumulator.push(category);
         if (category.subcategories.length)
           accumulator.push(...category.subcategories);
         return accumulator;
-      }, []).map((category: any) => ({
+      }, []).map((category: SplitwiseCategory) => ({
         title: category.name,
         value: category.id,
         label: <div className='flex gap-2 items-center w-full'>

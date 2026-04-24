@@ -4,7 +4,7 @@ import { SelectWithAdd, CustomSelect } from "../../Common";
 import { PrefixIcon } from "./ManualEntryModal";
 import { FC, useState } from "react";
 import { Nullable, WithId } from "../../../../../engine/models/types";
-import { DraftEntry } from "../../../engine/models/types";
+import { DraftEntry, SplitwiseCategory } from "../../../engine/models/types";
 import { useAppDispatch } from "../../../../../store/hooks";
 import { useCategoriesQuery, useDescriptionsQuery, useGroupsQuery } from "../../../store/reviewSlice";
 import { DefaultOptionType } from "antd/es/select";
@@ -63,12 +63,12 @@ export const ManualEntryModal: FC<ModalProps> = ({ isVisible, setVisible, draftE
         })) : [];
 
     const categoryOptions: DefaultOptionType[] = categories.data ?
-        categories.data.categories.reduce((accumulator: any[], category: any) => {
+        categories.data.categories.reduce((accumulator: SplitwiseCategory[], category: SplitwiseCategory) => {
             accumulator.push(category);
             if (category.subcategories.length)
                 accumulator.push(...category.subcategories);
             return accumulator;
-        }, []).map((category: any) => ({
+        }, []).map((category: SplitwiseCategory) => ({
             title: category.name,
             value: category.id,
             label: <div className='flex gap-2 items-center w-full'>

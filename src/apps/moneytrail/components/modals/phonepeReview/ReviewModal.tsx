@@ -3,7 +3,7 @@ import { Form, InputNumber, Space } from 'antd';
 import { X, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Smartphone } from 'lucide-react';
 import TransactionCard from './TransactionCard';
 import { Nullable, WithId } from '../../../../../engine/models/types';
-import { DraftEntry, PhonepeEntry } from '../../../engine/models/types';
+import { DraftEntry, PhonepeEntry, SplitwiseCategory } from '../../../engine/models/types';
 import dayjs from 'dayjs';
 import { DefaultOptionType } from 'antd/es/select';
 import { CustomSelect, SelectWithAdd } from '../../Common';
@@ -58,12 +58,12 @@ export const PhonepeReviewModal: FC<{
       })) : [];
 
     const categoryOptions: DefaultOptionType[] = categories.data ?
-      categories.data.categories.reduce((accumulator: any[], category: any) => {
+      categories.data.categories.reduce((accumulator: SplitwiseCategory[], category: SplitwiseCategory) => {
         accumulator.push(category);
         if (category.subcategories.length)
           accumulator.push(...category.subcategories);
         return accumulator;
-      }, []).map((category: any) => ({
+      }, []).map((category: SplitwiseCategory) => ({
         title: category.name,
         value: category.id,
         label: <div className='flex gap-2 items-center w-full'>
