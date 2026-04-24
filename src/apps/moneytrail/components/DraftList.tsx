@@ -1,6 +1,7 @@
 import { FileSearch } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useRef, useEffect, FC, memo } from "react";
+import { Pagination } from "antd";
 
 import { DraftItem } from "./ListItem";
 import { EmptyList, SkeletonItem } from "./Common";
@@ -25,6 +26,8 @@ const DraftListFC: FC<{
     const dispatch = useAppDispatch();
     const [openItemId, setOpenItemId] = useState<string | null>(null);
     const [showProcessed, setShowProcessed] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 10;
     const listContainerRef = useRef<HTMLDivElement>(null);
 
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -54,7 +57,8 @@ const DraftListFC: FC<{
         .catch(handleError);
     }
 
-    const itemsToRender = items?.filter(item => (!item.processed || showProcessed)) ?? [];
+    const filteredItems = items?.filter(item => (!item.processed || showProcessed)) ?? [];
+    const itemsToRender = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     return (
       <div ref={listContainerRef} className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col border dark:border-gray-700 max-h-[85vh]">
@@ -100,6 +104,19 @@ const DraftListFC: FC<{
             }
           </ul>
         </div>
+        
+        {!isLoading && filteredItems.length > 0 && (
+          <div className="py-3 px-4 border-t border-gray-200 dark:border-gray-700 flex justify-center bg-gray-50 dark:bg-gray-800/50">
+            <Pagination
+              size="small"
+              current={currentPage}
+              pageSize={pageSize}
+              total={filteredItems.length}
+              onChange={(page) => setCurrentPage(page)}
+              showSizeChanger={false}
+            />
+          </div>
+        )}
       </div>
     );
   };
