@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BankReviewModal } from '../components/modals/bankReview/ReviewModal';
 import { BankList } from '../components/BankList';
 import { AnimatePresence } from 'framer-motion';
@@ -12,7 +12,6 @@ import {  ManualEntryModal } from '../components/modals/manualEntry/ManualEntryM
 import { DraftEntry } from '../engine/models/types';
 import { PhonepeReviewModal } from '../components/modals/phonepeReview/ReviewModal';
 import { Header } from '../components/review/Headers';
-import { } from '../components/modals/manualEntry/Modal';
 
 const ReviewExpense: React.FC = () => {
   const bankQuery = useBankEntryQuery();
@@ -29,73 +28,65 @@ const ReviewExpense: React.FC = () => {
 
   const [isManualEntryModalVisible, setManualEntryModalVisible] = useState(false);
 
-  useEffect(() => console.log('Parent'));
-
   return (
-    <>
-      <div className="px-8">
-        <Header setModalVisible={setManualEntryModalVisible} />
-        <div className="flex flex-row justify-between">
-          <div className="w-full min-w-0">
-            <BankList
-              items={bankEntries}
-              isLoading={bankQuery.isLoading}
+    <div className="px-8">
+      <Header setModalVisible={setManualEntryModalVisible} />
+      <div className="flex flex-row justify-between">
+        <div className="w-full min-w-0">
+          <BankList
+            items={bankEntries}
+            isLoading={bankQuery.isLoading}
+            setBankItemId={setBankItemId}
+          />
+        </div>
+        <div className="w-full px-10 min-w-0">
+          <PhonepeList
+            items={phonepeEntries}
+            isLoading={phonepeQuery.isLoading}
+            setPhonepeItemId={setPhonepeItemId}
+          />
+        </div>
+        <div className="w-full min-w-0">
+          <DraftList
+            items={draftEntries}
+            isLoading={draftQuery.isLoading}
+            setDraftItem={setDraftItem}
+          />
+        </div>
+
+        <AnimatePresence>
+          {bankItemId && (
+            <BankReviewModal
+              key={`bank-${bankItemId}`}
+              bankEntries={bankEntries}
+              phonepeEntries={phonepeEntries}
+              draftEntries={draftEntries}
+              bankItemId={bankItemId}
               setBankItemId={setBankItemId}
             />
-          </div>
-          <div className="w-full px-10 min-w-0">
-            <PhonepeList
-              items={phonepeEntries}
-              isLoading={phonepeQuery.isLoading}
+          )}
+
+          {phonepeItemId && (
+            <PhonepeReviewModal
+              key={`phonepe-${phonepeItemId}`}
+              phonepeEntries={phonepeEntries}
+              draftEntries={draftEntries}
+              phonepeItemId={phonepeItemId}
               setPhonepeItemId={setPhonepeItemId}
-            /> 
-          </div>
-          <div className="w-full min-w-0">
-            <DraftList
-              items={draftEntries}
-              isLoading={draftQuery.isLoading}
-              setDraftItem={setDraftItem}
             />
-          </div>
+          )}
 
-          <AnimatePresence>
-            {bankItemId && (
-              <BankReviewModal
-                key={bankItemId}
-                bankEntries={bankEntries}
-                phonepeEntries={phonepeEntries}
-                draftEntries={draftEntries}
-                bankItemId={bankItemId}
-                setBankItemId={setBankItemId}
-              />
-            )}
-          </AnimatePresence>
-
-          <AnimatePresence>
-            {(phonepeItemId) && (
-              <PhonepeReviewModal
-                key={phonepeItemId}
-                phonepeEntries={phonepeEntries}
-                draftEntries={draftEntries}
-                phonepeItemId={phonepeItemId}
-                setPhonepeItemId={setPhonepeItemId}
-              />
-            )}
-          </AnimatePresence>
-          
-          <AnimatePresence>
-            {(isManualEntryModalVisible || !!draftItem) && (
-              <ManualEntryModal
-                key={bankItemId}
-                draftEntry={draftItem}
-                setDraftItem={setDraftItem}
-                setVisible={setManualEntryModalVisible}
-              />
-            )}
-          </AnimatePresence>
-        </div>
-      </div >
-    </>
+          {(isManualEntryModalVisible || draftItem) && (
+            <ManualEntryModal
+              key={`manual-${draftItem?._id ?? 'new'}`}
+              draftEntry={draftItem}
+              setDraftItem={setDraftItem}
+              setVisible={setManualEntryModalVisible}
+            />
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
   );
 };
 
