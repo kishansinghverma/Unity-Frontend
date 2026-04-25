@@ -72,7 +72,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
 
   const handleLogout = () => {
     logout();
-    window.location.href = '/';
+    navigate('/', { replace: true });
   };
 
   return (

@@ -149,7 +149,7 @@ const AppRoutes: React.FC = () => {
     // Redirect to last visited page if available
     const lastVisitedPage = localStorage.getItem('lastVisitedPage');
     if (lastVisitedPage && window.location.pathname === '/') {
-      window.location.replace(lastVisitedPage);
+      router.navigate(lastVisitedPage, { replace: true });
     } else {
       setIsRedirecting(false);
     }

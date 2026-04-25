@@ -9,7 +9,10 @@ interface AppState {
 }
 
 const initialState: AppState = {
-  currentApp: null,
+  currentApp: (() => {
+    const path = window.location.pathname;
+    return APPS.find(app => path.startsWith(`/${app.id}`)) || null;
+  })(),
   availableApps: APPS,
 };
 
