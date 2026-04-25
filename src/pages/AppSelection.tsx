@@ -36,22 +36,7 @@ const AppSelection: React.FC = () => {
     dispatch(setCurrentApp(app));
     
     // Navigate to the appropriate app path
-    let appPath = '/';
-    switch (app.id) {
-      case 'emandi':
-        appPath = '/emandi';
-        break;
-      case 'moneytrail':
-        appPath = '/moneytrail';
-        break;
-      case 'smarthome':
-        appPath = '/smarthome';
-        break;
-      case 'potatostock':
-        appPath = '/potatostock';
-        break;
-    }
-    navigate(appPath);
+    navigate(`/${app.id}`);
   };
 
   return (

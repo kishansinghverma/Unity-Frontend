@@ -1,8 +1,9 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useAppSelector } from '../store/hooks';
-import { selectCurrentApp } from '../store/slices/appSlice';
+import { useAppSelector, useAppDispatch } from '../store/hooks';
+import { selectCurrentApp, setCurrentApp } from '../store/slices/appSlice';
+import { APPS } from '../constants/apps';
 
 interface ProtectedRouteProps {
   redirectPath?: string;
@@ -17,13 +18,23 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const { isAuthenticated } = useAuth();
   const currentApp = useAppSelector(selectCurrentApp);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (appId && (!currentApp || currentApp.id !== appId)) {
+      const app = APPS.find(a => a.id === appId);
+      if (app) {
+        dispatch(setCurrentApp(app));
+      }
+    }
+  }, [appId, currentApp, dispatch]);
 
   if (!isAuthenticated) {
     return <Navigate to={redirectPath} replace />;
   }
 
   if (appId && (!currentApp || currentApp.id !== appId)) {
-    return <Navigate to="/app-selection" replace />;
+    return null;
   }
 
   return <>{children}</>;

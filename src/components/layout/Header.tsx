@@ -49,17 +49,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
       setAppsDropdownOpen(false);
 
       // Navigate to the appropriate app route
-      switch (app.id) {
-        case 'emandi':
-          navigate('/emandi');
-          break;
-        case 'moneytrail':
-          navigate('/moneytrail');
-          break;
-        case 'smarthome':
-          navigate('/smarthome');
-          break;
-      }
+      navigate(`/${app.id}`);
     }
   };
 
