@@ -23,7 +23,9 @@ const styles = {
     datetimeDefault: 'text-slate-800',
     datetimeSelected: 'text-indigo-700',
     clockIcon: 'w-3.5 h-3.5 mr-0.5 opacity-85',
-    iconWrapper: 'flex items-start space-x-3'
+    iconWrapper: 'flex items-start space-x-3',
+    mapLink: 'cursor-default',
+    iconSelected: 'bg-indigo-100 text-indigo-600'
 };
 
 const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
@@ -32,7 +34,7 @@ const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
     const containerClassName = `${styles.containerBase} ${isSelected ? styles.containerSelected : styles.containerDefault}`;
     const primaryTextClassName = `${styles.primaryTextBase} ${isSelected ? styles.primaryTextSelected : styles.primaryTextDefault}`;
     const datetimeClassName = `${styles.datetimeBase} ${isSelected ? styles.datetimeSelected : styles.datetimeDefault}`;
-    const iconOverrideStyle = isSelected ? 'bg-indigo-100 text-indigo-600' : undefined;
+    const iconOverrideStyle = isSelected ? styles.iconSelected : undefined;
 
     const onSelect = (current: WithId<DraftEntry>) => setSelected(isSelected ? null : current);
 
@@ -46,7 +48,7 @@ const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
             <div className={styles.iconWrapper}>
                 <a
                     target="_blank"
-                    className="cursor-default"
+                    className={styles.mapLink}
                     href={`https://www.google.com/maps?q=${item.coordinate}`}
                     onMouseDown={(event) => event.preventDefault()}
                     onClick={(e) => e.stopPropagation()}
