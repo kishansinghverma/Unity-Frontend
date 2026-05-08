@@ -43,13 +43,18 @@ const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
     const onSelect = (current: WithId<DraftEntry>) => setSelected(isSelected ? null : current);
 
     return (
-        <div className={style.container} onClick={() => onSelect(item)}>
+        <div
+            className={style.container}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => onSelect(item)}
+        >
             {isSelected && <CheckCircle className={style.checkCircle} />}
             <div className={style.iconWrapper}>
                 <a
                     target="_blank"
                     className="cursor-default"
                     href={`https://www.google.com/maps?q=${item.coordinate}`}
+                    onMouseDown={(event) => event.preventDefault()}
                     onClick={(e) => e.stopPropagation()}
                 >
                     <AlphabetIcon {...{ firstLetter, seed: item._id, overrideStyle: style.textIcon }} />
