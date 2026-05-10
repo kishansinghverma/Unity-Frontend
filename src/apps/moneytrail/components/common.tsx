@@ -1,8 +1,9 @@
 import { CircleArrowUp, ListX } from "lucide-react";
 import { Space, Select, Form, Popover, List } from "antd";
-import { ElementType, FC, useEffect, useRef, useState } from "react";
-import { DefaultOptionType } from "antd/es/select";
-import { Rule } from "antd/es/form";
+import { FC, useEffect, useRef, useState } from "react";
+import { DefaultOptionType, SelectProps } from "antd/es/select";
+import { FormItemProps, Rule } from "antd/es/form";
+import { NamePath } from "antd/es/form/interface";
 
 import { BankLogo } from "./Resources";
 import { getColorPair, getIconBackground } from "../engine/utils";
@@ -57,54 +58,34 @@ export const SkeletonItem: FC = () => (
   </div>
 );
 
-export const CustomSelect: FC<{
-  defaultOptions: Array<DefaultOptionType>;
-  placeholder: string;
-  name: string;
+type CustomSelectProps = SelectProps<unknown, DefaultOptionType> & {
+  name: NamePath;
   rules?: Rule[];
-  className: string;
-  width?: string
-  placement?: "bottomLeft" | "bottomRight" | "topLeft" | "topRight"
-  prefix: React.ReactNode;
-  isLoading?: boolean;
-  initialValue?: string | number;
-  disabled?: boolean;
-}> = ({
-  defaultOptions,
-  placeholder,
+  width?: string | number;
+  prefix?: React.ReactNode;
+  formItemProps?: Omit<FormItemProps, "name" | "rules" | "children">;
+};
+
+export const CustomSelect: FC<CustomSelectProps> = ({
   name,
   rules,
-  className,
   width,
-  placement,
-  isLoading,
   prefix,
-  initialValue,
-  disabled
+  formItemProps,
+  style,
+  ...selectProps
 }) => {
-    const [value, setValue] = useState<any>(null);
-
-    const onClear = () => setValue(null);
-    const onChange = (value: string, option: any) => setValue(option);
 
     return (
       <Space.Compact style={{ width: width }}>
         {prefix}
-        <Form.Item noStyle name={name} rules={rules} initialValue={initialValue}>
+        <Form.Item noStyle name={name} rules={rules} {...formItemProps}>
           <Select
-            style={{ height: 38, width: width }}
+            style={{ height: 38, width: width, ...style }}
             showSearch
             allowClear
-            value={value}
-            options={defaultOptions}
-            placeholder={placeholder}
-            onChange={onChange}
-            onClear={onClear}
-            className={className}
-            placement={placement}
-            loading={isLoading}
             optionFilterProp="title"
-            disabled={disabled}
+            {...selectProps}
           />
         </Form.Item>
       </Space.Compact>

@@ -305,20 +305,20 @@ export const PhonepeReviewModal: FC<{
                       />
                       <CustomSelect
                         name="category"
-                        defaultOptions={categoryOptions}
-                        isLoading={categories.isLoading}
+                        options={categoryOptions}
+                        loading={categories.isLoading}
                         rules={[{ required: true }]}
                         placeholder="Category"
                         placement="bottomRight"
                         className={`w-48 ${classes.select}`}
                         prefix={<PrefixIcon icon={Layers2} size={16} strokeWidth={3} />}
-                        initialValue={phonepeEntry.type === 'Credit' ? 2 : 1}
+                        formItemProps={{ initialValue: phonepeEntry.type === 'Credit' ? 2 : 1 }}
                         disabled={phonepeEntry.type === 'Credit'}
                       />
                       <CustomSelect
                         name="group"
-                        defaultOptions={groupOptions}
-                        isLoading={groups.isLoading}
+                        options={groupOptions}
+                        loading={groups.isLoading}
                         rules={[{ required: true }]}
                         placeholder="Group"
                         placement="bottomRight"

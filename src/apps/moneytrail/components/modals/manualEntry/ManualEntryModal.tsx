@@ -32,6 +32,8 @@ type FormState = {
   type: "Credit" | "Debit";
 };
 
+const LAST_SOURCE_KEY = 'moneytrail.manualEntry.lastSource';
+
 export const ManualEntryModal: FC<{
   draftEntry: Nullable<WithId<DraftEntry>>;
   setVisible: (isVisible: boolean) => void;
@@ -44,6 +46,10 @@ export const ManualEntryModal: FC<{
     const dispatch = useAppDispatch();
     const [isSaving, setIsSaving] = useState(false);
     const [isOpen, setIsOpen] = useState(true);
+    const [lastSource, setLastSource] = useState<string | null>(() => {
+      const saved = localStorage.getItem(LAST_SOURCE_KEY);
+      return saved && saved.trim().length > 0 ? saved : null;
+    });
 
     const descriptions = useDescriptionsQuery();
     const groups = useGroupsQuery();
@@ -98,6 +104,21 @@ export const ManualEntryModal: FC<{
         <span className='text-gray-600 font-medium'>{source.name}</span>
       </div>
     }));
+
+    const availableSources = new Set(sourceOptions.map((option) => String(option.value)));
+    const selectedSource = lastSource && availableSources.has(lastSource) ? lastSource : null;
+
+    const persistLastSource = (source: string | null) => {
+      const nextSource = source?.trim() ?? null;
+      setLastSource(nextSource);
+
+      if (!nextSource) {
+        localStorage.removeItem(LAST_SOURCE_KEY);
+        return;
+      }
+
+      localStorage.setItem(LAST_SOURCE_KEY, nextSource);
+    };
 
     const classes = {
       tr: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap",
@@ -174,6 +195,15 @@ export const ManualEntryModal: FC<{
         .catch(handleError);
     }
 
+    const onSourceChange = (value: unknown) => {
+      if (typeof value === 'string') {
+        persistLastSource(value);
+        return;
+      }
+
+      persistLastSource(null);
+    };
+
   return (
       <AnimatedModal
         open={isOpen}
@@ -200,7 +230,10 @@ export const ManualEntryModal: FC<{
           <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
             <div className="mx-auto px-14 py-12">
               <div className=" bg-gray-100/20 p-8 rounded-lg shadow-md border border-gray-200 overflow-hidden">
-                <Form form={form} className="flex items-center flex-col gap-4">
+                <Form
+                  form={form}
+                  className="flex items-center flex-col gap-4"
+                >
 
                   <Space.Compact style={{ width: "100%" }}>
                     <PrefixIcon icon={CalendarClock} size={16} strokeWidth={3} />
@@ -242,9 +275,9 @@ export const ManualEntryModal: FC<{
 
                   <CustomSelect
                     name="source"
-                    defaultOptions={sourceOptions}
-                    initialValue={"HDFC"}
-                    disabled={true}
+                    options={sourceOptions}
+                    formItemProps={{ initialValue: selectedSource ?? undefined }}
+                    onChange={onSourceChange}
                     rules={[{ required: true }]}
                     placeholder="Source"
                     placement="bottomRight"
@@ -255,8 +288,8 @@ export const ManualEntryModal: FC<{
 
                   <CustomSelect
                     name="category"
-                    defaultOptions={categoryOptions}
-                    isLoading={categories.isLoading}
+                    options={categoryOptions}
+                    loading={categories.isLoading}
                     rules={[{ required: true }]}
                     placeholder="Category"
                     placement="bottomRight"
@@ -267,8 +300,8 @@ export const ManualEntryModal: FC<{
 
                   <CustomSelect
                     name="group"
-                    defaultOptions={groupOptions}
-                    isLoading={groups.isLoading}
+                    options={groupOptions}
+                    loading={groups.isLoading}
                     rules={[{ required: true }]}
                     placeholder="Group"
                     placement="bottomRight"
