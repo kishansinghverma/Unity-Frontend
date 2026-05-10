@@ -25,9 +25,8 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 15;
   const listContainerRef = useRef<HTMLDivElement>(null);
-
   const handleClickOutside = (event: MouseEvent | TouchEvent) => {
     if (openItemId !== null && listContainerRef.current && !listContainerRef.current.contains(event.target as Node)) {
       setOpenItemId(null);
@@ -43,7 +42,6 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
       document.removeEventListener('touchstart', handleClickOutside);
     };
   }, [openItemId]);
-
   const setProcessed = (id: string) => {
     const response = fetch(`${Routes.ProcessBank}/${id}`, PostParams).then(handleResponse);
 
@@ -63,7 +61,7 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
   const itemsToRender = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
-    <div ref={listContainerRef} className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col border dark:border-gray-700 max-h-[85vh]">
+    <div ref={listContainerRef} className="w-full h-full min-h-0 bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border">
       <ListHeader {...{
         title: "Bank Entries",
         subtitle: "Aggregated bank transactions",
@@ -88,7 +86,7 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
                       animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
                       exit={{ opacity: 0, scale: 0.95, y: -15, x: 20, transition: { duration: 0.2, ease: "easeInOut" } }}
                       transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
-                      className="border-b border-gray-200 dark:border-gray-700 last:border-b-0 relative overflow-hidden origin-left"
+                      className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
                     >
                       <BankItem
                         item={item}
@@ -107,7 +105,7 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
       </div>
       
       {!isLoading && filteredItems.length > 0 && (
-        <div className="py-3 px-4 border-t border-gray-200 dark:border-gray-700 flex justify-center bg-gray-50 dark:bg-gray-800/50">
+        <div className="py-3 px-4 border-t border-gray-200 flex justify-center bg-white">
           <Pagination
             size="small"
             current={currentPage}
