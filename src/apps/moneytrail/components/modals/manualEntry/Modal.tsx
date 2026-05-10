@@ -19,7 +19,7 @@ import OtherPayLogo from '../../../../../static/icons/otherpay.svg';
 const styles = {
     tr: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap",
     th: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap font-semibold tracking-wide",
-    input: "flex items-center [&_input]:font-medium [&_input]:text-gray-600 dark:[&_input]:text-gray-200",
+    input: "flex items-center [&_input]:font-medium [&_input]:text-gray-600",
     select: "[&_.ant-select-selection-placeholder]:font-medium [&_input]:!caret-transparent",
     modal: {
         mask: 'bg-black/50 backdrop-blur backdrop-saturate-[0.8]',
@@ -57,7 +57,7 @@ export const ManualEntryModal: FC<ModalProps> = ({ isVisible, setVisible, draftE
 
     const descriptionOptions: DefaultOptionType[] = descriptions.data ?
         descriptions.data.value.map(item => ({
-            label: <div className='text-gray-600 dark:text-gray-200 font-medium'>{item}</div>,
+            label: <div className='text-gray-600 font-medium'>{item}</div>,
             value: item,
             title: item
         })) : [];
@@ -73,7 +73,7 @@ export const ManualEntryModal: FC<ModalProps> = ({ isVisible, setVisible, draftE
             value: category.id,
             label: <div className='flex gap-2 items-center w-full'>
                 <img src={category.icon_types.square.large} className='rounded-full w-6 h-6' />
-                <span className='text-gray-600 dark:text-gray-200 font-medium'>{category.name}</span>
+                <span className='text-gray-600 font-medium'>{category.name}</span>
             </div>
         })) : [];
 
@@ -83,7 +83,7 @@ export const ManualEntryModal: FC<ModalProps> = ({ isVisible, setVisible, draftE
             value: group.id,
             label: <div className='flex gap-2 items-center w-full'>
                 <img src={group.avatar.large} className='rounded-full w-6 h-6' />
-                <span className='text-gray-600 dark:text-gray-200 font-medium'>{group.name}</span>
+                <span className='text-gray-600 font-medium'>{group.name}</span>
             </div>
         })) : [];
 
@@ -99,7 +99,7 @@ export const ManualEntryModal: FC<ModalProps> = ({ isVisible, setVisible, draftE
         value: source.name,
         label: <div className='flex gap-2 items-center w-full'>
             <img className="w-5 h-5 rounded-full" src={source.icon} />
-            <span className='text-gray-600 dark:text-gray-200 font-medium'>{source.name}</span>
+            <span className='text-gray-600 font-medium'>{source.name}</span>
         </div>
     }));
 
@@ -124,7 +124,7 @@ export const ManualEntryModal: FC<ModalProps> = ({ isVisible, setVisible, draftE
 const Body = () => (
     <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
         <div className="mx-auto px-14 py-12">
-            <div className=" bg-gray-100/20 p-8 dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className=" bg-gray-100/20 p-8 rounded-lg shadow-md border border-gray-200 overflow-hidden">
                 <Form className="flex items-center flex-col gap-4">
 
                     <Space.Compact style={{ width: "100%" }}>
@@ -211,8 +211,8 @@ const Body = () => (
                     </Space.Compact>
 
                     <Space.Compact style={{ width: "100%" }} className="font-medium">
-                        <label className="text-gray-500 dark:text-gray-300">Transaction Type</label>
-                        <span className="text-gray-300 dark:text-gray-600 px-2">⎜</span>
+                        <label className="text-gray-500">Transaction Type</label>
+                        <span className="text-gray-300 px-2">⎜</span>
                         <Form.Item name="type" noStyle rules={[{ required: true }]}>
                             <Radio.Group
                                 options={[
@@ -236,15 +236,15 @@ const Header = () => (
 );
 
 const Footer = () => (
-    <div className="flex gap-3 border-t border-gray-200 dark:border-gray-700 px-14 py-6 justify-end">
+    <div className="flex gap-3 border-t border-gray-200 px-14 py-6 justify-end">
         <button
             type="submit"
-            className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600`}
+            className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 hover:bg-green-700
         >
             Submit
         </button>
         <button
-            className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-gray-600 bg-gray-200 dark:bg-gray-500 hover:bg-gray-300 dark:hover:bg-gray-500 dark:text-gray-200"
+            className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-gray-600 bg-gray-200 hover:bg-gray-300"
         >
             <X className="w-4 h-4" />
             <span>Cancel</span>

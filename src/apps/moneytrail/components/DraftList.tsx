@@ -1,5 +1,6 @@
 import { FileSearch } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback, FC, memo } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Pagination } from "antd";
 
 import { DraftItem } from "./ListItem";
@@ -79,20 +80,29 @@ const DraftListFC: FC<{
             {isLoading ?
               Array.from({ length: 5 }).map((_, index) => <SkeletonItem key={index} />) :
               itemsToRender.length === 0 ? <EmptyList /> : (
-                itemsToRender.map((item) => (
-                  <div
-                    key={item._id}
-                    className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
-                  >
-                    <DraftItem
-                      item={item}
-                      setProcessed={setProcessed}
-                      setDraftItem={setDraftItem}
-                      isOpen={openItemId === item._id}
-                      onOpen={setOpenItemId}
-                    />
-                  </div>
-                ))
+                <AnimatePresence mode="popLayout">
+                  {
+                    itemsToRender.map((item, index) => (
+                      <motion.div
+                        layout
+                        key={item._id}
+                        initial={{ opacity: 0, scale: 0.9, y: 30, x: -20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -15, x: 20, transition: { duration: 0.2, ease: "easeInOut" } }}
+                        transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
+                        className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
+                      >
+                        <DraftItem
+                          item={item}
+                          setProcessed={setProcessed}
+                          setDraftItem={setDraftItem}
+                          isOpen={openItemId === item._id}
+                          onOpen={setOpenItemId}
+                        />
+                      </motion.div>
+                    ))
+                  }
+                </AnimatePresence>
               )
             }
           </ul>

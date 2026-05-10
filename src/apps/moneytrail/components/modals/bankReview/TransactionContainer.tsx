@@ -22,12 +22,12 @@ export const TransactionContainerFC: React.FC<PropsWithChildren<{
     useEffect(() => console.log("Render"));
 
     return (
-      <div {...(isFirst && { 'data-first-column': true })} className={`bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col ${!isFirst && 'h-[var(--first-col-height,auto)]'}`}>
+      <div {...(isFirst && { 'data-first-column': true })} className={`bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden flex flex-col ${!isFirst && 'h-[var(--first-col-height,auto)]'}`}>
 
-        <div className={`px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r ${headerStyle}`}>
+        <div className={`px-4 py-3 border-b border-gray-200 bg-gradient-to-r ${headerStyle}`}>
           <div className="flex items-center gap-2">
             <Icon className={`w-4 h-4 ${iconStyle}`} />
-            <h2 className="text-sm font-semibold text-gray-800 dark:text-white">{type} Transactions</h2>
+            <h2 className="text-sm font-semibold text-gray-800">{type} Transactions</h2>
           </div>
         </div>
 
@@ -35,9 +35,9 @@ export const TransactionContainerFC: React.FC<PropsWithChildren<{
         {childCount === 0 && (
           <div className="p-4 flex-1 flex items-center justify-center">
             <div className="text-center">
-              <FileText className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-              <p className="text-gray-500 dark:text-gray-400 font-medium text-sm">No Transaction Identified.</p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{type} transactions will appear here</p>
+              <FileText className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+              <p className="text-gray-500 font-medium text-sm">No Transaction Identified.</p>
+              <p className="text-xs text-gray-400 mt-1">{type} transactions will appear here</p>
             </div>
           </div>
         )}

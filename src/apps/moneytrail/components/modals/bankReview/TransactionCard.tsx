@@ -53,33 +53,33 @@ const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
     switch (bank.toUpperCase()) {
       case 'HDFC': return {
         gradient: 'from-blue-500 to-blue-600',
-        bg: 'bg-blue-50 dark:bg-blue-900/20',
-        text: 'text-blue-700 dark:text-blue-300',
-        border: 'border-blue-200 dark:border-blue-800'
+        bg: 'bg-blue-50',
+        text: 'text-blue-700',
+        border: 'border-blue-200'
       };
       case 'SBI': return {
         gradient: 'from-green-500 to-green-600',
-        bg: 'bg-green-50 dark:bg-green-900/20',
-        text: 'text-green-700 dark:text-green-300',
-        border: 'border-green-200 dark:border-green-800'
+        bg: 'bg-green-50',
+        text: 'text-green-700',
+        border: 'border-green-200'
       };
       case 'ICICI': return {
         gradient: 'from-orange-500 to-orange-600',
-        bg: 'bg-orange-50 dark:bg-orange-900/20',
-        text: 'text-orange-700 dark:text-orange-300',
-        border: 'border-orange-200 dark:border-orange-800'
+        bg: 'bg-orange-50',
+        text: 'text-orange-700',
+        border: 'border-orange-200'
       };
       case 'SBI CC': return {
         gradient: 'from-purple-500 to-purple-600',
-        bg: 'bg-purple-50 dark:bg-purple-900/20',
-        text: 'text-purple-700 dark:text-purple-300',
-        border: 'border-purple-200 dark:border-purple-800'
+        bg: 'bg-purple-50',
+        text: 'text-purple-700',
+        border: 'border-purple-200'
       };
       default: return {
         gradient: 'from-gray-500 to-gray-600',
-        bg: 'bg-gray-50 dark:bg-gray-800/50',
-        text: 'text-gray-700 dark:text-gray-300',
-        border: 'border-gray-200 dark:border-gray-700'
+        bg: 'bg-gray-50',
+        text: 'text-gray-700',
+        border: 'border-gray-200'
       };
     }
   };
@@ -94,12 +94,12 @@ const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
             <BankIcon bankName={bankEntry.bank} />
-            <div className="font-semibold text-gray-800 dark:text-gray-100">{bankEntry.bank}</div>
+            <div className="font-semibold text-gray-800">{bankEntry.bank}</div>
           </div>
           <div className="text-right">
             <div className={`text-xl font-bold ${isDebit
-              ? 'text-red-600 dark:text-red-400'
-              : 'text-emerald-600 dark:text-emerald-400'
+              ? 'text-red-600'
+              : 'text-emerald-600'
               }`}>
               {isDebit ? '-' : '+'} ₹{bankEntry.amount.toLocaleString()}
             </div>
@@ -110,8 +110,8 @@ const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
         <div className="flex flex-wrap items-center gap-2 mb-4">
           {/* Transaction Type Tag */}
           <span className={`${tagBaseStyle} ${isDebit
-            ? 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800'
-            : 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800'
+            ? 'bg-red-100 text-red-700 border-red-200'
+            : 'bg-emerald-100 text-emerald-700 border-emerald-200'
             }`}>
             {bankEntry.type}
           </span>
@@ -123,22 +123,22 @@ const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
 
           {/* Processed/Pending Status Tag */}
           <span className={`${tagBaseStyle} ${bankEntry.processed
-            ? 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800'
-            : 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800'
+            ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
+            : 'bg-yellow-100 text-yellow-700 border-yellow-200'
             }`}>
             {bankEntry.processed ? <CheckCircle2 className="w-3 h-3 mr-1.5" /> : <Clock className="w-3 h-3 mr-1.5" />}
             {bankEntry.processed ? 'Processed' : 'Pending'}
           </span>
         </div>
 
-        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
+        <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center space-x-2 mb-2 text-slate-800 dark:text-slate-100">
+              <div className="flex items-center space-x-2 mb-2 text-slate-800">
                 <Calendar className="w-4 h-4 flex-shrink-0" />
                 <div className="font-medium text-sm">{dayjs(bankEntry.date).format('dddd, DD MMM, YYYY')}</div>
               </div>
-              <div className="flex items-start space-x-2 text-slate-500 dark:text-slate-400">
+              <div className="flex items-start space-x-2 text-slate-500">
                 <FileText className="w-4 h-4 flex-shrink-0 mt-0.5" />
                 <div className="text-sm font-medium break-all leading-relaxed capitalize">{bankEntry.description}</div>
               </div>

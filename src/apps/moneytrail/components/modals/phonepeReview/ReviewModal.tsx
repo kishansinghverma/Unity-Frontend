@@ -52,7 +52,7 @@ export const PhonepeReviewModal: FC<{
 
     const descriptionOptions: DefaultOptionType[] = descriptions.data ?
       descriptions.data.value.map(item => ({
-        label: <div className='text-gray-600 dark:text-gray-200 font-medium'>{item}</div>,
+        label: <div className='text-gray-600 font-medium'>{item}</div>,
         value: item,
         title: item
       })) : [];
@@ -68,7 +68,7 @@ export const PhonepeReviewModal: FC<{
         value: category.id,
         label: <div className='flex gap-2 items-center w-full'>
           <img src={category.icon_types.square.large} className='rounded-full w-6 h-6' />
-          <span className='text-gray-600 dark:text-gray-200 font-medium'>{category.name}</span>
+          <span className='text-gray-600 font-medium'>{category.name}</span>
         </div>
       })) : [];
 
@@ -78,14 +78,14 @@ export const PhonepeReviewModal: FC<{
         value: group.id,
         label: <div className='flex gap-2 items-center w-full'>
           <img src={group.avatar.large} className='rounded-full w-6 h-6' />
-          <span className='text-gray-600 dark:text-gray-200 font-medium'>{group.name}</span>
+          <span className='text-gray-600 font-medium'>{group.name}</span>
         </div>
       })) : [];
 
     const classes = {
       tr: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap",
       th: "px-3 py-2 truncate overflow-hidden text-overflow-ellipsis whitespace-nowrap font-semibold tracking-wide",
-      input: "flex items-center [&_input]:font-medium [&_input]:text-gray-600 dark:[&_input]:text-gray-200",
+      input: "flex items-center [&_input]:font-medium [&_input]:text-gray-600",
       select: "[&_.ant-select-selection-placeholder]:font-medium [&_input]:!caret-transparent"
     }
 
@@ -198,18 +198,18 @@ export const PhonepeReviewModal: FC<{
         onCancel={onModalClose}
         afterClose={() => setPhonepeItemId(null)}
       >
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden">
+        <div className="bg-white rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden">
           {/* Modal Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-10">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Review PhonePe Transaction</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Review and approve your transactions</p>
+              <h2 className="text-xl font-bold text-gray-900">Review PhonePe Transaction</h2>
+              <p className="text-sm text-gray-600">Review and approve your transactions</p>
             </div>
             <button
               onClick={onModalClose}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <X className="w-6 h-6 text-gray-500 dark:text-gray-400" />
+              <X className="w-6 h-6 text-gray-500" />
             </button>
           </div>
 
@@ -223,8 +223,8 @@ export const PhonepeReviewModal: FC<{
                     isFirst
                     icon={Smartphone}
                     type="PhonePe"
-                    headerStyle="from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20"
-                    iconStyle="text-blue-600 dark:text-blue-400"
+                    headerStyle="from-blue-50 to-indigo-50"
+                    iconStyle="text-blue-600"
                   >
                     <TransactionCard {...phonepeEntry} />
                   </TransactionContainer>
@@ -234,8 +234,8 @@ export const PhonepeReviewModal: FC<{
                   <TransactionContainer
                     icon={FileText}
                     type="Draft"
-                    headerStyle="from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20"
-                    iconStyle="text-orange-600 dark:text-orange-400"
+                    headerStyle="from-orange-50 to-yellow-50"
+                    iconStyle="text-orange-600"
                   >
                     {draftMatches.map((item) => (
                       <DraftItem key={item._id} {...{
@@ -249,15 +249,15 @@ export const PhonepeReviewModal: FC<{
               </div>
 
               {/* Transaction Details Table */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div className="px-4 py-3 border-b bg-gradient-to-r from-green-50 to-blue-50/60 dark:from-green-500/20 dark:to-blue-500/10 border-gray-200 dark:border-gray-700">
-                  <h3 className="font-semibold text-gray-800 dark:text-white">Transaction Details</h3>
+              <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+                <div className="px-4 py-3 border-b bg-gradient-to-r from-green-50 to-blue-50/60 border-gray-200">
+                  <h3 className="font-semibold text-gray-800">Transaction Details</h3>
                 </div>
 
                 <div className="overflow-x-auto">
                   <table className="w-full table-fixed">
-                    <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                      <tr className="text-left text-gray-500 dark:text-gray-400 text-sm">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr className="text-left text-gray-500 text-sm">
                         <th className={`${classes.th} w-20`}>Date</th>
                         <th className={`${classes.th} w-12`}>Bank</th>
                         <th className={`${classes.th} w-28`}>UTR / Transaction #</th>
@@ -265,8 +265,8 @@ export const PhonepeReviewModal: FC<{
                         <th className={`${classes.th} w-40`}>Location</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                      <tr className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-900 dark:text-white text-sm">
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      <tr className="hover:bg-gray-50 transition-colors text-gray-900 text-sm">
                         <td className={classes.tr}> {dayjs(phonepeEntry.date).format('DD-MM-YYYY')} </td>
                         <td className={classes.tr}> {phonepeEntry.bank} </td>
                         <td className={classes.tr}> {phonepeEntry?.utr || '-'} </td>
@@ -278,7 +278,7 @@ export const PhonepeReviewModal: FC<{
                 </div>
 
                 {/* Amount and Action Row */}
-                <div className="bg-gray-50 dark:bg-gray-900 p-4 border-t border-gray-200 dark:border-gray-600">
+                <div className="bg-gray-50 p-4 border-t border-gray-200">
                   <Form form={form} className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <Space.Compact>
@@ -329,7 +329,7 @@ export const PhonepeReviewModal: FC<{
                     <div className="flex gap-3">
                       <button
                         onClick={onModalClose}
-                        className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-gray-600 bg-gray-200 dark:bg-gray-500 hover:bg-gray-300 dark:hover:bg-gray-500 dark:text-gray-200"
+                        className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-gray-600 bg-gray-200 hover:bg-gray-300"
                       >
                         <X className="w-4 h-4" />
                         <span>Reject</span>
@@ -337,7 +337,7 @@ export const PhonepeReviewModal: FC<{
                       <button
                         onClick={onApprove}
                         type="submit"
-                        className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600"
+                        className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 hover:bg-green-700"
                       >
                         <Check className="w-4 h-4" />
                         <span>Approve</span>
@@ -354,7 +354,7 @@ export const PhonepeReviewModal: FC<{
   }
 
 const PrefixIcon: FC<{ size: number, strokeWidth: number, icon: ElementType }> = ({ size, strokeWidth, icon: Icon }) => (
-  <span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 dark:border-[#424242] bg-gray-50 dark:bg-[#FFFFFF0A] text-gray-500 dark:text-gray-300">
+  <span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 bg-gray-50 text-gray-500">
     <Icon size={size} strokeWidth={strokeWidth} />
   </span>
 )

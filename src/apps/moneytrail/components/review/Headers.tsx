@@ -4,9 +4,9 @@ import { ElementType, FC, memo } from "react";
 import { UploadStatement } from "../Common";
 
 const HeaderFC: FC<{ setModalVisible: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setModalVisible }) => (
-  <div className="flex px-4 py-3 mb-6 justify-between items-center text-sm font-medium text-gray-600 dark:text-gray-300 duration-200 rounded-xl bg-white dark:bg-gray-800 shadow-md dark:shadow-none border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+  <div className="flex px-4 py-3 mb-6 justify-between items-center text-sm font-medium text-gray-600 duration-200 rounded-xl bg-white shadow-md border border-gray-200 bg-white">
     <div className="flex gap-2">
-      <button onClick={() => setModalVisible(true)} className="flex gap-1 hover:text-gray-900 dark:hover:text-white hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-32">
+      <button onClick={() => setModalVisible(true)} className="flex gap-1 hover:text-gray-900 hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-32">
         <PlusCircle size={20} />
         <span>Add Expense</span>
       </button>
@@ -56,7 +56,7 @@ const ListHeaderFC: FC<{
           >
             <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 ease-in-out ${showProcessed ? 'translate-x-6' : 'translate-x-1'}`} />
           </button>
-          <div className="absolute top-8 right-0 w-max bg-gray-900 text-white dark:bg-gray-200 dark:text-black text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="absolute top-8 right-0 w-max bg-gray-900 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
             Show Processed
           </div>
         </div>

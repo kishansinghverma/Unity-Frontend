@@ -96,7 +96,7 @@ const SwipeableContent = ({
             onPointerCancel={finishDrag}
             onClick={handleClick}
             style={{ transform: `translate3d(${offsetX}px, 0, 0)` }}
-            className={`relative z-10 touch-pan-y bg-white text-sm font-semibold dark:bg-gray-800 group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer will-change-transform ${isDragging ? '' : 'transition-transform duration-200 ease-out'}`}
+            className={`relative z-10 touch-pan-y bg-white text-sm font-semibold group flex items-center justify-between p-3 sm:px-6 hover:bg-gray-50 cursor-pointer will-change-transform ${isDragging ? '' : 'transition-transform duration-200 ease-out'}`}
         >
             {children}
         </div>
@@ -135,11 +135,11 @@ export const BankItem = ({ isOpen, onOpen, setProcessed, item, setBankItemId }: 
             >
                 <div className="flex items-center flex-shrink-0"> <BankIcon bankName={item.bank} /></div>
                 <div className="flex-grow pr-6 pl-4 min-w-4">
-                    <h3 className="text-gray-800 dark:text-gray-200 line-clamp-2 break-all capitalize">{item.description}</h3>
+                    <h3 className="text-gray-800 line-clamp-2 break-all capitalize">{item.description}</h3>
                 </div>
                 <div className="text-right min-w-fit">
-                    <p className={`${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</p>
-                    <div className="flex justify-end text-gray-400 dark:text-gray-400">
+                    <p className={`${item.type === 'Credit' ? 'text-green-600' : 'text-red-600'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</p>
+                    <div className="flex justify-end text-gray-400">
                         <div className="flex items-center">
                             <div className="mr-1"><Calendar width={16} height={16} strokeWidth={2.5} /></div>
                             <div>{dayjs(item.date).format('DD MMM')}</div>
@@ -184,9 +184,9 @@ export const PhonepeItem = memo(({ isOpen, onOpen, setProcessed, item, setPhonep
                     <BankIcon bankName={item.bank} />
                 </div>
                 <div className="flex-grow pl-4 min-w-4">
-                    <div className="text-gray-800 dark:text-gray-200 line-clamp-1 break-all capitalize">{item.recipient}</div>
+                    <div className="text-gray-800 line-clamp-1 break-all capitalize">{item.recipient}</div>
                     <div className="flex justify-between">
-                        <div className={`flex items-center ${item.type === 'Credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</div>
+                        <div className={`flex items-center ${item.type === 'Credit' ? 'text-green-600' : 'text-red-600'}`}>{item.type === 'Credit' ? '+' : '-'} ₹{item.amount}</div>
                         <div className="flex items-center text-gray-400">
                             <div className="mr-1"><Calendar width={16} height={16} strokeWidth={2.5} /></div>
                             <div>{dayjs(item.date).format('DD MMM')}</div>
@@ -241,10 +241,10 @@ export const DraftItem = memo(({ isOpen, onOpen, setProcessed, item, setDraftIte
                 </a>
 
                 <div className="flex-grow pr-6 pl-4 min-w-4">
-                    <h3 className="text-gray-800 dark:text-gray-200 line-clamp-2 break-all capitalize">{location}</h3>
+                    <h3 className="text-gray-800 line-clamp-2 break-all capitalize">{location}</h3>
                 </div>
                 <div className="text-right min-w-fit">
-                    <div className="text-gray-400 dark:text-gray-300">
+                    <div className="text-gray-400">
                         <div className="flex items-center">
                             <div className="mr-1"><Calendar width={16} height={16} strokeWidth={2.5} /></div>
                             <div>{dayjs(item.dateTime).format('DD MMM')}</div>

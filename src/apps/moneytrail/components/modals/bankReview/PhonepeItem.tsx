@@ -15,27 +15,25 @@ export const PhonePeItem: FC<{
   isSelected,
   setSelected
 }) => {
-    const baseStyling = `w-full rounded-lg p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden group
-                       border border-gray-100 dark:border-gray-700
-                       hover:shadow-md dark:hover:shadow-slate-700/40`;
-    const hoverClasses = "hover:scale-[1.015] hover:border-slate-200 dark:hover:border-slate-700";
+    const baseStyling = `w-full rounded-lg p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden group border border-gray-100 hover:shadow-md`;
+    const hoverClasses = "hover:scale-[1.015] hover:border-slate-200";
 
     let selectionSpecificClasses = "";
     let selectionIndicatorElement: ReactNode = null;
 
     const isCredit = item.type === 'Credit';
-    let currentDateTimeColor = 'text-slate-800 dark:text-slate-100';
-    let currentPrimaryTextColor = 'text-slate-500 dark:text-slate-400';
-    let currentAmountColor = isCredit ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400';
+    let currentDateTimeColor = 'text-slate-800';
+    let currentPrimaryTextColor = 'text-slate-500';
+    let currentAmountColor = isCredit ? 'text-green-600' : 'text-red-600';
 
     if (isSelected) {
-      selectionSpecificClasses = `ring-1 ring-indigo-400 dark:ring-indigo-500 shadow-lg dark:shadow-indigo-900/50 bg-indigo-50/70 dark:bg-slate-800`;
-      selectionIndicatorElement = <CheckCircle className="w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 dark:bg-indigo-400 rounded-full p-0.5 shadow" />;
-      currentDateTimeColor = 'text-indigo-700 dark:text-indigo-300';
-      currentPrimaryTextColor = 'text-indigo-600 dark:text-indigo-400';
-      currentAmountColor = isCredit ? 'text-green-500 dark:text-green-300 font-semibold' : 'text-red-500 dark:text-red-300 font-semibold';
+      selectionSpecificClasses = "ring-1 ring-indigo-400 shadow-lg bg-indigo-50/70";
+      selectionIndicatorElement = <CheckCircle className="w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 rounded-full p-0.5 shadow" />;
+      currentDateTimeColor = 'text-indigo-700';
+      currentPrimaryTextColor = 'text-indigo-600';
+      currentAmountColor = isCredit ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold';
     } else {
-      selectionSpecificClasses = "bg-gray-50 dark:bg-slate-800/60 shadow-sm dark:shadow-slate-900/30";
+      selectionSpecificClasses = "bg-gray-50 shadow-sm";
     }
 
     const onSelect = (current: WithId<PhonepeEntry>) => {
