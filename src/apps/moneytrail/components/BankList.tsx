@@ -61,7 +61,7 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
   const itemsToRender = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
-    <div ref={listContainerRef} className="w-full h-full min-h-0 bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border">
+    <div ref={listContainerRef} className="w-full h-fit max-h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border">
       <ListHeader {...{
         title: "Bank Entries",
         subtitle: "Aggregated bank transactions",
@@ -71,7 +71,7 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
         setShowProcessed
       }} />
 
-      <div className="select-none flex-grow overflow-y-auto">
+      <div className="select-none overflow-y-auto">
         <ul>
           {isLoading ?
             Array.from({ length: 5 }).map((_, index) => <SkeletonItem key={index} />) :
