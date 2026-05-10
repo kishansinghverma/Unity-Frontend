@@ -1,22 +1,39 @@
-import React, { useState } from 'react';
-import { BankReviewModal } from '../components/modals/bankReview/ReviewModal';
+import React, { Suspense, lazy, memo, useMemo, useState } from 'react';
 import { BankList } from '../components/BankList';
 import { Nullable, WithId } from '../../../engine/models/types';
 import { useBankEntryQuery, useDraftEntryQuery, usePhonepeEntryQuery } from '../store/reviewSlice';
 import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
 import { PhonepeList } from '../components/PhonePeList';
 import { DraftList } from '../components/DraftList';
-import {  ManualEntryModal } from '../components/modals/manualEntry/ManualEntryModal';
 import { DraftEntry, BankEntry, PhonepeEntry } from '../engine/models/types';
-import { PhonepeReviewModal } from '../components/modals/phonepeReview/ReviewModal';
 import { Header } from '../components/review/Headers';
 
-const BankSection: React.FC<{
+const BankReviewModal = lazy(() =>
+  import('../components/modals/bankReview/ReviewModal').then((module) => ({
+    default: module.BankReviewModal,
+  })),
+);
+
+const PhonepeReviewModal = lazy(() =>
+  import('../components/modals/phonepeReview/ReviewModal').then((module) => ({
+    default: module.PhonepeReviewModal,
+  })),
+);
+
+const ManualEntryModal = lazy(() =>
+  import('../components/modals/manualEntry/ManualEntryModal').then((module) => ({
+    default: module.ManualEntryModal,
+  })),
+);
+
+type BankSectionProps = {
   bankEntries: WithId<BankEntry>[];
   phonepeEntries: WithId<PhonepeEntry>[];
   draftEntries: WithId<DraftEntry>[];
   isLoading: boolean;
-}> = ({ bankEntries, phonepeEntries, draftEntries, isLoading }) => {
+};
+
+const BankSection = memo(({ bankEntries, phonepeEntries, draftEntries, isLoading }: BankSectionProps) => {
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
 
   return (
@@ -27,24 +44,28 @@ const BankSection: React.FC<{
         setBankItemId={setBankItemId}
       />
       {bankItemId && (
-        <BankReviewModal
-          key={`bank-${bankItemId}`}
-          bankEntries={bankEntries}
-          phonepeEntries={phonepeEntries}
-          draftEntries={draftEntries}
-          bankItemId={bankItemId}
-          setBankItemId={setBankItemId}
-        />
+        <Suspense fallback={null}>
+          <BankReviewModal
+            key={`bank-${bankItemId}`}
+            bankEntries={bankEntries}
+            phonepeEntries={phonepeEntries}
+            draftEntries={draftEntries}
+            bankItemId={bankItemId}
+            setBankItemId={setBankItemId}
+          />
+        </Suspense>
       )}
     </div>
   );
-};
+});
 
-const PhonepeSection: React.FC<{
+type PhonepeSectionProps = {
   phonepeEntries: WithId<PhonepeEntry>[];
   draftEntries: WithId<DraftEntry>[];
   isLoading: boolean;
-}> = ({ phonepeEntries, draftEntries, isLoading }) => {
+};
+
+const PhonepeSection = memo(({ phonepeEntries, draftEntries, isLoading }: PhonepeSectionProps) => {
   const [phonepeItemId, setPhonepeItemId] = useState<Nullable<string>>(null);
 
   return (
@@ -55,24 +76,33 @@ const PhonepeSection: React.FC<{
         setPhonepeItemId={setPhonepeItemId}
       />
       {phonepeItemId && (
-        <PhonepeReviewModal
-          key={`phonepe-${phonepeItemId}`}
-          phonepeEntries={phonepeEntries}
-          draftEntries={draftEntries}
-          phonepeItemId={phonepeItemId}
-          setPhonepeItemId={setPhonepeItemId}
-        />
+        <Suspense fallback={null}>
+          <PhonepeReviewModal
+            key={`phonepe-${phonepeItemId}`}
+            phonepeEntries={phonepeEntries}
+            draftEntries={draftEntries}
+            phonepeItemId={phonepeItemId}
+            setPhonepeItemId={setPhonepeItemId}
+          />
+        </Suspense>
       )}
     </div>
   );
-};
+});
 
-const DraftSection: React.FC<{
+type DraftSectionProps = {
   draftEntries: WithId<DraftEntry>[];
   isLoading: boolean;
   isManualEntryModalVisible: boolean;
   setManualEntryModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ draftEntries, isLoading, isManualEntryModalVisible, setManualEntryModalVisible }) => {
+};
+
+const DraftSection = memo(({
+  draftEntries,
+  isLoading,
+  isManualEntryModalVisible,
+  setManualEntryModalVisible,
+}: DraftSectionProps) => {
   const [draftItem, setDraftItem] = useState<Nullable<WithId<DraftEntry>>>(null);
 
   return (
@@ -83,25 +113,27 @@ const DraftSection: React.FC<{
         setDraftItem={setDraftItem}
       />
       {(isManualEntryModalVisible || draftItem) && (
-        <ManualEntryModal
-          key={`manual-${draftItem?._id ?? 'new'}`}
-          draftEntry={draftItem}
-          setDraftItem={setDraftItem}
-          setVisible={setManualEntryModalVisible}
-        />
+        <Suspense fallback={null}>
+          <ManualEntryModal
+            key={`manual-${draftItem?._id ?? 'new'}`}
+            draftEntry={draftItem}
+            setDraftItem={setDraftItem}
+            setVisible={setManualEntryModalVisible}
+          />
+        </Suspense>
       )}
     </div>
   );
-};
+});
 
 const ReviewExpense: React.FC = () => {
   const bankQuery = useBankEntryQuery();
   const phonepeQuery = usePhonepeEntryQuery();
   const draftQuery = useDraftEntryQuery();
 
-  const bankEntries = getArrayOrDefault(bankQuery);
-  const phonepeEntries = getArrayOrDefault(phonepeQuery);
-  const draftEntries = getArrayOrDefault(draftQuery);
+  const bankEntries = useMemo(() => getArrayOrDefault(bankQuery), [bankQuery.data, bankQuery.isError, bankQuery.isLoading]);
+  const phonepeEntries = useMemo(() => getArrayOrDefault(phonepeQuery), [phonepeQuery.data, phonepeQuery.isError, phonepeQuery.isLoading]);
+  const draftEntries = useMemo(() => getArrayOrDefault(draftQuery), [draftQuery.data, draftQuery.isError, draftQuery.isLoading]);
 
   const [isManualEntryModalVisible, setManualEntryModalVisible] = useState(false);
 

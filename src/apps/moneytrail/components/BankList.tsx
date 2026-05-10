@@ -1,6 +1,5 @@
 import { Building2 } from "lucide-react";
-import { useState, useRef, useEffect, FC, memo } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useState, useRef, useEffect, useMemo, useCallback, FC, memo } from "react";
 import { Pagination } from "antd";
 
 import { BankItem } from "./ListItem";
@@ -27,11 +26,11 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 15;
   const listContainerRef = useRef<HTMLDivElement>(null);
-  const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+  const handleClickOutside = useCallback((event: MouseEvent | TouchEvent) => {
     if (openItemId !== null && listContainerRef.current && !listContainerRef.current.contains(event.target as Node)) {
       setOpenItemId(null);
     }
-  };
+  }, [openItemId]);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -41,8 +40,8 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, [openItemId]);
-  const setProcessed = (id: string) => {
+  }, [handleClickOutside]);
+  const setProcessed = useCallback((id: string) => {
     const response = fetch(`${Routes.ProcessBank}/${id}`, PostParams).then(handleResponse);
 
     notify.promise(response, Constants.Notifications.Request, {
@@ -55,10 +54,16 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
         data.forEach(entry => { if (entry._id === id) entry.processed = true });
       }));
     });
-  }
+  }, [dispatch]);
 
-  const filteredItems = items?.filter(item => (!item.processed || showProcessed)) ?? [];
-  const itemsToRender = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const filteredItems = useMemo(
+    () => items?.filter((item) => (!item.processed || showProcessed)) ?? [],
+    [items, showProcessed],
+  );
+  const itemsToRender = useMemo(
+    () => filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize),
+    [filteredItems, currentPage, pageSize],
+  );
 
   return (
     <div ref={listContainerRef} className="w-full h-fit max-h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border">
@@ -76,29 +81,20 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
           {isLoading ?
             Array.from({ length: 5 }).map((_, index) => <SkeletonItem key={index} />) :
             itemsToRender.length === 0 ? <EmptyList /> : (
-              <AnimatePresence mode="popLayout">
-                {
-                  itemsToRender.map((item, index) => (
-                    <motion.div
-                      layout
-                      key={item._id}
-                      initial={{ opacity: 0, scale: 0.9, y: 30, x: -20 }}
-                      animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-                      exit={{ opacity: 0, scale: 0.95, y: -15, x: 20, transition: { duration: 0.2, ease: "easeInOut" } }}
-                      transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
-                      className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
-                    >
-                      <BankItem
-                        item={item}
-                        setProcessed={setProcessed}
-                        setBankItemId={setBankItemId}
-                        isOpen={openItemId === item._id}
-                        onOpen={setOpenItemId}
-                      />
-                    </motion.div>
-                  ))
-                }
-              </AnimatePresence>
+              itemsToRender.map((item) => (
+                <div
+                  key={item._id}
+                  className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
+                >
+                  <BankItem
+                    item={item}
+                    setProcessed={setProcessed}
+                    setBankItemId={setBankItemId}
+                    isOpen={openItemId === item._id}
+                    onOpen={setOpenItemId}
+                  />
+                </div>
+              ))
             )
           }
         </ul>

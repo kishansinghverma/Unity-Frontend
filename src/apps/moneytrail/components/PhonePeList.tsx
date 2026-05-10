@@ -1,6 +1,5 @@
 import { TabletSmartphone } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useState, useRef, useEffect, FC, memo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback, FC, memo } from "react";
 import { Pagination } from "antd";
 import { PhonepeItem } from "./ListItem";
 import { EmptyList, SkeletonItem } from "./Common";
@@ -24,11 +23,11 @@ const PhonepeListFC: FC<{
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 15;
   const listContainerRef = useRef<HTMLDivElement>(null);
-  const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+  const handleClickOutside = useCallback((event: MouseEvent | TouchEvent) => {
     if (openItemId !== null && listContainerRef.current && !listContainerRef.current.contains(event.target as Node)) {
       setOpenItemId(null);
     }
-  };
+  }, [openItemId]);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -38,8 +37,8 @@ const PhonepeListFC: FC<{
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, [openItemId]);
-  const setProcessed = (id: string) => {
+  }, [handleClickOutside]);
+  const setProcessed = useCallback((id: string) => {
     dispatch(reviewApi.util.updateQueryData('phonepeEntry', undefined, (data) => {
       data.forEach(entry => { if (entry._id === id) entry.processed = true });
     }));
@@ -48,10 +47,16 @@ const PhonepeListFC: FC<{
       .then(handleResponse)
       .then(() => notify.success({ message: "Success", description: "Transaction Marked as Proccessed!" }))
       .catch(handleError);
-  }
+  }, [dispatch]);
 
-  const filteredItems = items?.filter(item => (!item.processed || showProcessed)) ?? [];
-  const itemsToRender = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const filteredItems = useMemo(
+    () => items?.filter((item) => (!item.processed || showProcessed)) ?? [],
+    [items, showProcessed],
+  );
+  const itemsToRender = useMemo(
+    () => filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize),
+    [filteredItems, currentPage, pageSize],
+  );
 
   return (
     <>
@@ -69,30 +74,20 @@ const PhonepeListFC: FC<{
             {isLoading ?
               (Array.from({ length: 5 }).map((_, index) => <SkeletonItem key={index} />)) :
               itemsToRender.length === 0 ? <EmptyList /> : (
-                <AnimatePresence mode="popLayout">
-                  {
-                    itemsToRender.map((item, index) => (
-                      <motion.div
-                        layout
-                        key={item._id}
-                        initial={{ opacity: 0, scale: 0.9, y: 30, x: -20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -15, x: 20, transition: { duration: 0.2, ease: "easeInOut" } }}
-                        transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
-                        className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
-                      >
-                        <PhonepeItem {...{
-                          item,
-                          setProcessed,
-                          setPhonepeItemId,
-                          isOpen: openItemId === item._id,
-                          onOpen: setOpenItemId
-                        }}
-                        />
-                      </motion.div>
-                    ))
-                  }
-                </AnimatePresence>
+                itemsToRender.map((item) => (
+                  <div
+                    key={item._id}
+                    className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
+                  >
+                    <PhonepeItem
+                      item={item}
+                      setProcessed={setProcessed}
+                      setPhonepeItemId={setPhonepeItemId}
+                      isOpen={openItemId === item._id}
+                      onOpen={setOpenItemId}
+                    />
+                  </div>
+                ))
               )
             }
           </ul>
