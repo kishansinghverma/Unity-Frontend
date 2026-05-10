@@ -122,7 +122,11 @@ export const BankItem = ({ isOpen, onOpen, setProcessed, item, setBankItemId }: 
                     disabled={item.processed}
                     title="Mark Complete"
                     onClick={() => markProcessed(item._id)}
-                    className="bg-green-500 text-white h-full w-20 flex items-center justify-center hover:bg-green-600 transition-colors"
+                    className={`text-white h-full w-20 flex items-center justify-center transition-colors ${
+                        item.processed
+                            ? 'bg-gray-400/50 cursor-not-allowed'
+                            : 'bg-green-500 hover:bg-green-600 cursor-pointer'
+                    }`}
                 >
                     <CircleCheckBigIcon />
                 </button>
@@ -167,9 +171,14 @@ export const PhonepeItem = memo(({ isOpen, onOpen, setProcessed, item, setPhonep
         <>
             <div className="absolute top-0 right-0 h-full flex items-center">
                 <button
+                    disabled={item.processed}
                     title="Mark Complete"
                     onClick={() => markProcessed(item._id)}
-                    className="bg-green-500 text-white h-full w-20 flex items-center justify-center hover:bg-green-600 transition-colors"
+                    className={`text-white h-full w-20 flex items-center justify-center transition-colors ${
+                        item.processed
+                            ? 'bg-gray-400/50 cursor-not-allowed'
+                            : 'bg-green-500 hover:bg-green-600 cursor-pointer'
+                    }`}
                 >
                     <CircleCheckBigIcon />
                 </button>
@@ -218,9 +227,14 @@ export const DraftItem = memo(({ isOpen, onOpen, setProcessed, item, setDraftIte
         <>
             <div className="absolute top-0 right-0 h-full flex items-center">
                 <button
+                    disabled={item.processed}
                     title="Mark Complete"
                     onClick={() => markProcessed(item._id)}
-                    className="bg-green-500 text-white h-full w-20 flex items-center justify-center hover:bg-green-600 transition-colors"
+                    className={`text-white h-full w-20 flex items-center justify-center transition-colors ${
+                        item.processed
+                            ? 'bg-gray-400/50 cursor-not-allowed'
+                            : 'bg-green-500 hover:bg-green-600 cursor-pointer'
+                    }`}
                 >
                     <CircleCheckBigIcon />
                 </button>
