@@ -1,6 +1,6 @@
 import { ElementType, FC, useEffect, useState } from 'react';
 import { Form, InputNumber, Space } from 'antd';
-import { X, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Smartphone } from 'lucide-react';
+import { X, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Smartphone, Loader2 } from 'lucide-react';
 import TransactionCard from './TransactionCard';
 import { Nullable, WithId } from '../../../../../engine/models/types';
 import { DraftEntry, PhonepeEntry, SplitwiseCategory } from '../../../engine/models/types';
@@ -44,6 +44,7 @@ export const PhonepeReviewModal: FC<{
 
     const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
     const [isOpen, setIsOpen] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
 
     const phonepeEntry = phonepeEntries.find(entry => entry._id === phonepeItemId)!;
     const draftMatches = getDraftMatches(null, phonepeEntry, draftEntries);
@@ -166,15 +167,22 @@ export const PhonepeReviewModal: FC<{
         .then(handleResponse)
         .then(onComplete)
         .catch(handleError)
+        .finally(() => setIsSaving(false));
     }
 
     const onApprove = () => {
+      if (isSaving) return;
+      setIsSaving(true);
+
       form.validateFields()
         .then(saveTransaction)
-        .catch(() => notify.error({
-          message: "Failed to Save",
-          description: "Provide the required details!"
-        }));
+        .catch(() => {
+          notify.error({
+            message: "Failed to Save",
+            description: "Provide the required details!"
+          });
+          setIsSaving(false);
+        });
     };
 
     const onAddDescription = (option: DefaultOptionType) => {
@@ -207,7 +215,8 @@ export const PhonepeReviewModal: FC<{
             </div>
             <button
               onClick={onModalClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              disabled={isSaving}
+              className={`p-2 hover:bg-gray-100 rounded-lg transition-colors ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <X className="w-6 h-6 text-gray-500" />
             </button>
@@ -329,7 +338,8 @@ export const PhonepeReviewModal: FC<{
                     <div className="flex gap-3">
                       <button
                         onClick={onModalClose}
-                        className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-gray-600 bg-gray-200 hover:bg-gray-300"
+                        disabled={isSaving}
+                        className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-gray-600 bg-gray-200 hover:bg-gray-300 ${isSaving ? 'opacity-60 cursor-not-allowed' : ''}`}
                       >
                         <X className="w-4 h-4" />
                         <span>Reject</span>
@@ -337,10 +347,15 @@ export const PhonepeReviewModal: FC<{
                       <button
                         onClick={onApprove}
                         type="submit"
-                        className="flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 hover:bg-green-700"
+                        disabled={isSaving}
+                        className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium shadow-sm transition-colors text-white bg-green-600 hover:bg-green-700 ${isSaving ? 'opacity-60 cursor-not-allowed' : ''}`}
                       >
-                        <Check className="w-4 h-4" />
-                        <span>Approve</span>
+                        {isSaving ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Check className="w-4 h-4" />
+                        )}
+                        <span>{isSaving ? 'Saving...' : 'Approve'}</span>
                       </button>
                     </div>
                   </Form>
