@@ -1,6 +1,6 @@
 import dayjs from "dayjs"
 import React, { memo, useEffect, useRef, useState } from "react";
-import { Calendar, CircleCheckBigIcon, Clock } from "lucide-react"
+import { Calendar, CircleCheckBigIcon, Clock, Check } from "lucide-react"
 
 import { AlphabetIcon, BankIcon } from "./Common"
 import { BankEntry, DraftEntry, PhonepeEntry } from "../engine/models/types";
@@ -12,6 +12,12 @@ const OPEN_THRESHOLD = -50;
 const CLICK_EPSILON = 6;
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+const ProcessedMarker = () => (
+    <div className="absolute top-0 left-0 z-30 flex h-4 w-4 items-center justify-center bg-green-600/90 rounded-br-lg shadow-lg">
+        <Check className="h-2 w-2 text-white" strokeWidth={5} />
+    </div>
+);
 
 const SwipeableContent = ({
     id,
@@ -137,6 +143,7 @@ export const BankItem = ({ isOpen, onOpen, setProcessed, item, setBankItemId }: 
                 onOpen={onOpen}
                 onClick={() => setBankItemId(item._id)}
             >
+                {item.processed && <ProcessedMarker />}
                 <div className="flex items-center flex-shrink-0"> <BankIcon bankName={item.bank} /></div>
                 <div className="flex-grow pr-6 pl-4 min-w-4">
                     <h3 className="text-gray-800 line-clamp-2 break-all capitalize">{item.description}</h3>
@@ -189,6 +196,7 @@ export const PhonepeItem = memo(({ isOpen, onOpen, setProcessed, item, setPhonep
                 onOpen={onOpen}
                 onClick={() => setPhonepeItemId(item._id)}
             >
+                {item.processed && <ProcessedMarker />}
                 <div className="flex items-center flex-shrink-0">
                     <BankIcon bankName={item.bank} />
                 </div>
@@ -245,6 +253,7 @@ export const DraftItem = memo(({ isOpen, onOpen, setProcessed, item, setDraftIte
                 onOpen={onOpen}
                 onClick={() => setDraftItem(item)}
             >
+                {item.processed && <ProcessedMarker />}
                 <a
                     target="_blank"
                     href={`https://www.google.com/maps?q=${item.coordinate}`}
