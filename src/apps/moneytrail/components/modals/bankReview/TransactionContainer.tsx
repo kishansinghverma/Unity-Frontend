@@ -1,5 +1,5 @@
 import { FileText } from "lucide-react"
-import React, { memo, Profiler, useEffect } from "react";
+import React, { memo } from "react";
 import { ElementType, PropsWithChildren } from "react"
 
 export const TransactionContainerFC: React.FC<PropsWithChildren<{
@@ -16,10 +16,7 @@ export const TransactionContainerFC: React.FC<PropsWithChildren<{
   iconStyle,
   isFirst
 }) => {
-    console.log(type);
     const childCount = React.Children.count(children);
-
-    useEffect(() => console.log("Render"));
 
     return (
       <div {...(isFirst && { 'data-first-column': true })} className={`bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden flex flex-col ${!isFirst && 'h-[var(--first-col-height,auto)]'}`}>
@@ -41,15 +38,7 @@ export const TransactionContainerFC: React.FC<PropsWithChildren<{
             </div>
           </div>
         )}
-
-        <Profiler
-          id="TransactionContainer"
-          onRender={(id, phase, actualDuration) => {
-            console.log(`${id} [${phase}] rendered in ${actualDuration} ms`);
-          }}
-        >
           {childCount > 0 && (<div className="p-4 flex-1 overflow-y-auto"> {children} </div>)}
-        </Profiler>
       </div>
     )
   };

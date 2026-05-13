@@ -45,8 +45,11 @@ const TransactionMetaData: { [key: string]: { Account: string, Type: string } } 
 
 const getNumberAt = (sheet: XLSX.WorkSheet, cellAddress: string): number | null => {
     const data = sheet[cellAddress]?.v;
-    if (data === undefined || data === null || StringUtils.isNullOrEmpty(data)) return null;
-    const value = data.replace(',', '');
+    if (data === undefined || data === null) return null;
+
+    const value = String(data).replace(/[,\s]+/g, '');
+    if (StringUtils.isNullOrEmpty(value)) return null;
+
     return isNaN(parseFloat(value)) ? null : parseFloat(value);
 };
 
