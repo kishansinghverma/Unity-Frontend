@@ -10,7 +10,6 @@ export const AnimatedModal: FC<AnimatedModalProps> = ({
   open,
   afterClose,
   children,
-  maskStyle,
   modalRender,
   motionClassName,
   styles,
@@ -39,12 +38,12 @@ export const AnimatedModal: FC<AnimatedModalProps> = ({
       title={title}
       closable={closable}
       transitionName=""
-      maskStyle={{
-        backdropFilter: 'blur(8px) saturate(0.8)',
-        ...maskStyle,
-      }}
       styles={{
         ...styles,
+        mask: {
+          backdropFilter: 'blur(8px) saturate(0.8)',
+          ...styles?.mask,
+        },
         content: {
           padding: 0,
           background: 'transparent',
