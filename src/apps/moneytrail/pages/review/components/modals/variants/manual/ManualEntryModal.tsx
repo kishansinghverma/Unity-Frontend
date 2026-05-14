@@ -2,23 +2,17 @@ import { DatePicker, Form, Input, InputNumber, Radio, Space } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 import dayjs from 'dayjs';
 import { X, IndianRupee, Layers2, Pencil, PieChart, Save, CalendarClock, CreditCard, MapPin, Loader2 } from 'lucide-react';
-import { ElementType, FC } from 'react';
-import { useState } from 'react';
-import CashLogo from '../../../../../../../static/icons/cash.svg';
-import HdfcLogo from '../../../../../../../static/icons/hdfc.svg';
-import ICICILogo from '../../../../../../../static/icons/icici.svg';
-import OtherPayLogo from '../../../../../../../static/icons/otherpay.svg';
-import SbiLogo from '../../../../../../../static/icons/sbi.svg';
-import SBICCLogo from '../../../../../../../static/icons/sbicc.svg';
-import { PostParams, Routes } from '../../../../../../../engine/constant';
-import { handleResponse, handleError } from '../../../../../../../engine/helpers/httpHelper';
-import { Nullable, WithId } from '../../../../../../../engine/models/types';
-import { notify } from '../../../../../../../engine/services/notificationService';
-import { useAppDispatch } from '../../../../../../../store/hooks';
-import { SelectWithAdd, CustomSelect } from '../../../../../components/Common';
-import { DraftEntry, SplitwiseCategory } from '../../../../../engine/models/types';
-import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../store/reviewSlice';
-import { AnimatedModal } from '../elements/AnimatedModal';
+import { ElementType, FC, useState } from 'react';
+import { PostParams, Routes } from '../../../../../../../../engine/constant';
+import { handleResponse, handleError } from '../../../../../../../../engine/helpers/httpHelper';
+import { Nullable, WithId } from '../../../../../../../../engine/models/types';
+import { notify } from '../../../../../../../../engine/services/notificationService';
+import { getSvg, svg } from '../../../../../../../../static/icons/provider';
+import { useAppDispatch } from '../../../../../../../../store/hooks';
+import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
+import { DraftEntry, SplitwiseCategory } from '../../../../../../engine/models/types';
+import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
+import { AnimatedModal } from '../../shared/AnimatedModal';
 
 type FormState = {
   amount: number;
@@ -89,17 +83,17 @@ export const ManualEntryModal: FC<{
       })) : [];
 
     const sourceOptions: DefaultOptionType[] = [
-      { name: "SBI", icon: SbiLogo },
-      { name: "HDFC", icon: HdfcLogo },
-      { name: "SBI Credit Card", icon: SBICCLogo },
-      { name: "ICICI Credit Card", icon: ICICILogo },
-      { name: "Cash", icon: CashLogo },
-      { name: "Other", icon: OtherPayLogo }
-    ].map(source => ({
+      { name: 'SBI', icon: svg.Sbi },
+      { name: 'HDFC', icon: svg.Hdfc },
+      { name: 'SBI Credit Card', icon: svg.SbiCc },
+      { name: 'ICICI Credit Card', icon: svg.Icici },
+      { name: 'Cash', icon: svg.Cash },
+      { name: 'Other', icon: svg.OtherPay }
+    ].map((source) => ({
       title: source.name,
       value: source.name,
       label: <div className='flex gap-2 items-center w-full'>
-        <img className="w-5 h-5 rounded-full" src={source.icon} />
+        <img className="w-5 h-5 rounded-full" src={getSvg(source.icon)} />
         <span className='text-gray-600 font-medium'>{source.name}</span>
       </div>
     }));

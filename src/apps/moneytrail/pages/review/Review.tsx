@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, memo, useMemo, useState } from 'react';
 import { getArrayOrDefault } from '../../../../engine/helpers/rtkHelper';
 import { Nullable, WithId } from '../../../../engine/models/types';
-import { BankList } from './components/lists/BankList';
+import { BankList } from './components/lists/bankList/BankList';
 import { DraftList } from './components/lists/DraftList';
 import { PaymentAppList } from './components/lists/PaymentAppList';
 import { Header } from './components/layouts/Headers';
@@ -9,19 +9,19 @@ import { DraftEntry, BankEntry, PaymentAppEntry } from '../../engine/models/type
 import { useBankEntryQuery, useDraftEntryQuery, usePaymentAppEntryQuery } from '../../store/reviewSlice';
 
 const BankReviewModal = lazy(() =>
-  import('./components/reviewModals/bank/ReviewModal').then((module) => ({
+  import('./components/modals/variants/bank/ReviewModal').then((module) => ({
     default: module.BankReviewModal,
   })),
 );
 
 const PaymentAppReviewModal = lazy(() =>
-  import('./components/reviewModals/paymentApp/ReviewModal').then((module) => ({
+  import('./components/modals/variants/paymentApp/ReviewModal').then((module) => ({
     default: module.PaymentAppReviewModal,
   })),
 );
 
 const ManualEntryModal = lazy(() =>
-  import('./components/reviewModals/manual/ManualEntryModal').then((module) => ({
+  import('./components/modals/variants/manual/ManualEntryModal').then((module) => ({
     default: module.ManualEntryModal,
   })),
 );

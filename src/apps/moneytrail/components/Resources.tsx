@@ -1,17 +1,13 @@
 import { CircleDollarSign } from "lucide-react";
 import { JSX } from "react";
 import { SafeMap } from "../../../engine/containers/safeMap";
-import HdfcLogo from '../../../static/icons/hdfc.svg';
-import IciciLogo from '../../../static/icons/icici.svg';
-import SbiLogo from '../../../static/icons/sbi.svg';
-import SbiCcLogo from '../../../static/icons/sbicc.svg';
-import UpiLogo from '../../../static/icons/upi.svg';
+import { getIcon, icon } from '../../../static/icons/provider';
 
 export const BankLogo = new SafeMap<string, JSX.Element>({
-    HDFC: <img src={HdfcLogo} width={24} height={24} />,
-    SBI: <img src={SbiLogo} width={24} height={24} />,
-    "ICICI CC": <img src={IciciLogo} width={24} height={24} className="rounded-xl" />,
-    "SBI CC": <img src={SbiCcLogo} width={24} height={24} />,
-    "UPI Lite": <img src={UpiLogo} width={24} height={24} />,
+    HDFC: <img src={getIcon(icon.Hdfc)} width={24} height={24} />,
+    SBI: <img src={getIcon(icon.Sbi)} width={24} height={24} />,
+    "ICICI CC": <img src={getIcon(icon.Icici)} width={24} height={24} className="rounded-xl" />,
+    "SBI CC": <img src={getIcon(icon.SbiCc)} width={24} height={24} />,
+    "UPI Lite": <img src={getIcon(icon.Upi)} width={24} height={24} />,
     Default: <CircleDollarSign size={24} />
 });

@@ -1,22 +1,23 @@
 import { Form, InputNumber, Space } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 import dayjs from 'dayjs';
-import { X, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Smartphone, Loader2 } from 'lucide-react';
+import { X, CreditCard, Smartphone, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Loader2 } from 'lucide-react';
 import { ElementType, FC, useEffect, useState } from 'react';
-import { TransactionContainer } from '../elements/TransactionContainer';
+import { PaymentAppItem } from './PaymentAppItem';
 import TransactionCard from './TransactionCard';
-import { PostParams, Routes } from '../../../../../../../engine/constant';
-import { handleResponse, handleError } from '../../../../../../../engine/helpers/httpHelper';
-import { StringUtils } from '../../../../../../../engine/helpers/stringHelper';
-import { WithId, Nullable } from '../../../../../../../engine/models/types';
-import { notify } from '../../../../../../../engine/services/notificationService';
-import { useAppDispatch } from '../../../../../../../store/hooks';
-import { SelectWithAdd, CustomSelect } from '../../../../../components/Common';
-import { PaymentAppEntry, DraftEntry, SplitwiseCategory } from '../../../../../engine/models/types';
-import { getDraftMatches } from '../../../../../engine/utils';
-import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../store/reviewSlice';
-import { AnimatedModal } from '../elements/AnimatedModal';
-import { DraftItem } from '../elements/DraftItem';
+import { TransactionContainer } from '../../shared/TransactionContainer';
+import { Nullable, WithId } from '../../../../../../../../engine/models/types';
+import { PostParams, Routes } from '../../../../../../../../engine/constant';
+import { handleResponse, handleError } from '../../../../../../../../engine/helpers/httpHelper';
+import { StringUtils } from '../../../../../../../../engine/helpers/stringHelper';
+import { notify } from '../../../../../../../../engine/services/notificationService';
+import { useAppDispatch } from '../../../../../../../../store/hooks';
+import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
+import { BankEntry, PaymentAppEntry, DraftEntry, SplitwiseCategory } from '../../../../../../engine/models/types';
+import { getPaymentAppMatches, getDraftMatches } from '../../../../../../engine/utils';
+import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
+import { AnimatedModal } from '../../shared/AnimatedModal';
+import { DraftItem } from '../../shared/DraftItem';
 
 type FormState = {
   amount: number,
@@ -25,16 +26,18 @@ type FormState = {
   group: number
 };
 
-export const PaymentAppReviewModal: FC<{
-  paymentAppItemId: string;
+export const BankReviewModal: FC<{
+  bankItemId: string;
+  bankEntries: WithId<BankEntry>[];
   paymentAppEntries: WithId<PaymentAppEntry>[];
   draftEntries: WithId<DraftEntry>[];
-  setPaymentAppItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
+  setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
 }> = ({
-  paymentAppItemId,
+  bankItemId,
+  bankEntries,
   paymentAppEntries,
   draftEntries,
-  setPaymentAppItemId
+  setBankItemId
 }) => {
     const dispatch = useAppDispatch();
 
@@ -42,12 +45,14 @@ export const PaymentAppReviewModal: FC<{
     const groups = useGroupsQuery();
     const categories = useCategoriesQuery();
 
+    const [selectedPaymentApp, setSelectedPaymentApp] = useState<Nullable<WithId<PaymentAppEntry>>>(null);
     const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
     const [isOpen, setIsOpen] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
-    const paymentAppEntry = paymentAppEntries.find(entry => entry._id === paymentAppItemId)!;
-    const draftMatches = getDraftMatches(null, paymentAppEntry, draftEntries);
+    const bankEntry = bankEntries.find(entry => entry._id === bankItemId)!;
+    const paymentAppMatches = getPaymentAppMatches(bankEntry, paymentAppEntries);
+    const draftMatches = getDraftMatches(bankEntry, selectedPaymentApp, draftEntries);
 
     const [form] = Form.useForm<FormState>();
 
@@ -104,9 +109,13 @@ export const PaymentAppReviewModal: FC<{
     const onComplete = () => {
       notify.success({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
 
-      if (paymentAppEntry?._id) {
+      dispatch(reviewApi.util.updateQueryData('bankEntry', undefined, (data) => {
+        data.forEach(entry => { if (entry._id === bankEntry._id) entry.processed = true });
+      }));
+
+      if (selectedPaymentApp?._id) {
         dispatch(reviewApi.util.updateQueryData('paymentAppEntry', undefined, (data) => {
-          data.forEach(entry => { if (entry._id === paymentAppEntry._id) entry.processed = true });
+          data.forEach(entry => { if (entry._id === selectedPaymentApp._id) entry.processed = true });
         }));
       }
 
@@ -125,22 +134,24 @@ export const PaymentAppReviewModal: FC<{
       let payload = {
         group_id: selectedGroup?.id,
         cost: formState.amount,
-        date: paymentAppEntry.date,
+        date: bankEntry.date,
         description: formState.description,
         parties: selectedGroup?.members.map(m => m.id),
         category: formState.category,
-        phonePeTxnId: paymentAppEntry?._id,
+        bankTxnId: bankEntry?._id,
+        phonePeTxnId: selectedPaymentApp?._id,
         draftTxnId: selectedDraft?._id,
       };
 
-      if (paymentAppEntry.type === 'Debit') {
+      if (bankEntry.type === 'Debit') {
         const debitPayload = {
           shared: selectedGroup?.sharing,
           details: Object.entries({
-            Bank: paymentAppEntry.bank ?? StringUtils.empty,
-            UTR: paymentAppEntry?.utr ?? "N/A",
-            TransactionNo: paymentAppEntry?.transactionId ?? 'N/A',
-            Recipient: paymentAppEntry?.recipient ?? 'N/A',
+            Bank: bankEntry.bank ?? StringUtils.empty,
+            Description: bankEntry.description ?? StringUtils.empty,
+            UTR: selectedPaymentApp?.utr ?? "N/A",
+            TransactionNo: selectedPaymentApp?.transactionId ?? 'N/A',
+            Recipient: selectedPaymentApp?.recipient ?? 'N/A',
             Location: selectedDraft?.location.replaceAll('\n', ', ') ?? 'N/A',
             Coordinates: selectedDraft?.coordinate ? `https://www.google.com/maps?q=${selectedDraft.coordinate}` : 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
@@ -151,17 +162,18 @@ export const PaymentAppReviewModal: FC<{
       else {
         const creditPayload = {
           details: Object.entries({
-            Bank: paymentAppEntry.bank ?? StringUtils.empty,
-            UTR: paymentAppEntry?.utr ?? 'N/A',
-            TransactionNo: paymentAppEntry?.transactionId ?? 'N/A',
-            Payer: paymentAppEntry?.recipient ?? 'N/A'
+            Bank: bankEntry.bank ?? StringUtils.empty,
+            Description: bankEntry.description ?? StringUtils.empty,
+            UTR: selectedPaymentApp?.utr ?? 'N/A',
+            TransactionNo: selectedPaymentApp?.transactionId ?? 'N/A',
+            Payer: selectedPaymentApp?.recipient ?? 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n')
         }
 
         payload = { ...payload, ...creditPayload };
       }
 
-      const url = paymentAppEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
+      const url = bankEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
 
       fetch(url, { ...PostParams, body: JSON.stringify(payload) })
         .then(handleResponse)
@@ -204,13 +216,13 @@ export const PaymentAppReviewModal: FC<{
       <AnimatedModal
         open={isOpen}
         onCancel={onModalClose}
-        afterClose={() => setPaymentAppItemId(null)}
+        afterClose={() => setBankItemId(null)}
       >
         <div className="bg-white rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden">
           {/* Modal Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-10">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Review Payment App Transaction</h2>
+              <h2 className="text-xl font-bold text-gray-900">Review Bank Transaction</h2>
               <p className="text-sm text-gray-600">Review and approve your transactions</p>
             </div>
             <button
@@ -226,35 +238,46 @@ export const PaymentAppReviewModal: FC<{
           <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
             <div className="max-w-7xl mx-auto p-6">
               {/* Three Column Layout */}
-              <div className="flex gap-8 mb-6">
-                <div className="w-[35%]">
-                  <TransactionContainer
-                    isFirst
-                    icon={Smartphone}
-                    type="Payment App"
-                    headerStyle="from-blue-50 to-indigo-50"
-                    iconStyle="text-blue-600"
-                  >
-                    <TransactionCard {...paymentAppEntry} />
-                  </TransactionContainer>
-                </div>
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <TransactionContainer
+                  isFirst
+                  icon={CreditCard}
+                  type="Bank"
+                  headerStyle="from-blue-50 to-indigo-50"
+                  iconStyle="text-blue-600"
+                >
+                  <TransactionCard {...bankEntry} />
+                </TransactionContainer>
 
-                <div className="w-[65%]">
-                  <TransactionContainer
-                    icon={FileText}
-                    type="Draft"
-                    headerStyle="from-orange-50 to-yellow-50"
-                    iconStyle="text-orange-600"
-                  >
-                    {draftMatches.map((item) => (
-                      <DraftItem key={item._id} {...{
-                        item,
-                        isSelected: selectedDraft?._id === item._id,
-                        setSelected: setSelectedDraft
-                      }} />
-                    ))}
-                  </TransactionContainer>
-                </div>
+                <TransactionContainer
+                  icon={Smartphone}
+                  type="Payment App"
+                  headerStyle="from-purple-50 to-pink-50"
+                  iconStyle="text-purple-600"
+                >
+                  {paymentAppMatches.map((item) => (
+                    <PaymentAppItem key={item._id} {...{
+                      item,
+                      isSelected: selectedPaymentApp?._id === item._id,
+                      setSelected: setSelectedPaymentApp
+                    }} />
+                  ))}
+                </TransactionContainer>
+
+                <TransactionContainer
+                  icon={FileText}
+                  type="Draft"
+                  headerStyle="from-orange-50 to-yellow-50"
+                  iconStyle="text-orange-600"
+                >
+                  {draftMatches.map((item) => (
+                    <DraftItem key={item._id} {...{
+                      item,
+                      isSelected: selectedDraft?._id === item._id,
+                      setSelected: setSelectedDraft
+                    }} />
+                  ))}
+                </TransactionContainer>
               </div>
 
               {/* Transaction Details Table */}
@@ -269,6 +292,7 @@ export const PaymentAppReviewModal: FC<{
                       <tr className="text-left text-gray-500 text-sm">
                         <th className={`${classes.th} w-20`}>Date</th>
                         <th className={`${classes.th} w-12`}>Bank</th>
+                        <th className={`${classes.th} w-52`}>Description</th>
                         <th className={`${classes.th} w-28`}>UTR / Transaction #</th>
                         <th className={`${classes.th} w-28`}>Recipient</th>
                         <th className={`${classes.th} w-40`}>Location</th>
@@ -276,10 +300,11 @@ export const PaymentAppReviewModal: FC<{
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       <tr className="hover:bg-gray-50 transition-colors text-gray-900 text-sm">
-                        <td className={classes.tr}> {dayjs(paymentAppEntry.date).format('DD-MM-YYYY')} </td>
-                        <td className={classes.tr}> {paymentAppEntry.bank} </td>
-                        <td className={classes.tr}> {paymentAppEntry?.utr || '-'} </td>
-                        <td className={`${classes.tr} capitalize`}> {paymentAppEntry?.recipient || '-'} </td>
+                        <td className={classes.tr}> {dayjs(bankEntry.date).format('DD-MM-YYYY')} </td>
+                        <td className={classes.tr}> {bankEntry.bank} </td>
+                        <td className={`${classes.tr} capitalize`}> {bankEntry.description} </td>
+                        <td className={classes.tr}> {selectedPaymentApp?.utr || '-'} </td>
+                        <td className={`${classes.tr} capitalize`}> {selectedPaymentApp?.recipient || '-'} </td>
                         <td className={`${classes.tr} capitalize`}> {selectedDraft?.location.replaceAll('\n', ', ') || '-'} </td>
                       </tr>
                     </tbody>
@@ -292,7 +317,7 @@ export const PaymentAppReviewModal: FC<{
                     <div className="flex items-center gap-4">
                       <Space.Compact>
                         <PrefixIcon icon={IndianRupee} size={16} strokeWidth={3} />
-                        <Form.Item initialValue={paymentAppEntry.amount} name="amount" noStyle rules={[{ required: true }]}>
+                        <Form.Item initialValue={bankEntry.amount} name="amount" noStyle rules={[{ required: true }]}>
                           <InputNumber
                             placeholder="Amount"
                             className={`w-32 ${classes.input}`}
@@ -321,8 +346,8 @@ export const PaymentAppReviewModal: FC<{
                         placement="bottomRight"
                         className={`w-48 ${classes.select}`}
                         prefix={<PrefixIcon icon={Layers2} size={16} strokeWidth={3} />}
-                        formItemProps={{ initialValue: paymentAppEntry.type === 'Credit' ? 2 : 1 }}
-                        disabled={paymentAppEntry.type === 'Credit'}
+                        formItemProps={{ initialValue: bankEntry.type === 'Credit' ? 2 : 1 }}
+                        disabled={bankEntry.type === 'Credit'}
                       />
                       <CustomSelect
                         name="group"
