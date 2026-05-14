@@ -62,7 +62,7 @@ const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
                     href={`https://www.google.com/maps?q=${item.coordinate}`}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <AlphabetIcon {...{ firstLetter, seed: item._id, overrideStyle: iconOverrideStyle }} />
+                    <AlphabetIcon firstLetter={firstLetter} seed={item._id} overrideStyle={iconOverrideStyle} />
                 </a>
                 <div>
                     <p className={titleStyle} title={singleLineLocation}> {singleLineLocation} </p>
