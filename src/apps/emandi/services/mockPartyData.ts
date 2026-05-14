@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 
-// Mock data for parties
 const mockParties = [
   {
     id: '1',

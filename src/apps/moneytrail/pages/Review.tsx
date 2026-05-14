@@ -1,12 +1,12 @@
 import React, { Suspense, lazy, memo, useMemo, useState } from 'react';
-import { BankList } from '../components/BankList';
-import { Nullable, WithId } from '../../../engine/models/types';
-import { useBankEntryQuery, useDraftEntryQuery, usePhonePeEntryQuery } from '../store/reviewSlice';
 import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
-import { PhonePeList } from '../components/PhonePeList';
+import { Nullable, WithId } from '../../../engine/models/types';
+import { BankList } from '../components/BankList';
 import { DraftList } from '../components/DraftList';
-import { DraftEntry, BankEntry, PhonePeEntry } from '../engine/models/types';
+import { PhonePeList } from '../components/PhonePeList';
 import { Header } from '../components/review/Headers';
+import { DraftEntry, BankEntry, PhonePeEntry } from '../engine/models/types';
+import { useBankEntryQuery, useDraftEntryQuery, usePhonePeEntryQuery } from '../store/reviewSlice';
 
 const BankReviewModal = lazy(() =>
   import('../components/modals/bankReview/ReviewModal').then((module) => ({

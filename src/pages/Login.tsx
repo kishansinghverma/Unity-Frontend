@@ -1,6 +1,6 @@
+import { User, Lock } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Login: React.FC = () => {

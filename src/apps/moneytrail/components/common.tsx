@@ -1,18 +1,17 @@
-import { CircleArrowUp, ListX } from "lucide-react";
 import { Space, Select, Form, Popover, List } from "antd";
-import { FC, useEffect, useRef, useState } from "react";
-import { DefaultOptionType, SelectProps } from "antd/es/select";
 import { FormItemProps, Rule } from "antd/es/form";
 import { NamePath } from "antd/es/form/interface";
-
-import { BankLogo } from "./Resources";
-import { getColorPair, getIconBackground } from "../engine/utils";
-import { parsePhonePeStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../engine/parser";
-import { StringUtils } from "../../../engine/helpers/stringHelper";
-import { handleJsonResponse } from "../../../engine/helpers/httpHelper";
-import { NotificationMessages, notify } from "../../../engine/services/notificationService";
-import { Nullable } from "../../../engine/models/types";
+import { DefaultOptionType, SelectProps } from "antd/es/select";
+import { CircleArrowUp, ListX } from "lucide-react";
+import { FC, useEffect, useRef, useState } from "react";
 import { PostParams, Routes } from "../../../engine/constant";
+import { handleJsonResponse } from "../../../engine/helpers/httpHelper";
+import { StringUtils } from "../../../engine/helpers/stringHelper";
+import { Nullable } from "../../../engine/models/types";
+import { NotificationMessages, notify } from "../../../engine/services/notificationService";
+import { parsePhonePeStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../engine/parser";
+import { getColorPair, getIconBackground } from "../engine/utils";
+import { BankLogo } from "./Resources";
 
 export const BankIcon: FC<{
   bankName: string

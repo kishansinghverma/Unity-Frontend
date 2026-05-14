@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 
-// Mock data for gate passes
 const mockGatePasses = [
   {
     id: '1',

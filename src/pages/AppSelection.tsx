@@ -1,6 +1,6 @@
+import { Wheat, CandlestickChart, LogOut, Home, Package } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Wheat, CandlestickChart, LogOut, Home, Package } from 'lucide-react';
 import { APPS } from '../constants/apps';
 import { useAuth } from '../context/AuthContext';
 import { useAppDispatch } from '../store/hooks';

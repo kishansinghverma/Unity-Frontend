@@ -28,7 +28,6 @@ export const TransactionContainerFC: React.FC<PropsWithChildren<{
           </div>
         </div>
 
-
         {childCount === 0 && (
           <div className="p-4 flex-1 flex items-center justify-center">
             <div className="text-center">

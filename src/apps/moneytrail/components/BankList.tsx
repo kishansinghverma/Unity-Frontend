@@ -1,17 +1,16 @@
+import { Pagination } from "antd";
+import { AnimatePresence, motion } from "framer-motion";
 import { Building2 } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback, FC, memo } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Pagination } from "antd";
-
-import { BankItem } from "./ListItem";
+import { Constants, PostParams, Routes } from "../../../engine/constant";
+import { handleResponse } from "../../../engine/helpers/httpHelper";
+import { Nullable, WithId } from "../../../engine/models/types";
+import { notify } from "../../../engine/services/notificationService";
+import { useAppDispatch } from "../../../store/hooks";
 import { BankEntry } from "../engine/models/types";
 import { reviewApi } from "../store/reviewSlice";
 import { EmptyList, SkeletonItem } from "./Common";
-import { useAppDispatch } from "../../../store/hooks";
-import { Nullable, WithId } from "../../../engine/models/types";
-import { handleResponse } from "../../../engine/helpers/httpHelper";
-import { notify } from "../../../engine/services/notificationService";
-import { Constants, PostParams, Routes } from "../../../engine/constant";
+import { BankItem } from "./ListItem";
 import { ListHeader } from "./review/Headers";
 
 type BankListProps = {

@@ -1,9 +1,9 @@
+import { BarChart3, TrendingUp, ClipboardList, UserSquare, ChevronRight } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Card from '../../../components/ui/Card';
 import DashboardStats from '../components/DashboardStats';
 import RecentActivity from '../components/RecentActivity';
-import Card from '../../../components/ui/Card';
-import { BarChart3, TrendingUp, ClipboardList, UserSquare, ChevronRight } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
   return (

@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 
-// Mock data
 const mockCustomers = [
   {
     id: '1',

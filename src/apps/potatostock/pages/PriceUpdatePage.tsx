@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Card from '../../../components/ui/Card';
 import PriceUpdateForm from '../components/PriceUpdateForm';
 import type { StockPriceUpdate } from '../types';
-import Card from '../../../components/ui/Card';
 
 const PriceUpdatePage: React.FC = () => {
   const navigate = useNavigate();

@@ -1,11 +1,11 @@
 import { CircleDollarSign } from "lucide-react";
+import { JSX } from "react";
 import { SafeMap } from "../../../engine/containers/safeMap";
 import HdfcLogo from '../../../static/icons/hdfc.svg';
-import SbiLogo from '../../../static/icons/sbi.svg';
 import IciciLogo from '../../../static/icons/icici.svg';
+import SbiLogo from '../../../static/icons/sbi.svg';
 import SbiCcLogo from '../../../static/icons/sbicc.svg';
 import UpiLogo from '../../../static/icons/upi.svg';
-import { JSX } from "react";
 
 export const BankLogo = new SafeMap<string, JSX.Element>({
     HDFC: <img src={HdfcLogo} width={24} height={24} />,

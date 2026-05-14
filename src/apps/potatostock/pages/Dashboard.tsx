@@ -1,9 +1,9 @@
+import { BarChart3, TrendingUp, Warehouse, Scale, Tags, Package } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BarChart3, TrendingUp, Warehouse, Scale, Tags, Package } from 'lucide-react';
 import Card from '../../../components/ui/Card';
-import StockStats from '../components/StockStats';
 import RecentActivity from '../components/RecentActivity';
+import StockStats from '../components/StockStats';
 
 const Dashboard: React.FC = () => {
   return (

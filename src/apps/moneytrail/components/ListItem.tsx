@@ -3,8 +3,8 @@ import React, { memo, useEffect, useRef, useState } from "react";
 import { Calendar, CircleCheckBigIcon, Clock, Check } from "lucide-react"
 import { AlphabetIcon, BankIcon } from "./Common"
 import { BankEntry, DraftEntry, PhonePeEntry } from "../engine/models/types";
-import { Nullable, WithId } from "../../../engine/models/types";
 import { StringUtils } from "../../../engine/helpers/stringHelper";
+import { Nullable, WithId } from "../../../engine/models/types";
 
 const ACTION_WIDTH = 80;
 const OPEN_THRESHOLD = -50;

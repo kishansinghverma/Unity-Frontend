@@ -1,6 +1,6 @@
+import { X, Save } from 'lucide-react';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { X, Save } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 
 const GatePassForm: React.FC = () => {

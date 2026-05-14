@@ -1,5 +1,5 @@
-import React from 'react';
 import { Package, ArrowDownUp, Clock, Truck } from 'lucide-react';
+import React from 'react';
 import Card from '../../../components/ui/Card';
 
 interface ActivityItem {

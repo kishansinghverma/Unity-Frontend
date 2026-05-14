@@ -1,10 +1,9 @@
-import { ReactNode, FC } from 'react';
-import { CheckCircle, Clock } from 'lucide-react';
 import dayjs from 'dayjs';
+import { CheckCircle, Clock } from 'lucide-react';
+import { ReactNode, FC } from 'react';
 import { Nullable, WithId } from '../../../../../engine/models/types';
 import { PhonePeEntry } from '../../../engine/models/types';
 import { BankIcon } from '../../Common';
-
 
 export const PhonePeItem: FC<{
   item: WithId<PhonePeEntry>;

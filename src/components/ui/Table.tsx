@@ -1,5 +1,5 @@
-import React from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
+import React from 'react';
 import { ListColumn, SortConfig } from '../../types';
 
 interface TableProps<T extends { id: string }> {

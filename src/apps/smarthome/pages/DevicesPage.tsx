@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { Lightbulb, Snowflake, Lock, Speaker, Info, Edit2, PlusCircle } from 'lucide-react';
+import React, { useState } from 'react';
 
 const initialDevices = [
 	{

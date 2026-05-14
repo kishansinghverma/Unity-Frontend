@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppInfo } from '../../types';
-import { APPS } from '../../constants/apps';
 import { RootState } from '..';
+import { APPS } from '../../constants/apps';
+import { AppInfo } from '../../types';
 
 interface AppState {
   currentApp: AppInfo | null;

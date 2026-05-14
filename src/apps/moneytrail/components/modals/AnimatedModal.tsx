@@ -1,6 +1,6 @@
-import { FC, useEffect, useState } from 'react';
 import { Modal, ModalProps } from 'antd';
 import { motion } from 'framer-motion';
+import { FC, useEffect, useState } from 'react';
 
 type AnimatedModalProps = ModalProps & {
   motionClassName?: string;

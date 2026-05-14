@@ -1,12 +1,12 @@
+import { Save, X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Save, X } from 'lucide-react';
+import Button from '../../../components/ui/Button';
 import Card from '../../../components/ui/Card';
 import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
-import Button from '../../../components/ui/Button';
-import { StockFormData } from '../types';
 import { mockStocks } from '../services/mockData';
+import { StockFormData } from '../types';
 
 const QUALITIES = ['Premium', 'Standard', 'Economy'];
 const WAREHOUSES = ['Warehouse A', 'Warehouse B', 'Warehouse C'];

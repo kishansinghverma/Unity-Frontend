@@ -1,14 +1,14 @@
-import React from 'react';
+import dayjs from 'dayjs';
 import {
   Calendar,
   CheckCircle2,
   Clock,
   FileText
 } from 'lucide-react';
+import React from 'react';
 import { WithId } from '../../../../../engine/models/types';
 import { BankEntry } from '../../../engine/models/types';
 import { BankIcon } from '../../Common';
-import dayjs from 'dayjs';
 
 interface DescriptionInfo {
   platform: string;

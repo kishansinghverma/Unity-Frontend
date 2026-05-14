@@ -1,20 +1,19 @@
-import React from 'react';
+import dayjs from 'dayjs';
 import {
   Calendar,
   CheckCircle2,
   Clock,
   FileText
 } from 'lucide-react';
+import React from 'react';
 import { WithId } from '../../../../../engine/models/types';
 import { PhonePeEntry } from '../../../engine/models/types';
 import { BankIcon } from '../../Common';
-import dayjs from 'dayjs';
 
 // interface DescriptionInfo {
 //   platform: string;
 //   category: string;
 // }
-
 // interface BankTheme {
 //   gradient: string;
 //   bg: string;
@@ -55,7 +54,6 @@ const TransactionCard: React.FC<WithId<PhonePeEntry>> = (phonePeEntry) => {
             }`}>
             {phonePeEntry.type}
           </span>
-
 
           {/* Processed/Pending Status Tag */}
           <span className={`${tagBaseStyle} ${phonePeEntry.processed

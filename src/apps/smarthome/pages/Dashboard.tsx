@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-
 // Import Lucide icons
 import {
     ChevronDown,
@@ -32,6 +30,7 @@ import {
     CloudSun,
     Sunrise,
 } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface StatCardProps {
     title: string;
@@ -167,7 +166,6 @@ const DeviceToggle: React.FC<{device: Device, onToggle: (id: string) => void}> =
   );
 };
 
-
 const RoomCard: React.FC<{ room: Room, onDeviceToggle: (roomId: string, deviceId: string) => void }> = ({ room, onDeviceToggle }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -223,7 +221,6 @@ const SceneButton: React.FC<{ scene: Scene, onToggle: (id: string) => void }> = 
   </button>
   );
 };
-
 
 const DashboardPage: React.FC = () => {
   const [currentRooms, setCurrentRooms] = useState<Room[]>(roomsData);

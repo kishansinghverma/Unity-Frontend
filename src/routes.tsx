@@ -1,40 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate, useLocation } from 'react-router-dom';
-import { useAppDispatch } from './store/hooks';
-import { setCurrentApp } from './store/slices/appSlice';
-import { APPS } from './constants/apps';
-
-// Layout
-import AppShell from './components/layout/AppShell';
-import ProtectedRoute from './components/ProtectedRoute';
-
-// Auth pages
-import Login from './pages/Login';
-import AppSelection from './pages/AppSelection';
-
 // eMandi App
 import Dashboard from './apps/emandi/pages/Dashboard';
 import GatePassForm from './apps/emandi/pages/GatePassForm';
 import GatePassList from './apps/emandi/pages/GatePassList';
-import ProcessedRecordsList from './apps/emandi/pages/ProcessedRecordsList';
-import PartyList from './apps/emandi/pages/PartyList';
 import PartyForm from './apps/emandi/pages/PartyForm';
-
+import PartyList from './apps/emandi/pages/PartyList';
+import ProcessedRecordsList from './apps/emandi/pages/ProcessedRecordsList';
 // Money Trail App
 import MoneyTrailDashboard from './apps/moneytrail/pages/Dashboard';
 import ReviewExpense from './apps/moneytrail/pages/Review';
 import Splitwise from './apps/moneytrail/pages/Splitwise';
-
+// Potato Stock App
+import PotatoStockDashboard from './apps/potatostock/pages/Dashboard';
+import PriceUpdatePage from './apps/potatostock/pages/PriceUpdatePage';
+import StockForm from './apps/potatostock/pages/StockForm';
+import StockList from './apps/potatostock/pages/StockList';
+import TransferPage from './apps/potatostock/pages/TransferPage';
 // Smart Home App
 import SmartHomeDashboard from './apps/smarthome/pages/Dashboard';
 import DevicesPage from './apps/smarthome/pages/DevicesPage';
-
-// Potato Stock App
-import PotatoStockDashboard from './apps/potatostock/pages/Dashboard';
-import StockList from './apps/potatostock/pages/StockList';
-import StockForm from './apps/potatostock/pages/StockForm';
-import TransferPage from './apps/potatostock/pages/TransferPage';
-import PriceUpdatePage from './apps/potatostock/pages/PriceUpdatePage';
+// Layout
+import AppShell from './components/layout/AppShell';
+import ProtectedRoute from './components/ProtectedRoute';
+import { APPS } from './constants/apps';
+import AppSelection from './pages/AppSelection';
+// Auth pages
+import Login from './pages/Login';
+import { useAppDispatch } from './store/hooks';
+import { setCurrentApp } from './store/slices/appSlice';
 
 const PersistLastVisitedPage: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
