@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate, useLocation } from 'react-router-dom';
 // eMandi App
-import Dashboard from './apps/emandi/pages/Dashboard';
+import Dashboard from './apps/emandi/pages/dashboard/Dashboard';
 import GatePassForm from './apps/emandi/pages/GatePassForm';
 import GatePassList from './apps/emandi/pages/GatePassList';
 import PartyForm from './apps/emandi/pages/PartyForm';
@@ -9,7 +9,7 @@ import PartyList from './apps/emandi/pages/PartyList';
 import ProcessedRecordsList from './apps/emandi/pages/ProcessedRecordsList';
 // Money Trail App
 import MoneyTrailDashboard from './apps/moneytrail/pages/dashboard/Dashboard';
-import ReviewExpense from './apps/moneytrail/pages/review/Review';
+import ReviewExpense from './apps/moneytrail/pages/review';
 import Splitwise from './apps/moneytrail/pages/splitwise/Splitwise';
 // Potato Stock App
 import PotatoStockDashboard from './apps/potatostock/pages/Dashboard';

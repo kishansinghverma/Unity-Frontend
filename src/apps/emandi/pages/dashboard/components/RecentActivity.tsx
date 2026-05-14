@@ -1,6 +1,6 @@
 import { UserSquare, ClipboardList, Clock, ClipboardCheck } from 'lucide-react';
 import React from 'react';
-import Card from '../../../components/ui/Card';
+import Card from '../../../../../components/ui/Card';
 
 interface ActivityItem {
   id: string;
