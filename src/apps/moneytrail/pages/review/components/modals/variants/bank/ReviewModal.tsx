@@ -13,12 +13,12 @@ import { StringUtils } from '../../../../../../../../engine/helpers/stringHelper
 import { notify } from '../../../../../../../../engine/services/notificationService';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
 import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
-import { BankReviewModalProps, PrefixIconProps } from '../../../../../../engine/contracts/props';
-import { PaymentAppEntry, DraftEntry, SplitwiseCategory } from '../../../../../../engine/types';
-import { getPaymentAppMatches, getDraftMatches } from '../../../../../../engine/utils';
+import { BankReviewModalProps, PrefixIconProps } from '../../../../../../core/contracts/props';
+import { getPaymentAppMatches, getDraftMatches } from '../../../../engine/utils';
 import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
 import { AnimatedModal } from '../../shared/AnimatedModal';
 import { DraftItem } from '../../shared/DraftItem';
+import { PaymentAppEntry, DraftEntry, SplitwiseCategory } from '../../../../../../core/contracts/models';
 
 type FormState = {
   amount: number,

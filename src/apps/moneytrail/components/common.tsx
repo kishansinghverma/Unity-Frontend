@@ -6,9 +6,9 @@ import { PostParams, Routes } from "../../../engine/constant";
 import { handleJsonResponse } from "../../../engine/helpers/httpHelper";
 import { StringUtils } from "../../../engine/helpers/stringHelper";
 import { NotificationMessages, notify } from "../../../engine/services/notificationService";
-import { AlphabetIconProps, BankIconProps, CustomSelectProps, SelectWithAddProps } from "../engine/contracts/props";
-import { parsePaymentAppStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../engine/parser";
-import { getColorPair, getIconBackground } from "../engine/utils";
+import { AlphabetIconProps, BankIconProps, CustomSelectProps, SelectWithAddProps } from "../core/contracts/props";
+import { parsePaymentAppStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../pages/review/engine/parser";
+import { getColorPair, getIconBackground } from "../pages/review/engine/utils";
 import { BankLogo } from "./Resources";
 
 export const BankIcon: FC<BankIconProps> = ({ bankName }) => (

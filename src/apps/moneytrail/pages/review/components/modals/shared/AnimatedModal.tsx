@@ -1,7 +1,7 @@
 import { Modal } from 'antd';
 import { motion } from 'framer-motion';
 import { FC, useEffect, useState } from 'react';
-import { AnimatedModalProps } from '../../../../../engine/contracts/props';
+import { AnimatedModalProps } from '../../../../../core/contracts/props';
 
 export const AnimatedModal: FC<AnimatedModalProps> = ({
   open,

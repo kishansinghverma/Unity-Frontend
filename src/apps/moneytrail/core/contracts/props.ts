@@ -4,7 +4,7 @@ import type { NamePath } from 'antd/es/form/interface';
 import type { DefaultOptionType, SelectProps } from 'antd/es/select';
 import type { Dispatch, ElementType, ReactNode, SetStateAction } from 'react';
 import type { Nullable, WithId } from '../../../../engine/models/types';
-import type { BankEntry, DraftEntry, PaymentAppEntry } from '../types';
+import { BankEntry, PaymentAppEntry, DraftEntry } from './models';
 
 export type BankIconProps = {
   bankName: string;

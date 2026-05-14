@@ -7,7 +7,7 @@ import { handleResponse } from "../../../../../../engine/helpers/httpHelper";
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { SkeletonItem, EmptyList } from "../../../../components/Common";
-import { BankListProps } from "../../../../engine/contracts/props";
+import { BankListProps } from "../../../../core/contracts/props";
 import { reviewApi } from "../../../../store/reviewSlice";
 import { BankListItem } from "./items/BankListItem";
 import { ListHeader } from "../layouts/Headers";

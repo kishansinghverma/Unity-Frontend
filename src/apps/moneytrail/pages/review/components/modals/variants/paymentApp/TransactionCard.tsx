@@ -1,14 +1,10 @@
 import dayjs from 'dayjs';
-import {
-  Calendar,
-  CheckCircle2,
-  Clock,
-  FileText
-} from 'lucide-react';
 import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
 import { BankIcon } from '../../../../../../components/Common';
-import { PaymentAppEntry } from '../../../../../../engine/types';
+import { PaymentAppEntry } from '../../../../../../core/contracts/models';
+import { Calendar } from 'antd';
+import { CheckCircle2, Clock, FileText } from 'lucide-react';
 
 const TransactionCard: React.FC<WithId<PaymentAppEntry>> = (paymentAppEntry) => {
   const isDebit: boolean = paymentAppEntry.type === 'Debit';

@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { Calendar } from 'lucide-react';
 import { FC, memo } from 'react';
 import { BankIcon } from '../../../../../components/Common';
-import { BankListItemProps } from '../../../../../engine/contracts/props';
+import { BankListItemProps } from '../../../../../core/contracts/props';
 import { ProcessedActionButton, ProcessedMarker } from './shared/ProcessedState';
 import { SwipeableContent } from './shared/SwipeableContent';
 

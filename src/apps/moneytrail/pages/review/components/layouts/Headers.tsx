@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { PlusCircle, CalendarArrowUp, ClockArrowUp } from "lucide-react";
 import { FC, memo } from "react";
 import { UploadStatement } from "../../../../components/Common";
-import { HeaderProps, ListHeaderProps } from "../../../../engine/contracts/props";
+import { HeaderProps, ListHeaderProps } from "../../../../core/contracts/props";
 
 const HeaderFC: FC<HeaderProps> = ({ setModalVisible }) => (
   <div className="flex px-4 py-3 mb-6 justify-between items-center text-sm font-medium text-gray-600 duration-200 rounded-xl bg-white shadow-md border border-gray-200 bg-white">

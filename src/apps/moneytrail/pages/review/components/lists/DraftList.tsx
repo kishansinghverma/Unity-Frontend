@@ -7,7 +7,7 @@ import { handleResponse, handleError } from "../../../../../../engine/helpers/ht
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { SkeletonItem, EmptyList } from "../../../../components/Common";
-import { ReviewDraftListProps } from "../../../../engine/contracts/props";
+import { ReviewDraftListProps } from "../../../../core/contracts/props";
 import { DraftListItem } from "./items/DraftListItem";
 import { reviewApi } from "../../../../store/reviewSlice";
 import { ListHeader } from "../layouts/Headers";

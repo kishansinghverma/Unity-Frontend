@@ -8,11 +8,11 @@ import { handleResponse, handleError } from '../../../../../../../../engine/help
 import { notify } from '../../../../../../../../engine/services/notificationService';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
 import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
-import { ManualEntryModalProps, PrefixIconProps } from '../../../../../../engine/contracts/props';
-import { SplitwiseCategory } from '../../../../../../engine/types';
+import { ManualEntryModalProps, PrefixIconProps } from '../../../../../../core/contracts/props';
 import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
 import { AnimatedModal } from '../../shared/AnimatedModal';
 import { getIcon, icon } from '../../../../../../../../static/icons/provider';
+import { SplitwiseCategory } from '../../../../../../core/contracts/models';
 
 type FormState = {
   amount: number;

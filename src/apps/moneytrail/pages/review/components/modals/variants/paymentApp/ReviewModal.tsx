@@ -12,12 +12,12 @@ import { WithId, Nullable } from '../../../../../../../../engine/models/types';
 import { notify } from '../../../../../../../../engine/services/notificationService';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
 import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
-import { PaymentAppReviewModalProps, PrefixIconProps } from '../../../../../../engine/contracts/props';
-import { DraftEntry, SplitwiseCategory } from '../../../../../../engine/types';
-import { getDraftMatches } from '../../../../../../engine/utils';
+import { PaymentAppReviewModalProps, PrefixIconProps } from '../../../../../../core/contracts/props';
+import { getDraftMatches } from '../../../../engine/utils';
 import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
 import { AnimatedModal } from '../../shared/AnimatedModal';
 import { DraftItem } from '../../shared/DraftItem';
+import { DraftEntry, SplitwiseCategory } from '../../../../../../core/contracts/models';
 
 type FormState = {
   amount: number,

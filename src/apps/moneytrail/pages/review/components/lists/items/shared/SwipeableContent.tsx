@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { SwipeableContentProps } from '../../../../../../engine/contracts/props';
+import { SwipeableContentProps } from '../../../../../../core/contracts/props';
 
 const ACTION_WIDTH = 80;
 const OPEN_THRESHOLD = -50;

@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { Calendar, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
 import { AlphabetIcon } from '../../../../../components/Common';
-import { DraftListItemProps } from '../../../../../engine/contracts/props';
+import { DraftListItemProps } from '../../../../../core/contracts/props';
 import { StringUtils } from '../../../../../../../engine/helpers/stringHelper';
 import { ProcessedActionButton, ProcessedMarker } from './shared/ProcessedState';
 import { SwipeableContent } from './shared/SwipeableContent';
