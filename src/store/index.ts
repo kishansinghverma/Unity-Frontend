@@ -6,7 +6,7 @@ import customersReducer from './slices/customersSlice';
 
 const combinedReducers = combineSlices(
   { app: appReducer },
-  { customer: customersReducer },
+  { customers: customersReducer },
   ...moneyTrailReducer
 )
 
