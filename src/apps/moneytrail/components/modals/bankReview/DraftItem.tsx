@@ -33,8 +33,7 @@ const styles = {
         clock: 'w-3.5 h-3.5 mr-0.5 opacity-85'
     },
     iconWrapper: 'flex items-start space-x-3',
-    mapLink: 'cursor-default',
-    iconSelected: 'bg-indigo-100 text-indigo-600'
+    mapLink: 'cursor-default'
 };
 
 const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
@@ -44,7 +43,7 @@ const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
     const containerClassName = `${styles.base.container} ${isSelected ? styles.selected.container : styles.default.container}`;
     const primaryTextClassName = `${styles.base.primaryText} ${isSelected ? styles.selected.primaryText : styles.default.primaryText}`;
     const datetimeClassName = `${styles.base.datetime} ${isSelected ? styles.selected.datetime : styles.default.datetime}`;
-    const iconOverrideStyle = isSelected ? styles.iconSelected : undefined;
+    const iconOverrideStyle = isSelected ? styles.selected.icon : undefined;
 
     const onSelect = (current: WithId<DraftEntry>) => setSelected(isSelected ? null : current);
 
