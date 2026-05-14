@@ -1,6 +1,5 @@
-import { Calendar } from 'antd';
 import dayjs from 'dayjs';
-import { CheckCircle2, Clock, FileText } from 'lucide-react';
+import { Calendar, CheckCircle2, Clock, FileText } from 'lucide-react';
 import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
 import { PaymentAppEntry } from '../../../../engine/contracts/models';

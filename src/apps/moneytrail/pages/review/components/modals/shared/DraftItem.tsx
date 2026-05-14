@@ -8,7 +8,8 @@ const styles = {
     container: 'w-full rounded-lg bg-gray-50 p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden border border-gray-100 hover:shadow-md hover:scale-[1.015] hover:border-slate-200 [&:not(:first-child)]:mt-3 [&:not(:last-child)]:mb-3',
     title: 'text-sm font-medium line-clamp-2 capitalize',
     datetime: 'flex items-center text-xs font-semibold absolute bottom-2 right-2 px-1.5 py-1 opacity-90',
-    contentWrapper: 'flex items-start space-x-3',
+    contentWrapper: 'flex items-center space-x-3',
+    textBlock: 'flex-1 min-w-0 flex items-center pr-16',
     locationLink: 'cursor-alias',
     default: {
         container: 'shadow-sm',
@@ -54,8 +55,8 @@ const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
                 >
                     <AlphabetIcon firstLetter={firstLetter} seed={item._id} overrideStyle={iconOverrideStyle} />
                 </a>
-                <div>
-                    <p className={titleStyle} title={singleLineLocation}> {singleLineLocation} </p>
+                <div className={styles.textBlock}>
+                    <p className={titleStyle} title={singleLineLocation}>{singleLineLocation}</p>
                     <div className={datetimeStyle}>
                         <Clock className={styles.icon.clock} />
                         <span>{dayjs(item.dateTime).format('hh:mm A')}</span>
