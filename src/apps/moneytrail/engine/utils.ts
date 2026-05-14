@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { Nullable, WithId } from "../../../engine/models/types";
 import { BankEntry, DraftEntry, PhonePeEntry } from "./models/types";
+import { normalizeToMinute } from "../../../engine/helpers/dateTimeHelper";
 
 const colorPair = [
     'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700/60',
@@ -14,8 +15,6 @@ const colorPair = [
     'text-teal-600 dark:text-teal-400 bg-teal-100 dark:bg-teal-800/50',
     'text-pink-600 dark:text-pink-400 bg-pink-100 dark:bg-pink-800/50'
 ];
-
-const normalizeToMinute = (date: Date | string | undefined) => dayjs(date).startOf('minute').valueOf();
 
 export const getIconBackground = (bankName: string) => {
     if (bankName === 'SBI')

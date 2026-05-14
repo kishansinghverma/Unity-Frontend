@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const getDateComponent = (dateValue: string | Date) => {
     const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
     const day = date.getDate().toString().padStart(2, '0');
@@ -11,3 +13,5 @@ export const getDateComponent = (dateValue: string | Date) => {
 
     return { day, month, time, year };
 }
+
+export const normalizeToMinute = (date: Date | string | undefined) => dayjs(date).startOf('minute').valueOf();

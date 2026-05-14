@@ -1,9 +1,44 @@
 import dayjs from 'dayjs';
 import { CheckCircle, Clock } from 'lucide-react';
-import { ReactNode, FC } from 'react';
+import { FC } from 'react';
 import { Nullable, WithId } from '../../../../../engine/models/types';
 import { PhonePeEntry } from '../../../engine/models/types';
 import { BankIcon } from '../../Common';
+import { getFormattedAmount } from '../../../../../engine/helpers/numberHelper';
+
+const styles = {
+  base: {
+    container: 'w-full rounded-lg bg-gray-50 p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden border border-gray-100 hover:shadow-md hover:scale-[1.015] hover:border-slate-200 [&:not(:first-child)]:mt-2.5 [&:not(:last-child)]:mb-2.5',
+    indicator: 'w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 rounded-full p-0.5 shadow',
+    content: 'flex items-center space-x-3',
+    iconWrapper: 'flex-shrink-0',
+    titleWrapper: 'flex-grow min-w-0',
+    title: 'text-sm font-medium line-clamp-2 capitalize',
+    rightSection: 'flex flex-col items-end flex-shrink-0 ml-auto text-right',
+    amount: 'font-semibold whitespace-nowrap mb-0.5',
+    datetime: 'flex items-center text-xs font-semibold whitespace-nowrap',
+    clock: 'w-3.5 h-3.5 ml-1.5 mr-0.5 opacity-70',
+    time: 'opacity-90'
+  },
+  default: {
+    container: 'shadow-sm',
+    title: 'text-slate-500',
+    datetime: 'text-slate-800',
+    amount: {
+      credit: 'text-green-600',
+      debit: 'text-red-600'
+    }
+  },
+  selected: {
+    container: 'ring-1 ring-indigo-400 shadow-lg bg-indigo-50/70',
+    title: 'text-indigo-600',
+    datetime: 'text-indigo-700',
+    amount: {
+      credit: 'text-green-500',
+      debit: 'text-red-500'
+    }
+  }
+};
 
 export const PhonePeItem: FC<{
   item: WithId<PhonePeEntry>;
@@ -14,55 +49,39 @@ export const PhonePeItem: FC<{
   isSelected,
   setSelected
 }) => {
-    const baseStyling = `w-full rounded-lg p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden group border border-gray-100 hover:shadow-md`;
-    const hoverClasses = "hover:scale-[1.015] hover:border-slate-200";
-
-    let selectionSpecificClasses = "";
-    let selectionIndicatorElement: ReactNode = null;
-
     const isCredit = item.type === 'Credit';
-    let currentDateTimeColor = 'text-slate-800';
-    let currentPrimaryTextColor = 'text-slate-500';
-    let currentAmountColor = isCredit ? 'text-green-600' : 'text-red-600';
+    const stateStyles = isSelected ? styles.selected : styles.default;
+    const containerStyle = `${styles.base.container} ${stateStyles.container}`;
+    const titleStyle = `${styles.base.title} ${stateStyles.title}`;
+    const amountStyle = `${styles.base.amount} ${isCredit ? stateStyles.amount.credit : stateStyles.amount.debit}`;
+    const datetimeStyle = `${styles.base.datetime} ${stateStyles.datetime}`;
 
-    if (isSelected) {
-      selectionSpecificClasses = "ring-1 ring-indigo-400 shadow-lg bg-indigo-50/70";
-      selectionIndicatorElement = <CheckCircle className="w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 rounded-full p-0.5 shadow" />;
-      currentDateTimeColor = 'text-indigo-700';
-      currentPrimaryTextColor = 'text-indigo-600';
-      currentAmountColor = isCredit ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold';
-    } else {
-      selectionSpecificClasses = "bg-gray-50 shadow-sm";
-    }
-
-    const onSelect = (current: WithId<PhonePeEntry>) => {
-      isSelected ? setSelected(null) : setSelected(current);
-    }
+    const onSelect = (current: WithId<PhonePeEntry>) => setSelected(isSelected ? null : current);
 
     return (
       <div
-        className={`${baseStyling} ${selectionSpecificClasses} ${hoverClasses} [&:not(:first-child)]:mt-2.5 [&:not(:last-child)]:mb-2.5`}
+        className={containerStyle}
         onClick={() => onSelect(item)}
       >
-        {selectionIndicatorElement}
-        <div className={`flex items-center space-x-3`}>
-          <div className="flex-shrink-0"><BankIcon bankName={item.bank} /></div>
-          <div className="flex-grow min-w-0">
-            <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2 capitalize`} title={item.recipient}>
+        {isSelected && <CheckCircle className={styles.base.indicator} />}
+        <div className={styles.base.content}>
+          <div className={styles.base.iconWrapper}><BankIcon bankName={item.bank} /></div>
+          <div className={styles.base.titleWrapper}>
+            <p className={titleStyle} title={item.recipient}>
               {item.recipient}
             </p>
           </div>
 
-          <div className={`flex flex-col items-end flex-shrink-0 ml-auto text-right`}>
-            <div className={`text-md font-semibold whitespace-nowrap ${currentAmountColor} mb-0.5`}>
-              {isCredit ? '+' : '-'}₹{parseFloat(item.amount.toString()).toFixed(2)}
+          <div className={styles.base.rightSection}>
+            <div className={amountStyle}>
+              {isCredit ? '+' : '-'}₹{getFormattedAmount(item.amount)}
             </div>
-            <div className={`flex items-center text-xs font-semibold whitespace-nowrap ${currentDateTimeColor}`}>
-              <Clock className="w-3.5 h-3.5 ml-1.5 mr-0.5 opacity-70" />
-              <span className="opacity-90">{dayjs(item.date).format('hh:mm A')}</span>
+            <div className={datetimeStyle}>
+              <Clock className={styles.base.clock} />
+              <span className={styles.base.time}>{dayjs(item.date).format('hh:mm A')}</span>
             </div>
           </div>
         </div>
       </div>
-    );
+    )
   };
