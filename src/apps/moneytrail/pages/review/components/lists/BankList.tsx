@@ -8,9 +8,9 @@ import { WithId, Nullable } from "../../../../../../engine/models/types";
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { SkeletonItem, EmptyList } from "../../../../components/Common";
-import { BankItem } from "../../../../components/ListItem";
 import { BankEntry } from "../../../../engine/models/types";
 import { reviewApi } from "../../../../store/reviewSlice";
+import { BankListItem } from "./items/BankListItem";
 import { ListHeader } from "../layouts/Headers";
 
 type BankListProps = {
@@ -93,7 +93,7 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
                       transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
                       className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
                     >
-                      <BankItem
+                      <BankListItem
                         item={item}
                         setProcessed={setProcessed}
                         setBankItemId={setBankItemId}

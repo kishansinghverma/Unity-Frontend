@@ -8,10 +8,10 @@ import { WithId, Nullable } from "../../../../../../engine/models/types";
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { SkeletonItem, EmptyList } from "../../../../components/Common";
+import { PaymentAppListItem } from "./items/PaymentAppListItem";
 import { PaymentAppEntry } from "../../../../engine/models/types";
 import { reviewApi } from "../../../../store/reviewSlice";
 import { ListHeader } from "../layouts/Headers";
-import { PaymentAppItem } from "../../../../components/ListItem";
 
 const PaymentAppListFC: FC<{
   items: WithId<PaymentAppEntry>[];
@@ -87,7 +87,7 @@ const PaymentAppListFC: FC<{
                         transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
                         className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
                       >
-                        <PaymentAppItem
+                        <PaymentAppListItem
                           item={item}
                           setProcessed={setProcessed}
                           setPaymentAppItemId={setPaymentAppItemId}

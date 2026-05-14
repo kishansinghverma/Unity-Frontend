@@ -10,17 +10,6 @@ import { WithId } from '../../../../../../../../engine/models/types';
 import { BankIcon } from '../../../../../../components/Common';
 import { PaymentAppEntry } from '../../../../../../engine/models/types';
 
-// interface DescriptionInfo {
-//   platform: string;
-//   category: string;
-// }
-// interface BankTheme {
-//   gradient: string;
-//   bg: string;
-//   text: string;
-//   border: string;
-// }
-
 const TransactionCard: React.FC<WithId<PaymentAppEntry>> = (paymentAppEntry) => {
   const isDebit: boolean = paymentAppEntry.type === 'Debit';
 

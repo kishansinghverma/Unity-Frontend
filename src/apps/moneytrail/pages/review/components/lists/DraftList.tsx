@@ -8,10 +8,10 @@ import { WithId, Nullable } from "../../../../../../engine/models/types";
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { SkeletonItem, EmptyList } from "../../../../components/Common";
+import { DraftListItem } from "./items/DraftListItem";
 import { DraftEntry } from "../../../../engine/models/types";
 import { reviewApi } from "../../../../store/reviewSlice";
 import { ListHeader } from "../layouts/Headers";
-import { DraftItem } from "../../../../components/ListItem";
 
 const DraftListFC: FC<{
   items: WithId<DraftEntry>[];
@@ -91,7 +91,7 @@ const DraftListFC: FC<{
                         transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
                         className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
                       >
-                        <DraftItem
+                        <DraftListItem
                           item={item}
                           setProcessed={setProcessed}
                           setDraftItem={setDraftItem}

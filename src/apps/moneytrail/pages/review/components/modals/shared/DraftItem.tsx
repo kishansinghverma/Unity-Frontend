@@ -33,7 +33,6 @@ const styles = {
         checkCircle: 'w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 rounded-full p-0.5 shadow',
         clock: 'w-3.5 h-3.5 mr-0.5 opacity-85'
     },
-
 };
 
 const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
