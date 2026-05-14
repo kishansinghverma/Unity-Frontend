@@ -7,12 +7,12 @@ import { PostParams, Routes } from '../../../../../../../../engine/constant';
 import { handleResponse, handleError } from '../../../../../../../../engine/helpers/httpHelper';
 import { Nullable, WithId } from '../../../../../../../../engine/models/types';
 import { notify } from '../../../../../../../../engine/services/notificationService';
-import { getSvg, svg } from '../../../../../../../../static/icons/provider';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
 import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
 import { DraftEntry, SplitwiseCategory } from '../../../../../../engine/models/types';
 import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
 import { AnimatedModal } from '../../shared/AnimatedModal';
+import { getIcon, icon } from '../../../../../../../../static/icons/provider';
 
 type FormState = {
   amount: number;
@@ -83,17 +83,17 @@ export const ManualEntryModal: FC<{
       })) : [];
 
     const sourceOptions: DefaultOptionType[] = [
-      { name: 'SBI', icon: svg.Sbi },
-      { name: 'HDFC', icon: svg.Hdfc },
-      { name: 'SBI Credit Card', icon: svg.SbiCc },
-      { name: 'ICICI Credit Card', icon: svg.Icici },
-      { name: 'Cash', icon: svg.Cash },
-      { name: 'Other', icon: svg.OtherPay }
+      { name: 'SBI', icon: icon.Sbi },
+      { name: 'HDFC', icon: icon.Hdfc },
+      { name: 'SBI Credit Card', icon: icon.SbiCc },
+      { name: 'ICICI Credit Card', icon: icon.Icici },
+      { name: 'Cash', icon: icon.Cash },
+      { name: 'Other', icon: icon.OtherPay }
     ].map((source) => ({
       title: source.name,
       value: source.name,
       label: <div className='flex gap-2 items-center w-full'>
-        <img className="w-5 h-5 rounded-full" src={getSvg(source.icon)} />
+        <img className="w-5 h-5 rounded-full" src={getIcon(source.icon)} />
         <span className='text-gray-600 font-medium'>{source.name}</span>
       </div>
     }));

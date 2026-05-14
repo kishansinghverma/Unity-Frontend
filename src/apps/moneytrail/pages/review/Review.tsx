@@ -1,12 +1,12 @@
 import React, { Suspense, lazy, memo, useMemo, useState } from 'react';
 import { getArrayOrDefault } from '../../../../engine/helpers/rtkHelper';
 import { Nullable, WithId } from '../../../../engine/models/types';
-import { BankList } from './components/lists/bankList/BankList';
 import { DraftList } from './components/lists/DraftList';
 import { PaymentAppList } from './components/lists/PaymentAppList';
 import { Header } from './components/layouts/Headers';
 import { DraftEntry, BankEntry, PaymentAppEntry } from '../../engine/models/types';
 import { useBankEntryQuery, useDraftEntryQuery, usePaymentAppEntryQuery } from '../../store/reviewSlice';
+import { BankList } from './components/lists/BankList';
 
 const BankReviewModal = lazy(() =>
   import('./components/modals/variants/bank/ReviewModal').then((module) => ({
