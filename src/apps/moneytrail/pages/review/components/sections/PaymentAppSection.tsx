@@ -17,7 +17,7 @@ const PaymentAppSectionComponent: React.FC<PaymentAppSectionProps> = ({
   const [paymentAppItemId, setPaymentAppItemId] = useState<Nullable<string>>(null);
 
   return (
-    <div className="w-full xl:px-10 min-w-0 h-full flex">
+    <div className="w-full mx-2 min-w-0 h-full flex">
       <PaymentAppList
         items={paymentAppEntries}
         isLoading={isLoading}
