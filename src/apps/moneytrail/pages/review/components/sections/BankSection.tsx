@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, memo, useState } from 'react';
 import { Nullable } from '../../../../../../engine/models/types';
-import { BankList } from '../lists/BankList';
 import { BankSectionProps } from '../../engine/contracts/props';
+import { BankList } from '../lists/BankList';
 
 const BankReviewModal = lazy(() =>
   import('../modals/variants/bank/ReviewModal').then((module) => ({

@@ -1,8 +1,8 @@
 import React, { Suspense, lazy, memo, useState } from 'react';
 import { Nullable, WithId } from '../../../../../../engine/models/types';
-import { DraftList } from '../lists/DraftList';
 import { DraftEntry } from '../../engine/contracts/models';
 import { DraftSectionProps } from '../../engine/contracts/props';
+import { DraftList } from '../lists/DraftList';
 
 const ManualEntryModal = lazy(() =>
   import('../modals/variants/manual/ManualEntryModal').then((module) => ({
