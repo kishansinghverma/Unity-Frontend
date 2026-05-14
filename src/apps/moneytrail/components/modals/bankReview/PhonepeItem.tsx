@@ -56,12 +56,10 @@ export const PhonePeItem: FC<{
     const amountStyle = `${styles.base.amount} ${isCredit ? stateStyles.amount.credit : stateStyles.amount.debit}`;
     const datetimeStyle = `${styles.base.datetime} ${stateStyles.datetime}`;
 
-    const onSelect = (current: WithId<PhonePeEntry>) => setSelected(isSelected ? null : current);
-
     return (
       <div
         className={containerStyle}
-        onClick={() => onSelect(item)}
+        onClick={() => setSelected(isSelected ? null : item)}
       >
         {isSelected && <CheckCircle className={styles.base.indicator} />}
         <div className={styles.base.content}>

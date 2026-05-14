@@ -45,13 +45,11 @@ const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
     const datetimeStyle = `${styles.base.datetime} ${isSelected ? styles.selected.datetime : styles.default.datetime}`;
     const iconOverrideStyle = isSelected ? styles.selected.icon : undefined;
 
-    const onSelect = (current: WithId<DraftEntry>) => setSelected(isSelected ? null : current);
-
     return (
         <div
             className={containerStyle}
             onMouseDown={(event) => event.preventDefault()}
-            onClick={() => onSelect(item)}
+            onClick={() => setSelected(isSelected ? null : item)}
         >
             {isSelected && <CheckCircle className={styles.icon.checkCircle} />}
             <div className={styles.contentWrapper}>
