@@ -47,7 +47,7 @@ export const PhonePeItem: FC<{
       >
         {selectionIndicatorElement}
         <div className={`flex items-center space-x-3`}>
-          <BankIcon bankName={item.bank} />
+          <div className="flex-shrink-0"><BankIcon bankName={item.bank} /></div>
           <div className="flex-grow min-w-0">
             <p className={`text-sm font-medium ${currentPrimaryTextColor} line-clamp-2 capitalize`} title={item.recipient}>
               {item.recipient}
