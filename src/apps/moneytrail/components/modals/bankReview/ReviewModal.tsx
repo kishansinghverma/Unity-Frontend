@@ -6,8 +6,8 @@ import { DraftItem } from './DraftItem';
 import { getDraftMatches, getPhonePeMatches } from '../../../engine/utils';
 import { TransactionContainer } from './TransactionContainer';
 import { Nullable, WithId } from '../../../../../engine/models/types';
-import { BankEntry, DraftEntry, PhonepeEntry, SplitwiseCategory } from '../../../engine/models/types';
-import { PhonePeItem } from './PhonepeItem';
+import { BankEntry, DraftEntry, PhonePeEntry, SplitwiseCategory } from '../../../engine/models/types';
+import { PhonePeItem } from './PhonePeItem';
 import dayjs from 'dayjs';
 import { DefaultOptionType } from 'antd/es/select';
 import { CustomSelect, SelectWithAdd } from '../../Common';
@@ -29,13 +29,13 @@ type FormState = {
 export const BankReviewModal: FC<{
   bankItemId: string;
   bankEntries: WithId<BankEntry>[];
-  phonepeEntries: WithId<PhonepeEntry>[];
+  phonePeEntries: WithId<PhonePeEntry>[];
   draftEntries: WithId<DraftEntry>[];
   setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
 }> = ({
   bankItemId,
   bankEntries,
-  phonepeEntries,
+  phonePeEntries,
   draftEntries,
   setBankItemId
 }) => {
@@ -45,14 +45,14 @@ export const BankReviewModal: FC<{
     const groups = useGroupsQuery();
     const categories = useCategoriesQuery();
 
-    const [selectedPhonepe, setSelectedPhonePe] = useState<Nullable<WithId<PhonepeEntry>>>(null);
+    const [selectedPhonePe, setSelectedPhonePe] = useState<Nullable<WithId<PhonePeEntry>>>(null);
     const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
     const [isOpen, setIsOpen] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
     const bankEntry = bankEntries.find(entry => entry._id === bankItemId)!;
-    const phonepeMatches = getPhonePeMatches(bankEntry, phonepeEntries);
-    const draftMatches = getDraftMatches(bankEntry, selectedPhonepe, draftEntries);
+    const phonePeMatches = getPhonePeMatches(bankEntry, phonePeEntries);
+    const draftMatches = getDraftMatches(bankEntry, selectedPhonePe, draftEntries);
 
     const [form] = Form.useForm<FormState>();
 
@@ -113,9 +113,9 @@ export const BankReviewModal: FC<{
         data.forEach(entry => { if (entry._id === bankEntry._id) entry.processed = true });
       }));
 
-      if (selectedPhonepe?._id) {
-        dispatch(reviewApi.util.updateQueryData('phonepeEntry', undefined, (data) => {
-          data.forEach(entry => { if (entry._id === selectedPhonepe._id) entry.processed = true });
+      if (selectedPhonePe?._id) {
+        dispatch(reviewApi.util.updateQueryData('phonePeEntry', undefined, (data) => {
+          data.forEach(entry => { if (entry._id === selectedPhonePe._id) entry.processed = true });
         }));
       }
 
@@ -139,7 +139,7 @@ export const BankReviewModal: FC<{
         parties: selectedGroup?.members.map(m => m.id),
         category: formState.category,
         bankTxnId: bankEntry?._id,
-        phonePeTxnId: selectedPhonepe?._id,
+        phonePeTxnId: selectedPhonePe?._id,
         draftTxnId: selectedDraft?._id,
       };
 
@@ -149,9 +149,9 @@ export const BankReviewModal: FC<{
           details: Object.entries({
             Bank: bankEntry.bank ?? StringUtils.empty,
             Description: bankEntry.description ?? StringUtils.empty,
-            UTR: selectedPhonepe?.utr ?? "N/A",
-            TransactionNo: selectedPhonepe?.transactionId ?? 'N/A',
-            Recipient: selectedPhonepe?.recipient ?? 'N/A',
+            UTR: selectedPhonePe?.utr ?? "N/A",
+            TransactionNo: selectedPhonePe?.transactionId ?? 'N/A',
+            Recipient: selectedPhonePe?.recipient ?? 'N/A',
             Location: selectedDraft?.location.replaceAll('\n', ', ') ?? 'N/A',
             Coordinates: selectedDraft?.coordinate ? `https://www.google.com/maps?q=${selectedDraft.coordinate}` : 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
@@ -164,9 +164,9 @@ export const BankReviewModal: FC<{
           details: Object.entries({
             Bank: bankEntry.bank ?? StringUtils.empty,
             Description: bankEntry.description ?? StringUtils.empty,
-            UTR: selectedPhonepe?.utr ?? 'N/A',
-            TransactionNo: selectedPhonepe?.transactionId ?? 'N/A',
-            Payer: selectedPhonepe?.recipient ?? 'N/A'
+            UTR: selectedPhonePe?.utr ?? 'N/A',
+            TransactionNo: selectedPhonePe?.transactionId ?? 'N/A',
+            Payer: selectedPhonePe?.recipient ?? 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n')
         }
 
@@ -255,10 +255,10 @@ export const BankReviewModal: FC<{
                   headerStyle="from-purple-50 to-pink-50"
                   iconStyle="text-purple-600"
                 >
-                  {phonepeMatches.map((item) => (
+                  {phonePeMatches.map((item) => (
                     <PhonePeItem key={item._id} {...{
                       item,
-                      isSelected: selectedPhonepe?._id === item._id,
+                      isSelected: selectedPhonePe?._id === item._id,
                       setSelected: setSelectedPhonePe
                     }} />
                   ))}
@@ -304,8 +304,8 @@ export const BankReviewModal: FC<{
                         <td className={classes.tr}> {dayjs(bankEntry.date).format('DD-MM-YYYY')} </td>
                         <td className={classes.tr}> {bankEntry.bank} </td>
                         <td className={`${classes.tr} capitalize`}> {bankEntry.description} </td>
-                        <td className={classes.tr}> {selectedPhonepe?.utr || '-'} </td>
-                        <td className={`${classes.tr} capitalize`}> {selectedPhonepe?.recipient || '-'} </td>
+                        <td className={classes.tr}> {selectedPhonePe?.utr || '-'} </td>
+                        <td className={`${classes.tr} capitalize`}> {selectedPhonePe?.recipient || '-'} </td>
                         <td className={`${classes.tr} capitalize`}> {selectedDraft?.location.replaceAll('\n', ', ') || '-'} </td>
                       </tr>
                     </tbody>

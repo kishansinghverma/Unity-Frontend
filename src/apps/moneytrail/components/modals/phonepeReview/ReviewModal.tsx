@@ -3,7 +3,7 @@ import { Form, InputNumber, Space } from 'antd';
 import { X, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Smartphone, Loader2 } from 'lucide-react';
 import TransactionCard from './TransactionCard';
 import { Nullable, WithId } from '../../../../../engine/models/types';
-import { DraftEntry, PhonepeEntry, SplitwiseCategory } from '../../../engine/models/types';
+import { DraftEntry, PhonePeEntry, SplitwiseCategory } from '../../../engine/models/types';
 import dayjs from 'dayjs';
 import { DefaultOptionType } from 'antd/es/select';
 import { CustomSelect, SelectWithAdd } from '../../Common';
@@ -25,16 +25,16 @@ type FormState = {
   group: number
 };
 
-export const PhonepeReviewModal: FC<{
-  phonepeItemId: string;
-  phonepeEntries: WithId<PhonepeEntry>[];
+export const PhonePeReviewModal: FC<{
+  phonePeItemId: string;
+  phonePeEntries: WithId<PhonePeEntry>[];
   draftEntries: WithId<DraftEntry>[];
-  setPhonepeItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
+  setPhonePeItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
 }> = ({
-  phonepeItemId,
-  phonepeEntries,
+  phonePeItemId,
+  phonePeEntries,
   draftEntries,
-  setPhonepeItemId
+  setPhonePeItemId
 }) => {
     const dispatch = useAppDispatch();
 
@@ -46,8 +46,8 @@ export const PhonepeReviewModal: FC<{
     const [isOpen, setIsOpen] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
-    const phonepeEntry = phonepeEntries.find(entry => entry._id === phonepeItemId)!;
-    const draftMatches = getDraftMatches(null, phonepeEntry, draftEntries);
+    const phonePeEntry = phonePeEntries.find(entry => entry._id === phonePeItemId)!;
+    const draftMatches = getDraftMatches(null, phonePeEntry, draftEntries);
 
     const [form] = Form.useForm<FormState>();
 
@@ -104,9 +104,9 @@ export const PhonepeReviewModal: FC<{
     const onComplete = () => {
       notify.success({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
 
-      if (phonepeEntry?._id) {
-        dispatch(reviewApi.util.updateQueryData('phonepeEntry', undefined, (data) => {
-          data.forEach(entry => { if (entry._id === phonepeEntry._id) entry.processed = true });
+      if (phonePeEntry?._id) {
+        dispatch(reviewApi.util.updateQueryData('phonePeEntry', undefined, (data) => {
+          data.forEach(entry => { if (entry._id === phonePeEntry._id) entry.processed = true });
         }));
       }
 
@@ -125,22 +125,22 @@ export const PhonepeReviewModal: FC<{
       let payload = {
         group_id: selectedGroup?.id,
         cost: formState.amount,
-        date: phonepeEntry.date,
+        date: phonePeEntry.date,
         description: formState.description,
         parties: selectedGroup?.members.map(m => m.id),
         category: formState.category,
-        phonePeTxnId: phonepeEntry?._id,
+        phonePeTxnId: phonePeEntry?._id,
         draftTxnId: selectedDraft?._id,
       };
 
-      if (phonepeEntry.type === 'Debit') {
+      if (phonePeEntry.type === 'Debit') {
         const debitPayload = {
           shared: selectedGroup?.sharing,
           details: Object.entries({
-            Bank: phonepeEntry.bank ?? StringUtils.empty,
-            UTR: phonepeEntry?.utr ?? "N/A",
-            TransactionNo: phonepeEntry?.transactionId ?? 'N/A',
-            Recipient: phonepeEntry?.recipient ?? 'N/A',
+            Bank: phonePeEntry.bank ?? StringUtils.empty,
+            UTR: phonePeEntry?.utr ?? "N/A",
+            TransactionNo: phonePeEntry?.transactionId ?? 'N/A',
+            Recipient: phonePeEntry?.recipient ?? 'N/A',
             Location: selectedDraft?.location.replaceAll('\n', ', ') ?? 'N/A',
             Coordinates: selectedDraft?.coordinate ? `https://www.google.com/maps?q=${selectedDraft.coordinate}` : 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
@@ -151,17 +151,17 @@ export const PhonepeReviewModal: FC<{
       else {
         const creditPayload = {
           details: Object.entries({
-            Bank: phonepeEntry.bank ?? StringUtils.empty,
-            UTR: phonepeEntry?.utr ?? 'N/A',
-            TransactionNo: phonepeEntry?.transactionId ?? 'N/A',
-            Payer: phonepeEntry?.recipient ?? 'N/A'
+            Bank: phonePeEntry.bank ?? StringUtils.empty,
+            UTR: phonePeEntry?.utr ?? 'N/A',
+            TransactionNo: phonePeEntry?.transactionId ?? 'N/A',
+            Payer: phonePeEntry?.recipient ?? 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n')
         }
 
         payload = { ...payload, ...creditPayload };
       }
 
-      const url = phonepeEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
+      const url = phonePeEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
 
       fetch(url, { ...PostParams, body: JSON.stringify(payload) })
         .then(handleResponse)
@@ -204,7 +204,7 @@ export const PhonepeReviewModal: FC<{
       <AnimatedModal
         open={isOpen}
         onCancel={onModalClose}
-        afterClose={() => setPhonepeItemId(null)}
+        afterClose={() => setPhonePeItemId(null)}
       >
         <div className="bg-white rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden">
           {/* Modal Header */}
@@ -235,7 +235,7 @@ export const PhonepeReviewModal: FC<{
                     headerStyle="from-blue-50 to-indigo-50"
                     iconStyle="text-blue-600"
                   >
-                    <TransactionCard {...phonepeEntry} />
+                    <TransactionCard {...phonePeEntry} />
                   </TransactionContainer>
                 </div>
 
@@ -276,10 +276,10 @@ export const PhonepeReviewModal: FC<{
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       <tr className="hover:bg-gray-50 transition-colors text-gray-900 text-sm">
-                        <td className={classes.tr}> {dayjs(phonepeEntry.date).format('DD-MM-YYYY')} </td>
-                        <td className={classes.tr}> {phonepeEntry.bank} </td>
-                        <td className={classes.tr}> {phonepeEntry?.utr || '-'} </td>
-                        <td className={`${classes.tr} capitalize`}> {phonepeEntry?.recipient || '-'} </td>
+                        <td className={classes.tr}> {dayjs(phonePeEntry.date).format('DD-MM-YYYY')} </td>
+                        <td className={classes.tr}> {phonePeEntry.bank} </td>
+                        <td className={classes.tr}> {phonePeEntry?.utr || '-'} </td>
+                        <td className={`${classes.tr} capitalize`}> {phonePeEntry?.recipient || '-'} </td>
                         <td className={`${classes.tr} capitalize`}> {selectedDraft?.location.replaceAll('\n', ', ') || '-'} </td>
                       </tr>
                     </tbody>
@@ -292,7 +292,7 @@ export const PhonepeReviewModal: FC<{
                     <div className="flex items-center gap-4">
                       <Space.Compact>
                         <PrefixIcon icon={IndianRupee} size={16} strokeWidth={3} />
-                        <Form.Item initialValue={phonepeEntry.amount} name="amount" noStyle rules={[{ required: true }]}>
+                        <Form.Item initialValue={phonePeEntry.amount} name="amount" noStyle rules={[{ required: true }]}>
                           <InputNumber
                             placeholder="Amount"
                             className={`w-32 ${classes.input}`}
@@ -321,8 +321,8 @@ export const PhonepeReviewModal: FC<{
                         placement="bottomRight"
                         className={`w-48 ${classes.select}`}
                         prefix={<PrefixIcon icon={Layers2} size={16} strokeWidth={3} />}
-                        formItemProps={{ initialValue: phonepeEntry.type === 'Credit' ? 2 : 1 }}
-                        disabled={phonepeEntry.type === 'Credit'}
+                        formItemProps={{ initialValue: phonePeEntry.type === 'Credit' ? 2 : 1 }}
+                        disabled={phonePeEntry.type === 'Credit'}
                       />
                       <CustomSelect
                         name="group"

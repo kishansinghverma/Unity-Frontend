@@ -2,14 +2,14 @@ import { ReactNode, FC } from 'react';
 import { CheckCircle, Clock } from 'lucide-react';
 import dayjs from 'dayjs';
 import { Nullable, WithId } from '../../../../../engine/models/types';
-import { PhonepeEntry } from '../../../engine/models/types';
-import { BankIcon } from '../../common';
+import { PhonePeEntry } from '../../../engine/models/types';
+import { BankIcon } from '../../Common';
 
 
 export const PhonePeItem: FC<{
-  item: WithId<PhonepeEntry>;
+  item: WithId<PhonePeEntry>;
   isSelected: boolean;
-  setSelected: React.Dispatch<React.SetStateAction<Nullable<WithId<PhonepeEntry>>>>
+  setSelected: React.Dispatch<React.SetStateAction<Nullable<WithId<PhonePeEntry>>>>
 }> = ({
   item,
   isSelected,
@@ -36,7 +36,7 @@ export const PhonePeItem: FC<{
       selectionSpecificClasses = "bg-gray-50 shadow-sm";
     }
 
-    const onSelect = (current: WithId<PhonepeEntry>) => {
+    const onSelect = (current: WithId<PhonePeEntry>) => {
       isSelected ? setSelected(null) : setSelected(current);
     }
 

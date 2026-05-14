@@ -1,11 +1,11 @@
 import React, { Suspense, lazy, memo, useMemo, useState } from 'react';
 import { BankList } from '../components/BankList';
 import { Nullable, WithId } from '../../../engine/models/types';
-import { useBankEntryQuery, useDraftEntryQuery, usePhonepeEntryQuery } from '../store/reviewSlice';
+import { useBankEntryQuery, useDraftEntryQuery, usePhonePeEntryQuery } from '../store/reviewSlice';
 import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
-import { PhonepeList } from '../components/PhonePeList';
+import { PhonePeList } from '../components/PhonePeList';
 import { DraftList } from '../components/DraftList';
-import { DraftEntry, BankEntry, PhonepeEntry } from '../engine/models/types';
+import { DraftEntry, BankEntry, PhonePeEntry } from '../engine/models/types';
 import { Header } from '../components/review/Headers';
 
 const BankReviewModal = lazy(() =>
@@ -14,9 +14,9 @@ const BankReviewModal = lazy(() =>
   })),
 );
 
-const PhonepeReviewModal = lazy(() =>
-  import('../components/modals/phonepeReview/ReviewModal').then((module) => ({
-    default: module.PhonepeReviewModal,
+const PhonePeReviewModal = lazy(() =>
+  import('../components/modals/phonePeReview/ReviewModal').then((module) => ({
+    default: module.PhonePeReviewModal,
   })),
 );
 
@@ -28,12 +28,12 @@ const ManualEntryModal = lazy(() =>
 
 type BankSectionProps = {
   bankEntries: WithId<BankEntry>[];
-  phonepeEntries: WithId<PhonepeEntry>[];
+  phonePeEntries: WithId<PhonePeEntry>[];
   draftEntries: WithId<DraftEntry>[];
   isLoading: boolean;
 };
 
-const BankSection = memo(({ bankEntries, phonepeEntries, draftEntries, isLoading }: BankSectionProps) => {
+const BankSection = memo(({ bankEntries, phonePeEntries, draftEntries, isLoading }: BankSectionProps) => {
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
 
   return (
@@ -48,7 +48,7 @@ const BankSection = memo(({ bankEntries, phonepeEntries, draftEntries, isLoading
           <BankReviewModal
             key={`bank-${bankItemId}`}
             bankEntries={bankEntries}
-            phonepeEntries={phonepeEntries}
+            phonePeEntries={phonePeEntries}
             draftEntries={draftEntries}
             bankItemId={bankItemId}
             setBankItemId={setBankItemId}
@@ -59,30 +59,30 @@ const BankSection = memo(({ bankEntries, phonepeEntries, draftEntries, isLoading
   );
 });
 
-type PhonepeSectionProps = {
-  phonepeEntries: WithId<PhonepeEntry>[];
+type PhonePeSectionProps = {
+  phonePeEntries: WithId<PhonePeEntry>[];
   draftEntries: WithId<DraftEntry>[];
   isLoading: boolean;
 };
 
-const PhonepeSection = memo(({ phonepeEntries, draftEntries, isLoading }: PhonepeSectionProps) => {
-  const [phonepeItemId, setPhonepeItemId] = useState<Nullable<string>>(null);
+const PhonePeSection = memo(({ phonePeEntries, draftEntries, isLoading }: PhonePeSectionProps) => {
+  const [phonePeItemId, setPhonePeItemId] = useState<Nullable<string>>(null);
 
   return (
     <div className="w-full xl:px-10 min-w-0 h-full flex">
-      <PhonepeList
-        items={phonepeEntries}
+      <PhonePeList
+        items={phonePeEntries}
         isLoading={isLoading}
-        setPhonepeItemId={setPhonepeItemId}
+        setPhonePeItemId={setPhonePeItemId}
       />
-      {phonepeItemId && (
+      {phonePeItemId && (
         <Suspense fallback={null}>
-          <PhonepeReviewModal
-            key={`phonepe-${phonepeItemId}`}
-            phonepeEntries={phonepeEntries}
+          <PhonePeReviewModal
+            key={`phonePe-${phonePeItemId}`}
+            phonePeEntries={phonePeEntries}
             draftEntries={draftEntries}
-            phonepeItemId={phonepeItemId}
-            setPhonepeItemId={setPhonepeItemId}
+            phonePeItemId={phonePeItemId}
+            setPhonePeItemId={setPhonePeItemId}
           />
         </Suspense>
       )}
@@ -128,11 +128,11 @@ const DraftSection = memo(({
 
 const ReviewExpense: React.FC = () => {
   const bankQuery = useBankEntryQuery();
-  const phonepeQuery = usePhonepeEntryQuery();
+  const phonePeQuery = usePhonePeEntryQuery();
   const draftQuery = useDraftEntryQuery();
 
   const bankEntries = useMemo(() => getArrayOrDefault(bankQuery), [bankQuery.data, bankQuery.isError, bankQuery.isLoading]);
-  const phonepeEntries = useMemo(() => getArrayOrDefault(phonepeQuery), [phonepeQuery.data, phonepeQuery.isError, phonepeQuery.isLoading]);
+  const phonePeEntries = useMemo(() => getArrayOrDefault(phonePeQuery), [phonePeQuery.data, phonePeQuery.isError, phonePeQuery.isLoading]);
   const draftEntries = useMemo(() => getArrayOrDefault(draftQuery), [draftQuery.data, draftQuery.isError, draftQuery.isLoading]);
 
   const [isManualEntryModalVisible, setManualEntryModalVisible] = useState(false);
@@ -143,14 +143,14 @@ const ReviewExpense: React.FC = () => {
       <div className="flex flex-row justify-between gap-4 flex-1 min-h-0">
         <BankSection
           bankEntries={bankEntries}
-          phonepeEntries={phonepeEntries}
+          phonePeEntries={phonePeEntries}
           draftEntries={draftEntries}
           isLoading={bankQuery.isLoading}
         />
-        <PhonepeSection
-          phonepeEntries={phonepeEntries}
+        <PhonePeSection
+          phonePeEntries={phonePeEntries}
           draftEntries={draftEntries}
-          isLoading={phonepeQuery.isLoading}
+          isLoading={phonePeQuery.isLoading}
         />
         <DraftSection
           draftEntries={draftEntries}

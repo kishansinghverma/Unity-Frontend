@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Routes } from '../../../engine/constant';
-import { BankEntry, DraftEntry, PhonepeEntry, SplitwiseGroupsResponse, SplitwiseCategoriesResponse } from '../engine/models/types';
+import { BankEntry, DraftEntry, PhonePeEntry, SplitwiseGroupsResponse, SplitwiseCategoriesResponse } from '../engine/models/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { WithId } from '../../../engine/models/types';
 
@@ -15,7 +15,7 @@ export const reviewApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   endpoints: (builder) => ({
     bankEntry: builder.query<WithId<BankEntry>[], void>({ query: () => Routes.BankStatement }),
-    phonepeEntry: builder.query<WithId<PhonepeEntry>[], void>({ query: () => Routes.PhonePeStatement }),
+    phonePeEntry: builder.query<WithId<PhonePeEntry>[], void>({ query: () => Routes.PhonePeStatement }),
     draftEntry: builder.query<WithId<DraftEntry>[], void>({ query: () => Routes.DraftExpenses }),
     descriptions: builder.query<{ value: string[] }, void>({ query: () => Routes.ExpenseDescriptions }),
     groups: builder.query<SplitwiseGroupsResponse, void>({ query: () => Routes.SplitWiseGroups }),
@@ -32,7 +32,7 @@ export const reviewSlice = createSlice({
 
 export const {
   useBankEntryQuery,
-  usePhonepeEntryQuery,
+  usePhonePeEntryQuery,
   useDraftEntryQuery,
   useDescriptionsQuery,
   useGroupsQuery,

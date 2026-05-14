@@ -2,9 +2,9 @@ import { TabletSmartphone } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback, FC, memo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Pagination } from "antd";
-import { PhonepeItem } from "./ListItem";
+import { PhonePeItem } from "./ListItem";
 import { EmptyList, SkeletonItem } from "./Common";
-import { PhonepeEntry } from "../engine/models/types";
+import { PhonePeEntry } from "../engine/models/types";
 import { reviewApi } from "../store/reviewSlice";
 import { useAppDispatch } from "../../../store/hooks";
 import { Nullable, WithId } from "../../../engine/models/types";
@@ -13,11 +13,11 @@ import { handleResponse, handleError } from "../../../engine/helpers/httpHelper"
 import { notify } from "../../../engine/services/notificationService";
 import { ListHeader } from "./review/Headers";
 
-const PhonepeListFC: FC<{
-  items: WithId<PhonepeEntry>[];
+const PhonePeListFC: FC<{
+  items: WithId<PhonePeEntry>[];
   isLoading: boolean;
-  setPhonepeItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
-}> = ({ isLoading, items, setPhonepeItemId }) => {
+  setPhonePeItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
+}> = ({ isLoading, items, setPhonePeItemId }) => {
   const dispatch = useAppDispatch();
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);
@@ -40,7 +40,7 @@ const PhonepeListFC: FC<{
     };
   }, [handleClickOutside]);
   const setProcessed = useCallback((id: string) => {
-    dispatch(reviewApi.util.updateQueryData('phonepeEntry', undefined, (data) => {
+    dispatch(reviewApi.util.updateQueryData('phonePeEntry', undefined, (data) => {
       data.forEach(entry => { if (entry._id === id) entry.processed = true });
     }));
 
@@ -87,10 +87,10 @@ const PhonepeListFC: FC<{
                         transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
                         className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
                       >
-                        <PhonepeItem
+                        <PhonePeItem
                           item={item}
                           setProcessed={setProcessed}
-                          setPhonepeItemId={setPhonepeItemId}
+                          setPhonePeItemId={setPhonePeItemId}
                           isOpen={openItemId === item._id}
                           onOpen={setOpenItemId}
                         />
@@ -119,4 +119,4 @@ const PhonepeListFC: FC<{
   );
 };
 
-export const PhonepeList = memo(PhonepeListFC);
+export const PhonePeList = memo(PhonePeListFC);

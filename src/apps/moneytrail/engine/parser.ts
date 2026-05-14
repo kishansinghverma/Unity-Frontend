@@ -180,7 +180,7 @@ export const parsePhonePeStatement = async (file: File) => {
 
             const transaction = {
                 date: dayjs(`${date} - ${time}`, 'MMM DD, YYYY - hh:mm A').toDate(),
-                recipient: `Phonepe - ${recipient.replace('Paid to', '').replace('Received from', '').replace('Bill paid -', '').trim()}`,
+                recipient: `PhonePe - ${recipient.replace('Paid to', '').replace('Received from', '').replace('Bill paid -', '').trim()}`,
                 transactionId: tokens[index].split(':')[1].trim(),
                 utr: tokens[index + 1].split(':')[1].trim(),
                 bank: meta[tokens[index + 2].trim()]?.Account ?? 'Unknown',

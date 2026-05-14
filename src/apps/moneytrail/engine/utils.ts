@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { Nullable, WithId } from "../../../engine/models/types";
-import { BankEntry, DraftEntry, PhonepeEntry } from "./models/types";
+import { BankEntry, DraftEntry, PhonePeEntry } from "./models/types";
 
 const colorPair = [
     'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700/60',
@@ -16,11 +16,6 @@ const colorPair = [
 ];
 
 const normalizeToMinute = (date: Date | string | undefined) => dayjs(date).startOf('minute').valueOf();
-
-export const getPhonePeMatches = (bankEntry: WithId<BankEntry>, phonePeEntries: WithId<PhonepeEntry>[]) => {
-    return phonePeEntries.filter(entry =>
-        entry.amount === bankEntry?.amount && dayjs(bankEntry.date).format('DD/MMM') === dayjs(entry.date).format('DD/MMM'));
-}
 
 export const getIconBackground = (bankName: string) => {
     if (bankName === 'SBI')
@@ -48,7 +43,12 @@ export const getColorPair = (seed: string) => {
     return colorPair[index];
 };
 
-export const getDraftMatches = (bankEntry: Nullable<WithId<BankEntry>>, phonePeEntry: Nullable<WithId<PhonepeEntry>>, draftEntries: WithId<DraftEntry>[]) => {
+export const getPhonePeMatches = (bankEntry: WithId<BankEntry>, phonePeEntries: WithId<PhonePeEntry>[]) => {
+    return phonePeEntries.filter(entry =>
+        entry.amount === bankEntry?.amount && dayjs(bankEntry.date).format('DD/MMM') === dayjs(entry.date).format('DD/MMM'));
+}
+
+export const getDraftMatches = (bankEntry: Nullable<WithId<BankEntry>>, phonePeEntry: Nullable<WithId<PhonePeEntry>>, draftEntries: WithId<DraftEntry>[]) => {
     if (phonePeEntry?._id) {
         const phonePeTimeNormalized = normalizeToMinute(phonePeEntry?.date)
         const draftEntry = draftEntries.find(t => phonePeTimeNormalized === normalizeToMinute(t.dateTime));
