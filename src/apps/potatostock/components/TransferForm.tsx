@@ -3,7 +3,7 @@ import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
 import { mockStocks } from '../services/mockData';
-import type { Stock, StockTransfer } from '../types';
+import type { StockTransfer } from '../types';
 
 interface TransferFormProps {
   onSubmit: (data: Omit<StockTransfer, 'id' | 'status'>) => void;

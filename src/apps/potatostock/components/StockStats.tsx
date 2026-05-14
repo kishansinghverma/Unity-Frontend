@@ -1,6 +1,5 @@
 import { Package, ArrowUpDown, BarChart3, Warehouse } from 'lucide-react';
 import React from 'react';
-import Card from '../../../components/ui/Card';
 
 interface StatCardProps {
   title: string;

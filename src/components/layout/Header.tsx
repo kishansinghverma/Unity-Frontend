@@ -1,6 +1,6 @@
-import { Menu, Search, Bell, User, ChevronDown, LayoutDashboard, BarChart3, Wheat, LogIn, DollarSign, CandlestickChart, Home } from 'lucide-react';
+import { Menu, Search, Bell, ChevronDown, LayoutDashboard, BarChart3, Wheat, DollarSign, CandlestickChart, Home } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { APPS } from '../../constants/apps';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectCurrentApp, setCurrentApp } from '../../store/slices/appSlice';

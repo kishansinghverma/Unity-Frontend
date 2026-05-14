@@ -1,4 +1,4 @@
-import { BarChart3, TrendingUp, Warehouse, Scale, Tags, Package } from 'lucide-react';
+import { BarChart3, TrendingUp, Warehouse, Tags, Package } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../../../components/ui/Card';

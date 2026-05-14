@@ -1,4 +1,4 @@
-import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, Wheat, LogIn, DollarSign, CandlestickChart, Home, Thermometer, Package, PlusCircle, ListFilter, ArrowRightLeft, DollarSign as PriceIcon, Archive } from 'lucide-react';
+import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, LogIn, Home, Thermometer, PlusCircle, ListFilter, ArrowRightLeft, DollarSign as PriceIcon, Archive } from 'lucide-react';
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
