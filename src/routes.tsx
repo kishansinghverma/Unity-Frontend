@@ -9,7 +9,7 @@ import PartyList from './apps/emandi/pages/PartyList';
 import ProcessedRecordsList from './apps/emandi/pages/ProcessedRecordsList';
 // Money Trail App
 import MoneyTrailDashboard from './apps/moneytrail/pages/Dashboard';
-import ReviewExpense from './apps/moneytrail/pages/Review';
+import ReviewExpense from './apps/moneytrail/pages/review/Review';
 import Splitwise from './apps/moneytrail/pages/Splitwise';
 // Potato Stock App
 import PotatoStockDashboard from './apps/potatostock/pages/Dashboard';

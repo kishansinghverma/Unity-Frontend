@@ -1,5 +1,5 @@
 import Dashboard from './pages/Dashboard';
-import Review from './pages/Review';
+import Review from './pages/review/Review';
 
 export const routes = [
   {
