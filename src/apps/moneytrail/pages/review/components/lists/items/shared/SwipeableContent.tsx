@@ -1,18 +1,11 @@
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { SwipeableContentProps } from '../../../../../../engine/contracts/props';
 
 const ACTION_WIDTH = 80;
 const OPEN_THRESHOLD = -50;
 const CLICK_EPSILON = 6;
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
-
-type SwipeableContentProps = {
-  id: string;
-  isOpen: boolean;
-  onOpen: (id: string | null) => void;
-  onClick: () => void;
-  children: ReactNode;
-};
 
 export const SwipeableContent = ({
   id,

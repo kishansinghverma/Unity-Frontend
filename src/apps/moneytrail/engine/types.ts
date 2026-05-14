@@ -1,6 +1,3 @@
-import { ElementType } from "react";
-import { WithId } from "../../../../engine/models/types";
-
 export type BankEntry = {
     date: string;
     description: string;
@@ -26,49 +23,6 @@ export type DraftEntry = {
     location: string,
     coordinate: string,
     processed: boolean,
-}
-
-export type TransactionListProps = {
-    title: string;
-    subtitle: string;
-    isLoading: boolean;
-    items: WithId<BankEntry>[];
-    icon: ElementType;
-    gradientColors: {
-        from: string;
-        to: string;
-    };
-}
-
-export type PaymentAppListProps = {
-    title: string;
-    subtitle: string;
-    isLoading: boolean;
-    items: WithId<PaymentAppEntry>[];
-    icon: ElementType;
-    gradientColors: {
-        from: string;
-        to: string;
-    };
-}
-
-export type DraftListProps = {
-    title: string;
-    subtitle: string;
-    isLoading: boolean;
-    items: WithId<DraftEntry>[];
-    icon: ElementType;
-    gradientColors: {
-        from: string;
-        to: string;
-    };
-}
-
-export type ReviewModalProps = {
-    itemId: string | null;
-    bankEntries: Array<WithId<BankEntry>>;
-    paymentAppEntries: Array<WithId<PaymentAppEntry>>;
-    onClose: () => void;
 }
 
 export type Group = {

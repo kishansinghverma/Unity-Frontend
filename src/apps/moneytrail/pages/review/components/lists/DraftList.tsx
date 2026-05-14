@@ -4,20 +4,15 @@ import { FileSearch } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback, FC, memo } from "react";
 import { PostParams, Routes } from "../../../../../../engine/constant";
 import { handleResponse, handleError } from "../../../../../../engine/helpers/httpHelper";
-import { WithId, Nullable } from "../../../../../../engine/models/types";
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { SkeletonItem, EmptyList } from "../../../../components/Common";
+import { ReviewDraftListProps } from "../../../../engine/contracts/props";
 import { DraftListItem } from "./items/DraftListItem";
-import { DraftEntry } from "../../../../engine/models/types";
 import { reviewApi } from "../../../../store/reviewSlice";
 import { ListHeader } from "../layouts/Headers";
 
-const DraftListFC: FC<{
-  items: WithId<DraftEntry>[];
-  isLoading: boolean;
-  setDraftItem: React.Dispatch<React.SetStateAction<Nullable<WithId<DraftEntry>>>>
-}> = ({
+const DraftListFC: FC<ReviewDraftListProps> = ({
   isLoading,
   items,
   setDraftItem

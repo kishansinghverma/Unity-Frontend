@@ -1,19 +1,10 @@
 import dayjs from 'dayjs';
 import { Calendar } from 'lucide-react';
-import { Dispatch, FC, memo, SetStateAction } from 'react';
+import { FC, memo } from 'react';
 import { BankIcon } from '../../../../../components/Common';
-import { BankEntry } from '../../../../../engine/models/types';
-import { Nullable, WithId } from '../../../../../../../engine/models/types';
+import { BankListItemProps } from '../../../../../engine/contracts/props';
 import { ProcessedActionButton, ProcessedMarker } from './shared/ProcessedState';
 import { SwipeableContent } from './shared/SwipeableContent';
-
-type BankListItemProps = {
-  item: WithId<BankEntry>;
-  isOpen: boolean;
-  onOpen: (id: string | null) => void;
-  setProcessed: (id: string) => void;
-  setBankItemId: Dispatch<SetStateAction<Nullable<string>>>;
-};
 
 const BankListItemFC: FC<BankListItemProps> = ({ isOpen, item, onOpen, setBankItemId, setProcessed }) => {
   const markProcessed = (id: string) => {

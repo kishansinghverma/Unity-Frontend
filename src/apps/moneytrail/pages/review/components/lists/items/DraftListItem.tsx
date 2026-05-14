@@ -1,20 +1,11 @@
 import dayjs from 'dayjs';
 import { Calendar, Clock } from 'lucide-react';
-import { Dispatch, FC, memo, SetStateAction } from 'react';
+import { FC, memo } from 'react';
 import { AlphabetIcon } from '../../../../../components/Common';
-import { DraftEntry } from '../../../../../engine/models/types';
-import { Nullable, WithId } from '../../../../../../../engine/models/types';
+import { DraftListItemProps } from '../../../../../engine/contracts/props';
 import { StringUtils } from '../../../../../../../engine/helpers/stringHelper';
 import { ProcessedActionButton, ProcessedMarker } from './shared/ProcessedState';
 import { SwipeableContent } from './shared/SwipeableContent';
-
-type DraftListItemProps = {
-  item: WithId<DraftEntry>;
-  isOpen: boolean;
-  onOpen: (id: string | null) => void;
-  setProcessed: (id: string) => void;
-  setDraftItem: Dispatch<SetStateAction<Nullable<WithId<DraftEntry>>>>;
-};
 
 const DraftListItemFC: FC<DraftListItemProps> = ({ isOpen, item, onOpen, setDraftItem, setProcessed }) => {
   const location = StringUtils.isNullOrEmpty(item.location) ? 'Unidentified Location' : item.location;

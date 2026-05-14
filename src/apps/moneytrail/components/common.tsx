@@ -1,31 +1,23 @@
 import { Space, Select, Form, Popover, List } from "antd";
-import { FormItemProps, Rule } from "antd/es/form";
-import { NamePath } from "antd/es/form/interface";
-import { DefaultOptionType, SelectProps } from "antd/es/select";
+import { DefaultOptionType } from "antd/es/select";
 import { CircleArrowUp, ListX } from "lucide-react";
 import { FC, useEffect, useRef, useState } from "react";
 import { PostParams, Routes } from "../../../engine/constant";
 import { handleJsonResponse } from "../../../engine/helpers/httpHelper";
 import { StringUtils } from "../../../engine/helpers/stringHelper";
-import { Nullable } from "../../../engine/models/types";
 import { NotificationMessages, notify } from "../../../engine/services/notificationService";
+import { AlphabetIconProps, BankIconProps, CustomSelectProps, SelectWithAddProps } from "../engine/contracts/props";
 import { parsePaymentAppStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../engine/parser";
 import { getColorPair, getIconBackground } from "../engine/utils";
 import { BankLogo } from "./Resources";
 
-export const BankIcon: FC<{
-  bankName: string
-}> = ({ bankName }) => (
+export const BankIcon: FC<BankIconProps> = ({ bankName }) => (
   <div className={`p-2 rounded ${getIconBackground(bankName)}`} title={bankName}>
     {BankLogo.get(bankName)}
   </div>
 );
 
-export const AlphabetIcon: FC<{
-  firstLetter: string
-  seed: string;
-  overrideStyle?: Nullable<string>;
-}> = ({ firstLetter, seed, overrideStyle }) => (
+export const AlphabetIcon: FC<AlphabetIconProps> = ({ firstLetter, seed, overrideStyle }) => (
   <div className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg ${overrideStyle ?? getColorPair(seed)}`}>
     <span className={`text-lg sm:text-xl font-bold`}>
       {firstLetter}
@@ -57,14 +49,6 @@ export const SkeletonItem: FC = () => (
   </div>
 );
 
-type CustomSelectProps = SelectProps<unknown, DefaultOptionType> & {
-  name: NamePath;
-  rules?: Rule[];
-  width?: string | number;
-  prefix?: React.ReactNode;
-  formItemProps?: Omit<FormItemProps, "name" | "rules" | "children">;
-};
-
 export const CustomSelect: FC<CustomSelectProps> = ({
   name,
   rules,
@@ -91,18 +75,7 @@ export const CustomSelect: FC<CustomSelectProps> = ({
     )
   }
 
-export const SelectWithAdd: FC<{
-  defaultOptions: Array<DefaultOptionType>;
-  placeholder: string;
-  name: string;
-  rules?: Rule[];
-  className: string;
-  width?: string;
-  isLoading: boolean;
-  placement?: "bottomLeft" | "bottomRight" | "topLeft" | "topRight";
-  prefix: React.ReactNode;
-  onAddOption: (option: DefaultOptionType) => void
-}> = ({
+export const SelectWithAdd: FC<SelectWithAddProps> = ({
   defaultOptions,
   placeholder,
   name,

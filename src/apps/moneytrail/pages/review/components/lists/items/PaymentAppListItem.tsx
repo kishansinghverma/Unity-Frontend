@@ -1,19 +1,10 @@
 import dayjs from 'dayjs';
 import { Calendar, Clock } from 'lucide-react';
-import { Dispatch, FC, memo, SetStateAction } from 'react';
+import { FC, memo } from 'react';
 import { BankIcon } from '../../../../../components/Common';
-import { PaymentAppEntry } from '../../../../../engine/models/types';
-import { Nullable, WithId } from '../../../../../../../engine/models/types';
+import { PaymentAppListItemProps } from '../../../../../engine/contracts/props';
 import { ProcessedActionButton, ProcessedMarker } from './shared/ProcessedState';
 import { SwipeableContent } from './shared/SwipeableContent';
-
-type PaymentAppListItemProps = {
-  item: WithId<PaymentAppEntry>;
-  isOpen: boolean;
-  onOpen: (id: string | null) => void;
-  setProcessed: (id: string) => void;
-  setPaymentAppItemId: Dispatch<SetStateAction<Nullable<string>>>;
-};
 
 const PaymentAppListItemFC: FC<PaymentAppListItemProps> = ({
   isOpen,

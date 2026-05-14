@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
 import { BankIcon } from '../../../../../../components/Common';
-import { BankEntry } from '../../../../../../engine/models/types';
+import { BankEntry } from '../../../../../../engine/types';
 
 interface DescriptionInfo {
   platform: string;

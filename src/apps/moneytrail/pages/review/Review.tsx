@@ -4,7 +4,8 @@ import { Nullable, WithId } from '../../../../engine/models/types';
 import { DraftList } from './components/lists/DraftList';
 import { PaymentAppList } from './components/lists/PaymentAppList';
 import { Header } from './components/layouts/Headers';
-import { DraftEntry, BankEntry, PaymentAppEntry } from '../../engine/models/types';
+import { BankSectionProps, DraftSectionProps, PaymentAppSectionProps } from '../../engine/contracts/props';
+import { DraftEntry } from '../../engine/types';
 import { useBankEntryQuery, useDraftEntryQuery, usePaymentAppEntryQuery } from '../../store/reviewSlice';
 import { BankList } from './components/lists/BankList';
 
@@ -25,13 +26,6 @@ const ManualEntryModal = lazy(() =>
     default: module.ManualEntryModal,
   })),
 );
-
-type BankSectionProps = {
-  bankEntries: WithId<BankEntry>[];
-  paymentAppEntries: WithId<PaymentAppEntry>[];
-  draftEntries: WithId<DraftEntry>[];
-  isLoading: boolean;
-};
 
 const BankSection = memo(({ bankEntries, paymentAppEntries, draftEntries, isLoading }: BankSectionProps) => {
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
@@ -59,12 +53,6 @@ const BankSection = memo(({ bankEntries, paymentAppEntries, draftEntries, isLoad
   );
 });
 
-type PaymentAppSectionProps = {
-  paymentAppEntries: WithId<PaymentAppEntry>[];
-  draftEntries: WithId<DraftEntry>[];
-  isLoading: boolean;
-};
-
 const PaymentAppSection = memo(({ paymentAppEntries, draftEntries, isLoading }: PaymentAppSectionProps) => {
   const [paymentAppItemId, setPaymentAppItemId] = useState<Nullable<string>>(null);
 
@@ -89,13 +77,6 @@ const PaymentAppSection = memo(({ paymentAppEntries, draftEntries, isLoading }: 
     </div>
   );
 });
-
-type DraftSectionProps = {
-  draftEntries: WithId<DraftEntry>[];
-  isLoading: boolean;
-  isManualEntryModalVisible: boolean;
-  setManualEntryModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-};
 
 const DraftSection = memo(({
   draftEntries,

@@ -2,7 +2,7 @@ import { Form, InputNumber, Space } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 import dayjs from 'dayjs';
 import { X, CreditCard, Smartphone, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Loader2 } from 'lucide-react';
-import { ElementType, FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { PaymentAppItem } from './PaymentAppItem';
 import TransactionCard from './TransactionCard';
 import { TransactionContainer } from '../../shared/TransactionContainer';
@@ -13,7 +13,8 @@ import { StringUtils } from '../../../../../../../../engine/helpers/stringHelper
 import { notify } from '../../../../../../../../engine/services/notificationService';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
 import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
-import { BankEntry, PaymentAppEntry, DraftEntry, SplitwiseCategory } from '../../../../../../engine/models/types';
+import { BankReviewModalProps, PrefixIconProps } from '../../../../../../engine/contracts/props';
+import { PaymentAppEntry, DraftEntry, SplitwiseCategory } from '../../../../../../engine/types';
 import { getPaymentAppMatches, getDraftMatches } from '../../../../../../engine/utils';
 import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
 import { AnimatedModal } from '../../shared/AnimatedModal';
@@ -26,13 +27,7 @@ type FormState = {
   group: number
 };
 
-export const BankReviewModal: FC<{
-  bankItemId: string;
-  bankEntries: WithId<BankEntry>[];
-  paymentAppEntries: WithId<PaymentAppEntry>[];
-  draftEntries: WithId<DraftEntry>[];
-  setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
-}> = ({
+export const BankReviewModal: FC<BankReviewModalProps> = ({
   bankItemId,
   bankEntries,
   paymentAppEntries,
@@ -393,7 +388,7 @@ export const BankReviewModal: FC<{
     );
   }
 
-const PrefixIcon: FC<{ size: number, strokeWidth: number, icon: ElementType }> = ({ size, strokeWidth, icon: Icon }) => (
+const PrefixIcon: FC<PrefixIconProps> = ({ size, strokeWidth, icon: Icon }) => (
   <span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 bg-gray-50 text-gray-500">
     <Icon size={size} strokeWidth={strokeWidth} />
   </span>

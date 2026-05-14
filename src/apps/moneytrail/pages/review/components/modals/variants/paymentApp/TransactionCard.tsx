@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
 import { BankIcon } from '../../../../../../components/Common';
-import { PaymentAppEntry } from '../../../../../../engine/models/types';
+import { PaymentAppEntry } from '../../../../../../engine/types';
 
 const TransactionCard: React.FC<WithId<PaymentAppEntry>> = (paymentAppEntry) => {
   const isDebit: boolean = paymentAppEntry.type === 'Debit';

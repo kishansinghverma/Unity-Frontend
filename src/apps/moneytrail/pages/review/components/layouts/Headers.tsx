@@ -1,9 +1,10 @@
 import dayjs from "dayjs";
 import { PlusCircle, CalendarArrowUp, ClockArrowUp } from "lucide-react";
-import { ElementType, FC, memo } from "react";
+import { FC, memo } from "react";
 import { UploadStatement } from "../../../../components/Common";
+import { HeaderProps, ListHeaderProps } from "../../../../engine/contracts/props";
 
-const HeaderFC: FC<{ setModalVisible: React.Dispatch<React.SetStateAction<boolean>> }> = ({ setModalVisible }) => (
+const HeaderFC: FC<HeaderProps> = ({ setModalVisible }) => (
   <div className="flex px-4 py-3 mb-6 justify-between items-center text-sm font-medium text-gray-600 duration-200 rounded-xl bg-white shadow-md border border-gray-200 bg-white">
     <div className="flex gap-2">
       <button onClick={() => setModalVisible(true)} className="flex gap-1 hover:text-gray-900 hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-32">
@@ -25,14 +26,7 @@ const HeaderFC: FC<{ setModalVisible: React.Dispatch<React.SetStateAction<boolea
   </div>
 );
 
-const ListHeaderFC: FC<{
-  title: string;
-  subtitle: string;
-  Icon: ElementType;
-  className: string;
-  showProcessed: boolean;
-  setShowProcessed: React.Dispatch<React.SetStateAction<boolean>>
-}> = ({
+const ListHeaderFC: FC<ListHeaderProps> = ({
   title, subtitle, Icon, className, showProcessed, setShowProcessed
 }) => (
     <header className={`px-6 py-4 flex-shrink-0 bg-gradient-to-r ${className}`}>

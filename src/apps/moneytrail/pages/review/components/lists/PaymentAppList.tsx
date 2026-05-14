@@ -4,20 +4,15 @@ import { TabletSmartphone } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback, FC, memo } from "react";
 import { PostParams, Routes } from "../../../../../../engine/constant";
 import { handleResponse, handleError } from "../../../../../../engine/helpers/httpHelper";
-import { WithId, Nullable } from "../../../../../../engine/models/types";
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { SkeletonItem, EmptyList } from "../../../../components/Common";
+import { ReviewPaymentAppListProps } from "../../../../engine/contracts/props";
 import { PaymentAppListItem } from "./items/PaymentAppListItem";
-import { PaymentAppEntry } from "../../../../engine/models/types";
 import { reviewApi } from "../../../../store/reviewSlice";
 import { ListHeader } from "../layouts/Headers";
 
-const PaymentAppListFC: FC<{
-  items: WithId<PaymentAppEntry>[];
-  isLoading: boolean;
-  setPaymentAppItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
-}> = ({ isLoading, items, setPaymentAppItemId }) => {
+const PaymentAppListFC: FC<ReviewPaymentAppListProps> = ({ isLoading, items, setPaymentAppItemId }) => {
   const dispatch = useAppDispatch();
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);

@@ -4,20 +4,13 @@ import { Building2 } from "lucide-react";
 import { useState, useRef, useEffect, useMemo, useCallback, FC, memo } from "react";
 import { PostParams, Constants, Routes } from "../../../../../../engine/constant";
 import { handleResponse } from "../../../../../../engine/helpers/httpHelper";
-import { WithId, Nullable } from "../../../../../../engine/models/types";
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { SkeletonItem, EmptyList } from "../../../../components/Common";
-import { BankEntry } from "../../../../engine/models/types";
+import { BankListProps } from "../../../../engine/contracts/props";
 import { reviewApi } from "../../../../store/reviewSlice";
 import { BankListItem } from "./items/BankListItem";
 import { ListHeader } from "../layouts/Headers";
-
-type BankListProps = {
-  items: WithId<BankEntry>[];
-  isLoading: boolean;
-  setBankItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
-};
 
 const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
   const dispatch = useAppDispatch();

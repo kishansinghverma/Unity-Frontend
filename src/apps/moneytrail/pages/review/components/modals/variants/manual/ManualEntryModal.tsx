@@ -2,14 +2,14 @@ import { DatePicker, Form, Input, InputNumber, Radio, Space } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 import dayjs from 'dayjs';
 import { X, IndianRupee, Layers2, Pencil, PieChart, Save, CalendarClock, CreditCard, MapPin, Loader2 } from 'lucide-react';
-import { ElementType, FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { PostParams, Routes } from '../../../../../../../../engine/constant';
 import { handleResponse, handleError } from '../../../../../../../../engine/helpers/httpHelper';
-import { Nullable, WithId } from '../../../../../../../../engine/models/types';
 import { notify } from '../../../../../../../../engine/services/notificationService';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
 import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
-import { DraftEntry, SplitwiseCategory } from '../../../../../../engine/models/types';
+import { ManualEntryModalProps, PrefixIconProps } from '../../../../../../engine/contracts/props';
+import { SplitwiseCategory } from '../../../../../../engine/types';
 import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
 import { AnimatedModal } from '../../shared/AnimatedModal';
 import { getIcon, icon } from '../../../../../../../../static/icons/provider';
@@ -27,11 +27,7 @@ type FormState = {
 
 const LAST_SOURCE_KEY = 'moneytrail.manualEntry.lastSource';
 
-export const ManualEntryModal: FC<{
-  draftEntry: Nullable<WithId<DraftEntry>>;
-  setVisible: (isVisible: boolean) => void;
-  setDraftItem: React.Dispatch<React.SetStateAction<Nullable<WithId<DraftEntry>>>>;
-}> = ({
+export const ManualEntryModal: FC<ManualEntryModalProps> = ({
   draftEntry,
   setVisible,
   setDraftItem
@@ -357,7 +353,7 @@ export const ManualEntryModal: FC<{
     );
   }
 
-export const PrefixIcon: FC<{ size: number, strokeWidth: number, icon: ElementType }> = ({ size, strokeWidth, icon: Icon }) => (
+export const PrefixIcon: FC<PrefixIconProps> = ({ size, strokeWidth, icon: Icon }) => (
   <span className="text-sm px-3 py-[10px] border border-r-0 rounded-l-md border-gray-300 bg-gray-50 text-gray-500">
     <Icon size={size} strokeWidth={strokeWidth} />
   </span>
