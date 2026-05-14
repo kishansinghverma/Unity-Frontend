@@ -11,21 +11,21 @@ const styles = {
   rightSection: 'flex flex-col items-end flex-shrink-0 ml-auto text-right',
   content: 'flex items-center space-x-3',
   title: 'text-sm font-medium line-clamp-2 capitalize',
-  dateTime: 'flex items-center text-xs font-semibold whitespace-nowrap opacity-90',
+  datetime: 'flex items-center text-xs font-semibold whitespace-nowrap opacity-90',
   amount: 'font-semibold whitespace-nowrap mb-0.5',
   iconWrapper: 'flex-shrink-0',
   titleWrapper: 'flex-grow min-w-0',
   default: {
     container: 'shadow-sm',
     title: 'text-slate-500',
-    dateTime: 'text-slate-800',
+    datetime: 'text-slate-800',
     creditAmount: 'text-green-600',
     debitAmount: 'text-red-600'
   },
   selected: {
     container: 'shadow-lg ring-1 ring-indigo-400 bg-indigo-50/70',
     title: 'text-indigo-600',
-    dateTime: 'text-indigo-700',
+    datetime: 'text-indigo-700',
     creditAmount: 'text-green-500',
     debitAmount: 'text-red-500'
   },
@@ -49,7 +49,7 @@ const PaymentAppItemFC: FC<{
     const containerStyle = `${styles.container} ${stateStyles.container}`;
     const titleStyle = `${styles.title} ${stateStyles.title}`;
     const amountStyle = `${styles.amount} ${isCredit ? stateStyles.creditAmount : stateStyles.debitAmount}`;
-    const datetimeStyle = `${styles.dateTime} ${stateStyles.dateTime}`;
+    const datetimeStyle = `${styles.datetime} ${stateStyles.datetime}`;
 
     return (
       <div
