@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import { CheckCircle, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
-import { Nullable, WithId } from '../../../../../engine/models/types';
-import { DraftEntry } from '../../../engine/models/types';
-import { AlphabetIcon } from '../../Common';
+import { Nullable, WithId } from '../../../../engine/models/types';
+import { DraftEntry } from '../../engine/models/types';
+import { AlphabetIcon } from '../Common';
 
 type DraftItemProps = {
     item: WithId<DraftEntry>;

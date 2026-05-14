@@ -13,11 +13,11 @@ import { BankEntry, DraftEntry, PaymentAppEntry, SplitwiseCategory } from '../..
 import { getDraftMatches, getPaymentAppMatches } from '../../../engine/utils';
 import { reviewApi, useCategoriesQuery, useDescriptionsQuery, useGroupsQuery } from '../../../store/reviewSlice';
 import { CustomSelect, SelectWithAdd } from '../../Common';
-import { AnimatedModal } from '../AnimatedModal';
-import { DraftItem } from './DraftItem';
+import { AnimatedModal } from '../../common/AnimatedModal';
+import { DraftItem } from '../../common/DraftItem';
 import { PaymentAppItem } from './PaymentAppItem';
 import TransactionCard from './TransactionCard';
-import { TransactionContainer } from './TransactionContainer';
+import { TransactionContainer } from '../../common/TransactionContainer';
 
 type FormState = {
   amount: number,

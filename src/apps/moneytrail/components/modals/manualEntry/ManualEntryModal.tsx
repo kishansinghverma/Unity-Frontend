@@ -18,7 +18,7 @@ import { useAppDispatch } from '../../../../../store/hooks';
 import { DraftEntry, SplitwiseCategory } from '../../../engine/models/types';
 import { reviewApi, useCategoriesQuery, useDescriptionsQuery, useGroupsQuery } from '../../../store/reviewSlice';
 import { CustomSelect, SelectWithAdd } from '../../Common';
-import { AnimatedModal } from '../AnimatedModal';
+import { AnimatedModal } from '../../common/AnimatedModal';
 
 type FormState = {
   amount: number;

@@ -13,9 +13,9 @@ import { DraftEntry, PaymentAppEntry, SplitwiseCategory } from '../../../engine/
 import { getDraftMatches } from '../../../engine/utils';
 import { reviewApi, useCategoriesQuery, useDescriptionsQuery, useGroupsQuery } from '../../../store/reviewSlice';
 import { CustomSelect, SelectWithAdd } from '../../Common';
-import { AnimatedModal } from '../AnimatedModal';
-import { DraftItem } from '../bankReview/DraftItem';
-import { TransactionContainer } from '../bankReview/TransactionContainer';
+import { AnimatedModal } from '../../common/AnimatedModal';
+import { DraftItem } from '../../common/DraftItem';
+import { TransactionContainer } from '../../common/TransactionContainer';
 import TransactionCard from './TransactionCard';
 
 type FormState = {
