@@ -1,11 +1,11 @@
+import { Calendar } from 'antd';
 import dayjs from 'dayjs';
+import { CheckCircle2, Clock, FileText } from 'lucide-react';
 import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
-import { BankIcon } from '../../../shared/Common';
-import { Calendar } from 'antd';
-import { CheckCircle2, Clock, FileText } from 'lucide-react';
 import { BankEntry } from '../../../../engine/contracts/models';
 import { DescriptionInfo, BankTheme } from '../../../../engine/contracts/types';
+import { BankIcon } from '../../../shared/Common';
 
 const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
   const parseDescription = (desc: string): DescriptionInfo => {

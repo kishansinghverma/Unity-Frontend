@@ -2,8 +2,8 @@ import dayjs from 'dayjs';
 import { CheckCircle, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
 import { getFormattedAmount } from '../../../../../../../../engine/helpers/numberHelper';
-import { BankIcon } from '../../../shared/Common';
 import { PaymentAppItemProps } from '../../../../engine/contracts/props';
+import { BankIcon } from '../../../shared/Common';
 
 const styles = {
   container: 'w-full rounded-lg bg-gray-50 p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden border border-gray-100 hover:shadow-md hover:scale-[1.015] hover:border-slate-200 [&:not(:first-child)]:mt-2.5 [&:not(:last-child)]:mb-2.5',

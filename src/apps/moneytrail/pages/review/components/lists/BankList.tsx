@@ -6,11 +6,11 @@ import { PostParams, Constants, Routes } from "../../../../../../engine/constant
 import { handleResponse } from "../../../../../../engine/helpers/httpHelper";
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
-import { SkeletonItem, EmptyList } from "../shared/Common";
 import { reviewApi } from "../../../../store/reviewSlice";
-import { BankListItem } from "./items/BankListItem";
-import { ListHeader } from "../layouts/Headers";
 import { BankListProps } from "../../engine/contracts/props";
+import { ListHeader } from "../layouts/Headers";
+import { SkeletonItem, EmptyList } from "../shared/Common";
+import { BankListItem } from "./items/BankListItem";
 
 const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
   const dispatch = useAppDispatch();

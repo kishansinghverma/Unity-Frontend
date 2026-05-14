@@ -1,6 +1,6 @@
 import { FileText } from "lucide-react"
-import React, { memo } from "react";
 import { ElementType, PropsWithChildren } from "react"
+import React, { memo } from "react";
 
 export const TransactionContainerFC: React.FC<PropsWithChildren<{
   icon: ElementType,

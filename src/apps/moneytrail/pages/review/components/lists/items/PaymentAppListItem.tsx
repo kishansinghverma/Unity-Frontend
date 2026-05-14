@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
 import { Calendar, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
+import { PaymentAppListItemProps } from '../../../engine/contracts/props';
 import { BankIcon } from '../../shared/Common';
 import { ProcessedActionButton, ProcessedMarker } from './shared/ProcessedState';
 import { SwipeableContent } from './shared/SwipeableContent';
-import { PaymentAppListItemProps } from '../../../engine/contracts/props';
 
 const PaymentAppListItemFC: FC<PaymentAppListItemProps> = ({
   isOpen,

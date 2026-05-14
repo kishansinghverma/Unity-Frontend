@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import { Nullable, WithId } from "../../../../../engine/models/types";
 import { normalizeToMinute } from "../../../../../engine/helpers/dateTimeHelper";
+import { Nullable, WithId } from "../../../../../engine/models/types";
 import { BankEntry, PaymentAppEntry, DraftEntry } from "./contracts/models";
 
 const colorPair = [
