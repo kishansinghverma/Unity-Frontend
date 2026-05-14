@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { CheckCircle, Clock } from 'lucide-react';
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { Nullable, WithId } from '../../../../../engine/models/types';
 import { PhonePeEntry } from '../../../engine/models/types';
 import { BankIcon } from '../../Common';
@@ -40,7 +40,7 @@ const styles = {
   }
 };
 
-export const PhonePeItem: FC<{
+const PhonePeItemFC: FC<{
   item: WithId<PhonePeEntry>;
   isSelected: boolean;
   setSelected: React.Dispatch<React.SetStateAction<Nullable<WithId<PhonePeEntry>>>>
@@ -82,4 +82,6 @@ export const PhonePeItem: FC<{
         </div>
       </div>
     )
-  };
+};
+
+export const PhonePeItem = memo(PhonePeItemFC);
