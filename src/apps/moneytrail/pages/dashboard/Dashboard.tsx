@@ -1,13 +1,6 @@
 import { RefreshCw } from 'lucide-react';
-import { useState, ReactNode } from 'react';
-
-type RecordItem = {
-  id: string;
-  icon: ReactNode;
-  title: string;
-  subtitle: string;
-  date: string;
-};
+import { useState } from 'react';
+import type { RecordItem } from './engine/contracts/types';
 
 function Dashboard() {
   const [selectedTransaction, setSelectedTransaction] = useState<RecordItem | null>(null);
@@ -93,13 +86,6 @@ function Dashboard() {
           <span>Refresh Dashboard</span>
         </button>
       </div>
-
-      {/* {selectedTransaction && (
-        <ReviewModal
-          item={selectedTransaction}
-          onClose={() => setSelectedTransaction(null)}
-        />
-      )} */}
     </main>
   );
 }

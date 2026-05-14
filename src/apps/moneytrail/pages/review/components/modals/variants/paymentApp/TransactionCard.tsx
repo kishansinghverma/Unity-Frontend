@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
-import { BankIcon } from '../../../../../../components/Common';
+import { BankIcon } from '../../../shared/Common';
 import { Calendar } from 'antd';
 import { CheckCircle2, Clock, FileText } from 'lucide-react';
 import { PaymentAppEntry } from '../../../../engine/contracts/models';

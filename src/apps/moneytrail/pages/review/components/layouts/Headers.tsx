@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { PlusCircle, CalendarArrowUp, ClockArrowUp } from "lucide-react";
 import { FC, memo } from "react";
-import { UploadStatement } from "../../../../components/Common";
+import { UploadStatement } from "../shared/Common";
 import { HeaderProps, ListHeaderProps } from "../../engine/contracts/props";
 
 const HeaderFC: FC<HeaderProps> = ({ setModalVisible }) => (

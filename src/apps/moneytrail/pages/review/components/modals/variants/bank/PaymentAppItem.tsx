@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { CheckCircle, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
 import { getFormattedAmount } from '../../../../../../../../engine/helpers/numberHelper';
-import { BankIcon } from '../../../../../../components/Common';
+import { BankIcon } from '../../../shared/Common';
 import { PaymentAppItemProps } from '../../../../engine/contracts/props';
 
 const styles = {

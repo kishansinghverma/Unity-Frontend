@@ -1,7 +1,7 @@
 import { CircleDollarSign } from "lucide-react";
 import { JSX } from "react";
-import { SafeMap } from "../../../engine/containers/safeMap";
-import { getIcon, icon } from '../../../static/icons/provider';
+import { SafeMap } from "../../../../../../engine/containers/safeMap";
+import { getIcon, icon } from '../../../../../../static/icons/provider';
 
 export const BankLogo = new SafeMap<string, JSX.Element>({
     HDFC: <img src={getIcon(icon.Hdfc)} width={24} height={24} />,

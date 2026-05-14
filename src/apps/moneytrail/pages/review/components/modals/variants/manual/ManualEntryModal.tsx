@@ -7,7 +7,7 @@ import { PostParams, Routes } from '../../../../../../../../engine/constant';
 import { handleResponse, handleError } from '../../../../../../../../engine/helpers/httpHelper';
 import { notify } from '../../../../../../../../engine/services/notificationService';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
-import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
+import { SelectWithAdd, CustomSelect } from '../../../shared/Common';
 import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
 import { AnimatedModal } from '../../shared/AnimatedModal';
 import { getIcon, icon } from '../../../../../../../../static/icons/provider';

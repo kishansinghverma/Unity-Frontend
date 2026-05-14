@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { CheckCircle, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
-import { AlphabetIcon } from '../../../../../components/Common';
+import { AlphabetIcon } from '../../shared/Common';
 import { DraftItemProps } from '../../../engine/contracts/props';
 
 const styles = {

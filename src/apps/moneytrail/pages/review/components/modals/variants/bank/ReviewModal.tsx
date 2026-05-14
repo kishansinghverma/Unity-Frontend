@@ -12,7 +12,7 @@ import { handleResponse, handleError } from '../../../../../../../../engine/help
 import { StringUtils } from '../../../../../../../../engine/helpers/stringHelper';
 import { notify } from '../../../../../../../../engine/services/notificationService';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
-import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
+import { SelectWithAdd, CustomSelect } from '../../../shared/Common';
 import { getPaymentAppMatches, getDraftMatches } from '../../../../engine/utils';
 import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
 import { AnimatedModal } from '../../shared/AnimatedModal';

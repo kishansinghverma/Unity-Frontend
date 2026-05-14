@@ -6,7 +6,7 @@ import { PostParams, Constants, Routes } from "../../../../../../engine/constant
 import { handleResponse } from "../../../../../../engine/helpers/httpHelper";
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
-import { SkeletonItem, EmptyList } from "../../../../components/Common";
+import { SkeletonItem, EmptyList } from "../shared/Common";
 import { reviewApi } from "../../../../store/reviewSlice";
 import { BankListItem } from "./items/BankListItem";
 import { ListHeader } from "../layouts/Headers";

@@ -2,15 +2,15 @@ import { Space, Select, Form, Popover, List } from "antd";
 import { DefaultOptionType } from "antd/es/select";
 import { CircleArrowUp, ListX } from "lucide-react";
 import { FC, useEffect, useRef, useState } from "react";
-import { PostParams, Routes } from "../../../engine/constant";
-import { handleJsonResponse } from "../../../engine/helpers/httpHelper";
-import { StringUtils } from "../../../engine/helpers/stringHelper";
-import { NotificationMessages, notify } from "../../../engine/services/notificationService";
-import { AlphabetIconProps, BankIconProps, CustomSelectProps, SelectWithAddProps } from "../core/contracts/props";
-import { parsePaymentAppStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../pages/review/engine/parser";
-import { getColorPair, getIconBackground } from "../pages/review/engine/utils";
+import { PostParams, Routes } from "../../../../../../engine/constant";
+import { handleJsonResponse } from "../../../../../../engine/helpers/httpHelper";
+import { StringUtils } from "../../../../../../engine/helpers/stringHelper";
+import { NotificationMessages, notify } from "../../../../../../engine/services/notificationService";
+import { parsePaymentAppStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../../engine/parser";
+import { getColorPair, getIconBackground } from "../../engine/utils";
+import { BankEntry, PaymentAppEntry } from "../../engine/contracts/models";
+import { BankIconProps, AlphabetIconProps, CustomSelectProps, SelectWithAddProps } from "../../engine/contracts/props";
 import { BankLogo } from "./Resources";
-import { BankEntry, PaymentAppEntry } from "../core/contracts/models";
 
 export const BankIcon: FC<BankIconProps> = ({ bankName }) => (
   <div className={`p-2 rounded ${getIconBackground(bankName)}`} title={bankName}>
