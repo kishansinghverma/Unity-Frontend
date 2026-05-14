@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import { CheckCircle, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
-import { DraftItemProps } from '../../../../../core/contracts/props';
 import { AlphabetIcon } from '../../../../../components/Common';
+import { DraftItemProps } from '../../../engine/contracts/props';
 
 const styles = {
     container: 'w-full rounded-lg bg-gray-50 p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden border border-gray-100 hover:shadow-md hover:scale-[1.015] hover:border-slate-200 [&:not(:first-child)]:mt-3 [&:not(:last-child)]:mb-3',

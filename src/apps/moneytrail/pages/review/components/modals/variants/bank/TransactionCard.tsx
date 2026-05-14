@@ -2,13 +2,12 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
 import { BankIcon } from '../../../../../../components/Common';
-import { BankTheme, DescriptionInfo } from '../../../../../../core/contracts/types';
-import { BankEntry } from '../../../../../../core/contracts/models';
 import { Calendar } from 'antd';
 import { CheckCircle2, Clock, FileText } from 'lucide-react';
+import { BankEntry } from '../../../../engine/contracts/models';
+import { DescriptionInfo, BankTheme } from '../../../../engine/contracts/types';
 
 const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
-
   const parseDescription = (desc: string): DescriptionInfo => {
     const description = desc.trim();
     if (description.startsWith('UPI-')) {
@@ -68,6 +67,7 @@ const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
       };
     }
   };
+
   const bankTheme: BankTheme = getBankTheme(bankEntry.bank);
 
   // Common styling for the new tags

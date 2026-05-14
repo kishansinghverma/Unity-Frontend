@@ -3,8 +3,8 @@ import type { FormItemProps, Rule } from 'antd/es/form';
 import type { NamePath } from 'antd/es/form/interface';
 import type { DefaultOptionType, SelectProps } from 'antd/es/select';
 import type { Dispatch, ElementType, ReactNode, SetStateAction } from 'react';
-import type { Nullable, WithId } from '../../../../engine/models/types';
 import { BankEntry, PaymentAppEntry, DraftEntry } from './models';
+import { Nullable, WithId } from '../../../../../../engine/models/types';
 
 export type BankIconProps = {
   bankName: string;

@@ -7,10 +7,10 @@ import { handleResponse, handleError } from "../../../../../../engine/helpers/ht
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { SkeletonItem, EmptyList } from "../../../../components/Common";
-import { ReviewPaymentAppListProps } from "../../../../core/contracts/props";
 import { PaymentAppListItem } from "./items/PaymentAppListItem";
 import { reviewApi } from "../../../../store/reviewSlice";
 import { ListHeader } from "../layouts/Headers";
+import { ReviewPaymentAppListProps } from "../../engine/contracts/props";
 
 const PaymentAppListFC: FC<ReviewPaymentAppListProps> = ({ isLoading, items, setPaymentAppItemId }) => {
   const dispatch = useAppDispatch();

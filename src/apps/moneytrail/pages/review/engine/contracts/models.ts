@@ -1,22 +1,23 @@
 export type BankEntry = {
-    date: string;
-    description: string;
-    amount: number;
-    processed?: boolean;
-    type: "Credit" | "Debit";
-    bank: string;
+  date: Date,
+  description: string,
+  amount: number,
+  processed?: boolean,
+  type: "Credit" | "Debit",
+  bank: "SBI" | "HDFC" | "SBI CC" | "ICICI CC"
 }
 
 export type PaymentAppEntry = {
-    date: string
-    recipient: string;
-    transactionId: string;
-    utr: string;
-    bank: string;
-    type: "Credit" | "Debit";
-    amount: number;
-    processed: boolean;
-};
+  date: Date,
+  recipient: string,
+  transactionId: string,
+  utr: string,
+  processed?: boolean,
+  bank: string | "SBI" | "HDFC"
+  type: string | "Credit" | "Debit",
+  amount: number
+}
+
 
 export type DraftEntry = {
     dateTime: string,

@@ -13,19 +13,13 @@ import { StringUtils } from '../../../../../../../../engine/helpers/stringHelper
 import { notify } from '../../../../../../../../engine/services/notificationService';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
 import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
-import { BankReviewModalProps, PrefixIconProps } from '../../../../../../core/contracts/props';
 import { getPaymentAppMatches, getDraftMatches } from '../../../../engine/utils';
 import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
 import { AnimatedModal } from '../../shared/AnimatedModal';
 import { DraftItem } from '../../shared/DraftItem';
-import { PaymentAppEntry, DraftEntry, SplitwiseCategory } from '../../../../../../core/contracts/models';
-
-type FormState = {
-  amount: number,
-  description: string,
-  category: number,
-  group: number
-};
+import { PaymentAppEntry, DraftEntry, SplitwiseCategory } from '../../../../engine/contracts/models';
+import { BankReviewModalProps, PrefixIconProps } from '../../../../engine/contracts/props';
+import { ReviewModalFormState } from '../../../../engine/contracts/states';
 
 export const BankReviewModal: FC<BankReviewModalProps> = ({
   bankItemId,
@@ -49,7 +43,7 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
     const paymentAppMatches = getPaymentAppMatches(bankEntry, paymentAppEntries);
     const draftMatches = getDraftMatches(bankEntry, selectedPaymentApp, draftEntries);
 
-    const [form] = Form.useForm<FormState>();
+    const [form] = Form.useForm<ReviewModalFormState>();
 
     const descriptionOptions: DefaultOptionType[] = descriptions.data ?
       descriptions.data.value.map(item => ({
@@ -123,7 +117,7 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
       onModalClose();
     }
 
-    const saveTransaction = (formState: FormState) => {
+    const saveTransaction = (formState: ReviewModalFormState) => {
       const selectedGroup = groups.data?.find(group => group.id === formState.group);
 
       let payload = {

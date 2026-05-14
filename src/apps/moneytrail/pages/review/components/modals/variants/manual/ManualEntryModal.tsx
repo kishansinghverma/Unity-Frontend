@@ -8,22 +8,12 @@ import { handleResponse, handleError } from '../../../../../../../../engine/help
 import { notify } from '../../../../../../../../engine/services/notificationService';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
 import { SelectWithAdd, CustomSelect } from '../../../../../../components/Common';
-import { ManualEntryModalProps, PrefixIconProps } from '../../../../../../core/contracts/props';
 import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
 import { AnimatedModal } from '../../shared/AnimatedModal';
 import { getIcon, icon } from '../../../../../../../../static/icons/provider';
-import { SplitwiseCategory } from '../../../../../../core/contracts/models';
-
-type FormState = {
-  amount: number;
-  description: string;
-  category: number;
-  group: number;
-  date: Date;
-  source: string;
-  location: string;
-  type: "Credit" | "Debit";
-};
+import { SplitwiseCategory } from '../../../../engine/contracts/models';
+import { ManualEntryModalProps, PrefixIconProps } from '../../../../engine/contracts/props';
+import { ManualEntryFormState } from '../../../../engine/contracts/states';
 
 const LAST_SOURCE_KEY = 'moneytrail.manualEntry.lastSource';
 
@@ -44,7 +34,7 @@ export const ManualEntryModal: FC<ManualEntryModalProps> = ({
     const groups = useGroupsQuery();
     const categories = useCategoriesQuery();
 
-    const [form] = Form.useForm<FormState>();
+    const [form] = Form.useForm<ManualEntryFormState>();
 
     const descriptionOptions: DefaultOptionType[] = descriptions.data ?
       descriptions.data.value.map(item => ({
@@ -130,7 +120,7 @@ export const ManualEntryModal: FC<ManualEntryModalProps> = ({
       onModalClose();
     }
 
-    const saveTransaction = (formState: FormState) => {
+    const saveTransaction = (formState: ManualEntryFormState) => {
       const selectedGroup = groups.data?.find(group => group.id === formState.group);
 
       let payload = {

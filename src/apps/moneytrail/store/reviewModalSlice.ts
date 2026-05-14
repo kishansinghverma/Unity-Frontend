@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ReviewModalState } from "../core/contracts/types";
+import { ReviewModalState } from "../pages/review/engine/contracts/states";
 
 const initialState: ReviewModalState = {
     bankItemId: null

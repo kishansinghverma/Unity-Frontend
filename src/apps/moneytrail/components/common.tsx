@@ -10,6 +10,7 @@ import { AlphabetIconProps, BankIconProps, CustomSelectProps, SelectWithAddProps
 import { parsePaymentAppStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../pages/review/engine/parser";
 import { getColorPair, getIconBackground } from "../pages/review/engine/utils";
 import { BankLogo } from "./Resources";
+import { BankEntry, PaymentAppEntry } from "../core/contracts/models";
 
 export const BankIcon: FC<BankIconProps> = ({ bankName }) => (
   <div className={`p-2 rounded ${getIconBackground(bankName)}`} title={bankName}>
@@ -164,26 +165,6 @@ export const SelectWithAdd: FC<SelectWithAddProps> = ({
       </Space.Compact>
     )
   }
-
-type BankEntry = {
-  date: Date,
-  description: string,
-  amount: number,
-  processed?: boolean,
-  type: "Credit" | "Debit",
-  bank: "SBI" | "HDFC" | "SBI CC" | "ICICI CC"
-}
-
-type PaymentAppEntry = {
-  date: Date,
-  recipient: string,
-  transactionId: string,
-  utr: string,
-  processed?: boolean,
-  bank: string | "SBI" | "HDFC"
-  type: string | "Credit" | "Debit",
-  amount: number
-}
 
 export const UploadStatement: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);

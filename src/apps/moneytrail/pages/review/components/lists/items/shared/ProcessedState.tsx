@@ -1,6 +1,6 @@
 import { Check, CircleCheckBigIcon } from 'lucide-react';
 import { FC } from 'react';
-import { ProcessedActionButtonProps } from '../../../../../../core/contracts/props';
+import { ProcessedActionButtonProps } from '../../../../engine/contracts/props';
 
 export const ProcessedMarker = () => (
   <div className="absolute top-0 left-0 z-30 flex h-4 w-4 items-center justify-center rounded-br-lg bg-green-600/90 shadow-lg">

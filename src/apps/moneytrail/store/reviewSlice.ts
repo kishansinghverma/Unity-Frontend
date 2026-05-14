@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Routes } from '../../../engine/constant';
 import { WithId } from '../../../engine/models/types';
-import { BankEntry, PaymentAppEntry, DraftEntry, SplitwiseGroupsResponse, SplitwiseCategoriesResponse } from '../core/contracts/models';
+import { BankEntry, PaymentAppEntry, DraftEntry, SplitwiseGroupsResponse, SplitwiseCategoriesResponse } from '../pages/review/engine/contracts/models';
 
 const initialState: {
 

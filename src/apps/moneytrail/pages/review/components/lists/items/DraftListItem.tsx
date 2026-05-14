@@ -2,10 +2,10 @@ import dayjs from 'dayjs';
 import { Calendar, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
 import { AlphabetIcon } from '../../../../../components/Common';
-import { DraftListItemProps } from '../../../../../core/contracts/props';
 import { StringUtils } from '../../../../../../../engine/helpers/stringHelper';
 import { ProcessedActionButton, ProcessedMarker } from './shared/ProcessedState';
 import { SwipeableContent } from './shared/SwipeableContent';
+import { DraftListItemProps } from '../../../engine/contracts/props';
 
 const DraftListItemFC: FC<DraftListItemProps> = ({ isOpen, item, onOpen, setDraftItem, setProcessed }) => {
   const location = StringUtils.isNullOrEmpty(item.location) ? 'Unidentified Location' : item.location;

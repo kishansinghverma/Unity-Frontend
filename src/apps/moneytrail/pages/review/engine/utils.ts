@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { Nullable, WithId } from "../../../../../engine/models/types";
 import { normalizeToMinute } from "../../../../../engine/helpers/dateTimeHelper";
-import { BankEntry, DraftEntry, PaymentAppEntry } from "../../../core/contracts/models";
+import { BankEntry, PaymentAppEntry, DraftEntry } from "./contracts/models";
 
 const colorPair = [
     'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700/60',

@@ -4,10 +4,10 @@ import { Nullable, WithId } from '../../../../engine/models/types';
 import { DraftList } from './components/lists/DraftList';
 import { PaymentAppList } from './components/lists/PaymentAppList';
 import { Header } from './components/layouts/Headers';
-import { BankSectionProps, DraftSectionProps, PaymentAppSectionProps } from '../../core/contracts/props';
 import { useBankEntryQuery, useDraftEntryQuery, usePaymentAppEntryQuery } from '../../store/reviewSlice';
 import { BankList } from './components/lists/BankList';
-import { DraftEntry } from '../../core/contracts/models';
+import { DraftEntry } from './engine/contracts/models';
+import { BankSectionProps, PaymentAppSectionProps, DraftSectionProps } from './engine/contracts/props';
 
 const BankReviewModal = lazy(() =>
   import('./components/modals/variants/bank/ReviewModal').then((module) => ({
