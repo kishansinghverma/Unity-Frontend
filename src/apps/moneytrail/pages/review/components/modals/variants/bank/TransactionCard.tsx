@@ -2,21 +2,10 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
 import { BankIcon } from '../../../../../../components/Common';
+import { BankTheme, DescriptionInfo } from '../../../../../../core/contracts/types';
 import { BankEntry } from '../../../../../../core/contracts/models';
 import { Calendar } from 'antd';
 import { CheckCircle2, Clock, FileText } from 'lucide-react';
-
-interface DescriptionInfo {
-  platform: string;
-  category: string;
-}
-
-interface BankTheme {
-  gradient: string;
-  bg: string;
-  text: string;
-  border: string;
-}
 
 const TransactionCard: React.FC<WithId<BankEntry>> = (bankEntry) => {
 

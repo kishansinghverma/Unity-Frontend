@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Nullable } from "../../../engine/models/types";
-
-interface ReviewModalState {
-    bankItemId: Nullable<string>;
-}
+import { ReviewModalState } from "../core/contracts/types";
 
 const initialState: ReviewModalState = {
     bankItemId: null
