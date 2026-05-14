@@ -4,30 +4,11 @@ import * as pdfjsLib from "pdfjs-dist";
 import * as XLSX from 'xlsx';
 import { StringUtils } from "../../../../../engine/helpers/stringHelper";
 import { getHash } from "./utils";
+import { BankEntry, PaymentAppEntry } from "./contracts/models";
 
 dayjs.extend(customParseFormat);
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs`;
-
-type BankEntry = {
-    date: Date,
-    description: string,
-    amount: number,
-    processed?: boolean,
-    type: "Credit" | "Debit",
-    bank: "SBI" | "HDFC" | "SBI CC" | "ICICI CC"
-}
-
-type PaymentAppEntry = {
-    date: Date,
-    recipient: string,
-    transactionId: string,
-    utr: string,
-    processed?: boolean,
-    bank: string | "SBI" | "HDFC"
-    type: string | "Credit" | "Debit",
-    amount: number
-}
 
 const TransactionMetaData: { [key: string]: { Account: string, Type: string } } = {
     "Debited from XX0041": { Account: "HDFC", Type: "Debit" },
