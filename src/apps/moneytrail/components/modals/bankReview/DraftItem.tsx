@@ -4,7 +4,6 @@ import { Nullable, WithId } from '../../../../../engine/models/types';
 import { DraftEntry } from '../../../engine/models/types';
 import dayjs from 'dayjs';
 import { AlphabetIcon } from '../../Common';
-import { title } from 'framer-motion/client';
 
 type DraftItemProps = {
     item: WithId<DraftEntry>;
@@ -34,7 +33,7 @@ const styles = {
         clock: 'w-3.5 h-3.5 mr-0.5 opacity-85'
     },
     contentWrapper: 'flex items-start space-x-3',
-    locationLink: 'cursor-default'
+    locationLink: 'cursor-alias'
 };
 
 const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
