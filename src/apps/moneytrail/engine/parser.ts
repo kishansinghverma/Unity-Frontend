@@ -18,7 +18,7 @@ type BankEntry = {
     bank: "SBI" | "HDFC" | "SBI CC" | "ICICI CC"
 }
 
-type PhonePeEntry = {
+type PaymentAppEntry = {
     date: Date,
     recipient: string,
     transactionId: string,
@@ -83,7 +83,7 @@ const parseHdfcStatement = (sheet: XLSX.WorkSheet) => {
 }
 
 const parsePaytmStatement = (sheet: XLSX.WorkSheet) => {
-    const transactions: Array<PhonePeEntry> = [];
+    const transactions: Array<PaymentAppEntry> = [];
     const range = XLSX.utils.decode_range(sheet["!ref"] || "");
     if (!range) throw new Error('Empty Worksheet Found!');
     const meta = TransactionMetaData;
@@ -151,9 +151,9 @@ export const extractDataFromExcel = async (file: File) => {
     else throw Error("Unsupported Excel File Provided.")
 }
 
-export const parsePhonePeStatement = async (file: File) => {
+export const parsePaymentAppStatement = async (file: File) => {
     let tokens: Array<string> = [];
-    const transactions: Array<PhonePeEntry> = [];
+    const transactions: Array<PaymentAppEntry> = [];
     const meta = TransactionMetaData;
     const fileBuffer = await file.arrayBuffer();
     const document = await pdfjsLib.getDocument({ data: fileBuffer }).promise;
@@ -165,7 +165,7 @@ export const parsePhonePeStatement = async (file: File) => {
     }
 
     if (!tokens[0].includes('Transaction Statement'))
-        throw new pdfjsLib.InvalidPDFException('Invalid PhonePe Statement.');
+        throw new pdfjsLib.InvalidPDFException('Invalid Payment App Statement.');
 
     tokens.forEach((item, index) => {
         if (item.includes('Transaction ID')) {
@@ -181,7 +181,7 @@ export const parsePhonePeStatement = async (file: File) => {
 
             const transaction = {
                 date: dayjs(`${date} - ${time}`, 'MMM DD, YYYY - hh:mm A').toDate(),
-                recipient: `PhonePe - ${recipient.replace('Paid to', '').replace('Received from', '').replace('Bill paid -', '').trim()}`,
+                recipient: `Payment App - ${recipient.replace('Paid to', '').replace('Received from', '').replace('Bill paid -', '').trim()}`,
                 transactionId: tokens[index].split(':')[1].trim(),
                 utr: tokens[index + 1].split(':')[1].trim(),
                 bank: meta[tokens[index + 2].trim()]?.Account ?? 'Unknown',

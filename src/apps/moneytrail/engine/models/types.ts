@@ -10,7 +10,7 @@ export type BankEntry = {
     bank: string;
 }
 
-export type PhonePeEntry = {
+export type PaymentAppEntry = {
     date: string
     recipient: string;
     transactionId: string;
@@ -40,11 +40,11 @@ export type TransactionListProps = {
     };
 }
 
-export type PhonePeListProps = {
+export type PaymentAppListProps = {
     title: string;
     subtitle: string;
     isLoading: boolean;
-    items: WithId<PhonePeEntry>[];
+    items: WithId<PaymentAppEntry>[];
     icon: ElementType;
     gradientColors: {
         from: string;
@@ -67,7 +67,7 @@ export type DraftListProps = {
 export type ReviewModalProps = {
     itemId: string | null;
     bankEntries: Array<WithId<BankEntry>>;
-    phonePeEntries: Array<WithId<PhonePeEntry>>;
+    paymentAppEntries: Array<WithId<PaymentAppEntry>>;
     onClose: () => void;
 }
 

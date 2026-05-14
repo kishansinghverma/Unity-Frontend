@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { Nullable, WithId } from "../../../engine/models/types";
-import { BankEntry, DraftEntry, PhonePeEntry } from "./models/types";
+import { BankEntry, DraftEntry, PaymentAppEntry } from "./models/types";
 import { normalizeToMinute } from "../../../engine/helpers/dateTimeHelper";
 
 const colorPair = [
@@ -42,20 +42,20 @@ export const getColorPair = (seed: string) => {
     return colorPair[index];
 };
 
-export const getPhonePeMatches = (bankEntry: WithId<BankEntry>, phonePeEntries: WithId<PhonePeEntry>[]) => {
-    return phonePeEntries.filter(entry =>
+export const getPaymentAppMatches = (bankEntry: WithId<BankEntry>, paymentAppEntries: WithId<PaymentAppEntry>[]) => {
+    return paymentAppEntries.filter(entry =>
         entry.amount === bankEntry?.amount && dayjs(bankEntry.date).format('DD/MMM') === dayjs(entry.date).format('DD/MMM'));
 }
 
-export const getDraftMatches = (bankEntry: Nullable<WithId<BankEntry>>, phonePeEntry: Nullable<WithId<PhonePeEntry>>, draftEntries: WithId<DraftEntry>[]) => {
-    if (phonePeEntry?._id) {
-        const phonePeTimeNormalized = normalizeToMinute(phonePeEntry?.date)
-        const draftEntry = draftEntries.find(t => phonePeTimeNormalized === normalizeToMinute(t.dateTime));
+export const getDraftMatches = (bankEntry: Nullable<WithId<BankEntry>>, paymentAppEntry: Nullable<WithId<PaymentAppEntry>>, draftEntries: WithId<DraftEntry>[]) => {
+    if (paymentAppEntry?._id) {
+        const paymentAppTimeNormalized = normalizeToMinute(paymentAppEntry?.date)
+        const draftEntry = draftEntries.find(t => paymentAppTimeNormalized === normalizeToMinute(t.dateTime));
         if (draftEntry) return [draftEntry];
 
         const delta = (5 * 60 * 1000);
-        const upperDelta = phonePeTimeNormalized + delta;
-        const lowerDelta = phonePeTimeNormalized - delta;
+        const upperDelta = paymentAppTimeNormalized + delta;
+        const lowerDelta = paymentAppTimeNormalized - delta;
         return draftEntries.filter(t => normalizeToMinute(t.dateTime) >= lowerDelta && normalizeToMinute(t.dateTime) <= upperDelta);
     }
     else {

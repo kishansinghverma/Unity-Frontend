@@ -9,7 +9,7 @@ import { StringUtils } from '../../../../../engine/helpers/stringHelper';
 import { Nullable, WithId } from '../../../../../engine/models/types';
 import { notify } from '../../../../../engine/services/notificationService';
 import { useAppDispatch } from '../../../../../store/hooks';
-import { DraftEntry, PhonePeEntry, SplitwiseCategory } from '../../../engine/models/types';
+import { DraftEntry, PaymentAppEntry, SplitwiseCategory } from '../../../engine/models/types';
 import { getDraftMatches } from '../../../engine/utils';
 import { reviewApi, useCategoriesQuery, useDescriptionsQuery, useGroupsQuery } from '../../../store/reviewSlice';
 import { CustomSelect, SelectWithAdd } from '../../Common';
@@ -25,16 +25,16 @@ type FormState = {
   group: number
 };
 
-export const PhonePeReviewModal: FC<{
-  phonePeItemId: string;
-  phonePeEntries: WithId<PhonePeEntry>[];
+export const PaymentAppReviewModal: FC<{
+  paymentAppItemId: string;
+  paymentAppEntries: WithId<PaymentAppEntry>[];
   draftEntries: WithId<DraftEntry>[];
-  setPhonePeItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
+  setPaymentAppItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>
 }> = ({
-  phonePeItemId,
-  phonePeEntries,
+  paymentAppItemId,
+  paymentAppEntries,
   draftEntries,
-  setPhonePeItemId
+  setPaymentAppItemId
 }) => {
     const dispatch = useAppDispatch();
 
@@ -46,8 +46,8 @@ export const PhonePeReviewModal: FC<{
     const [isOpen, setIsOpen] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
-    const phonePeEntry = phonePeEntries.find(entry => entry._id === phonePeItemId)!;
-    const draftMatches = getDraftMatches(null, phonePeEntry, draftEntries);
+    const paymentAppEntry = paymentAppEntries.find(entry => entry._id === paymentAppItemId)!;
+    const draftMatches = getDraftMatches(null, paymentAppEntry, draftEntries);
 
     const [form] = Form.useForm<FormState>();
 
@@ -104,9 +104,9 @@ export const PhonePeReviewModal: FC<{
     const onComplete = () => {
       notify.success({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
 
-      if (phonePeEntry?._id) {
-        dispatch(reviewApi.util.updateQueryData('phonePeEntry', undefined, (data) => {
-          data.forEach(entry => { if (entry._id === phonePeEntry._id) entry.processed = true });
+      if (paymentAppEntry?._id) {
+        dispatch(reviewApi.util.updateQueryData('paymentAppEntry', undefined, (data) => {
+          data.forEach(entry => { if (entry._id === paymentAppEntry._id) entry.processed = true });
         }));
       }
 
@@ -125,22 +125,22 @@ export const PhonePeReviewModal: FC<{
       let payload = {
         group_id: selectedGroup?.id,
         cost: formState.amount,
-        date: phonePeEntry.date,
+        date: paymentAppEntry.date,
         description: formState.description,
         parties: selectedGroup?.members.map(m => m.id),
         category: formState.category,
-        phonePeTxnId: phonePeEntry?._id,
+        phonePeTxnId: paymentAppEntry?._id,
         draftTxnId: selectedDraft?._id,
       };
 
-      if (phonePeEntry.type === 'Debit') {
+      if (paymentAppEntry.type === 'Debit') {
         const debitPayload = {
           shared: selectedGroup?.sharing,
           details: Object.entries({
-            Bank: phonePeEntry.bank ?? StringUtils.empty,
-            UTR: phonePeEntry?.utr ?? "N/A",
-            TransactionNo: phonePeEntry?.transactionId ?? 'N/A',
-            Recipient: phonePeEntry?.recipient ?? 'N/A',
+            Bank: paymentAppEntry.bank ?? StringUtils.empty,
+            UTR: paymentAppEntry?.utr ?? "N/A",
+            TransactionNo: paymentAppEntry?.transactionId ?? 'N/A',
+            Recipient: paymentAppEntry?.recipient ?? 'N/A',
             Location: selectedDraft?.location.replaceAll('\n', ', ') ?? 'N/A',
             Coordinates: selectedDraft?.coordinate ? `https://www.google.com/maps?q=${selectedDraft.coordinate}` : 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
@@ -151,17 +151,17 @@ export const PhonePeReviewModal: FC<{
       else {
         const creditPayload = {
           details: Object.entries({
-            Bank: phonePeEntry.bank ?? StringUtils.empty,
-            UTR: phonePeEntry?.utr ?? 'N/A',
-            TransactionNo: phonePeEntry?.transactionId ?? 'N/A',
-            Payer: phonePeEntry?.recipient ?? 'N/A'
+            Bank: paymentAppEntry.bank ?? StringUtils.empty,
+            UTR: paymentAppEntry?.utr ?? 'N/A',
+            TransactionNo: paymentAppEntry?.transactionId ?? 'N/A',
+            Payer: paymentAppEntry?.recipient ?? 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n')
         }
 
         payload = { ...payload, ...creditPayload };
       }
 
-      const url = phonePeEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
+      const url = paymentAppEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
 
       fetch(url, { ...PostParams, body: JSON.stringify(payload) })
         .then(handleResponse)
@@ -204,13 +204,13 @@ export const PhonePeReviewModal: FC<{
       <AnimatedModal
         open={isOpen}
         onCancel={onModalClose}
-        afterClose={() => setPhonePeItemId(null)}
+        afterClose={() => setPaymentAppItemId(null)}
       >
         <div className="bg-white rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden">
           {/* Modal Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-10">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Review PhonePe Transaction</h2>
+              <h2 className="text-xl font-bold text-gray-900">Review Payment App Transaction</h2>
               <p className="text-sm text-gray-600">Review and approve your transactions</p>
             </div>
             <button
@@ -231,11 +231,11 @@ export const PhonePeReviewModal: FC<{
                   <TransactionContainer
                     isFirst
                     icon={Smartphone}
-                    type="PhonePe"
+                    type="Payment App"
                     headerStyle="from-blue-50 to-indigo-50"
                     iconStyle="text-blue-600"
                   >
-                    <TransactionCard {...phonePeEntry} />
+                    <TransactionCard {...paymentAppEntry} />
                   </TransactionContainer>
                 </div>
 
@@ -276,10 +276,10 @@ export const PhonePeReviewModal: FC<{
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       <tr className="hover:bg-gray-50 transition-colors text-gray-900 text-sm">
-                        <td className={classes.tr}> {dayjs(phonePeEntry.date).format('DD-MM-YYYY')} </td>
-                        <td className={classes.tr}> {phonePeEntry.bank} </td>
-                        <td className={classes.tr}> {phonePeEntry?.utr || '-'} </td>
-                        <td className={`${classes.tr} capitalize`}> {phonePeEntry?.recipient || '-'} </td>
+                        <td className={classes.tr}> {dayjs(paymentAppEntry.date).format('DD-MM-YYYY')} </td>
+                        <td className={classes.tr}> {paymentAppEntry.bank} </td>
+                        <td className={classes.tr}> {paymentAppEntry?.utr || '-'} </td>
+                        <td className={`${classes.tr} capitalize`}> {paymentAppEntry?.recipient || '-'} </td>
                         <td className={`${classes.tr} capitalize`}> {selectedDraft?.location.replaceAll('\n', ', ') || '-'} </td>
                       </tr>
                     </tbody>
@@ -292,7 +292,7 @@ export const PhonePeReviewModal: FC<{
                     <div className="flex items-center gap-4">
                       <Space.Compact>
                         <PrefixIcon icon={IndianRupee} size={16} strokeWidth={3} />
-                        <Form.Item initialValue={phonePeEntry.amount} name="amount" noStyle rules={[{ required: true }]}>
+                        <Form.Item initialValue={paymentAppEntry.amount} name="amount" noStyle rules={[{ required: true }]}>
                           <InputNumber
                             placeholder="Amount"
                             className={`w-32 ${classes.input}`}
@@ -321,8 +321,8 @@ export const PhonePeReviewModal: FC<{
                         placement="bottomRight"
                         className={`w-48 ${classes.select}`}
                         prefix={<PrefixIcon icon={Layers2} size={16} strokeWidth={3} />}
-                        formItemProps={{ initialValue: phonePeEntry.type === 'Credit' ? 2 : 1 }}
-                        disabled={phonePeEntry.type === 'Credit'}
+                        formItemProps={{ initialValue: paymentAppEntry.type === 'Credit' ? 2 : 1 }}
+                        disabled={paymentAppEntry.type === 'Credit'}
                       />
                       <CustomSelect
                         name="group"

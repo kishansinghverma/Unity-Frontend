@@ -9,7 +9,7 @@ import { handleJsonResponse } from "../../../engine/helpers/httpHelper";
 import { StringUtils } from "../../../engine/helpers/stringHelper";
 import { Nullable } from "../../../engine/models/types";
 import { NotificationMessages, notify } from "../../../engine/services/notificationService";
-import { parsePhonePeStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../engine/parser";
+import { parsePaymentAppStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../engine/parser";
 import { getColorPair, getIconBackground } from "../engine/utils";
 import { BankLogo } from "./Resources";
 
@@ -201,7 +201,7 @@ type BankEntry = {
   bank: "SBI" | "HDFC" | "SBI CC" | "ICICI CC"
 }
 
-type PhonePeEntry = {
+type PaymentAppEntry = {
   date: Date,
   recipient: string,
   transactionId: string,
@@ -220,8 +220,8 @@ export const UploadStatement: React.FC = () => {
       .then(handleJsonResponse);
   }
 
-  const uploadPhonePeStatement = async (transactions: Array<PhonePeEntry>) => {
-    return fetch(`${Routes.PhonePeStatement}`, { ...PostParams, body: JSON.stringify(transactions) })
+  const uploadPaymentAppStatement = async (transactions: Array<PaymentAppEntry>) => {
+    return fetch(`${Routes.PaymentAppStatement}`, { ...PostParams, body: JSON.stringify(transactions) })
       .then(handleJsonResponse);
   }
 
@@ -238,16 +238,16 @@ export const UploadStatement: React.FC = () => {
     }
 
     if (file.type === 'application/pdf') {
-      const response = parsePhonePeStatement(file).then(uploadPhonePeStatement)
+      const response = parsePaymentAppStatement(file).then(uploadPaymentAppStatement)
       notify.promise(response, notificationMessages, {
-        pending: 'Uploading PhonePe Statement...',
-        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} PhonePe Records.`)
+        pending: 'Uploading Payment App Statement...',
+        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Payment App Records.`)
       });
     }
     else if (file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       const response = extractDataFromExcel(file).then(res => {
         return (res.length > 0 && 'transactionId' in res[0]) ?
-          uploadPhonePeStatement(res as PhonePeEntry[]) : uploadBankStatement(res as BankEntry[]);
+          uploadPaymentAppStatement(res as PaymentAppEntry[]) : uploadBankStatement(res as BankEntry[]);
       });
       notify.promise(response, notificationMessages, {
         pending: 'Uploading Excel Sheet...',

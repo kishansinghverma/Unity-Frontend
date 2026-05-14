@@ -18,9 +18,9 @@ export const Routes = {
     SplitWiseGroup: "/api/splitwise/group",
     SplitWiseExpenses: "/api/splitwise/transactions",
     BankStatement: "/api/expenses/statement/bank",
-    PhonePeStatement: "/api/expenses/statement/phonepe",
+    PaymentAppStatement: "/api/expenses/statement/phonepe",
     ProcessBank: "/api/expenses/process/bank",
-    ProcessPhonepe: "/api/expenses/process/phonepe",
+    ProcessPaymentApp: "/api/expenses/process/phonepe",
     ProcessDraft: "/api/expenses/process/draft",
     Distance: `https://dev.virtualearth.net/REST/V1/Routes/Driving?o=json&wp.0=sadabad&key=${import.meta.env.VITE_BING_MAPS_KEY}&wp.1`
 }

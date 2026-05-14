@@ -2,7 +2,7 @@ import dayjs from "dayjs"
 import React, { memo, useEffect, useRef, useState } from "react";
 import { Calendar, CircleCheckBigIcon, Clock, Check } from "lucide-react"
 import { AlphabetIcon, BankIcon } from "./Common"
-import { BankEntry, DraftEntry, PhonePeEntry } from "../engine/models/types";
+import { BankEntry, DraftEntry, PaymentAppEntry } from "../engine/models/types";
 import { StringUtils } from "../../../engine/helpers/stringHelper";
 import { Nullable, WithId } from "../../../engine/models/types";
 
@@ -161,12 +161,12 @@ export const BankItem = ({ isOpen, onOpen, setProcessed, item, setBankItemId }: 
     );
 };
 
-export const PhonePeItem = memo(({ isOpen, onOpen, setProcessed, item, setPhonePeItemId }: {
-    item: WithId<PhonePeEntry>;
+export const PaymentAppItem = memo(({ isOpen, onOpen, setProcessed, item, setPaymentAppItemId }: {
+    item: WithId<PaymentAppEntry>;
     isOpen: boolean;
     onOpen: (id: string | null) => void;
     setProcessed: (id: string) => void;
-    setPhonePeItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
+    setPaymentAppItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
 }) => {
     const markProcessed = (id: string) => {
         setProcessed(id);
@@ -193,7 +193,7 @@ export const PhonePeItem = memo(({ isOpen, onOpen, setProcessed, item, setPhoneP
                 id={item._id}
                 isOpen={isOpen}
                 onOpen={onOpen}
-                onClick={() => setPhonePeItemId(item._id)}
+                onClick={() => setPaymentAppItemId(item._id)}
             >
                 {item.processed && <ProcessedMarker />}
                 <div className="flex items-center flex-shrink-0">

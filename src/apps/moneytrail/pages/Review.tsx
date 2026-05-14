@@ -3,10 +3,10 @@ import { getArrayOrDefault } from '../../../engine/helpers/rtkHelper';
 import { Nullable, WithId } from '../../../engine/models/types';
 import { BankList } from '../components/BankList';
 import { DraftList } from '../components/DraftList';
-import { PhonePeList } from '../components/PhonePeList';
+import { PaymentAppList } from '../components/PaymentAppList';
 import { Header } from '../components/review/Headers';
-import { DraftEntry, BankEntry, PhonePeEntry } from '../engine/models/types';
-import { useBankEntryQuery, useDraftEntryQuery, usePhonePeEntryQuery } from '../store/reviewSlice';
+import { DraftEntry, BankEntry, PaymentAppEntry } from '../engine/models/types';
+import { useBankEntryQuery, useDraftEntryQuery, usePaymentAppEntryQuery } from '../store/reviewSlice';
 
 const BankReviewModal = lazy(() =>
   import('../components/modals/bankReview/ReviewModal').then((module) => ({
@@ -14,9 +14,9 @@ const BankReviewModal = lazy(() =>
   })),
 );
 
-const PhonePeReviewModal = lazy(() =>
-  import('../components/modals/phonePeReview/ReviewModal').then((module) => ({
-    default: module.PhonePeReviewModal,
+const PaymentAppReviewModal = lazy(() =>
+  import('../components/modals/paymentAppReview/ReviewModal').then((module) => ({
+    default: module.PaymentAppReviewModal,
   })),
 );
 
@@ -28,12 +28,12 @@ const ManualEntryModal = lazy(() =>
 
 type BankSectionProps = {
   bankEntries: WithId<BankEntry>[];
-  phonePeEntries: WithId<PhonePeEntry>[];
+  paymentAppEntries: WithId<PaymentAppEntry>[];
   draftEntries: WithId<DraftEntry>[];
   isLoading: boolean;
 };
 
-const BankSection = memo(({ bankEntries, phonePeEntries, draftEntries, isLoading }: BankSectionProps) => {
+const BankSection = memo(({ bankEntries, paymentAppEntries, draftEntries, isLoading }: BankSectionProps) => {
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
 
   return (
@@ -48,7 +48,7 @@ const BankSection = memo(({ bankEntries, phonePeEntries, draftEntries, isLoading
           <BankReviewModal
             key={`bank-${bankItemId}`}
             bankEntries={bankEntries}
-            phonePeEntries={phonePeEntries}
+            paymentAppEntries={paymentAppEntries}
             draftEntries={draftEntries}
             bankItemId={bankItemId}
             setBankItemId={setBankItemId}
@@ -59,30 +59,30 @@ const BankSection = memo(({ bankEntries, phonePeEntries, draftEntries, isLoading
   );
 });
 
-type PhonePeSectionProps = {
-  phonePeEntries: WithId<PhonePeEntry>[];
+type PaymentAppSectionProps = {
+  paymentAppEntries: WithId<PaymentAppEntry>[];
   draftEntries: WithId<DraftEntry>[];
   isLoading: boolean;
 };
 
-const PhonePeSection = memo(({ phonePeEntries, draftEntries, isLoading }: PhonePeSectionProps) => {
-  const [phonePeItemId, setPhonePeItemId] = useState<Nullable<string>>(null);
+const PaymentAppSection = memo(({ paymentAppEntries, draftEntries, isLoading }: PaymentAppSectionProps) => {
+  const [paymentAppItemId, setPaymentAppItemId] = useState<Nullable<string>>(null);
 
   return (
     <div className="w-full xl:px-10 min-w-0 h-full flex">
-      <PhonePeList
-        items={phonePeEntries}
+      <PaymentAppList
+        items={paymentAppEntries}
         isLoading={isLoading}
-        setPhonePeItemId={setPhonePeItemId}
+        setPaymentAppItemId={setPaymentAppItemId}
       />
-      {phonePeItemId && (
+      {paymentAppItemId && (
         <Suspense fallback={null}>
-          <PhonePeReviewModal
-            key={`phonePe-${phonePeItemId}`}
-            phonePeEntries={phonePeEntries}
+          <PaymentAppReviewModal
+            key={`payment-app-${paymentAppItemId}`}
+            paymentAppEntries={paymentAppEntries}
             draftEntries={draftEntries}
-            phonePeItemId={phonePeItemId}
-            setPhonePeItemId={setPhonePeItemId}
+            paymentAppItemId={paymentAppItemId}
+            setPaymentAppItemId={setPaymentAppItemId}
           />
         </Suspense>
       )}
@@ -128,11 +128,11 @@ const DraftSection = memo(({
 
 const ReviewExpense: React.FC = () => {
   const bankQuery = useBankEntryQuery();
-  const phonePeQuery = usePhonePeEntryQuery();
+  const paymentAppQuery = usePaymentAppEntryQuery();
   const draftQuery = useDraftEntryQuery();
 
   const bankEntries = useMemo(() => getArrayOrDefault(bankQuery), [bankQuery.data, bankQuery.isError, bankQuery.isLoading]);
-  const phonePeEntries = useMemo(() => getArrayOrDefault(phonePeQuery), [phonePeQuery.data, phonePeQuery.isError, phonePeQuery.isLoading]);
+  const paymentAppEntries = useMemo(() => getArrayOrDefault(paymentAppQuery), [paymentAppQuery.data, paymentAppQuery.isError, paymentAppQuery.isLoading]);
   const draftEntries = useMemo(() => getArrayOrDefault(draftQuery), [draftQuery.data, draftQuery.isError, draftQuery.isLoading]);
 
   const [isManualEntryModalVisible, setManualEntryModalVisible] = useState(false);
@@ -143,14 +143,14 @@ const ReviewExpense: React.FC = () => {
       <div className="flex flex-row justify-between gap-4 flex-1 min-h-0">
         <BankSection
           bankEntries={bankEntries}
-          phonePeEntries={phonePeEntries}
+          paymentAppEntries={paymentAppEntries}
           draftEntries={draftEntries}
           isLoading={bankQuery.isLoading}
         />
-        <PhonePeSection
-          phonePeEntries={phonePeEntries}
+        <PaymentAppSection
+          paymentAppEntries={paymentAppEntries}
           draftEntries={draftEntries}
-          isLoading={phonePeQuery.isLoading}
+          isLoading={paymentAppQuery.isLoading}
         />
         <DraftSection
           draftEntries={draftEntries}

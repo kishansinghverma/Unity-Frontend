@@ -12,15 +12,16 @@ type DraftItemProps = {
 };
 
 const styles = {
-    base: {
-        container: 'w-full rounded-lg bg-gray-50 p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden border border-gray-100 hover:shadow-md hover:scale-[1.015] hover:border-slate-200 [&:not(:first-child)]:mt-3 [&:not(:last-child)]:mb-3',
-        title: 'text-sm font-medium line-clamp-2 capitalize',
-        datetime: 'flex items-center text-xs font-semibold absolute bottom-2 right-2 px-1.5 py-1'
-    },
+    container: 'w-full rounded-lg bg-gray-50 p-2.5 font-sans transition-all duration-300 ease-in-out cursor-pointer relative overflow-hidden border border-gray-100 hover:shadow-md hover:scale-[1.015] hover:border-slate-200 [&:not(:first-child)]:mt-3 [&:not(:last-child)]:mb-3',
+    title: 'text-sm font-medium line-clamp-2 capitalize',
+    datetime: 'flex items-center text-xs font-semibold absolute bottom-2 right-2 px-1.5 py-1 opacity-90',
+    contentWrapper: 'flex items-start space-x-3',
+    locationLink: 'cursor-alias',
     default: {
         container: 'shadow-sm',
         title: 'text-slate-500',
-        datetime: 'text-slate-800'
+        datetime: 'text-slate-800',
+        icon: undefined
     },
     selected: {
         container: 'ring-1 ring-indigo-400 shadow-lg bg-indigo-50/70',
@@ -32,18 +33,18 @@ const styles = {
         checkCircle: 'w-4 h-4 text-white absolute top-2 right-2 bg-indigo-500 rounded-full p-0.5 shadow',
         clock: 'w-3.5 h-3.5 mr-0.5 opacity-85'
     },
-    contentWrapper: 'flex items-start space-x-3',
-    locationLink: 'cursor-alias'
+
 };
 
 const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
     const singleLineLocation = item.location.split('\n').join(', ');
     const firstLetter = singleLineLocation.charAt(0).toUpperCase() || '?';
 
-    const containerStyle = `${styles.base.container} ${isSelected ? styles.selected.container : styles.default.container}`;
-    const titleStyle = `${styles.base.title} ${isSelected ? styles.selected.title : styles.default.title}`;
-    const datetimeStyle = `${styles.base.datetime} ${isSelected ? styles.selected.datetime : styles.default.datetime}`;
-    const iconOverrideStyle = isSelected ? styles.selected.icon : undefined;
+    const stateStyles = isSelected ? styles.selected : styles.default;
+    const containerStyle = `${styles.container} ${stateStyles.container}`;
+    const titleStyle = `${styles.title} ${stateStyles.title}`;
+    const datetimeStyle = `${styles.datetime} ${stateStyles.datetime}`;
+    const iconOverrideStyle = stateStyles.icon
 
     return (
         <div

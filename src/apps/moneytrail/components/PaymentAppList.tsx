@@ -7,17 +7,17 @@ import { handleResponse, handleError } from "../../../engine/helpers/httpHelper"
 import { Nullable, WithId } from "../../../engine/models/types";
 import { notify } from "../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../store/hooks";
-import { PhonePeEntry } from "../engine/models/types";
+import { PaymentAppEntry } from "../engine/models/types";
 import { reviewApi } from "../store/reviewSlice";
 import { EmptyList, SkeletonItem } from "./Common";
-import { PhonePeItem } from "./ListItem";
+import { PaymentAppItem } from "./ListItem";
 import { ListHeader } from "./review/Headers";
 
-const PhonePeListFC: FC<{
-  items: WithId<PhonePeEntry>[];
+const PaymentAppListFC: FC<{
+  items: WithId<PaymentAppEntry>[];
   isLoading: boolean;
-  setPhonePeItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
-}> = ({ isLoading, items, setPhonePeItemId }) => {
+  setPaymentAppItemId: React.Dispatch<React.SetStateAction<Nullable<string>>>;
+}> = ({ isLoading, items, setPaymentAppItemId }) => {
   const dispatch = useAppDispatch();
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);
@@ -40,11 +40,11 @@ const PhonePeListFC: FC<{
     };
   }, [handleClickOutside]);
   const setProcessed = useCallback((id: string) => {
-    dispatch(reviewApi.util.updateQueryData('phonePeEntry', undefined, (data) => {
+    dispatch(reviewApi.util.updateQueryData('paymentAppEntry', undefined, (data) => {
       data.forEach(entry => { if (entry._id === id) entry.processed = true });
     }));
 
-    fetch(`${Routes.ProcessPhonepe}/${id}`, PostParams)
+    fetch(`${Routes.ProcessPaymentApp}/${id}`, PostParams)
       .then(handleResponse)
       .then(() => notify.success({ message: "Success", description: "Transaction Marked as Proccessed!" }))
       .catch(handleError);
@@ -87,10 +87,10 @@ const PhonePeListFC: FC<{
                         transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
                         className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
                       >
-                        <PhonePeItem
+                        <PaymentAppItem
                           item={item}
                           setProcessed={setProcessed}
-                          setPhonePeItemId={setPhonePeItemId}
+                          setPaymentAppItemId={setPaymentAppItemId}
                           isOpen={openItemId === item._id}
                           onOpen={setOpenItemId}
                         />
@@ -119,4 +119,4 @@ const PhonePeListFC: FC<{
   );
 };
 
-export const PhonePeList = memo(PhonePeListFC);
+export const PaymentAppList = memo(PaymentAppListFC);
