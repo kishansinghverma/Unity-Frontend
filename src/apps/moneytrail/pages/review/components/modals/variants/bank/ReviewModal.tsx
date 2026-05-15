@@ -18,7 +18,13 @@ import {
 import { DraftEntry, PaymentAppEntry, SplitwiseCategory } from '../../../../engine/contracts/models';
 import { BankReviewModalProps, PrefixIconProps } from '../../../../engine/contracts/props';
 import { ReviewModalFormState } from '../../../../engine/contracts/states';
-import { formatPredictionScore, loadPredictionSamplesFromStorage, predictReviewFields, upsertPredictionSampleInStorage } from '../../../../engine/prediction';
+import {
+  buildPredictionSignature,
+  formatPredictionScore,
+  loadPredictionSamplesFromStorage,
+  predictReviewFields,
+  upsertPredictionSampleInStorage,
+} from '../../../../engine/prediction';
 import { getDraftMatches, getPaymentAppMatches } from '../../../../engine/utils';
 import { CustomSelect, SelectWithAdd } from '../../../shared/Common';
 import { AnimatedModal } from '../../shared/AnimatedModal';
@@ -50,27 +56,19 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
   const paymentAppMatches = getPaymentAppMatches(bankEntry, paymentAppEntries);
   const draftMatches = getDraftMatches(bankEntry, selectedPaymentApp, draftEntries);
   const isCreditTransaction = bankEntry.type === 'Credit';
-  const getPredictionType = (type?: string) => (type === 'Credit' || type === 'Debit' ? type : undefined);
 
   const [form] = Form.useForm<ReviewModalFormState>();
 
   const predictionInput = useMemo(() => ({
     source: 'bank_modal' as const,
     bank: {
-      type: bankEntry.type,
-      bank: bankEntry.bank,
       description: bankEntry.description,
     },
     paymentApp: selectedPaymentApp ? {
       recipient: selectedPaymentApp.recipient,
-      utr: selectedPaymentApp.utr,
-      bank: selectedPaymentApp.bank,
-      type: getPredictionType(selectedPaymentApp.type),
     } : undefined,
   }), [
-    bankEntry.bank,
     bankEntry.description,
-    bankEntry.type,
     selectedPaymentApp,
   ]);
 
@@ -151,19 +149,14 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
     onModalClose();
   }
 
-  const savePrediction = (formState: ReviewModalFormState) => {
+  const savePrediction = async (formState: ReviewModalFormState) => {
     const payload = {
       source: 'bank_modal',
       bank: {
-        type: bankEntry.type,
-        bank: bankEntry.bank,
         description: bankEntry.description,
       },
       paymentApp: selectedPaymentApp ? {
         recipient: selectedPaymentApp.recipient,
-        utr: selectedPaymentApp.utr,
-        bank: selectedPaymentApp.bank,
-        type: getPredictionType(selectedPaymentApp.type),
       } : undefined,
       output: {
         description: formState.description,
@@ -171,10 +164,12 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
         group: formState.group,
       }
     };
+    const signature = await buildPredictionSignature(payload);
+    const predictionPayload = { ...payload, signature };
 
-    setPredictionSamples(upsertPredictionSampleInStorage(payload));
+    setPredictionSamples(upsertPredictionSampleInStorage(predictionPayload));
 
-    return fetch(Routes.ExpensePredictions, { ...PostParams, body: JSON.stringify(payload) })
+    return fetch(Routes.ExpensePredictions, { ...PostParams, body: JSON.stringify(predictionPayload) })
       .then(handleResponse)
       .catch(() => null);
   }

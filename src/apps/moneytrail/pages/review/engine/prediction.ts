@@ -1,18 +1,10 @@
-type TransactionType = 'Credit' | 'Debit';
-
 type PredictionRecord = Record<string, unknown>;
-
-type OptionalTransactionType = TransactionType | null;
 
 type NullableNumber = number | null;
 
 const WEIGHTS = {
-  typeMatch: 0.22,
-  bankMatch: 0.18,
-  bankDescription: 0.30,
-  recipient: 0.18,
-  utr: 0.07,
-  appBankMatch: 0.05,
+  bankDescription: 0.75,
+  recipient: 0.25,
 };
 
 const STOP_WORDS = new Set([
@@ -48,30 +40,31 @@ const STORAGE_KEY = 'moneytrail.review.predictions.v1';
 export type PredictionInput = {
   source: 'bank_modal' | 'payment_app_modal';
   bank?: {
-    type: TransactionType;
-    bank: string;
     description: string;
   };
   paymentApp?: {
     recipient: string;
-    utr: string;
-    bank: string;
-    type?: TransactionType;
   };
 };
 
 export type PredictionSample = {
+  source?: PredictionInput['source'];
+  signature?: string;
   bank?: {
-    type?: TransactionType;
-    bank?: string;
     description?: string;
   };
   paymentApp?: {
     recipient?: string;
-    utr?: string;
-    bank?: string;
-    type?: TransactionType;
   };
+  output: {
+    description?: string;
+    category?: number;
+    group?: number;
+  };
+};
+
+export type PredictionPayload = PredictionInput & {
+  signature?: string;
   output: {
     description?: string;
     category?: number;
@@ -113,6 +106,9 @@ const toNumberOrUndefined = (value: unknown): number | undefined => {
   return Number.isFinite(parsed) ? parsed : undefined;
 };
 
+const toSourceOrUndefined = (value: unknown): PredictionInput['source'] | undefined =>
+  value === 'bank_modal' || value === 'payment_app_modal' ? value : undefined;
+
 const pickString = (record: PredictionRecord, keys: string[]): string | undefined => {
   for (const key of keys) {
     const value = toStringOrUndefined(record[key]);
@@ -129,18 +125,11 @@ const pickNumber = (record: PredictionRecord, keys: string[]): number | undefine
   return undefined;
 };
 
-const normalizeType = (value: string | undefined): OptionalTransactionType => {
-  if (!value) return null;
-  const normalized = value.trim().toLowerCase();
-  if (normalized.includes('credit') || normalized === 'cr') return 'Credit';
-  if (normalized.includes('debit') || normalized === 'dr') return 'Debit';
-  return null;
-};
-
 const normalizeText = (value: string | undefined): string => {
   if (!value) return '';
   return value
     .toLowerCase()
+    .replace(/\d+/g, ' ')
     .replace(/[^a-z0-9\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -178,32 +167,6 @@ const stringSimilarity = (left: string | undefined, right: string | undefined): 
   return Math.max(contains, tokenScore);
 };
 
-const typeSimilarity = (left: string | undefined, right: string | undefined): NullableNumber => {
-  const normalizedLeft = normalizeType(left);
-  const normalizedRight = normalizeType(right);
-  if (!normalizedLeft || !normalizedRight) return null;
-  return normalizedLeft === normalizedRight ? 1 : 0;
-};
-
-const normalizeUtr = (value: string | undefined): string => {
-  if (!value) return '';
-  return value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-};
-
-const utrSimilarity = (left: string | undefined, right: string | undefined): NullableNumber => {
-  const normalizedLeft = normalizeUtr(left);
-  const normalizedRight = normalizeUtr(right);
-  if (!normalizedLeft || !normalizedRight) return null;
-  if (normalizedLeft === normalizedRight) return 1;
-
-  const shorter = normalizedLeft.length <= normalizedRight.length ? normalizedLeft : normalizedRight;
-  const longer = normalizedLeft.length > normalizedRight.length ? normalizedLeft : normalizedRight;
-
-  if (shorter.length >= 6 && longer.includes(shorter)) return 0.6;
-  if (shorter.length >= 6 && longer.endsWith(shorter.slice(-6))) return 0.45;
-  return 0;
-};
-
 const pushScore = (
   featureValue: NullableNumber,
   weight: number,
@@ -212,16 +175,6 @@ const pushScore = (
   if (featureValue === null) return;
   state.score += featureValue * weight;
   state.weight += weight;
-};
-
-const scoreTypeFeature = (inputType: string | undefined, sampleType: string | undefined): NullableNumber => {
-  const normalizedInputType = normalizeType(inputType);
-  if (!normalizedInputType) return null;
-
-  const normalizedSampleType = normalizeType(sampleType);
-  if (!normalizedSampleType) return 0;
-
-  return normalizedInputType === normalizedSampleType ? 1 : 0;
 };
 
 const scoreTextFeature = (inputText: string | undefined, sampleText: string | undefined): NullableNumber => {
@@ -234,16 +187,6 @@ const scoreTextFeature = (inputText: string | undefined, sampleText: string | un
   return stringSimilarity(normalizedInputText, normalizedSampleText) ?? 0;
 };
 
-const scoreUtrFeature = (inputUtr: string | undefined, sampleUtr: string | undefined): NullableNumber => {
-  const normalizedInputUtr = normalizeUtr(inputUtr);
-  if (!normalizedInputUtr) return null;
-
-  const normalizedSampleUtr = normalizeUtr(sampleUtr);
-  if (!normalizedSampleUtr) return 0;
-
-  return utrSimilarity(normalizedInputUtr, normalizedSampleUtr) ?? 0;
-};
-
 const hasOutput = (sample: PredictionSample): boolean =>
   Boolean(sample.output.description) ||
   sample.output.category !== undefined ||
@@ -253,6 +196,8 @@ const normalizeSample = (record: PredictionRecord): PredictionSample | null => {
   const bankRecord = isRecord(record.bank) ? record.bank : null;
   const paymentAppRecord = isRecord(record.paymentApp) ? record.paymentApp : null;
   const outputRecord = isRecord(record.output) ? record.output : null;
+  const source = toSourceOrUndefined(record.source);
+  const signature = pickString(record, ['signature']);
 
   const bankDescription = pickString(record, [
     'bankDescription',
@@ -261,46 +206,21 @@ const normalizeSample = (record: PredictionRecord): PredictionSample | null => {
     'statementDescription',
     'rawDescription',
   ]) ?? (bankRecord ? pickString(bankRecord, ['description', 'bankDescription']) : undefined);
-  const recipient = pickString(record, ['recipient', 'paymentRecipient', 'payee', 'merchant', 'party']);
-  const genericType = pickString(record, ['type', 'txnType', 'transactionType']);
-  const genericBank = pickString(record, ['bank', 'bankName']);
-
-  const bankType =
-    (bankRecord ? pickString(bankRecord, ['type']) : undefined) ??
-    pickString(record, ['bankType', 'bankTxnType']) ??
-    (bankDescription ? genericType : undefined);
-  const bankName =
-    (bankRecord ? pickString(bankRecord, ['bank']) : undefined) ??
-    pickString(record, ['bankAccount', 'sourceBank']) ??
-    (bankDescription ? genericBank : undefined);
-
-  const appType =
-    (paymentAppRecord ? pickString(paymentAppRecord, ['type']) : undefined) ??
-    pickString(record, ['paymentType', 'paymentTxnType', 'upiType']) ?? (recipient ? genericType : undefined);
-  const appBank =
-    (paymentAppRecord ? pickString(paymentAppRecord, ['bank']) : undefined) ??
-    pickString(record, ['paymentBank', 'paymentAppBank', 'upiBank', 'appBank']) ??
-    (recipient ? genericBank : undefined);
   const appRecipient =
-    recipient ?? (paymentAppRecord ? pickString(paymentAppRecord, ['recipient', 'payee']) : undefined);
-  const appUtr =
-    (paymentAppRecord ? pickString(paymentAppRecord, ['utr', 'reference']) : undefined) ??
-    pickString(record, ['utr', 'upiRef', 'reference', 'transactionRef', 'upiTransactionId']);
+    pickString(record, ['recipient', 'paymentRecipient', 'payee', 'merchant', 'party']) ??
+    (paymentAppRecord ? pickString(paymentAppRecord, ['recipient', 'payee']) : undefined);
 
   const sample: PredictionSample = {
-    bank: bankType || bankName || bankDescription
+    source,
+    signature,
+    bank: bankDescription
       ? {
-          type: normalizeType(bankType ?? undefined) ?? undefined,
-          bank: bankName,
           description: bankDescription,
         }
       : undefined,
-    paymentApp: appType || appBank || appRecipient
+    paymentApp: appRecipient
       ? {
-          type: normalizeType(appType ?? undefined) ?? undefined,
           recipient: appRecipient,
-          utr: appUtr,
-          bank: appBank,
         }
       : undefined,
     output: {
@@ -329,33 +249,21 @@ const normalizeSample = (record: PredictionRecord): PredictionSample | null => {
 const scoreSample = (input: PredictionInput, sample: PredictionSample): number => {
   const scoreState = { score: 0, weight: 0 };
 
-  const inputType = input.bank?.type ?? input.paymentApp?.type;
-  const sampleType = input.paymentApp
-    ? sample.paymentApp?.type ?? sample.bank?.type
-    : sample.bank?.type ?? sample.paymentApp?.type;
-  pushScore(scoreTypeFeature(inputType, sampleType), WEIGHTS.typeMatch, scoreState);
-
-  if (input.bank) {
-    pushScore(scoreTextFeature(input.bank.bank, sample.bank?.bank), WEIGHTS.bankMatch, scoreState);
+  if (input.source === 'bank_modal') {
     pushScore(
-      scoreTextFeature(input.bank.description, sample.bank?.description),
+      scoreTextFeature(input.bank?.description, sample.bank?.description),
       WEIGHTS.bankDescription,
       scoreState,
     );
-  }
-
-  if (input.paymentApp) {
-    pushScore(
-      scoreTextFeature(input.paymentApp.recipient, sample.paymentApp?.recipient),
-      WEIGHTS.recipient,
-      scoreState,
-    );
-    pushScore(scoreUtrFeature(input.paymentApp.utr, sample.paymentApp?.utr), WEIGHTS.utr, scoreState);
-    pushScore(
-      scoreTextFeature(input.paymentApp.bank, sample.paymentApp?.bank),
-      WEIGHTS.appBankMatch,
-      scoreState,
-    );
+    if (input.paymentApp?.recipient) {
+      pushScore(
+        scoreTextFeature(input.paymentApp.recipient, sample.paymentApp?.recipient),
+        WEIGHTS.recipient,
+        scoreState,
+      );
+    }
+  } else {
+    pushScore(scoreTextFeature(input.paymentApp?.recipient, sample.paymentApp?.recipient), 1, scoreState);
   }
 
   return scoreState.weight === 0 ? 0 : scoreState.score / scoreState.weight;
@@ -392,18 +300,16 @@ const toStorageState = (value: unknown): PredictionStorageState | null => {
   };
 };
 
-const getSampleSignature = (sample: PredictionSample): string => {
-  return JSON.stringify({
+type SignatureSource = Pick<PredictionSample, 'source' | 'bank' | 'paymentApp' | 'output'>;
+
+const getPredictionSignatureSeed = (sample: SignatureSource): string =>
+  JSON.stringify({
+    source: sample.source,
     bank: {
-      type: sample.bank?.type ?? null,
-      bank: normalizeText(sample.bank?.bank),
       description: normalizeText(sample.bank?.description),
     },
     paymentApp: {
-      type: sample.paymentApp?.type ?? null,
-      bank: normalizeText(sample.paymentApp?.bank),
       recipient: normalizeText(sample.paymentApp?.recipient),
-      utr: normalizeUtr(sample.paymentApp?.utr),
     },
     output: {
       description: normalizeText(sample.output.description),
@@ -411,6 +317,35 @@ const getSampleSignature = (sample: PredictionSample): string => {
       group: sample.output.group ?? null,
     },
   });
+
+const getSampleSignature = (sample: PredictionSample): string =>
+  sample.signature?.trim() || getPredictionSignatureSeed(sample);
+
+const hashFallback = (value: string): string => {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+  }
+  return `fnv1a_${(hash >>> 0).toString(16).padStart(8, '0')}`;
+};
+
+const toHex = (buffer: ArrayBuffer): string =>
+  Array.from(new Uint8Array(buffer))
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+
+export const buildPredictionSignature = async (sample: PredictionPayload): Promise<string> => {
+  const seed = getPredictionSignatureSeed(sample);
+  const subtle = globalThis.crypto?.subtle;
+  if (!subtle) return hashFallback(seed);
+
+  try {
+    const digest = await subtle.digest('SHA-256', new TextEncoder().encode(seed));
+    return toHex(digest);
+  } catch {
+    return hashFallback(seed);
+  }
 };
 
 export const toPredictionSamples = (raw: unknown): PredictionSample[] =>
@@ -464,8 +399,15 @@ export const upsertPredictionSampleInStorage = (sample: PredictionSample): Predi
 
   const existing = loadPredictionSamplesFromStorage();
   const sampleSignature = getSampleSignature(sample);
+  const sampleSignatureSeed = getPredictionSignatureSeed(sample);
 
-  const deduped = existing.filter((item) => getSampleSignature(item) !== sampleSignature);
+  const deduped = existing.filter((item) => {
+    const itemSignature = getSampleSignature(item);
+    if (itemSignature === sampleSignature) return false;
+
+    const itemSignatureSeed = getPredictionSignatureSeed(item);
+    return itemSignatureSeed !== sampleSignatureSeed;
+  });
   const updated = [sample, ...deduped];
 
   return savePredictionSamplesToStorage(updated);
