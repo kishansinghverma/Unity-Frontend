@@ -10,7 +10,6 @@ import ProcessedRecordsList from './apps/emandi/pages/ProcessedRecordsList';
 // Money Trail App
 import MoneyTrailDashboard from './apps/moneytrail/pages/dashboard/Dashboard';
 import ReviewExpense from './apps/moneytrail/pages/review';
-import Splitwise from './apps/moneytrail/pages/splitwise/Splitwise';
 // Potato Stock App
 import PotatoStockDashboard from './apps/potatostock/pages/Dashboard';
 import PriceUpdatePage from './apps/potatostock/pages/PriceUpdatePage';
@@ -89,7 +88,6 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <MoneyTrailDashboard /> },
-      { path: 'splitwise-groups', element: <Splitwise /> },
       { path: 'review', element: <ReviewExpense /> },
       { path: 'reports', element: <div className="p-8 text-center">Money Trail Reports - Coming Soon</div> },
       { path: 'settings', element: <div className="p-8 text-center">Money Trail Settings - Coming Soon</div> },

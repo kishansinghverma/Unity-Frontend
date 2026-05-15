@@ -30,7 +30,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     } else if (currentApp?.id === 'moneytrail') {
       return [
         { name: 'Dashboard', path: '/moneytrail/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-        { name: 'Splitwise', path: '/moneytrail/splitwise-groups', icon: <User className="w-5 h-5" /> },
         { name: 'Review Expense', path: '/moneytrail/review', icon: <Archive className="w-5 h-5" /> },
         { name: 'Reports', path: '/moneytrail/reports', icon: <BarChart3 className="w-5 h-5" /> },
         { name: 'Settings', path: '/moneytrail/settings', icon: <Settings className="w-5 h-5" /> },
