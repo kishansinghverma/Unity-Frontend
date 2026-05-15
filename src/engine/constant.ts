@@ -7,6 +7,7 @@ export const Routes = {
     Delete: "/api/emandi/entry",
     DraftExpenses: "/api/expenses",
     ExpenseLastRefinement: "/api/expenses/lastrefinement",
+    ExpensePredictions: "/api/expenses/predictions",
     ExpenseDescriptions: "/api/expenses/descriptions",
     AddDescriptions: "/api/expenses/description",
     ExpenseGroups: "/api/expenses/groups",

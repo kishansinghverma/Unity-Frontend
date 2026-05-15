@@ -2,19 +2,25 @@ import { Form, InputNumber, Space } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 import dayjs from 'dayjs';
 import { X, CreditCard, Smartphone, FileText, Check, IndianRupee, Layers2, Pencil, PieChart, Loader2 } from 'lucide-react';
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { PostParams, Routes } from '../../../../../../../../engine/constant';
-import { handleResponse, handleError } from '../../../../../../../../engine/helpers/httpHelper';
+import { handleError, handleResponse } from '../../../../../../../../engine/helpers/httpHelper';
 import { StringUtils } from '../../../../../../../../engine/helpers/stringHelper';
 import { Nullable, WithId } from '../../../../../../../../engine/models/types';
 import { notify } from '../../../../../../../../engine/services/notificationService';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
-import { useDescriptionsQuery, useGroupsQuery, useCategoriesQuery, reviewApi } from '../../../../../../store/reviewSlice';
-import { PaymentAppEntry, DraftEntry, SplitwiseCategory } from '../../../../engine/contracts/models';
+import {
+  reviewApi,
+  useCategoriesQuery,
+  useDescriptionsQuery,
+  useGroupsQuery,
+} from '../../../../../../store/reviewSlice';
+import { DraftEntry, PaymentAppEntry, SplitwiseCategory } from '../../../../engine/contracts/models';
 import { BankReviewModalProps, PrefixIconProps } from '../../../../engine/contracts/props';
 import { ReviewModalFormState } from '../../../../engine/contracts/states';
-import { getPaymentAppMatches, getDraftMatches } from '../../../../engine/utils';
-import { SelectWithAdd, CustomSelect } from '../../../shared/Common';
+import { formatPredictionScore, loadPredictionSamplesFromStorage, predictReviewFields, upsertPredictionSampleInStorage } from '../../../../engine/prediction';
+import { getDraftMatches, getPaymentAppMatches } from '../../../../engine/utils';
+import { CustomSelect, SelectWithAdd } from '../../../shared/Common';
 import { AnimatedModal } from '../../shared/AnimatedModal';
 import { DraftItem } from '../../shared/DraftItem';
 import { TransactionContainer } from '../../shared/TransactionContainer';
@@ -33,6 +39,7 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
   const descriptions = useDescriptionsQuery();
   const groups = useGroupsQuery();
   const categories = useCategoriesQuery();
+  const [predictionSamples, setPredictionSamples] = useState(() => loadPredictionSamplesFromStorage());
 
   const [selectedPaymentApp, setSelectedPaymentApp] = useState<Nullable<WithId<PaymentAppEntry>>>(null);
   const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
@@ -42,8 +49,35 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
   const bankEntry = bankEntries.find(entry => entry._id === bankItemId)!;
   const paymentAppMatches = getPaymentAppMatches(bankEntry, paymentAppEntries);
   const draftMatches = getDraftMatches(bankEntry, selectedPaymentApp, draftEntries);
+  const isCreditTransaction = bankEntry.type === 'Credit';
+  const getPredictionType = (type?: string) => (type === 'Credit' || type === 'Debit' ? type : undefined);
 
   const [form] = Form.useForm<ReviewModalFormState>();
+
+  const predictionInput = useMemo(() => ({
+    source: 'bank_modal' as const,
+    bank: {
+      type: bankEntry.type,
+      bank: bankEntry.bank,
+      description: bankEntry.description,
+    },
+    paymentApp: selectedPaymentApp ? {
+      recipient: selectedPaymentApp.recipient,
+      utr: selectedPaymentApp.utr,
+      bank: selectedPaymentApp.bank,
+      type: getPredictionType(selectedPaymentApp.type),
+    } : undefined,
+  }), [
+    bankEntry.bank,
+    bankEntry.description,
+    bankEntry.type,
+    selectedPaymentApp,
+  ]);
+
+  const prediction = useMemo(
+    () => predictReviewFields(predictionInput, predictionSamples),
+    [predictionInput, predictionSamples],
+  );
 
   const descriptionOptions: DefaultOptionType[] = descriptions.data ?
     descriptions.data.value.map(item => ({
@@ -117,6 +151,34 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
     onModalClose();
   }
 
+  const savePrediction = (formState: ReviewModalFormState) => {
+    const payload = {
+      source: 'bank_modal',
+      bank: {
+        type: bankEntry.type,
+        bank: bankEntry.bank,
+        description: bankEntry.description,
+      },
+      paymentApp: selectedPaymentApp ? {
+        recipient: selectedPaymentApp.recipient,
+        utr: selectedPaymentApp.utr,
+        bank: selectedPaymentApp.bank,
+        type: getPredictionType(selectedPaymentApp.type),
+      } : undefined,
+      output: {
+        description: formState.description,
+        category: formState.category,
+        group: formState.group,
+      }
+    };
+
+    setPredictionSamples(upsertPredictionSampleInStorage(payload));
+
+    return fetch(Routes.ExpensePredictions, { ...PostParams, body: JSON.stringify(payload) })
+      .then(handleResponse)
+      .catch(() => null);
+  }
+
   const saveTransaction = (formState: ReviewModalFormState) => {
     const selectedGroup = groups.data?.find(group => group.id === formState.group);
 
@@ -166,6 +228,7 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
 
     fetch(url, { ...PostParams, body: JSON.stringify(payload) })
       .then(handleResponse)
+      .then(() => savePrediction(formState))
       .then(onComplete)
       .catch(handleError)
       .finally(() => setIsSaving(false));
@@ -201,6 +264,44 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
     setColumnHeight();
   }, []);
 
+  const applyPrediction = useCallback((fillOnlyMissing: boolean) => {
+    if (!prediction.hasSuggestion) return;
+
+    const currentValues = form.getFieldsValue(['description', 'category', 'group']);
+    const nextValues: Partial<ReviewModalFormState> = {};
+
+    if (prediction.description) {
+      const isDescriptionMissing = StringUtils.isNullOrEmpty(currentValues.description);
+      if (!fillOnlyMissing || isDescriptionMissing) {
+        nextValues.description = prediction.description;
+      }
+    }
+
+    if (!isCreditTransaction && prediction.category !== undefined) {
+      const isCategoryMissing = currentValues.category === undefined || currentValues.category === null;
+      if (!fillOnlyMissing || isCategoryMissing) {
+        nextValues.category = prediction.category;
+      }
+    }
+
+    if (prediction.group !== undefined) {
+      const isGroupMissing = currentValues.group === undefined || currentValues.group === null;
+      if (!fillOnlyMissing || isGroupMissing) {
+        nextValues.group = prediction.group;
+      }
+    }
+
+    if (Object.keys(nextValues).length > 0) {
+      form.setFieldsValue(nextValues);
+    }
+  }, [form, isCreditTransaction, prediction]);
+
+  useEffect(() => {
+    if (prediction.confidence === 'high') {
+      applyPrediction(false);
+    }
+  }, [applyPrediction, prediction.confidence]);
+
   return (
     <AnimatedModal
       open={isOpen}
@@ -235,7 +336,13 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
                 headerStyle="from-blue-50 to-indigo-50"
                 iconStyle="text-blue-600"
               >
-                <TransactionCard {...bankEntry} />
+                <TransactionCard
+                  {...bankEntry}
+                  onApplyPrediction={prediction.hasSuggestion ? () => applyPrediction(false) : undefined}
+                  predictionLabel={prediction.hasSuggestion ? formatPredictionScore(prediction.score) : undefined}
+                  predictionTitle={prediction.hasSuggestion ? `Confidence: ${prediction.confidence} (${formatPredictionScore(prediction.score)})` : undefined}
+                  predictionTone={prediction.confidence === 'none' ? undefined : prediction.confidence}
+                />
               </TransactionContainer>
 
               <TransactionContainer
@@ -335,8 +442,8 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
                       placement="bottomRight"
                       className={`w-48 ${classes.select}`}
                       prefix={<PrefixIcon icon={Layers2} size={16} strokeWidth={3} />}
-                      formItemProps={{ initialValue: bankEntry.type === 'Credit' ? 2 : 1 }}
-                      disabled={bankEntry.type === 'Credit'}
+                      formItemProps={{ initialValue: isCreditTransaction ? 2 : 1 }}
+                      disabled={isCreditTransaction}
                     />
                     <CustomSelect
                       name="group"

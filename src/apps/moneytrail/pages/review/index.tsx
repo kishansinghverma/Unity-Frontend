@@ -1,21 +1,28 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { getArrayOrDefault } from '../../../../engine/helpers/rtkHelper';
-import { useBankEntryQuery, useDraftEntryQuery, usePaymentAppEntryQuery } from '../../store/reviewSlice';
+import { useBankEntryQuery, useDraftEntryQuery, useExpensePredictionsQuery, usePaymentAppEntryQuery } from '../../store/reviewSlice';
 import { Header } from './components/layouts/Headers';
 import { BankSection } from './components/sections/BankSection';
 import { DraftSection } from './components/sections/DraftSection';
 import { PaymentAppSection } from './components/sections/PaymentAppSection';
+import { hydratePredictionSamplesFromApi } from './engine/prediction';
 
 const ReviewExpense: React.FC = () => {
   const bankQuery = useBankEntryQuery();
   const paymentAppQuery = usePaymentAppEntryQuery();
   const draftQuery = useDraftEntryQuery();
+  const predictionsQuery = useExpensePredictionsQuery();
 
   const bankEntries = useMemo(() => getArrayOrDefault(bankQuery), [bankQuery.data, bankQuery.isError, bankQuery.isLoading]);
   const paymentAppEntries = useMemo(() => getArrayOrDefault(paymentAppQuery), [paymentAppQuery.data, paymentAppQuery.isError, paymentAppQuery.isLoading]);
   const draftEntries = useMemo(() => getArrayOrDefault(draftQuery), [draftQuery.data, draftQuery.isError, draftQuery.isLoading]);
 
   const [isManualEntryModalVisible, setManualEntryModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (!predictionsQuery.data) return;
+    hydratePredictionSamplesFromApi(predictionsQuery.data);
+  }, [predictionsQuery.data]);
 
   return (
     <div className="px-8 pb-4 h-full min-h-0 flex flex-col gap-4">

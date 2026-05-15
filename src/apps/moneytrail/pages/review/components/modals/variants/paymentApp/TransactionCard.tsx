@@ -1,15 +1,34 @@
 import dayjs from 'dayjs';
-import { Calendar, CheckCircle2, Clock, FileText } from 'lucide-react';
+import { Calendar, CheckCircle2, Clock, FileText, Sparkles } from 'lucide-react';
 import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
 import { PaymentAppEntry } from '../../../../engine/contracts/models';
 import { BankIcon } from '../../../shared/Common';
 
-const TransactionCard: React.FC<WithId<PaymentAppEntry>> = (paymentAppEntry) => {
+type PaymentAppTransactionCardProps = WithId<PaymentAppEntry> & {
+  predictionLabel?: string;
+  predictionTitle?: string;
+  predictionTone?: 'low' | 'medium' | 'high';
+  onApplyPrediction?: () => void;
+};
+
+const TransactionCard: React.FC<PaymentAppTransactionCardProps> = ({
+  predictionLabel,
+  predictionTitle,
+  predictionTone,
+  onApplyPrediction,
+  ...paymentAppEntry
+}) => {
   const isDebit: boolean = paymentAppEntry.type === 'Debit';
 
   // Common styling for the new tags
   const tagBaseStyle = "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border";
+  const predictionStyleByTone = {
+    low: 'bg-amber-100 text-amber-700 border-amber-200 hover:bg-amber-200',
+    medium: 'bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200',
+    high: 'bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-200',
+  };
+  const predictionStyle = predictionTone ? predictionStyleByTone[predictionTone] : predictionStyleByTone.low;
 
   return (
     <div>
@@ -30,23 +49,37 @@ const TransactionCard: React.FC<WithId<PaymentAppEntry>> = (paymentAppEntry) => 
         </div>
 
         {/* New Tags Section: Type, Category, Status */}
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          {/* Transaction Type Tag */}
-          <span className={`${tagBaseStyle} ${isDebit
-            ? 'bg-red-100 text-red-700 border-red-200'
-            : 'bg-emerald-100 text-emerald-700 border-emerald-200'
-            }`}>
-            {paymentAppEntry.type}
-          </span>
+        <div className="flex items-start justify-between gap-2 mb-4">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Transaction Type Tag */}
+            <span className={`${tagBaseStyle} ${isDebit
+              ? 'bg-red-100 text-red-700 border-red-200'
+              : 'bg-emerald-100 text-emerald-700 border-emerald-200'
+              }`}>
+              {paymentAppEntry.type}
+            </span>
 
-          {/* Processed/Pending Status Tag */}
-          <span className={`${tagBaseStyle} ${paymentAppEntry.processed
-            ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
-            : 'bg-yellow-100 text-yellow-700 border-yellow-200'
-            }`}>
-            {paymentAppEntry.processed ? <CheckCircle2 className="w-3 h-3 mr-1.5" /> : <Clock className="w-3 h-3 mr-1.5" />}
-            {paymentAppEntry.processed ? 'Processed' : 'Pending'}
-          </span>
+            {/* Processed/Pending Status Tag */}
+            <span className={`${tagBaseStyle} ${paymentAppEntry.processed
+              ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
+              : 'bg-yellow-100 text-yellow-700 border-yellow-200'
+              }`}>
+              {paymentAppEntry.processed ? <CheckCircle2 className="w-3 h-3 mr-1.5" /> : <Clock className="w-3 h-3 mr-1.5" />}
+              {paymentAppEntry.processed ? 'Processed' : 'Pending'}
+            </span>
+          </div>
+
+          {onApplyPrediction && predictionLabel && (
+            <button
+              type="button"
+              onClick={onApplyPrediction}
+              title={predictionTitle}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors whitespace-nowrap ${predictionStyle}`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{predictionLabel}</span>
+            </button>
+          )}
         </div>
 
         <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
