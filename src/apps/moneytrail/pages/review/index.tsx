@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getArrayOrDefault } from '../../../../engine/helpers/rtkHelper';
 import { useBankEntryQuery, useDraftEntryQuery, useExpensePredictionsQuery, usePaymentAppEntryQuery } from '../../store/reviewSlice';
 import { Header } from './components/layouts/Headers';
@@ -13,9 +13,9 @@ const ReviewExpense: React.FC = () => {
   const draftQuery = useDraftEntryQuery();
   const predictionsQuery = useExpensePredictionsQuery();
 
-  const bankEntries = useMemo(() => getArrayOrDefault(bankQuery), [bankQuery.data, bankQuery.isError, bankQuery.isLoading]);
-  const paymentAppEntries = useMemo(() => getArrayOrDefault(paymentAppQuery), [paymentAppQuery.data, paymentAppQuery.isError, paymentAppQuery.isLoading]);
-  const draftEntries = useMemo(() => getArrayOrDefault(draftQuery), [draftQuery.data, draftQuery.isError, draftQuery.isLoading]);
+  const bankEntries = getArrayOrDefault(bankQuery);
+  const paymentAppEntries = getArrayOrDefault(paymentAppQuery);
+  const draftEntries = getArrayOrDefault(draftQuery);
 
   const [isManualEntryModalVisible, setManualEntryModalVisible] = useState(false);
 

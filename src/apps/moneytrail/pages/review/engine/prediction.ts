@@ -49,7 +49,7 @@ export type PredictionInput = {
 
 export type PredictionSample = {
   source?: PredictionInput['source'];
-  signature?: string;
+  signature: string;
   bank?: {
     description?: string;
   };
@@ -198,17 +198,10 @@ const normalizeSample = (record: PredictionRecord): PredictionSample | null => {
   const outputRecord = isRecord(record.output) ? record.output : null;
   const source = toSourceOrUndefined(record.source);
   const signature = pickString(record, ['signature']);
+  if (!signature) return null;
 
-  const bankDescription = pickString(record, [
-    'bankDescription',
-    'transactionDescription',
-    'narration',
-    'statementDescription',
-    'rawDescription',
-  ]) ?? (bankRecord ? pickString(bankRecord, ['description', 'bankDescription']) : undefined);
-  const appRecipient =
-    pickString(record, ['recipient', 'paymentRecipient', 'payee', 'merchant', 'party']) ??
-    (paymentAppRecord ? pickString(paymentAppRecord, ['recipient', 'payee']) : undefined);
+  const bankDescription = bankRecord ? pickString(bankRecord, ['description']) : undefined;
+  const appRecipient = paymentAppRecord ? pickString(paymentAppRecord, ['recipient']) : undefined;
 
   const sample: PredictionSample = {
     source,
@@ -224,20 +217,9 @@ const normalizeSample = (record: PredictionRecord): PredictionSample | null => {
         }
       : undefined,
     output: {
-      description:
-        (outputRecord ? pickString(outputRecord, ['description']) : undefined) ??
-        pickString(record, [
-          'outputDescription',
-          'finalDescription',
-          'expenseDescription',
-          'description',
-        ]),
-      category:
-        (outputRecord ? pickNumber(outputRecord, ['category']) : undefined) ??
-        pickNumber(record, ['categoryId', 'outputCategory', 'finalCategory', 'category']),
-      group:
-        (outputRecord ? pickNumber(outputRecord, ['group']) : undefined) ??
-        pickNumber(record, ['groupId', 'outputGroup', 'finalGroup', 'group']),
+      description: outputRecord ? pickString(outputRecord, ['description']) : undefined,
+      category: outputRecord ? pickNumber(outputRecord, ['category']) : undefined,
+      group: outputRecord ? pickNumber(outputRecord, ['group']) : undefined,
     },
   };
 
@@ -318,8 +300,7 @@ const getPredictionSignatureSeed = (sample: SignatureSource): string =>
     },
   });
 
-const getSampleSignature = (sample: PredictionSample): string =>
-  sample.signature?.trim() || getPredictionSignatureSeed(sample);
+const getSampleSignature = (sample: PredictionSample): string => sample.signature.trim();
 
 const hashFallback = (value: string): string => {
   let hash = 2166136261;
@@ -348,7 +329,7 @@ export const buildPredictionSignature = async (sample: PredictionPayload): Promi
   }
 };
 
-export const toPredictionSamples = (raw: unknown): PredictionSample[] =>
+const toPredictionSamples = (raw: unknown): PredictionSample[] =>
   toRecordArray(raw)
     .map(normalizeSample)
     .filter((sample): sample is PredictionSample => sample !== null);
@@ -369,7 +350,7 @@ export const loadPredictionSamplesFromStorage = (): PredictionSample[] => {
   }
 };
 
-export const savePredictionSamplesToStorage = (samples: PredictionSample[]): PredictionSample[] => {
+const savePredictionSamplesToStorage = (samples: PredictionSample[]): PredictionSample[] => {
   const storage = getStorage();
   const trimmedSamples = samples.slice(0, STORAGE_LIMIT);
   if (!storage) return trimmedSamples;
@@ -399,14 +380,10 @@ export const upsertPredictionSampleInStorage = (sample: PredictionSample): Predi
 
   const existing = loadPredictionSamplesFromStorage();
   const sampleSignature = getSampleSignature(sample);
-  const sampleSignatureSeed = getPredictionSignatureSeed(sample);
 
   const deduped = existing.filter((item) => {
     const itemSignature = getSampleSignature(item);
-    if (itemSignature === sampleSignature) return false;
-
-    const itemSignatureSeed = getPredictionSignatureSeed(item);
-    return itemSignatureSeed !== sampleSignatureSeed;
+    return itemSignature !== sampleSignature;
   });
   const updated = [sample, ...deduped];
 
