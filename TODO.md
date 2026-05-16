@@ -10,3 +10,4 @@
 - Add unit tests for prediction scoring/signature generation utilities.
 - Add integration tests for review modal prediction apply/save flows.
 - Document folder conventions: `components`, `engine`, `core/contracts`, and `pages/*/components`.
+- Update backend expense/settlement endpoints to accept generic `appTxnId` (replace legacy `phonePeTxnId`) before frontend payload rename.

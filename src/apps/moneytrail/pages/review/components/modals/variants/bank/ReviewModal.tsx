@@ -22,6 +22,7 @@ import {
   buildPredictionSignature,
   formatPredictionScore,
   loadPredictionSamplesFromStorage,
+  PredictionPayload,
   predictReviewFields,
   upsertPredictionSampleInStorage,
 } from '../../../../engine/prediction';
@@ -150,7 +151,7 @@ export const BankReviewModal: FC<BankRecordReviewModalProps> = ({
   }
 
   const savePrediction = async (formState: ReviewModalFormState) => {
-    const payload = {
+    const payload: PredictionPayload = {
       source: 'bank_modal',
       bank: {
         description: bankRecord.description,
