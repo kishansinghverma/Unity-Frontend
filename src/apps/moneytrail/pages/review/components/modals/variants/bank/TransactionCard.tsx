@@ -2,11 +2,11 @@ import dayjs from 'dayjs';
 import { Calendar, CheckCircle2, Clock, FileText, Sparkles } from 'lucide-react';
 import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
-import { BankEntry } from '../../../../engine/contracts/models';
+import { BankRecord } from '../../../../engine/contracts/models';
 import { DescriptionInfo, BankTheme } from '../../../../engine/contracts/types';
 import { BankIcon } from '../../../shared/Common';
 
-type BankTransactionCardProps = WithId<BankEntry> & {
+type BankTransactionCardProps = WithId<BankRecord> & {
   predictionLabel?: string;
   predictionTitle?: string;
   predictionTone?: 'low' | 'medium' | 'high';
@@ -18,7 +18,7 @@ const TransactionCard: React.FC<BankTransactionCardProps> = ({
   predictionTitle,
   predictionTone,
   onApplyPrediction,
-  ...bankEntry
+  ...bankRecord
 }) => {
   const parseDescription = (desc: string): DescriptionInfo => {
     const description = desc.trim();
@@ -42,8 +42,8 @@ const TransactionCard: React.FC<BankTransactionCardProps> = ({
     return { platform: 'Banking', category: 'General' };
   };
 
-  const descInfo: DescriptionInfo = parseDescription(bankEntry.description);
-  const isDebit: boolean = bankEntry.type === 'Debit';
+  const descInfo: DescriptionInfo = parseDescription(bankRecord.description);
+  const isDebit: boolean = bankRecord.type === 'Debit';
 
   const getBankTheme = (bank: string): BankTheme => {
     switch (bank.toUpperCase()) {
@@ -80,7 +80,7 @@ const TransactionCard: React.FC<BankTransactionCardProps> = ({
     }
   };
 
-  const bankTheme: BankTheme = getBankTheme(bankEntry.bank);
+  const bankTheme: BankTheme = getBankTheme(bankRecord.bank);
 
   // Common styling for the new tags
   const tagBaseStyle = "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border";
@@ -96,15 +96,15 @@ const TransactionCard: React.FC<BankTransactionCardProps> = ({
       <div>
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <BankIcon bankName={bankEntry.bank} />
-            <div className="font-semibold text-gray-800">{bankEntry.bank}</div>
+            <BankIcon bankName={bankRecord.bank} />
+            <div className="font-semibold text-gray-800">{bankRecord.bank}</div>
           </div>
           <div className="text-right">
             <div className={`text-xl font-bold ${isDebit
               ? 'text-red-600'
               : 'text-emerald-600'
               }`}>
-              {isDebit ? '-' : '+'} ₹{bankEntry.amount.toLocaleString()}
+              {isDebit ? '-' : '+'} ₹{bankRecord.amount.toLocaleString()}
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@ const TransactionCard: React.FC<BankTransactionCardProps> = ({
               ? 'bg-red-100 text-red-700 border-red-200'
               : 'bg-emerald-100 text-emerald-700 border-emerald-200'
               }`}>
-              {bankEntry.type}
+              {bankRecord.type}
             </span>
 
             {/* Category Tag */}
@@ -126,12 +126,12 @@ const TransactionCard: React.FC<BankTransactionCardProps> = ({
             </span>
 
             {/* Processed/Pending Status Tag */}
-            <span className={`${tagBaseStyle} ${bankEntry.processed
+            <span className={`${tagBaseStyle} ${bankRecord.processed
               ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
               : 'bg-yellow-100 text-yellow-700 border-yellow-200'
               }`}>
-              {bankEntry.processed ? <CheckCircle2 className="w-3 h-3 mr-1.5" /> : <Clock className="w-3 h-3 mr-1.5" />}
-              {bankEntry.processed ? 'Processed' : 'Pending'}
+              {bankRecord.processed ? <CheckCircle2 className="w-3 h-3 mr-1.5" /> : <Clock className="w-3 h-3 mr-1.5" />}
+              {bankRecord.processed ? 'Processed' : 'Pending'}
             </span>
           </div>
 
@@ -153,11 +153,11 @@ const TransactionCard: React.FC<BankTransactionCardProps> = ({
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2 mb-2 text-slate-800">
                 <Calendar className="w-4 h-4 flex-shrink-0" />
-                <div className="font-medium text-sm">{dayjs(bankEntry.date).format('dddd, DD MMM, YYYY')}</div>
+                <div className="font-medium text-sm">{dayjs(bankRecord.date).format('dddd, DD MMM, YYYY')}</div>
               </div>
               <div className="flex items-start space-x-2 text-slate-500">
                 <FileText className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                <div className="text-sm font-medium break-all leading-relaxed capitalize">{bankEntry.description}</div>
+                <div className="text-sm font-medium break-all leading-relaxed capitalize">{bankRecord.description}</div>
               </div>
             </div>
           </div>

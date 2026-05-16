@@ -4,7 +4,7 @@ import type { NamePath } from 'antd/es/form/interface';
 import type { DefaultOptionType, SelectProps } from 'antd/es/select';
 import type { Dispatch, ElementType, ReactNode, SetStateAction } from 'react';
 import { Nullable, WithId } from '../../../../../../engine/models/types';
-import { BankEntry, PaymentAppEntry, DraftEntry } from './models';
+import { BankRecord, AppRecord, LocationRecord } from './models';
 
 export type BankIconProps = {
   bankName: string;
@@ -37,21 +37,21 @@ export type SelectWithAddProps = {
   onAddOption: (option: DefaultOptionType) => void;
 };
 
-export type BankSectionProps = {
-  bankEntries: WithId<BankEntry>[];
-  paymentAppEntries: WithId<PaymentAppEntry>[];
-  draftEntries: WithId<DraftEntry>[];
+export type BankRecordSectionProps = {
+  bankRecords: WithId<BankRecord>[];
+  appRecords: WithId<AppRecord>[];
+  locationRecords: WithId<LocationRecord>[];
   isLoading: boolean;
 };
 
-export type PaymentAppSectionProps = {
-  paymentAppEntries: WithId<PaymentAppEntry>[];
-  draftEntries: WithId<DraftEntry>[];
+export type AppRecordSectionProps = {
+  appRecords: WithId<AppRecord>[];
+  locationRecords: WithId<LocationRecord>[];
   isLoading: boolean;
 };
 
-export type DraftSectionProps = {
-  draftEntries: WithId<DraftEntry>[];
+export type LocationRecordSectionProps = {
+  locationRecords: WithId<LocationRecord>[];
   isLoading: boolean;
   isManualEntryModalVisible: boolean;
   setManualEntryModalVisible: Dispatch<SetStateAction<boolean>>;
@@ -70,29 +70,29 @@ export type ListHeaderProps = {
   setShowProcessed: Dispatch<SetStateAction<boolean>>;
 };
 
-export type BankListProps = {
-  items: WithId<BankEntry>[];
+export type BankRecordListProps = {
+  items: WithId<BankRecord>[];
   isLoading: boolean;
   setBankItemId: Dispatch<SetStateAction<Nullable<string>>>;
 };
 
-export type ReviewDraftListProps = {
-  items: WithId<DraftEntry>[];
+export type ReviewLocationRecordListProps = {
+  items: WithId<LocationRecord>[];
   isLoading: boolean;
-  setDraftItem: Dispatch<SetStateAction<Nullable<WithId<DraftEntry>>>>;
+  setLocationRecordItem: Dispatch<SetStateAction<Nullable<WithId<LocationRecord>>>>;
 };
 
-export type ReviewPaymentAppListProps = {
-  items: WithId<PaymentAppEntry>[];
+export type ReviewAppRecordListProps = {
+  items: WithId<AppRecord>[];
   isLoading: boolean;
-  setPaymentAppItemId: Dispatch<SetStateAction<Nullable<string>>>;
+  setAppRecordItemId: Dispatch<SetStateAction<Nullable<string>>>;
 };
 
 export type TransactionListProps = {
   title: string;
   subtitle: string;
   isLoading: boolean;
-  items: WithId<BankEntry>[];
+  items: WithId<BankRecord>[];
   icon: ElementType;
   gradientColors: {
     from: string;
@@ -100,11 +100,11 @@ export type TransactionListProps = {
   };
 };
 
-export type PaymentAppListProps = {
+export type AppRecordListProps = {
   title: string;
   subtitle: string;
   isLoading: boolean;
-  items: WithId<PaymentAppEntry>[];
+  items: WithId<AppRecord>[];
   icon: ElementType;
   gradientColors: {
     from: string;
@@ -112,11 +112,11 @@ export type PaymentAppListProps = {
   };
 };
 
-export type DraftListProps = {
+export type LocationRecordListProps = {
   title: string;
   subtitle: string;
   isLoading: boolean;
-  items: WithId<DraftEntry>[];
+  items: WithId<LocationRecord>[];
   icon: ElementType;
   gradientColors: {
     from: string;
@@ -126,33 +126,33 @@ export type DraftListProps = {
 
 export type ReviewModalProps = {
   itemId: string | null;
-  bankEntries: Array<WithId<BankEntry>>;
-  paymentAppEntries: Array<WithId<PaymentAppEntry>>;
+  bankRecords: Array<WithId<BankRecord>>;
+  appRecords: Array<WithId<AppRecord>>;
   onClose: () => void;
 };
 
-export type BankListItemProps = {
-  item: WithId<BankEntry>;
+export type BankRecordListItemProps = {
+  item: WithId<BankRecord>;
   isOpen: boolean;
   onOpen: (id: string | null) => void;
   setProcessed: (id: string) => void;
   setBankItemId: Dispatch<SetStateAction<Nullable<string>>>;
 };
 
-export type DraftListItemProps = {
-  item: WithId<DraftEntry>;
+export type LocationRecordListItemProps = {
+  item: WithId<LocationRecord>;
   isOpen: boolean;
   onOpen: (id: string | null) => void;
   setProcessed: (id: string) => void;
-  setDraftItem: Dispatch<SetStateAction<Nullable<WithId<DraftEntry>>>>;
+  setLocationRecordItem: Dispatch<SetStateAction<Nullable<WithId<LocationRecord>>>>;
 };
 
-export type PaymentAppListItemProps = {
-  item: WithId<PaymentAppEntry>;
+export type AppRecordListItemProps = {
+  item: WithId<AppRecord>;
   isOpen: boolean;
   onOpen: (id: string | null) => void;
   setProcessed: (id: string) => void;
-  setPaymentAppItemId: Dispatch<SetStateAction<Nullable<string>>>;
+  setAppRecordItemId: Dispatch<SetStateAction<Nullable<string>>>;
 };
 
 export type ProcessedActionButtonProps = {
@@ -168,37 +168,37 @@ export type SwipeableContentProps = {
   children: ReactNode;
 };
 
-export type DraftItemProps = {
-  item: WithId<DraftEntry>;
+export type LocationRecordItemProps = {
+  item: WithId<LocationRecord>;
   isSelected: boolean;
-  setSelected: Dispatch<SetStateAction<Nullable<WithId<DraftEntry>>>>;
+  setSelected: Dispatch<SetStateAction<Nullable<WithId<LocationRecord>>>>;
 };
 
-export type PaymentAppItemProps = {
-  item: WithId<PaymentAppEntry>;
+export type AppRecordItemProps = {
+  item: WithId<AppRecord>;
   isSelected: boolean;
-  setSelected: Dispatch<SetStateAction<Nullable<WithId<PaymentAppEntry>>>>;
+  setSelected: Dispatch<SetStateAction<Nullable<WithId<AppRecord>>>>;
 };
 
-export type BankReviewModalProps = {
+export type BankRecordReviewModalProps = {
   bankItemId: string;
-  bankEntries: WithId<BankEntry>[];
-  paymentAppEntries: WithId<PaymentAppEntry>[];
-  draftEntries: WithId<DraftEntry>[];
+  bankRecords: WithId<BankRecord>[];
+  appRecords: WithId<AppRecord>[];
+  locationRecords: WithId<LocationRecord>[];
   setBankItemId: Dispatch<SetStateAction<Nullable<string>>>;
 };
 
 export type ManualEntryModalProps = {
-  draftEntry: Nullable<WithId<DraftEntry>>;
+  locationRecord: Nullable<WithId<LocationRecord>>;
   setVisible: (isVisible: boolean) => void;
-  setDraftItem: Dispatch<SetStateAction<Nullable<WithId<DraftEntry>>>>;
+  setLocationRecordItem: Dispatch<SetStateAction<Nullable<WithId<LocationRecord>>>>;
 };
 
-export type PaymentAppReviewModalProps = {
-  paymentAppItemId: string;
-  paymentAppEntries: WithId<PaymentAppEntry>[];
-  draftEntries: WithId<DraftEntry>[];
-  setPaymentAppItemId: Dispatch<SetStateAction<Nullable<string>>>;
+export type AppRecordReviewModalProps = {
+  appRecordItemId: string;
+  appRecords: WithId<AppRecord>[];
+  locationRecords: WithId<LocationRecord>[];
+  setAppRecordItemId: Dispatch<SetStateAction<Nullable<string>>>;
 };
 
 export type PrefixIconProps = {

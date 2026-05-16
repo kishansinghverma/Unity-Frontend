@@ -15,8 +15,8 @@ import {
   useDescriptionsQuery,
   useGroupsQuery,
 } from '../../../../../../store/reviewSlice';
-import { DraftEntry, SplitwiseCategory } from '../../../../engine/contracts/models';
-import { PaymentAppReviewModalProps, PrefixIconProps } from '../../../../engine/contracts/props';
+import { LocationRecord, SplitwiseCategory } from '../../../../engine/contracts/models';
+import { AppRecordReviewModalProps, PrefixIconProps } from '../../../../engine/contracts/props';
 import { ReviewModalFormState } from '../../../../engine/contracts/states';
 import {
   buildPredictionSignature,
@@ -25,18 +25,18 @@ import {
   predictReviewFields,
   upsertPredictionSampleInStorage,
 } from '../../../../engine/prediction';
-import { getDraftMatches } from '../../../../engine/utils';
+import { getLocationRecordMatches } from '../../../../engine/utils';
 import { CustomSelect, SelectWithAdd } from '../../../shared/Common';
 import { AnimatedModal } from '../../shared/AnimatedModal';
-import { DraftItem } from '../../shared/DraftItem';
+import { LocationRecordItem } from '../../shared/LocationRecordItem';
 import { TransactionContainer } from '../../shared/TransactionContainer';
 import TransactionCard from './TransactionCard';
 
-export const PaymentAppReviewModal: FC<PaymentAppReviewModalProps> = ({
-  paymentAppItemId,
-  paymentAppEntries,
-  draftEntries,
-  setPaymentAppItemId
+export const AppRecordReviewModal: FC<AppRecordReviewModalProps> = ({
+  appRecordItemId,
+  appRecords,
+  locationRecords,
+  setAppRecordItemId
 }) => {
     const dispatch = useAppDispatch();
 
@@ -45,23 +45,23 @@ export const PaymentAppReviewModal: FC<PaymentAppReviewModalProps> = ({
     const categories = useCategoriesQuery();
     const [predictionSamples, setPredictionSamples] = useState(() => loadPredictionSamplesFromStorage());
 
-    const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
+    const [selectedLocationRecord, setSelectedLocationRecord] = useState<Nullable<WithId<LocationRecord>>>(null);
     const [isOpen, setIsOpen] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
-    const paymentAppEntry = paymentAppEntries.find(entry => entry._id === paymentAppItemId)!;
-    const draftMatches = getDraftMatches(null, paymentAppEntry, draftEntries);
-    const isCreditTransaction = paymentAppEntry.type === 'Credit';
+    const appRecord = appRecords.find(entry => entry._id === appRecordItemId)!;
+    const locationRecordMatches = getLocationRecordMatches(null, appRecord, locationRecords);
+    const isCreditTransaction = appRecord.type === 'Credit';
 
     const [form] = Form.useForm<ReviewModalFormState>();
 
     const predictionInput = useMemo(() => ({
       source: 'payment_app_modal' as const,
       paymentApp: {
-        recipient: paymentAppEntry.recipient,
+        recipient: appRecord.recipient,
       },
     }), [
-      paymentAppEntry.recipient,
+      appRecord.recipient,
     ]);
 
     const prediction = useMemo(
@@ -122,15 +122,15 @@ export const PaymentAppReviewModal: FC<PaymentAppReviewModalProps> = ({
     const onComplete = () => {
       notify.success({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
 
-      if (paymentAppEntry?._id) {
-        dispatch(reviewApi.util.updateQueryData('paymentAppEntry', undefined, (data) => {
-          data.forEach(entry => { if (entry._id === paymentAppEntry._id) entry.processed = true });
+      if (appRecord?._id) {
+        dispatch(reviewApi.util.updateQueryData('appRecord', undefined, (data) => {
+          data.forEach(entry => { if (entry._id === appRecord._id) entry.processed = true });
         }));
       }
 
-      if (selectedDraft?._id) {
-        dispatch(reviewApi.util.updateQueryData('draftEntry', undefined, (data) => {
-          data.forEach(entry => { if (entry._id === selectedDraft._id) entry.processed = true });
+      if (selectedLocationRecord?._id) {
+        dispatch(reviewApi.util.updateQueryData('locationRecord', undefined, (data) => {
+          data.forEach(entry => { if (entry._id === selectedLocationRecord._id) entry.processed = true });
         }));
       }
 
@@ -141,7 +141,7 @@ export const PaymentAppReviewModal: FC<PaymentAppReviewModalProps> = ({
       const payload = {
         source: 'payment_app_modal',
         paymentApp: {
-          recipient: paymentAppEntry.recipient,
+          recipient: appRecord.recipient,
         },
         output: {
           description: formState.description,
@@ -165,24 +165,24 @@ export const PaymentAppReviewModal: FC<PaymentAppReviewModalProps> = ({
       let payload = {
         group_id: selectedGroup?.id,
         cost: formState.amount,
-        date: paymentAppEntry.date,
+        date: appRecord.date,
         description: formState.description,
         parties: selectedGroup?.members.map(m => m.id),
         category: formState.category,
-        phonePeTxnId: paymentAppEntry?._id,
-        draftTxnId: selectedDraft?._id,
+        phonePeTxnId: appRecord?._id,
+        draftTxnId: selectedLocationRecord?._id,
       };
 
-      if (paymentAppEntry.type === 'Debit') {
+      if (appRecord.type === 'Debit') {
         const debitPayload = {
           shared: selectedGroup?.sharing,
           details: Object.entries({
-            Bank: paymentAppEntry.bank ?? StringUtils.empty,
-            UTR: paymentAppEntry?.utr ?? "N/A",
-            TransactionNo: paymentAppEntry?.transactionId ?? 'N/A',
-            Recipient: paymentAppEntry?.recipient ?? 'N/A',
-            Location: selectedDraft?.location.replaceAll('\n', ', ') ?? 'N/A',
-            Coordinates: selectedDraft?.coordinate ? `https://www.google.com/maps?q=${selectedDraft.coordinate}` : 'N/A'
+            Bank: appRecord.bank ?? StringUtils.empty,
+            UTR: appRecord?.utr ?? "N/A",
+            TransactionNo: appRecord?.transactionId ?? 'N/A',
+            Recipient: appRecord?.recipient ?? 'N/A',
+            Location: selectedLocationRecord?.location.replaceAll('\n', ', ') ?? 'N/A',
+            Coordinates: selectedLocationRecord?.coordinate ? `https://www.google.com/maps?q=${selectedLocationRecord.coordinate}` : 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
         };
 
@@ -191,17 +191,17 @@ export const PaymentAppReviewModal: FC<PaymentAppReviewModalProps> = ({
       else {
         const creditPayload = {
           details: Object.entries({
-            Bank: paymentAppEntry.bank ?? StringUtils.empty,
-            UTR: paymentAppEntry?.utr ?? 'N/A',
-            TransactionNo: paymentAppEntry?.transactionId ?? 'N/A',
-            Payer: paymentAppEntry?.recipient ?? 'N/A'
+            Bank: appRecord.bank ?? StringUtils.empty,
+            UTR: appRecord?.utr ?? 'N/A',
+            TransactionNo: appRecord?.transactionId ?? 'N/A',
+            Payer: appRecord?.recipient ?? 'N/A'
           }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n')
         }
 
         payload = { ...payload, ...creditPayload };
       }
 
-      const url = paymentAppEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
+      const url = appRecord.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
 
       fetch(url, { ...PostParams, body: JSON.stringify(payload) })
         .then(handleResponse)
@@ -283,13 +283,13 @@ export const PaymentAppReviewModal: FC<PaymentAppReviewModalProps> = ({
       <AnimatedModal
         open={isOpen}
         onCancel={onModalClose}
-        afterClose={() => setPaymentAppItemId(null)}
+        afterClose={() => setAppRecordItemId(null)}
       >
         <div className="bg-white rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden">
           {/* Modal Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white sticky top-0 z-10">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Review Payment App Transaction</h2>
+              <h2 className="text-xl font-bold text-gray-900">Review App Transaction</h2>
               <p className="text-sm text-gray-600">Review and approve your transactions</p>
             </div>
             <button
@@ -310,12 +310,12 @@ export const PaymentAppReviewModal: FC<PaymentAppReviewModalProps> = ({
                   <TransactionContainer
                     isFirst
                     icon={Smartphone}
-                    type="Payment App"
+                    title="App Transaction"
                     headerStyle="from-blue-50 to-indigo-50"
                     iconStyle="text-blue-600"
                   >
                     <TransactionCard
-                      {...paymentAppEntry}
+                      {...appRecord}
                       onApplyPrediction={prediction.hasSuggestion ? () => applyPrediction(false) : undefined}
                       predictionLabel={prediction.hasSuggestion ? formatPredictionScore(prediction.score) : undefined}
                       predictionTitle={prediction.hasSuggestion ? `Confidence: ${prediction.confidence} (${formatPredictionScore(prediction.score)})` : undefined}
@@ -327,15 +327,15 @@ export const PaymentAppReviewModal: FC<PaymentAppReviewModalProps> = ({
                 <div className="w-[65%]">
                   <TransactionContainer
                     icon={FileText}
-                    type="Draft"
+                    title="Location Tags"
                     headerStyle="from-orange-50 to-yellow-50"
                     iconStyle="text-orange-600"
                   >
-                    {draftMatches.map((item) => (
-                      <DraftItem key={item._id} {...{
+                    {locationRecordMatches.map((item) => (
+                      <LocationRecordItem key={item._id} {...{
                         item,
-                        isSelected: selectedDraft?._id === item._id,
-                        setSelected: setSelectedDraft
+                        isSelected: selectedLocationRecord?._id === item._id,
+                        setSelected: setSelectedLocationRecord
                       }} />
                     ))}
                   </TransactionContainer>
@@ -361,11 +361,11 @@ export const PaymentAppReviewModal: FC<PaymentAppReviewModalProps> = ({
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       <tr className="hover:bg-gray-50 transition-colors text-gray-900 text-sm">
-                        <td className={classes.tr}> {dayjs(paymentAppEntry.date).format('DD-MM-YYYY')} </td>
-                        <td className={classes.tr}> {paymentAppEntry.bank} </td>
-                        <td className={classes.tr}> {paymentAppEntry?.utr || '-'} </td>
-                        <td className={`${classes.tr} capitalize`}> {paymentAppEntry?.recipient || '-'} </td>
-                        <td className={`${classes.tr} capitalize`}> {selectedDraft?.location.replaceAll('\n', ', ') || '-'} </td>
+                        <td className={classes.tr}> {dayjs(appRecord.date).format('DD-MM-YYYY')} </td>
+                        <td className={classes.tr}> {appRecord.bank} </td>
+                        <td className={classes.tr}> {appRecord?.utr || '-'} </td>
+                        <td className={`${classes.tr} capitalize`}> {appRecord?.recipient || '-'} </td>
+                        <td className={`${classes.tr} capitalize`}> {selectedLocationRecord?.location.replaceAll('\n', ', ') || '-'} </td>
                       </tr>
                     </tbody>
                   </table>
@@ -377,7 +377,7 @@ export const PaymentAppReviewModal: FC<PaymentAppReviewModalProps> = ({
                     <div className="flex items-center gap-4">
                       <Space.Compact>
                         <PrefixIcon icon={IndianRupee} size={16} strokeWidth={3} />
-                        <Form.Item initialValue={paymentAppEntry.amount} name="amount" noStyle rules={[{ required: true }]}>
+                        <Form.Item initialValue={appRecord.amount} name="amount" noStyle rules={[{ required: true }]}>
                           <InputNumber
                             placeholder="Amount"
                             className={`w-32 ${classes.input}`}

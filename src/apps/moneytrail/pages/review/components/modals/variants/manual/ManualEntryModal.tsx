@@ -18,9 +18,9 @@ import { AnimatedModal } from '../../shared/AnimatedModal';
 const LAST_SOURCE_KEY = 'moneytrail.manualEntry.lastSource';
 
 export const ManualEntryModal: FC<ManualEntryModalProps> = ({
-  draftEntry,
+  locationRecord,
   setVisible,
-  setDraftItem
+  setLocationRecordItem
 }) => {
     const dispatch = useAppDispatch();
     const [isSaving, setIsSaving] = useState(false);
@@ -112,7 +112,7 @@ export const ManualEntryModal: FC<ManualEntryModalProps> = ({
 
     const onAfterClose = () => {
       setVisible(false);
-      setDraftItem(null);
+      setLocationRecordItem(null);
     }
 
     const onComplete = () => {
@@ -130,11 +130,11 @@ export const ManualEntryModal: FC<ManualEntryModalProps> = ({
         description: formState.description,
         parties: selectedGroup?.members.map(m => m.id),
         category: formState.category,
-        draftTxnId: draftEntry?._id,
+        draftTxnId: locationRecord?._id,
         details: Object.entries({
           Source: formState.source,
           Location: formState.location ?? 'N/A',
-          Coordinates: draftEntry?.coordinate ? `https://www.google.com/maps?q=${draftEntry.coordinate}` : 'N/A'
+          Coordinates: locationRecord?.coordinate ? `https://www.google.com/maps?q=${locationRecord.coordinate}` : 'N/A'
         }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
         ...(formState.type === 'Debit' ? { shared: selectedGroup?.sharing } : {})
       };
@@ -216,7 +216,7 @@ export const ManualEntryModal: FC<ManualEntryModalProps> = ({
 
                   <Space.Compact style={{ width: "100%" }}>
                     <PrefixIcon icon={CalendarClock} size={16} strokeWidth={3} />
-                    <Form.Item name="date" noStyle rules={[{ required: true }]} initialValue={dayjs(draftEntry?.dateTime)}>
+                    <Form.Item name="date" noStyle rules={[{ required: true }]} initialValue={dayjs(locationRecord?.dateTime)}>
                       <DatePicker
                         showTime
                         style={{ width: "100%" }}
@@ -291,7 +291,7 @@ export const ManualEntryModal: FC<ManualEntryModalProps> = ({
 
                   <Space.Compact style={{ width: "100%" }}>
                     <PrefixIcon icon={MapPin} size={16} strokeWidth={3} />
-                    <Form.Item name="location" initialValue={draftEntry?.location.replaceAll('\n', ', ')} noStyle rules={[{ required: true }]}>
+                    <Form.Item name="location" initialValue={locationRecord?.location.replaceAll('\n', ', ')} noStyle rules={[{ required: true }]}>
                       <Input
                         style={{ width: "100%" }}
                         placeholder="Location"

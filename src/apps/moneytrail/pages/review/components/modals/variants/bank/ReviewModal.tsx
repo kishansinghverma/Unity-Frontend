@@ -15,8 +15,8 @@ import {
   useDescriptionsQuery,
   useGroupsQuery,
 } from '../../../../../../store/reviewSlice';
-import { DraftEntry, PaymentAppEntry, SplitwiseCategory } from '../../../../engine/contracts/models';
-import { BankReviewModalProps, PrefixIconProps } from '../../../../engine/contracts/props';
+import { LocationRecord, AppRecord, SplitwiseCategory } from '../../../../engine/contracts/models';
+import { BankRecordReviewModalProps, PrefixIconProps } from '../../../../engine/contracts/props';
 import { ReviewModalFormState } from '../../../../engine/contracts/states';
 import {
   buildPredictionSignature,
@@ -25,19 +25,19 @@ import {
   predictReviewFields,
   upsertPredictionSampleInStorage,
 } from '../../../../engine/prediction';
-import { getDraftMatches, getPaymentAppMatches } from '../../../../engine/utils';
+import { getLocationRecordMatches, getAppRecordMatches } from '../../../../engine/utils';
 import { CustomSelect, SelectWithAdd } from '../../../shared/Common';
 import { AnimatedModal } from '../../shared/AnimatedModal';
-import { DraftItem } from '../../shared/DraftItem';
+import { LocationRecordItem } from '../../shared/LocationRecordItem';
 import { TransactionContainer } from '../../shared/TransactionContainer';
-import { PaymentAppItem } from './PaymentAppItem';
+import { AppRecordItem } from './AppRecordItem';
 import TransactionCard from './TransactionCard';
 
-export const BankReviewModal: FC<BankReviewModalProps> = ({
+export const BankReviewModal: FC<BankRecordReviewModalProps> = ({
   bankItemId,
-  bankEntries,
-  paymentAppEntries,
-  draftEntries,
+  bankRecords,
+  appRecords,
+  locationRecords,
   setBankItemId
 }) => {
   const dispatch = useAppDispatch();
@@ -47,29 +47,29 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
   const categories = useCategoriesQuery();
   const [predictionSamples, setPredictionSamples] = useState(() => loadPredictionSamplesFromStorage());
 
-  const [selectedPaymentApp, setSelectedPaymentApp] = useState<Nullable<WithId<PaymentAppEntry>>>(null);
-  const [selectedDraft, setSelectedDraft] = useState<Nullable<WithId<DraftEntry>>>(null);
+  const [selectedAppRecord, setSelectedAppRecord] = useState<Nullable<WithId<AppRecord>>>(null);
+  const [selectedLocationRecord, setSelectedLocationRecord] = useState<Nullable<WithId<LocationRecord>>>(null);
   const [isOpen, setIsOpen] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  const bankEntry = bankEntries.find(entry => entry._id === bankItemId)!;
-  const paymentAppMatches = getPaymentAppMatches(bankEntry, paymentAppEntries);
-  const draftMatches = getDraftMatches(bankEntry, selectedPaymentApp, draftEntries);
-  const isCreditTransaction = bankEntry.type === 'Credit';
+  const bankRecord = bankRecords.find(entry => entry._id === bankItemId)!;
+  const appRecordMatches = getAppRecordMatches(bankRecord, appRecords);
+  const locationRecordMatches = getLocationRecordMatches(bankRecord, selectedAppRecord, locationRecords);
+  const isCreditTransaction = bankRecord.type === 'Credit';
 
   const [form] = Form.useForm<ReviewModalFormState>();
 
   const predictionInput = useMemo(() => ({
     source: 'bank_modal' as const,
     bank: {
-      description: bankEntry.description,
+      description: bankRecord.description,
     },
-    paymentApp: selectedPaymentApp ? {
-      recipient: selectedPaymentApp.recipient,
+    paymentApp: selectedAppRecord ? {
+      recipient: selectedAppRecord.recipient,
     } : undefined,
   }), [
-    bankEntry.description,
-    selectedPaymentApp,
+    bankRecord.description,
+    selectedAppRecord,
   ]);
 
   const prediction = useMemo(
@@ -130,19 +130,19 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
   const onComplete = () => {
     notify.success({ message: "Saved Successfully", description: "Expense Created in Splitwise!" });
 
-    dispatch(reviewApi.util.updateQueryData('bankEntry', undefined, (data) => {
-      data.forEach(entry => { if (entry._id === bankEntry._id) entry.processed = true });
+    dispatch(reviewApi.util.updateQueryData('bankRecord', undefined, (data) => {
+      data.forEach(entry => { if (entry._id === bankRecord._id) entry.processed = true });
     }));
 
-    if (selectedPaymentApp?._id) {
-      dispatch(reviewApi.util.updateQueryData('paymentAppEntry', undefined, (data) => {
-        data.forEach(entry => { if (entry._id === selectedPaymentApp._id) entry.processed = true });
+    if (selectedAppRecord?._id) {
+      dispatch(reviewApi.util.updateQueryData('appRecord', undefined, (data) => {
+        data.forEach(entry => { if (entry._id === selectedAppRecord._id) entry.processed = true });
       }));
     }
 
-    if (selectedDraft?._id) {
-      dispatch(reviewApi.util.updateQueryData('draftEntry', undefined, (data) => {
-        data.forEach(entry => { if (entry._id === selectedDraft._id) entry.processed = true });
+    if (selectedLocationRecord?._id) {
+      dispatch(reviewApi.util.updateQueryData('locationRecord', undefined, (data) => {
+        data.forEach(entry => { if (entry._id === selectedLocationRecord._id) entry.processed = true });
       }));
     }
 
@@ -153,10 +153,10 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
     const payload = {
       source: 'bank_modal',
       bank: {
-        description: bankEntry.description,
+        description: bankRecord.description,
       },
-      paymentApp: selectedPaymentApp ? {
-        recipient: selectedPaymentApp.recipient,
+      paymentApp: selectedAppRecord ? {
+        recipient: selectedAppRecord.recipient,
       } : undefined,
       output: {
         description: formState.description,
@@ -180,26 +180,26 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
     let payload = {
       group_id: selectedGroup?.id,
       cost: formState.amount,
-      date: bankEntry.date,
+      date: bankRecord.date,
       description: formState.description,
       parties: selectedGroup?.members.map(m => m.id),
       category: formState.category,
-      bankTxnId: bankEntry?._id,
-      phonePeTxnId: selectedPaymentApp?._id,
-      draftTxnId: selectedDraft?._id,
+      bankTxnId: bankRecord?._id,
+      phonePeTxnId: selectedAppRecord?._id,
+      draftTxnId: selectedLocationRecord?._id,
     };
 
-    if (bankEntry.type === 'Debit') {
+    if (bankRecord.type === 'Debit') {
       const debitPayload = {
         shared: selectedGroup?.sharing,
         details: Object.entries({
-          Bank: bankEntry.bank ?? StringUtils.empty,
-          Description: bankEntry.description ?? StringUtils.empty,
-          UTR: selectedPaymentApp?.utr ?? "N/A",
-          TransactionNo: selectedPaymentApp?.transactionId ?? 'N/A',
-          Recipient: selectedPaymentApp?.recipient ?? 'N/A',
-          Location: selectedDraft?.location.replaceAll('\n', ', ') ?? 'N/A',
-          Coordinates: selectedDraft?.coordinate ? `https://www.google.com/maps?q=${selectedDraft.coordinate}` : 'N/A'
+          Bank: bankRecord.bank ?? StringUtils.empty,
+          Description: bankRecord.description ?? StringUtils.empty,
+          UTR: selectedAppRecord?.utr ?? "N/A",
+          TransactionNo: selectedAppRecord?.transactionId ?? 'N/A',
+          Recipient: selectedAppRecord?.recipient ?? 'N/A',
+          Location: selectedLocationRecord?.location.replaceAll('\n', ', ') ?? 'N/A',
+          Coordinates: selectedLocationRecord?.coordinate ? `https://www.google.com/maps?q=${selectedLocationRecord.coordinate}` : 'N/A'
         }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
       };
 
@@ -208,18 +208,18 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
     else {
       const creditPayload = {
         details: Object.entries({
-          Bank: bankEntry.bank ?? StringUtils.empty,
-          Description: bankEntry.description ?? StringUtils.empty,
-          UTR: selectedPaymentApp?.utr ?? 'N/A',
-          TransactionNo: selectedPaymentApp?.transactionId ?? 'N/A',
-          Payer: selectedPaymentApp?.recipient ?? 'N/A'
+          Bank: bankRecord.bank ?? StringUtils.empty,
+          Description: bankRecord.description ?? StringUtils.empty,
+          UTR: selectedAppRecord?.utr ?? 'N/A',
+          TransactionNo: selectedAppRecord?.transactionId ?? 'N/A',
+          Payer: selectedAppRecord?.recipient ?? 'N/A'
         }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n')
       }
 
       payload = { ...payload, ...creditPayload };
     }
 
-    const url = bankEntry.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
+    const url = bankRecord.type === 'Credit' ? Routes.SettleExpense : Routes.FinalizeExpense;
 
     fetch(url, { ...PostParams, body: JSON.stringify(payload) })
       .then(handleResponse)
@@ -327,12 +327,12 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
               <TransactionContainer
                 isFirst
                 icon={CreditCard}
-                type="Bank"
+                title="Bank Transaction"
                 headerStyle="from-blue-50 to-indigo-50"
                 iconStyle="text-blue-600"
               >
                 <TransactionCard
-                  {...bankEntry}
+                  {...bankRecord}
                   onApplyPrediction={prediction.hasSuggestion ? () => applyPrediction(false) : undefined}
                   predictionLabel={prediction.hasSuggestion ? formatPredictionScore(prediction.score) : undefined}
                   predictionTitle={prediction.hasSuggestion ? `Confidence: ${prediction.confidence} (${formatPredictionScore(prediction.score)})` : undefined}
@@ -342,30 +342,30 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
 
               <TransactionContainer
                 icon={Smartphone}
-                type="Payment App"
+                title="App Transactions"
                 headerStyle="from-purple-50 to-pink-50"
                 iconStyle="text-purple-600"
               >
-                {paymentAppMatches.map((item) => (
-                  <PaymentAppItem key={item._id} {...{
+                {appRecordMatches.map((item) => (
+                  <AppRecordItem key={item._id} {...{
                     item,
-                    isSelected: selectedPaymentApp?._id === item._id,
-                    setSelected: setSelectedPaymentApp
+                    isSelected: selectedAppRecord?._id === item._id,
+                    setSelected: setSelectedAppRecord
                   }} />
                 ))}
               </TransactionContainer>
 
               <TransactionContainer
                 icon={FileText}
-                type="Draft"
+                title="Location Tags"
                 headerStyle="from-orange-50 to-yellow-50"
                 iconStyle="text-orange-600"
               >
-                {draftMatches.map((item) => (
-                  <DraftItem key={item._id} {...{
+                {locationRecordMatches.map((item) => (
+                  <LocationRecordItem key={item._id} {...{
                     item,
-                    isSelected: selectedDraft?._id === item._id,
-                    setSelected: setSelectedDraft
+                    isSelected: selectedLocationRecord?._id === item._id,
+                    setSelected: setSelectedLocationRecord
                   }} />
                 ))}
               </TransactionContainer>
@@ -391,12 +391,12 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     <tr className="hover:bg-gray-50 transition-colors text-gray-900 text-sm">
-                      <td className={classes.tr}> {dayjs(bankEntry.date).format('DD-MM-YYYY')} </td>
-                      <td className={classes.tr}> {bankEntry.bank} </td>
-                      <td className={`${classes.tr} capitalize`}> {bankEntry.description} </td>
-                      <td className={classes.tr}> {selectedPaymentApp?.utr || '-'} </td>
-                      <td className={`${classes.tr} capitalize`}> {selectedPaymentApp?.recipient || '-'} </td>
-                      <td className={`${classes.tr} capitalize`}> {selectedDraft?.location.replaceAll('\n', ', ') || '-'} </td>
+                      <td className={classes.tr}> {dayjs(bankRecord.date).format('DD-MM-YYYY')} </td>
+                      <td className={classes.tr}> {bankRecord.bank} </td>
+                      <td className={`${classes.tr} capitalize`}> {bankRecord.description} </td>
+                      <td className={classes.tr}> {selectedAppRecord?.utr || '-'} </td>
+                      <td className={`${classes.tr} capitalize`}> {selectedAppRecord?.recipient || '-'} </td>
+                      <td className={`${classes.tr} capitalize`}> {selectedLocationRecord?.location.replaceAll('\n', ', ') || '-'} </td>
                     </tr>
                   </tbody>
                 </table>
@@ -408,7 +408,7 @@ export const BankReviewModal: FC<BankReviewModalProps> = ({
                   <div className="flex items-center gap-4">
                     <Space.Compact>
                       <PrefixIcon icon={IndianRupee} size={16} strokeWidth={3} />
-                      <Form.Item initialValue={bankEntry.amount} name="amount" noStyle rules={[{ required: true }]}>
+                      <Form.Item initialValue={bankRecord.amount} name="amount" noStyle rules={[{ required: true }]}>
                         <InputNumber
                           placeholder="Amount"
                           className={`w-32 ${classes.input}`}

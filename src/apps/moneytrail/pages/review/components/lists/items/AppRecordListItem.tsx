@@ -1,16 +1,16 @@
 import dayjs from 'dayjs';
 import { Calendar, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
-import { PaymentAppListItemProps } from '../../../engine/contracts/props';
+import { AppRecordListItemProps } from '../../../engine/contracts/props';
 import { BankIcon } from '../../shared/Common';
 import { ProcessedActionButton, ProcessedMarker } from './shared/ProcessedState';
 import { SwipeableContent } from './shared/SwipeableContent';
 
-const PaymentAppListItemFC: FC<PaymentAppListItemProps> = ({
+const AppRecordListItemFC: FC<AppRecordListItemProps> = ({
   isOpen,
   item,
   onOpen,
-  setPaymentAppItemId,
+  setAppRecordItemId,
   setProcessed,
 }) => {
   const markProcessed = (id: string) => {
@@ -25,7 +25,7 @@ const PaymentAppListItemFC: FC<PaymentAppListItemProps> = ({
         id={item._id}
         isOpen={isOpen}
         onOpen={onOpen}
-        onClick={() => setPaymentAppItemId(item._id)}
+        onClick={() => setAppRecordItemId(item._id)}
       >
         {item.processed && <ProcessedMarker />}
         <div className="flex items-center flex-shrink-0">
@@ -50,4 +50,4 @@ const PaymentAppListItemFC: FC<PaymentAppListItemProps> = ({
   );
 };
 
-export const PaymentAppListItem = memo(PaymentAppListItemFC);
+export const AppRecordListItem = memo(AppRecordListItemFC);

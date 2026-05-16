@@ -5,7 +5,7 @@ export const Routes = {
     Requeue: "/api/emandi/requeue",
     Queued: "/api/emandi/queued",
     Delete: "/api/emandi/entry",
-    LocationTagExpenses: "/api/expenses",
+    LocationRecordExpenses: "/api/expenses",
     ExpenseLastRefinement: "/api/expenses/lastrefinement",
     ExpensePredictions: "/api/expenses/predictions",
     ExpenseDescriptions: "/api/expenses/descriptions",
@@ -18,11 +18,11 @@ export const Routes = {
     SplitWiseCategories: "/api/splitwise/categories",
     SplitWiseGroup: "/api/splitwise/group",
     SplitWiseExpenses: "/api/splitwise/transactions",
-    BankStatement: "/api/expenses/statement/bank",
-    PaymentAppStatement: "/api/expenses/statement/phonepe",
-    ProcessBank: "/api/expenses/process/bank",
-    ProcessPaymentApp: "/api/expenses/process/phonepe",
-    ProcessLocationTag: "/api/expenses/process/draft",
+    BankRecordStatement: "/api/expenses/statement/bank",
+    AppRecordStatement: "/api/expenses/statement/phonepe",
+    ProcessBankRecord: "/api/expenses/process/bank",
+    ProcessAppRecord: "/api/expenses/process/phonepe",
+    ProcessLocationRecord: "/api/expenses/process/draft",
     Distance: `https://dev.virtualearth.net/REST/V1/Routes/Driving?o=json&wp.0=sadabad&key=${import.meta.env.VITE_BING_MAPS_KEY}&wp.1`
 }
 

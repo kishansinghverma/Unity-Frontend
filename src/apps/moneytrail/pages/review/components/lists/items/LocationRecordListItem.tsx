@@ -2,12 +2,12 @@ import dayjs from 'dayjs';
 import { Calendar, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
 import { StringUtils } from '../../../../../../../engine/helpers/stringHelper';
-import { DraftListItemProps } from '../../../engine/contracts/props';
+import { LocationRecordListItemProps } from '../../../engine/contracts/props';
 import { AlphabetIcon } from '../../shared/Common';
 import { ProcessedActionButton, ProcessedMarker } from './shared/ProcessedState';
 import { SwipeableContent } from './shared/SwipeableContent';
 
-const DraftListItemFC: FC<DraftListItemProps> = ({ isOpen, item, onOpen, setDraftItem, setProcessed }) => {
+const LocationListItemFC: FC<LocationRecordListItemProps> = ({ isOpen, item, onOpen, setLocationRecordItem, setProcessed }) => {
   const location = StringUtils.isNullOrEmpty(item.location) ? 'Unidentified Location' : item.location;
 
   const markProcessed = (id: string) => {
@@ -22,7 +22,7 @@ const DraftListItemFC: FC<DraftListItemProps> = ({ isOpen, item, onOpen, setDraf
         id={item._id}
         isOpen={isOpen}
         onOpen={onOpen}
-        onClick={() => setDraftItem(item)}
+        onClick={() => setLocationRecordItem(item)}
       >
         {item.processed && <ProcessedMarker />}
         <a
@@ -53,4 +53,4 @@ const DraftListItemFC: FC<DraftListItemProps> = ({ isOpen, item, onOpen, setDraf
   );
 };
 
-export const DraftListItem = memo(DraftListItemFC);
+export const LocationRecordListItem = memo(LocationListItemFC);

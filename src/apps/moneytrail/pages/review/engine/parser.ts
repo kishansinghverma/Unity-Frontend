@@ -3,7 +3,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import * as pdfjsLib from "pdfjs-dist";
 import * as XLSX from 'xlsx';
 import { StringUtils } from "../../../../../engine/helpers/stringHelper";
-import { BankEntry, PaymentAppEntry } from "./contracts/models";
+import { BankRecord, AppRecord } from "./contracts/models";
 import { getHash } from "./utils";
 
 dayjs.extend(customParseFormat);
@@ -41,8 +41,9 @@ const getStringAt = (sheet: XLSX.WorkSheet, cellAddress: string): string | null 
     return String(data).trim();
 };
 
+// HDFC Statement Parser
 const parseHdfcStatement = (sheet: XLSX.WorkSheet) => {
-    const transactions: Array<BankEntry> = [];
+    const transactions: Array<BankRecord> = [];
     const range = XLSX.utils.decode_range(sheet["!ref"] || "");
     if (!range) throw new Error('Empty Worksheet Found!');
 
@@ -63,8 +64,9 @@ const parseHdfcStatement = (sheet: XLSX.WorkSheet) => {
     return transactions;
 }
 
+// Paytm Statement Parser
 const parsePaytmStatement = (sheet: XLSX.WorkSheet) => {
-    const transactions: Array<PaymentAppEntry> = [];
+    const transactions: Array<AppRecord> = [];
     const range = XLSX.utils.decode_range(sheet["!ref"] || "");
     if (!range) throw new Error('Empty Worksheet Found!');
     const meta = TransactionMetaData;
@@ -92,8 +94,9 @@ const parsePaytmStatement = (sheet: XLSX.WorkSheet) => {
     return transactions;
 }
 
+// SBI Statement Parser
 const parseSbiStatement = (sheet: XLSX.WorkSheet) => {
-    const transactions: Array<BankEntry> = [];
+    const transactions: Array<BankRecord> = [];
     const range = XLSX.utils.decode_range(sheet["!ref"] || "");
     if (!range) throw new Error('Empty Worksheet Found!');
 
@@ -132,9 +135,10 @@ export const extractDataFromExcel = async (file: File) => {
     else throw Error("Unsupported Excel File Provided.")
 }
 
-export const parsePaymentAppStatement = async (file: File) => {
+// PhonePe Statement Parser
+export const parsePhonePeStatement = async (file: File) => {
     let tokens: Array<string> = [];
-    const transactions: Array<PaymentAppEntry> = [];
+    const transactions: Array<AppRecord> = [];
     const meta = TransactionMetaData;
     const fileBuffer = await file.arrayBuffer();
     const document = await pdfjsLib.getDocument({ data: fileBuffer }).promise;
@@ -146,7 +150,7 @@ export const parsePaymentAppStatement = async (file: File) => {
     }
 
     if (!tokens[0].includes('Transaction Statement'))
-        throw new pdfjsLib.InvalidPDFException('Invalid Payment App Statement.');
+        throw new pdfjsLib.InvalidPDFException('Invalid PhonePe Statement.');
 
     tokens.forEach((item, index) => {
         if (item.includes('Transaction ID')) {
@@ -162,7 +166,7 @@ export const parsePaymentAppStatement = async (file: File) => {
 
             const transaction = {
                 date: dayjs(`${date} - ${time}`, 'MMM DD, YYYY - hh:mm A').toDate(),
-                recipient: `Payment App - ${recipient.replace('Paid to', '').replace('Received from', '').replace('Bill paid -', '').trim()}`,
+                recipient: `PhonePe - ${recipient.replace('Paid to', '').replace('Received from', '').replace('Bill paid -', '').trim()}`,
                 transactionId: tokens[index].split(':')[1].trim(),
                 utr: tokens[index + 1].split(':')[1].trim(),
                 bank: meta[tokens[index + 2].trim()]?.Account ?? 'Unknown',
@@ -185,7 +189,7 @@ export const extractDataFromHtml = async (file: File) => {
     const virtualDom = parser.parseFromString(htmlContents, 'text/html');
     const rows = virtualDom.querySelectorAll('tr');
 
-    const transactions: BankEntry[] = [];
+    const transactions: BankRecord[] = [];
 
     const isValidDate = (dateString: string) => (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString));
     const isValidType = (type: string) => (type === "Debit" || type === "Credit");
@@ -234,7 +238,7 @@ export const extractDataFromCsv = async (file: File) => {
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-    const transactions: BankEntry[] = [];
+    const transactions: BankRecord[] = [];
 
     rows.forEach(row => {
         const rowData = row as Array<any>;

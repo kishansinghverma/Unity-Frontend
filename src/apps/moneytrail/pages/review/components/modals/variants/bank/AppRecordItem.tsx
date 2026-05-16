@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { CheckCircle, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
 import { getFormattedAmount } from '../../../../../../../../engine/helpers/numberHelper';
-import { PaymentAppItemProps } from '../../../../engine/contracts/props';
+import { AppRecordItemProps } from '../../../../engine/contracts/props';
 import { BankIcon } from '../../../shared/Common';
 
 const styles = {
@@ -34,7 +34,7 @@ const styles = {
   }
 };
 
-const PaymentAppItemFC: FC<PaymentAppItemProps> = ({
+const AppRecordItemFC: FC<AppRecordItemProps> = ({
   item,
   isSelected,
   setSelected
@@ -72,4 +72,4 @@ const PaymentAppItemFC: FC<PaymentAppItemProps> = ({
     )
   };
 
-export const PaymentAppItem = memo(PaymentAppItemFC);
+export const AppRecordItem = memo(AppRecordItemFC);

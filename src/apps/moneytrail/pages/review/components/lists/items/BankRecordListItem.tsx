@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
 import { Calendar } from 'lucide-react';
 import { FC, memo } from 'react';
-import { BankListItemProps } from '../../../engine/contracts/props';
+import { BankRecordListItemProps } from '../../../engine/contracts/props';
 import { BankIcon } from '../../shared/Common';
 import { ProcessedActionButton, ProcessedMarker } from './shared/ProcessedState';
 import { SwipeableContent } from './shared/SwipeableContent';
 
-const BankListItemFC: FC<BankListItemProps> = ({ isOpen, item, onOpen, setBankItemId, setProcessed }) => {
+const BankRecordListItemFC: FC<BankRecordListItemProps> = ({ isOpen, item, onOpen, setBankItemId, setProcessed }) => {
   const markProcessed = (id: string) => {
     setProcessed(id);
     onOpen(null);
@@ -42,4 +42,4 @@ const BankListItemFC: FC<BankListItemProps> = ({ isOpen, item, onOpen, setBankIt
   );
 };
 
-export const BankListItem = memo(BankListItemFC);
+export const BankRecordListItem = memo(BankRecordListItemFC);

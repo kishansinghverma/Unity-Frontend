@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { normalizeToMinute } from "../../../../../engine/helpers/dateTimeHelper";
 import { Nullable, WithId } from "../../../../../engine/models/types";
-import { BankEntry, PaymentAppEntry, DraftEntry } from "./contracts/models";
+import { BankRecord, AppRecord, LocationRecord } from "./contracts/models";
 
 const colorPair = [
     'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700/60',
@@ -42,24 +42,24 @@ export const getColorPair = (seed: string) => {
     return colorPair[index];
 };
 
-export const getPaymentAppMatches = (bankEntry: WithId<BankEntry>, paymentAppEntries: WithId<PaymentAppEntry>[]) => {
-    return paymentAppEntries.filter(entry =>
-        entry.amount === bankEntry?.amount && dayjs(bankEntry.date).format('DD/MMM') === dayjs(entry.date).format('DD/MMM'));
+export const getAppRecordMatches = (bankRecord: WithId<BankRecord>, appRecords: WithId<AppRecord>[]) => {
+    return appRecords.filter(entry =>
+        entry.amount === bankRecord?.amount && dayjs(bankRecord.date).format('DD/MMM') === dayjs(entry.date).format('DD/MMM'));
 }
 
-export const getDraftMatches = (bankEntry: Nullable<WithId<BankEntry>>, paymentAppEntry: Nullable<WithId<PaymentAppEntry>>, draftEntries: WithId<DraftEntry>[]) => {
-    if (paymentAppEntry?._id) {
-        const paymentAppTimeNormalized = normalizeToMinute(paymentAppEntry?.date)
-        const draftEntry = draftEntries.find(t => paymentAppTimeNormalized === normalizeToMinute(t.dateTime));
-        if (draftEntry) return [draftEntry];
+export const getLocationRecordMatches = (bankRecord: Nullable<WithId<BankRecord>>, appRecord: Nullable<WithId<AppRecord>>, locationRecords: WithId<LocationRecord>[]) => {
+    if (appRecord?._id) {
+        const appRecordTimeNormalized = normalizeToMinute(appRecord?.date)
+        const locationRecord = locationRecords.find(t => appRecordTimeNormalized === normalizeToMinute(t.dateTime));
+        if (locationRecord) return [locationRecord];
 
         const delta = (5 * 60 * 1000);
-        const upperDelta = paymentAppTimeNormalized + delta;
-        const lowerDelta = paymentAppTimeNormalized - delta;
-        return draftEntries.filter(t => normalizeToMinute(t.dateTime) >= lowerDelta && normalizeToMinute(t.dateTime) <= upperDelta);
+        const upperDelta = appRecordTimeNormalized + delta;
+        const lowerDelta = appRecordTimeNormalized - delta;
+        return locationRecords.filter(t => normalizeToMinute(t.dateTime) >= lowerDelta && normalizeToMinute(t.dateTime) <= upperDelta);
     }
     else {
-        return draftEntries.filter(t => dayjs(t.dateTime).isSame(bankEntry?.date, 'day'));
+        return locationRecords.filter(t => dayjs(t.dateTime).isSame(bankRecord?.date, 'day'));
     }
 }
 

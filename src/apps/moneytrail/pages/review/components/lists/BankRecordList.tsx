@@ -7,12 +7,12 @@ import { handleResponse } from "../../../../../../engine/helpers/httpHelper";
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { reviewApi } from "../../../../store/reviewSlice";
-import { BankListProps } from "../../engine/contracts/props";
+import { BankRecordListProps } from "../../engine/contracts/props";
 import { ListHeader } from "../layouts/Headers";
 import { SkeletonItem, EmptyList } from "../shared/Common";
-import { BankListItem } from "./items/BankListItem";
+import { BankRecordListItem } from "./items/BankRecordListItem";
 
-const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
+const BankRecordListFC: FC<BankRecordListProps> = ({ isLoading, items, setBankItemId }) => {
   const dispatch = useAppDispatch();
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);
@@ -35,7 +35,7 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
     };
   }, [handleClickOutside]);
   const setProcessed = useCallback((id: string) => {
-    const response = fetch(`${Routes.ProcessBank}/${id}`, PostParams).then(handleResponse);
+    const response = fetch(`${Routes.ProcessBankRecord}/${id}`, PostParams).then(handleResponse);
 
     notify.promise(response, Constants.Notifications.Request, {
       pending: 'Marking as Processed...',
@@ -43,7 +43,7 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
     });
 
     response.then(() => {
-      dispatch(reviewApi.util.updateQueryData('bankEntry', undefined, (data) => {
+      dispatch(reviewApi.util.updateQueryData('bankRecord', undefined, (data) => {
         data.forEach(entry => { if (entry._id === id) entry.processed = true });
       }));
     });
@@ -61,8 +61,8 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
   return (
     <div ref={listContainerRef} className="w-full h-fit max-h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border">
       <ListHeader {...{
-        title: "Bank Entries",
-        subtitle: "Aggregated bank transactions",
+        title: "Bank Statement",
+        subtitle: "Aggregated Bank Transactions",
         Icon: Building2,
         className: 'from-violet-500 to-indigo-600',
         showProcessed,
@@ -86,7 +86,7 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
                       transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut", layout: { duration: 0.2 } }}
                       className="border-b border-gray-200 last:border-b-0 relative overflow-hidden origin-left"
                     >
-                      <BankListItem
+                      <BankRecordListItem
                         item={item}
                         setProcessed={setProcessed}
                         setBankItemId={setBankItemId}
@@ -118,4 +118,4 @@ const BankListFC: FC<BankListProps> = ({ isLoading, items, setBankItemId }) => {
   );
 };
 
-export const BankList = memo(BankListFC);
+export const BankRecordList = memo(BankRecordListFC);

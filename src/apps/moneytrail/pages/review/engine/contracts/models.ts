@@ -1,4 +1,4 @@
-export type BankEntry = {
+export type BankRecord = {
   date: Date,
   description: string,
   amount: number,
@@ -7,7 +7,7 @@ export type BankEntry = {
   bank: "SBI" | "HDFC" | "SBI CC" | "ICICI CC"
 }
 
-export type PaymentAppEntry = {
+export type AppRecord = {
   date: Date,
   recipient: string,
   transactionId: string,
@@ -19,7 +19,7 @@ export type PaymentAppEntry = {
 }
 
 
-export type DraftEntry = {
+export type LocationRecord = {
     dateTime: string,
     location: string,
     coordinate: string,

@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, memo, useState } from 'react';
 import { Nullable } from '../../../../../../engine/models/types';
-import { BankSectionProps } from '../../engine/contracts/props';
-import { BankList } from '../lists/BankList';
+import { BankRecordSectionProps } from '../../engine/contracts/props';
+import { BankRecordList } from '../lists/BankRecordList';
 
 const BankReviewModal = lazy(() =>
   import('../modals/variants/bank/ReviewModal').then((module) => ({
@@ -9,18 +9,18 @@ const BankReviewModal = lazy(() =>
   })),
 );
 
-const BankSectionComponent: React.FC<BankSectionProps> = ({
-  bankEntries,
-  paymentAppEntries,
-  draftEntries,
+const BankRecordSectionComponent: React.FC<BankRecordSectionProps> = ({
+  bankRecords,
+  appRecords,
+  locationRecords,
   isLoading,
 }) => {
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
 
   return (
     <div className="w-full min-w-0 h-full flex">
-      <BankList
-        items={bankEntries}
+      <BankRecordList
+        items={bankRecords}
         isLoading={isLoading}
         setBankItemId={setBankItemId}
       />
@@ -28,9 +28,9 @@ const BankSectionComponent: React.FC<BankSectionProps> = ({
         <Suspense fallback={null}>
           <BankReviewModal
             key={`bank-${bankItemId}`}
-            bankEntries={bankEntries}
-            paymentAppEntries={paymentAppEntries}
-            draftEntries={draftEntries}
+            bankRecords={bankRecords}
+            appRecords={appRecords}
+            locationRecords={locationRecords}
             bankItemId={bankItemId}
             setBankItemId={setBankItemId}
           />
@@ -40,4 +40,4 @@ const BankSectionComponent: React.FC<BankSectionProps> = ({
   );
 };
 
-export const BankSection = memo(BankSectionComponent);
+export const BankRecordSection = memo(BankRecordSectionComponent);

@@ -6,9 +6,9 @@ import { PostParams, Routes } from "../../../../../../engine/constant";
 import { handleJsonResponse } from "../../../../../../engine/helpers/httpHelper";
 import { StringUtils } from "../../../../../../engine/helpers/stringHelper";
 import { NotificationMessages, notify } from "../../../../../../engine/services/notificationService";
-import { BankEntry, PaymentAppEntry } from "../../engine/contracts/models";
+import { BankRecord, AppRecord } from "../../engine/contracts/models";
 import { BankIconProps, AlphabetIconProps, CustomSelectProps, SelectWithAddProps } from "../../engine/contracts/props";
-import { parsePaymentAppStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../../engine/parser";
+import { parsePhonePeStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../../engine/parser";
 import { getColorPair, getIconBackground } from "../../engine/utils";
 import { BankLogo } from "./Resources";
 
@@ -169,13 +169,13 @@ export const SelectWithAdd: FC<SelectWithAddProps> = ({
 export const UploadStatement: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const uploadBankStatement = async (transactions: Array<BankEntry>) => {
-    return fetch(`${Routes.BankStatement}`, { ...PostParams, body: JSON.stringify(transactions) })
+  const uploadBankStatement = async (transactions: Array<BankRecord>) => {
+    return fetch(`${Routes.BankRecordStatement}`, { ...PostParams, body: JSON.stringify(transactions) })
       .then(handleJsonResponse);
   }
 
-  const uploadPaymentAppStatement = async (transactions: Array<PaymentAppEntry>) => {
-    return fetch(`${Routes.PaymentAppStatement}`, { ...PostParams, body: JSON.stringify(transactions) })
+  const uploadAppRecordStatement = async (transactions: Array<AppRecord>) => {
+    return fetch(`${Routes.AppRecordStatement}`, { ...PostParams, body: JSON.stringify(transactions) })
       .then(handleJsonResponse);
   }
 
@@ -192,16 +192,16 @@ export const UploadStatement: React.FC = () => {
     }
 
     if (file.type === 'application/pdf') {
-      const response = parsePaymentAppStatement(file).then(uploadPaymentAppStatement)
+      const response = parsePhonePeStatement(file).then(uploadAppRecordStatement)
       notify.promise(response, notificationMessages, {
-        pending: 'Uploading Payment App Statement...',
-        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Payment App Records.`)
+        pending: 'Uploading PhonePe Statement...',
+        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} AppRecord entries.`)
       });
     }
     else if (file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       const response = extractDataFromExcel(file).then(res => {
         return (res.length > 0 && 'transactionId' in res[0]) ?
-          uploadPaymentAppStatement(res as PaymentAppEntry[]) : uploadBankStatement(res as BankEntry[]);
+          uploadAppRecordStatement(res as AppRecord[]) : uploadBankStatement(res as BankRecord[]);
       });
       notify.promise(response, notificationMessages, {
         pending: 'Uploading Excel Sheet...',

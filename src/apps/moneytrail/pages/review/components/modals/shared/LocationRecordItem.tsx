@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { CheckCircle, Clock } from 'lucide-react';
 import { FC, memo } from 'react';
-import { DraftItemProps } from '../../../engine/contracts/props';
+import { LocationRecordItemProps } from '../../../engine/contracts/props';
 import { AlphabetIcon } from '../../shared/Common';
 
 const styles = {
@@ -29,7 +29,7 @@ const styles = {
     },
 };
 
-const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
+const LocationRecordItemFC: FC<LocationRecordItemProps> = ({ item, isSelected, setSelected }) => {
     const singleLineLocation = item.location.split('\n').join(', ');
     const firstLetter = singleLineLocation.charAt(0).toUpperCase() || '?';
 
@@ -67,4 +67,4 @@ const DraftItemFC: FC<DraftItemProps> = ({ item, isSelected, setSelected }) => {
     );
 };
 
-export const DraftItem = memo(DraftItemFC);
+export const LocationRecordItem = memo(LocationRecordItemFC);

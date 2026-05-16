@@ -4,13 +4,13 @@ import React, { memo } from "react";
 
 export const TransactionContainerFC: React.FC<PropsWithChildren<{
   icon: ElementType,
-  type: string,
+  title: string,
   headerStyle: string,
   iconStyle: string,
   isFirst?: boolean
 }>> = ({
   icon: Icon,
-  type,
+  title,
   children,
   headerStyle,
   iconStyle,
@@ -24,7 +24,7 @@ export const TransactionContainerFC: React.FC<PropsWithChildren<{
         <div className={`px-4 py-3 border-b border-gray-200 bg-gradient-to-r ${headerStyle}`}>
           <div className="flex items-center gap-2">
             <Icon className={`w-4 h-4 ${iconStyle}`} />
-            <h2 className="text-sm font-semibold text-gray-800">{type} Transactions</h2>
+            <h2 className="text-sm font-semibold text-gray-800">{title}</h2>
           </div>
         </div>
 
@@ -32,8 +32,7 @@ export const TransactionContainerFC: React.FC<PropsWithChildren<{
           <div className="p-4 flex-1 flex items-center justify-center">
             <div className="text-center">
               <FileText className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-              <p className="text-gray-500 font-medium text-sm">No Transaction Identified.</p>
-              <p className="text-xs text-gray-400 mt-1">{type} transactions will appear here</p>
+              <p className="text-gray-500 font-medium text-sm">No Potential Matches Identified.</p>
             </div>
           </div>
         )}
