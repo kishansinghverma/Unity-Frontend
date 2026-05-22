@@ -11,3 +11,4 @@
 - Add integration tests for review modal prediction apply/save flows.
 - Document folder conventions: `components`, `engine`, `core/contracts`, and `pages/*/components`.
 - Update backend expense/settlement endpoints to accept generic `appTxnId` (replace legacy `phonePeTxnId`) before frontend payload rename.
+- Add Bank in Payment App transaction while parsing.

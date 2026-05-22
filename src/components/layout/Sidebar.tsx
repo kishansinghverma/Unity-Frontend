@@ -1,4 +1,4 @@
-import { X, LayoutDashboard, Settings, BarChart3, User, ClipboardList, ListChecks, FileCheck, UserSquare, LogIn, Home, Thermometer, PlusCircle, ListFilter, ArrowRightLeft, DollarSign as PriceIcon, Archive } from 'lucide-react';
+import { X, LayoutDashboard, Settings, User, ClipboardList, ListChecks, FileCheck, UserSquare, LogIn, Home, Thermometer, PlusCircle, ListFilter, ArrowRightLeft, DollarSign as PriceIcon, Archive, FileUp } from 'lucide-react';
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -31,7 +31,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       return [
         { name: 'Dashboard', path: '/moneytrail/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
         { name: 'Review Expense', path: '/moneytrail/review', icon: <Archive className="w-5 h-5" /> },
-        { name: 'Reports', path: '/moneytrail/reports', icon: <BarChart3 className="w-5 h-5" /> },
+        { name: 'Import', path: '/moneytrail/import', icon: <FileUp className="w-5 h-5" /> },
         { name: 'Settings', path: '/moneytrail/settings', icon: <Settings className="w-5 h-5" /> },
       ];
     } else if (currentApp?.id === 'smarthome') {

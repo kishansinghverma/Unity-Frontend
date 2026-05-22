@@ -11,7 +11,7 @@ export interface Stock {
   status: string;
 }
 
-export interface StockFormData extends Omit<Stock, 'id'> {}
+export type StockFormData = Omit<Stock, 'id'>;
 
 export interface StockTransfer {
   id: string;
