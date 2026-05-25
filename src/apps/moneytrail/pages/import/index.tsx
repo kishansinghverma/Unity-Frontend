@@ -74,8 +74,7 @@ const StatementParams: Record<StatementType, { source: string, fileType: string 
 };
 
 const parseStatementFile = async (file: File): Promise<ParsedStatementPreview> => {
-  const records = await parseStatement(file);
-  const statementType = await identifyStatementType(file);
+  const { records, statementType} = await parseStatement(file);
 
   return {
     records, statementType,
@@ -150,7 +149,7 @@ const ImportPage: React.FC = () => {
       pending: `Uploading ${StatementParams[parsedPreview.statementType].source} Statement...`,
       success: (data: UploadResult) => `Uploaded ${data.insertedCount}/${data.totalCount} Records.`,
     });
-
+    
     response.finally(() => setIsUploading(false));
   };
 

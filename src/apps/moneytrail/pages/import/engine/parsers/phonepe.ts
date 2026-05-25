@@ -7,7 +7,7 @@ export const parsePhonePeStatement = async (file: File) => {
     const transactions: Array<AppRecord> = [];
     const meta = TransactionMetaData;
 
-    if (!tokens[0].includes('Transaction Statement')) throw new Error('Invalid PhonePe Statement Provided!');
+    if (!tokens[0]?.includes('Transaction Statement')) throw new Error('Invalid PhonePe Statement Provided!');
 
     tokens.forEach((item, index) => {
         if (item.includes('Transaction ID')) {

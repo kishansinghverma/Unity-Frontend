@@ -48,7 +48,7 @@ const getStatementFileType = (file: File): StatementFileType => {
     throw new Error("File Type Not Supported!");
 };
 
-export const identifyStatementType = async (file: File): Promise<StatementType> => {
+const identifyStatementType = async (file: File): Promise<StatementType> => {
     const statementFileType = getStatementFileType(file);
 
     switch (statementFileType) {
@@ -66,5 +66,5 @@ export const parseStatement = async (file: File) => {
     const records = await parse(file);
 
     if (records.length === 0) throw new Error("No Record Extracted From Statement!");
-    return records;
+    return { records, statementType };
 }
