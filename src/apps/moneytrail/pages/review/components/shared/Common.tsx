@@ -1,14 +1,9 @@
-import { Space, Select, Form, Popover, List } from "antd";
+import { Form, Select, Space } from "antd";
 import { DefaultOptionType } from "antd/es/select";
-import { CircleArrowUp, ListX } from "lucide-react";
-import { FC, useEffect, useRef, useState } from "react";
-import { PostParams, Routes } from "../../../../../../engine/constant";
-import { handleJsonResponse } from "../../../../../../engine/helpers/httpHelper";
+import { ListX } from "lucide-react";
+import { FC, useEffect, useState } from "react";
 import { StringUtils } from "../../../../../../engine/helpers/stringHelper";
-import { NotificationMessages, notify } from "../../../../../../engine/services/notificationService";
-import { BankRecord, AppRecord } from "../../engine/contracts/models";
 import { BankIconProps, AlphabetIconProps, CustomSelectProps, SelectWithAddProps } from "../../engine/contracts/props";
-import { parsePhonePeStatement, extractDataFromExcel, extractDataFromHtml, extractDataFromCsv } from "../../engine/parser";
 import { getColorPair, getIconBackground } from "../../engine/utils";
 import { BankLogo } from "./Resources";
 
@@ -58,23 +53,20 @@ export const CustomSelect: FC<CustomSelectProps> = ({
   formItemProps,
   style,
   ...selectProps
-}) => {
-
-    return (
-      <Space.Compact style={{ width: width }}>
-        {prefix}
-        <Form.Item noStyle name={name} rules={rules} {...formItemProps}>
-          <Select
-            style={{ height: 38, width: width, ...style }}
-            showSearch
-            allowClear
-            optionFilterProp="title"
-            {...selectProps}
-          />
-        </Form.Item>
-      </Space.Compact>
-    )
-  }
+}) => (
+  <Space.Compact style={{ width: width }}>
+    {prefix}
+    <Form.Item noStyle name={name} rules={rules} {...formItemProps}>
+      <Select
+        style={{ height: 38, width: width, ...style }}
+        showSearch
+        allowClear
+        optionFilterProp="title"
+        {...selectProps}
+      />
+    </Form.Item>
+  </Space.Compact>
+);
 
 export const SelectWithAdd: FC<SelectWithAddProps> = ({
   defaultOptions,
@@ -89,7 +81,7 @@ export const SelectWithAdd: FC<SelectWithAddProps> = ({
   prefix
 }) => {
 
-    const [value, setValue] = useState<any>();
+    const [value, setValue] = useState<DefaultOptionType | null>(null);
     const [options, setOptions] = useState<DefaultOptionType[]>(defaultOptions);
 
     const filterAddOption = (items: DefaultOptionType[]) => items.filter(t => !t.title?.toString().startsWith('+ Add'));
@@ -165,97 +157,3 @@ export const SelectWithAdd: FC<SelectWithAddProps> = ({
       </Space.Compact>
     )
   }
-
-export const UploadStatement: React.FC = () => {
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const uploadBankStatement = async (transactions: Array<BankRecord>) => {
-    return fetch(`${Routes.BankRecordStatement}`, { ...PostParams, body: JSON.stringify(transactions) })
-      .then(handleJsonResponse);
-  }
-
-  const uploadAppRecordStatement = async (transactions: Array<AppRecord>) => {
-    return fetch(`${Routes.AppRecordStatement}`, { ...PostParams, body: JSON.stringify(transactions) })
-      .then(handleJsonResponse);
-  }
-
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = StringUtils.empty;
-
-    if (!file) return;
-
-    const notificationMessages: NotificationMessages = {
-      pending: 'Uploading Document',
-      success: 'Upload Success',
-      error: 'Upload Failed'
-    }
-
-    if (file.type === 'application/pdf') {
-      const response = parsePhonePeStatement(file).then(uploadAppRecordStatement)
-      notify.promise(response, notificationMessages, {
-        pending: 'Uploading PhonePe Statement...',
-        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} AppRecord entries.`)
-      });
-    }
-    else if (file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      const response = extractDataFromExcel(file).then(res => {
-        return (res.length > 0 && 'transactionId' in res[0]) ?
-          uploadAppRecordStatement(res as AppRecord[]) : uploadBankStatement(res as BankRecord[]);
-      });
-      notify.promise(response, notificationMessages, {
-        pending: 'Uploading Excel Sheet...',
-        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`)
-      });
-    }
-    else if (file.type === 'text/html') {
-      const response = extractDataFromHtml(file).then(uploadBankStatement);
-      notify.promise(response, notificationMessages, {
-        pending: 'Uploading SBI Credit Card Statement...',
-        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`),
-      });
-    }
-    else if (file.type === 'text/csv') {
-      const response = extractDataFromCsv(file).then(uploadBankStatement);
-      notify.promise(response, notificationMessages, {
-        pending: 'Uploading ICICI Credit Card Statement...',
-        success: (data) => (`Uploaded ${data.insertedCount}/${data.totalCount} Records.`),
-      });
-    }
-    else {
-      notify.error({ message: "Parsing Failed", description: "File Type Not Supported." });
-    }
-  };
-
-  const infoData = [
-    'PhonePe Statement :: Download the PDF statement from PhonePe App.',
-    'Paytm Statement :: Download the Excel statement from Paytm App.',
-    'SBI Statement :: Download Excel File from App/Netbanking.',
-    'HDFC Statement :: Download Excel File from App/Netbanking.',
-    'SBI CC :: Get <tbody> from Web App as HTML File using VS Code.',
-    'ICICI CC :: Get Monthly / Yearly Statement as CSV File from WebApp.'
-  ];
-
-  const infoList = <List
-    size="small"
-    header={<div className="font-medium">Supported File Types</div>}
-    bordered
-    dataSource={infoData}
-    renderItem={(item) => <List.Item>{item}</List.Item>}
-  />
-
-  return (
-    <>
-      <input type="file" ref={fileInputRef} hidden onChange={handleFileChange} onClick={(e) => { e.currentTarget.value = StringUtils.empty }} />
-      <Popover content={infoList}>
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="flex gap-1 hover:text-gray-900 hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-50"
-        >
-          <CircleArrowUp size={20} />
-          <span>Upload Statement</span>
-        </button>
-      </Popover>
-    </>
-  );
-};

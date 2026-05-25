@@ -3,8 +3,8 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import * as pdfjsLib from "pdfjs-dist";
 import * as XLSX from 'xlsx';
 import { StringUtils } from "../../../../../engine/helpers/stringHelper";
-import { BankRecord, AppRecord } from "./contracts/models";
-import { getHash } from "./utils";
+import { BankRecord, AppRecord } from "../../review/engine/contracts/models";
+import { getHash } from "../../review/engine/utils";
 
 dayjs.extend(customParseFormat);
 
