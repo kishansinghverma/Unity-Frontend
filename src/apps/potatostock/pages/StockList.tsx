@@ -1,4 +1,4 @@
-import { Plus, Search, Filter, RefreshCw } from 'lucide-react';
+import { Filter, Plus, RefreshCw, Search } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
@@ -57,7 +57,7 @@ const StockList: React.FC = () => {
       filteredData.sort((a, b) => {
         const aValue = a[sortConfig.field as keyof Stock];
         const bValue = b[sortConfig.field as keyof Stock];
-        
+
         if (aValue < bValue) {
           return sortConfig.direction === 'asc' ? -1 : 1;
         }

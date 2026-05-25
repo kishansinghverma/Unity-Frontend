@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createBrowserRouter, RouterProvider, Navigate, useLocation } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider, useLocation } from 'react-router-dom';
 // eMandi App
 import Dashboard from './apps/emandi/pages/dashboard/Dashboard';
 import GatePassForm from './apps/emandi/pages/GatePassForm';

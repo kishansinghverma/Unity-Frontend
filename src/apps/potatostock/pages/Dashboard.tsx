@@ -1,4 +1,4 @@
-import { BarChart3, TrendingUp, Warehouse, Tags, Package } from 'lucide-react';
+import { BarChart3, Package, Tags, TrendingUp, Warehouse } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../../../components/ui/Card';
@@ -58,13 +58,13 @@ const Dashboard: React.FC = () => {
           <RecentActivity />
         </div>
       </div>
-      
+
       {/* Quick Actions */}
       <section>
         <Card title="Quick Actions">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Link 
-              to="/potatostock/stock/new" 
+            <Link
+              to="/potatostock/stock/new"
               className="group flex items-center p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md dark:shadow-slate-700/50 hover:transform hover:-translate-y-0.5 transition-all duration-200"
             >
               <div className="p-3 rounded-full bg-green-50 dark:bg-green-900/30 group-hover:bg-green-100 dark:group-hover:bg-green-800/40 transition-colors">
@@ -76,8 +76,8 @@ const Dashboard: React.FC = () => {
               </div>
             </Link>
 
-            <Link 
-              to="/potatostock/stock/transfer" 
+            <Link
+              to="/potatostock/stock/transfer"
               className="group flex items-center p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md dark:shadow-slate-700/50 hover:transform hover:-translate-y-0.5 transition-all duration-200"
             >
               <div className="p-3 rounded-full bg-blue-50 dark:bg-blue-900/30 group-hover:bg-blue-100 dark:group-hover:bg-blue-800/40 transition-colors">
@@ -89,8 +89,8 @@ const Dashboard: React.FC = () => {
               </div>
             </Link>
 
-            <Link 
-              to="/potatostock/stock/price" 
+            <Link
+              to="/potatostock/stock/price"
               className="group flex items-center p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md dark:shadow-slate-700/50 hover:transform hover:-translate-y-0.5 transition-all duration-200"
             >
               <div className="p-3 rounded-full bg-purple-50 dark:bg-purple-900/30 group-hover:bg-purple-100 dark:group-hover:bg-purple-800/40 transition-colors">

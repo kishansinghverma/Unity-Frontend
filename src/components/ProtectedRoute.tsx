@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { APPS } from '../constants/apps';
 import { useAuth } from '../context/AuthContext';
-import { useAppSelector, useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectCurrentApp, setCurrentApp } from '../store/slices/appSlice';
 
 interface ProtectedRouteProps {

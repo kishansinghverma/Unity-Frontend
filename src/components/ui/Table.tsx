@@ -1,4 +1,4 @@
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { ListColumn, SortConfig } from '../../types';
 
 interface TableProps<T extends { id: string }> {
@@ -82,19 +82,17 @@ function Table<T extends { id: string }>({
                         className="focus:outline-none"
                       >
                         <span className="flex flex-col">
-                          <ChevronUp 
-                            className={`w-3 h-3 ${
-                              sortConfig?.field === column.accessor && sortConfig?.direction === 'asc'
+                          <ChevronUp
+                            className={`w-3 h-3 ${sortConfig?.field === column.accessor && sortConfig?.direction === 'asc'
                                 ? 'text-blue-600 dark:text-blue-400'
                                 : 'text-gray-400'
-                            }`} 
+                              }`}
                           />
-                          <ChevronDown 
-                            className={`w-3 h-3 -mt-1 ${
-                              sortConfig?.field === column.accessor && sortConfig?.direction === 'desc'
+                          <ChevronDown
+                            className={`w-3 h-3 -mt-1 ${sortConfig?.field === column.accessor && sortConfig?.direction === 'desc'
                                 ? 'text-blue-600 dark:text-blue-400'
                                 : 'text-gray-400'
-                            }`} 
+                              }`}
                           />
                         </span>
                       </button>
@@ -109,13 +107,12 @@ function Table<T extends { id: string }>({
               <tr
                 key={item.id}
                 onClick={() => onRowClick && onRowClick(item)}
-                className={`${
-                  onRowClick ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700' : ''
-                } transition-colors`}
+                className={`${onRowClick ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700' : ''
+                  } transition-colors`}
               >
                 {columns.map((column) => {
                   const rawValue = item[column.accessor as keyof T];
-                  
+
                   if (column.render) {
                     return (
                       <td
@@ -126,7 +123,7 @@ function Table<T extends { id: string }>({
                       </td>
                     );
                   }
-                  
+
                   return (
                     <td
                       key={`${item.id}-${column.id}`}

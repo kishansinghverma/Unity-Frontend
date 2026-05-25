@@ -1,12 +1,12 @@
 import { Save, X } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import Card from '../../../components/ui/Card';
 import Checkbox from '../../../components/ui/Checkbox';
 import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
-import { getMockPartyById, createMockParty, updateMockParty } from '../services/mockPartyData';
+import { createMockParty, getMockPartyById, updateMockParty } from '../services/mockPartyData';
 
 interface PartyFormData {
   name: string;
@@ -83,42 +83,42 @@ const PartyForm: React.FC = () => {
 
   const validateForm = () => {
     const newErrors: Partial<PartyFormData> = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Party name is required';
     }
-    
+
     if (!formData.mandi.trim()) {
       newErrors.mandi = 'Mandi is required';
     }
-    
+
     if (!formData.state) {
       newErrors.state = 'State is required';
     }
-    
+
     if (!formData.distance.trim()) {
       newErrors.distance = 'Distance is required';
     } else if (isNaN(Number(formData.distance))) {
       newErrors.distance = 'Distance must be a number';
     }
-    
+
     if (!formData.licenceNotRequired && !formData.licence.trim()) {
       newErrors.licence = 'License number is required unless not needed';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       const partyData = {
         name: formData.name,
@@ -127,13 +127,13 @@ const PartyForm: React.FC = () => {
         distance: formData.distance,
         licence: formData.licenceNotRequired ? '' : formData.licence
       };
-      
+
       if (isEditMode && id) {
         await updateMockParty(id, partyData);
       } else {
         await createMockParty(partyData);
       }
-      
+
       navigate('/parties');
     } catch (error) {
       console.error('Error saving party:', error);
@@ -153,7 +153,7 @@ const PartyForm: React.FC = () => {
         </p>
       </div>
 
-      <Card 
+      <Card
         title={isEditMode ? 'पार्टी अपडेट करें' : 'नई पार्टी जोड़ें'}
         description={isEditMode ? 'Update party details' : 'Add new party details'}
       >
@@ -173,7 +173,7 @@ const PartyForm: React.FC = () => {
                 required
               />
             </div>
-            
+
             <div>
               <label htmlFor="mandi" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                 मंडी का नाम <span className="text-red-500">*</span>
@@ -189,7 +189,7 @@ const PartyForm: React.FC = () => {
               />
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="state" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -205,7 +205,7 @@ const PartyForm: React.FC = () => {
                 required
               />
             </div>
-            
+
             <div>
               <label htmlFor="distance" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                 दूरी (K.M.) <span className="text-red-500">*</span>
@@ -222,7 +222,7 @@ const PartyForm: React.FC = () => {
               />
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="licence" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -239,7 +239,7 @@ const PartyForm: React.FC = () => {
                 required={!formData.licenceNotRequired}
               />
             </div>
-            
+
             <div className="flex items-center mt-8">
               <Checkbox
                 id="licenceNotRequired"
@@ -252,7 +252,7 @@ const PartyForm: React.FC = () => {
               </label>
             </div>
           </div>
-          
+
           <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
             <Button
               type="button"
@@ -268,10 +268,10 @@ const PartyForm: React.FC = () => {
               disabled={isSubmitting}
               leftIcon={<Save className="w-4 h-4" />}
             >
-              {isSubmitting 
-                ? 'प्रोसेसिंग...' 
-                : isEditMode 
-                  ? 'पार्टी अपडेट करें' 
+              {isSubmitting
+                ? 'प्रोसेसिंग...'
+                : isEditMode
+                  ? 'पार्टी अपडेट करें'
                   : 'पार्टी जोड़ें'}
             </Button>
           </div>

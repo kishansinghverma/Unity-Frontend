@@ -64,7 +64,7 @@ const PriceUpdateForm: React.FC<PriceUpdateFormProps> = ({ onSubmit, onCancel })
 
   const validateForm = () => {
     const newErrors: typeof errors = {};
-    
+
     if (!formData.stockId) {
       newErrors.stockId = 'Please select a stock';
     }

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { getArrayOrDefault } from '../../../../engine/helpers/rtkHelper';
-import { useBankRecordQuery, useLocationRecordQuery, useExpensePredictionsQuery, useAppRecordQuery } from '../../store/reviewSlice';
+import { useAppRecordQuery, useBankRecordQuery, useExpensePredictionsQuery, useLocationRecordQuery } from '../../store/reviewSlice';
 import { Header } from './components/layouts/Headers';
+import { AppRecordSection } from './components/sections/AppRecordSection';
 import { BankRecordSection } from './components/sections/BankRecordSection';
 import { LocationRecordSection } from './components/sections/LocationRecordSection';
-import { AppRecordSection } from './components/sections/AppRecordSection';
 import { hydratePredictionSamplesFromApi } from './engine/prediction';
 
 const ReviewExpense: React.FC = () => {

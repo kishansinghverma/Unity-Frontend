@@ -39,37 +39,37 @@ const AppRecordItemFC: FC<AppRecordItemProps> = ({
   isSelected,
   setSelected
 }) => {
-    const isCredit = item.type === 'Credit';
-    const stateStyles = isSelected ? styles.selected : styles.default;
-    const containerStyle = `${styles.container} ${stateStyles.container}`;
-    const titleStyle = `${styles.title} ${stateStyles.title}`;
-    const amountStyle = `${styles.amount} ${isCredit ? stateStyles.creditAmount : stateStyles.debitAmount}`;
-    const datetimeStyle = `${styles.datetime} ${stateStyles.datetime}`;
+  const isCredit = item.type === 'Credit';
+  const stateStyles = isSelected ? styles.selected : styles.default;
+  const containerStyle = `${styles.container} ${stateStyles.container}`;
+  const titleStyle = `${styles.title} ${stateStyles.title}`;
+  const amountStyle = `${styles.amount} ${isCredit ? stateStyles.creditAmount : stateStyles.debitAmount}`;
+  const datetimeStyle = `${styles.datetime} ${stateStyles.datetime}`;
 
-    return (
-      <div
-        className={containerStyle}
-        onClick={() => setSelected(isSelected ? null : item)}
-      >
-        {isSelected && <CheckCircle className={styles.icon.checkCircle} />}
-        <div className={styles.content}>
-          <div className={styles.iconWrapper}><BankIcon bankName={item.bank} /></div>
-          <div className={styles.titleWrapper}>
-            <p className={titleStyle} title={item.recipient}>{item.recipient}</p>
+  return (
+    <div
+      className={containerStyle}
+      onClick={() => setSelected(isSelected ? null : item)}
+    >
+      {isSelected && <CheckCircle className={styles.icon.checkCircle} />}
+      <div className={styles.content}>
+        <div className={styles.iconWrapper}><BankIcon bankName={item.bank} /></div>
+        <div className={styles.titleWrapper}>
+          <p className={titleStyle} title={item.recipient}>{item.recipient}</p>
+        </div>
+
+        <div className={styles.rightSection}>
+          <div className={amountStyle}>
+            {isCredit ? '+' : '-'}₹{getFormattedAmount(item.amount)}
           </div>
-
-          <div className={styles.rightSection}>
-            <div className={amountStyle}>
-              {isCredit ? '+' : '-'}₹{getFormattedAmount(item.amount)}
-            </div>
-            <div className={datetimeStyle}>
-              <Clock className={styles.icon.clock} />
-              <span>{dayjs(item.date).format('hh:mm A')}</span>
-            </div>
+          <div className={datetimeStyle}>
+            <Clock className={styles.icon.clock} />
+            <span>{dayjs(item.date).format('hh:mm A')}</span>
           </div>
         </div>
       </div>
-    )
-  };
+    </div>
+  )
+};
 
 export const AppRecordItem = memo(AppRecordItemFC);

@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { normalizeToMinute } from "../../../../../engine/helpers/dateTimeHelper";
 import { Nullable, WithId } from "../../../../../engine/models/types";
-import { BankRecord, AppRecord, LocationRecord } from "./contracts/models";
+import { AppRecord, BankRecord, LocationRecord } from "./contracts/models";
 
 const colorPair = [
     'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700/60',

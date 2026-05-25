@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import * as XLSX from 'xlsx';
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import * as XLSX from 'xlsx';
 import { StringUtils } from "../../../../../../engine/helpers/stringHelper";
 import { BankRecord } from "../../../review/engine/contracts/models";
 import { getHash } from "../../../review/engine/utils";
@@ -38,7 +38,7 @@ export const parseIciciCardStatement = async (file: File) => {
         const amountSigned = String(rowData[6] ?? StringUtils.empty).replaceAll(',', '');
         const parsedAmount = parseFloat(amount);
         const parsedSignedAmount = parseFloat(amountSigned);
-        
+
         const type: 'Debit' | 'Credit' = isNaN(parsedSignedAmount) ?
             StringUtils.isNullOrEmpty(amountSigned) ? 'Debit' : 'Credit' : parsedSignedAmount > 0 ? 'Debit' : 'Credit';
 

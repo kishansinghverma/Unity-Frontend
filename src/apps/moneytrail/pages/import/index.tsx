@@ -1,16 +1,16 @@
-import { Card, Col, List, Row, Table, Tag, Typography, Upload } from "antd";
 import type { UploadProps } from "antd";
+import { Card, Col, List, Row, Table, Tag, Typography, Upload } from "antd";
 import { CloudUpload, FileUp } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PostParams, Routes } from "../../../../engine/constant";
 import { handleError, handleJsonResponse } from "../../../../engine/helpers/httpHelper";
 import { notify } from "../../../../engine/services/notificationService";
 import { AppRecord, BankRecord } from "../review/engine/contracts/models";
-import { parseStatement } from "./engine/parsers";
-import { AppPreviewRow, BankPreviewRow, ParsedStatementPreview, UploadResult } from "./engine/contracts/types";
-import { PreviewTableHeader } from "./components/PreviewTableHeader";
 import { AppColumns, BankColumns } from "./components/Columns";
+import { PreviewTableHeader } from "./components/PreviewTableHeader";
 import { NotificationMessages, StatementParams, SupportedFormats } from "./engine/constants";
+import { AppPreviewRow, BankPreviewRow, ParsedStatementPreview, UploadResult } from "./engine/contracts/types";
+import { parseStatement } from "./engine/parsers";
 
 const { Dragger } = Upload;
 const { Text } = Typography;

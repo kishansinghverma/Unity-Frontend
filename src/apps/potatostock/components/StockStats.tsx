@@ -1,4 +1,4 @@
-import { Package, ArrowUpDown, BarChart3, Warehouse } from 'lucide-react';
+import { ArrowUpDown, BarChart3, Package, Warehouse } from 'lucide-react';
 import React from 'react';
 
 interface StatCardProps {

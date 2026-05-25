@@ -120,8 +120,8 @@ export const { addCustomer, updateCustomer, deleteCustomer } = customersSlice.ac
 
 // Export selectors
 export const selectAllCustomers = (state: RootState) => state.customers.items;
-export const selectCustomerById = (id: string) => (state: RootState) => 
-    state.customers.items.find(customer => customer.id === id);
+export const selectCustomerById = (id: string) => (state: RootState) =>
+  state.customers.items.find(customer => customer.id === id);
 export const selectCustomersLoading = (state: RootState) => state.customers.loading;
 export const selectCustomersError = (state: RootState) => state.customers.error;
 

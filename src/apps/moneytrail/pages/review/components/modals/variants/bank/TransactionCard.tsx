@@ -3,7 +3,7 @@ import { Calendar, CheckCircle2, Clock, FileText, Sparkles } from 'lucide-react'
 import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
 import { BankRecord } from '../../../../engine/contracts/models';
-import { DescriptionInfo, BankTheme } from '../../../../engine/contracts/types';
+import { BankTheme, DescriptionInfo } from '../../../../engine/contracts/types';
 import { BankIcon } from '../../../shared/Common';
 
 type BankTransactionCardProps = WithId<BankRecord> & {

@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { AppRecord } from "../../../review/engine/contracts/models";
-import { readPdfTokens } from "./common";
 import { TransactionMetaData } from "../constants";
+import { readPdfTokens } from "./common";
 
 export const parsePhonePeStatement = async (file: File) => {
     const tokens = await readPdfTokens(file);

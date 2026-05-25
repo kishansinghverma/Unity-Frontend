@@ -1,4 +1,4 @@
-import { Plus, Search, Filter, RefreshCw, Trash2 } from 'lucide-react';
+import { Filter, Plus, RefreshCw, Search, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
@@ -35,14 +35,14 @@ const GatePassList: React.FC = () => {
     { id: 'party', label: 'Party', accessor: 'party', sortable: true },
     { id: 'bags', label: 'Bags', accessor: 'bags', sortable: true },
     { id: 'weight', label: 'Weight', accessor: 'weight', sortable: true },
-    { 
-      id: 'actions', 
-      label: 'Delete', 
+    {
+      id: 'actions',
+      label: 'Delete',
       accessor: 'id',
       alignment: 'center',
       render: (gatePass: GatePass) => (
         <div className="flex justify-center">
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(gatePass.id);
@@ -86,7 +86,7 @@ const GatePassList: React.FC = () => {
       filteredData.sort((a, b) => {
         const aValue = a[sortConfig.field as keyof GatePass];
         const bValue = b[sortConfig.field as keyof GatePass];
-        
+
         if (aValue < bValue) {
           return sortConfig.direction === 'asc' ? -1 : 1;
         }
@@ -146,7 +146,7 @@ const GatePassList: React.FC = () => {
             />
           </div>
         </div>
-        
+
         <div className="flex gap-2">
           <Button
             variant="ghost"
@@ -177,7 +177,7 @@ const GatePassList: React.FC = () => {
           Showing <span className="font-medium">1</span> to <span className="font-medium">{formattedGatePasses.length}</span> of{' '}
           <span className="font-medium">{gatePasses.length}</span> results
         </div>
-        
+
         <div className="flex space-x-1">
           <Button variant="ghost" size="sm" disabled>
             Previous

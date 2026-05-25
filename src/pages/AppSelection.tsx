@@ -1,4 +1,4 @@
-import { Wheat, CandlestickChart, LogOut, Home, Package } from 'lucide-react';
+import { CandlestickChart, Home, LogOut, Package, Wheat } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { APPS } from '../constants/apps';
@@ -34,7 +34,7 @@ const AppSelection: React.FC = () => {
   const handleAppSelect = (app: typeof APPS[0]) => {
     // Set the current app in Redux store
     dispatch(setCurrentApp(app));
-    
+
     // Navigate to the appropriate app path
     navigate(`/${app.id}`);
   };

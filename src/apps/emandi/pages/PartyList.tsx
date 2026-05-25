@@ -1,4 +1,4 @@
-import { Plus, Search, Filter, RefreshCw, Edit, Trash2 } from 'lucide-react';
+import { Edit, Filter, Plus, RefreshCw, Search, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';

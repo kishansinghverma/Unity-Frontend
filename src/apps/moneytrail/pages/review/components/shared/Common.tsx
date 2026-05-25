@@ -3,7 +3,7 @@ import { DefaultOptionType } from "antd/es/select";
 import { ListX } from "lucide-react";
 import { FC, useEffect, useState } from "react";
 import { StringUtils } from "../../../../../../engine/helpers/stringHelper";
-import { BankIconProps, AlphabetIconProps, CustomSelectProps, SelectWithAddProps } from "../../engine/contracts/props";
+import { AlphabetIconProps, BankIconProps, CustomSelectProps, SelectWithAddProps } from "../../engine/contracts/props";
 import { getColorPair, getIconBackground } from "../../engine/utils";
 import { BankLogo } from "./Resources";
 
@@ -81,79 +81,79 @@ export const SelectWithAdd: FC<SelectWithAddProps> = ({
   prefix
 }) => {
 
-    const [value, setValue] = useState<DefaultOptionType | null>(null);
-    const [options, setOptions] = useState<DefaultOptionType[]>(defaultOptions);
+  const [value, setValue] = useState<DefaultOptionType | null>(null);
+  const [options, setOptions] = useState<DefaultOptionType[]>(defaultOptions);
 
-    const filterAddOption = (items: DefaultOptionType[]) => items.filter(t => !t.title?.toString().startsWith('+ Add'));
+  const filterAddOption = (items: DefaultOptionType[]) => items.filter(t => !t.title?.toString().startsWith('+ Add'));
 
-    const onOpenClose = () => setOptions(options => filterAddOption(options));
+  const onOpenClose = () => setOptions(options => filterAddOption(options));
 
-    const onClear = () => setValue(null);
+  const onClear = () => setValue(null);
 
-    const onSearch = (text: string) => {
-      const filteredOptions = filterAddOption(options);
+  const onSearch = (text: string) => {
+    const filteredOptions = filterAddOption(options);
 
-      if (!StringUtils.isNullOrEmpty(text)) {
-        if (!filteredOptions.some(option => option.title?.toString()?.toLowerCase() === text.toLowerCase())) {
-          const formattedValue = StringUtils.capitalize(text);
-          filteredOptions.push({
-            label: <span className='text-gray-600 font-medium'>{`+ Add ${formattedValue}`}</span>,
-            value: formattedValue,
-            title: `+ Add ${formattedValue}`
-          });
-        }
+    if (!StringUtils.isNullOrEmpty(text)) {
+      if (!filteredOptions.some(option => option.title?.toString()?.toLowerCase() === text.toLowerCase())) {
+        const formattedValue = StringUtils.capitalize(text);
+        filteredOptions.push({
+          label: <span className='text-gray-600 font-medium'>{`+ Add ${formattedValue}`}</span>,
+          value: formattedValue,
+          title: `+ Add ${formattedValue}`
+        });
       }
-
-      setOptions(filteredOptions);
     }
 
-    const onChange = (_value: unknown, item?: DefaultOptionType) => {
-      if (StringUtils.isNullOrEmpty(item?.title)) return;
-
-      let selectedOption = item;
-      if (item?.title?.toString()?.startsWith('+ Add')) {
-        const filteredOptions = filterAddOption(options);
-        const optionValue = item.value?.toString().trim().toLowerCase();
-        const existingOption = filteredOptions.find(option => option.value?.toString().toLowerCase() === optionValue);
-
-        if (existingOption) selectedOption = existingOption;
-        else {
-          const formattedValue = StringUtils.capitalize(optionValue);
-          selectedOption = {
-            label: <span className='text-gray-600 font-medium'>{formattedValue}</span>,
-            title: formattedValue,
-            value: formattedValue
-          };
-
-          onAddOption(selectedOption);
-        }
-      }
-
-      setValue(selectedOption);
-    }
-
-    useEffect(() => setOptions(defaultOptions), [defaultOptions]);
-
-    return (
-      <Space.Compact style={{ width: width }}>
-        {prefix}
-        <Form.Item noStyle name={name} rules={rules}>
-          <Select
-            style={{ height: 38, width: width }}
-            showSearch
-            value={value?.value}
-            options={options}
-            placeholder={placeholder}
-            onChange={onChange}
-            onSearch={onSearch}
-            onOpenChange={onOpenClose}
-            onClear={onClear}
-            className={className}
-            placement={placement}
-            loading={isLoading}
-            allowClear
-          />
-        </Form.Item>
-      </Space.Compact>
-    )
+    setOptions(filteredOptions);
   }
+
+  const onChange = (_value: unknown, item?: DefaultOptionType) => {
+    if (StringUtils.isNullOrEmpty(item?.title)) return;
+
+    let selectedOption = item;
+    if (item?.title?.toString()?.startsWith('+ Add')) {
+      const filteredOptions = filterAddOption(options);
+      const optionValue = item.value?.toString().trim().toLowerCase();
+      const existingOption = filteredOptions.find(option => option.value?.toString().toLowerCase() === optionValue);
+
+      if (existingOption) selectedOption = existingOption;
+      else {
+        const formattedValue = StringUtils.capitalize(optionValue);
+        selectedOption = {
+          label: <span className='text-gray-600 font-medium'>{formattedValue}</span>,
+          title: formattedValue,
+          value: formattedValue
+        };
+
+        onAddOption(selectedOption);
+      }
+    }
+
+    setValue(selectedOption);
+  }
+
+  useEffect(() => setOptions(defaultOptions), [defaultOptions]);
+
+  return (
+    <Space.Compact style={{ width: width }}>
+      {prefix}
+      <Form.Item noStyle name={name} rules={rules}>
+        <Select
+          style={{ height: 38, width: width }}
+          showSearch
+          value={value?.value}
+          options={options}
+          placeholder={placeholder}
+          onChange={onChange}
+          onSearch={onSearch}
+          onOpenChange={onOpenClose}
+          onClear={onClear}
+          className={className}
+          placement={placement}
+          loading={isLoading}
+          allowClear
+        />
+      </Form.Item>
+    </Space.Compact>
+  )
+}

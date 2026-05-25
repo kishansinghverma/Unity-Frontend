@@ -1,4 +1,4 @@
-import { Stock, StockTransfer, StockPriceUpdate, StockActivity } from '../types';
+import { Stock, StockActivity, StockPriceUpdate, StockTransfer } from '../types';
 
 export const mockStocks: Stock[] = [
   {

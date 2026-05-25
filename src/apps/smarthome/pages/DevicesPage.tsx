@@ -1,4 +1,4 @@
-import { Lightbulb, Snowflake, Lock, Speaker, Info, Edit2, PlusCircle } from 'lucide-react';
+import { Edit2, Info, Lightbulb, Lock, PlusCircle, Snowflake, Speaker } from 'lucide-react';
 import React, { useState } from 'react';
 
 const initialDevices = [
@@ -86,14 +86,14 @@ const DevicesPage: React.FC = () => {
 			devices.map(device =>
 				device.id === id
 					? {
-							...device,
-							status:
-								device.status === 'On'
-									? 'Off'
-									: device.status === 'Off'
+						...device,
+						status:
+							device.status === 'On'
+								? 'Off'
+								: device.status === 'Off'
 									? 'On'
 									: device.status,
-					  }
+					}
 					: device
 			)
 		);
@@ -252,10 +252,9 @@ const DevicesPage: React.FC = () => {
 							</div>
 							<div className="flex items-center gap-2 mb-4">
 								<span
-									className={`px-3 py-1 rounded-full text-xs font-medium ${
-										statusColors[device.status] ||
+									className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[device.status] ||
 										'bg-gray-100 text-gray-700'
-									}`}
+										}`}
 								>
 									{device.status}
 								</span>
@@ -267,17 +266,15 @@ const DevicesPage: React.FC = () => {
 							{(device.status === 'On' || device.status === 'Off') && (
 								<button
 									onClick={() => handleToggle(device.id)}
-									className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-200 focus:outline-none ${
-										device.status === 'On'
+									className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-200 focus:outline-none ${device.status === 'On'
 											? 'bg-green-400'
 											: 'bg-gray-300'
-									} mb-4`}
+										} mb-4`}
 									aria-label="Toggle device"
 								>
 									<span
-										className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform duration-200 ${
-											device.status === 'On' ? 'translate-x-6' : ''
-										}`}
+										className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform duration-200 ${device.status === 'On' ? 'translate-x-6' : ''
+											}`}
 									/>
 								</button>
 							)}

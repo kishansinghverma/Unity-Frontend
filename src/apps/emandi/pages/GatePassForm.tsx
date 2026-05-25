@@ -1,4 +1,4 @@
-import { X, Save } from 'lucide-react';
+import { Save, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Card from '../../../components/ui/Card';
@@ -42,8 +42,8 @@ const GatePassForm: React.FC = () => {
         </p>
       </div>
 
-      <Card 
-        title="नया गेटपास बनाएं" 
+      <Card
+        title="नया गेटपास बनाएं"
         description="Create a new gate pass record"
       >
         <form onSubmit={handleSubmit}>

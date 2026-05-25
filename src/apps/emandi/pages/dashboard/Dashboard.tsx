@@ -1,4 +1,4 @@
-import { BarChart3, TrendingUp, ClipboardList, UserSquare, ChevronRight } from 'lucide-react';
+import { BarChart3, ChevronRight, ClipboardList, TrendingUp, UserSquare } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../../../../components/ui/Card';
@@ -58,13 +58,13 @@ const Dashboard: React.FC = () => {
           <RecentActivity />
         </div>
       </div>
-      
+
       {/* Quick Actions */}
       <section>
         <Card title="Quick Actions">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Link 
-              to="/emandi/parties/new" 
+            <Link
+              to="/emandi/parties/new"
               className="group flex items-center p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md dark:shadow-slate-700/50 hover:transform hover:-translate-y-0.5 transition-all duration-200"
             >
               <div className="p-3 rounded-full bg-blue-50 dark:bg-blue-900/30 group-hover:bg-blue-100 dark:group-hover:bg-blue-800/40 transition-colors">
@@ -76,9 +76,9 @@ const Dashboard: React.FC = () => {
               </div>
               <ChevronRight className="w-5 h-5 text-slate-400 dark:text-slate-500 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
-            
-            <Link 
-              to="/emandi/gatepasses/new" 
+
+            <Link
+              to="/emandi/gatepasses/new"
               className="group flex items-center p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md dark:shadow-slate-700/50 hover:transform hover:-translate-y-0.5 transition-all duration-200"
             >
               <div className="p-3 rounded-full bg-red-50 dark:bg-red-900/30 group-hover:bg-red-100 dark:group-hover:bg-red-800/40 transition-colors">

@@ -1,6 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import * as XLSX from 'xlsx';
-import { BankRecord, AppRecord } from '../../../review/engine/contracts/models';
+import { AppRecord, BankRecord } from '../../../review/engine/contracts/models';
 
 export type StatementFileType = "pdf" | "excel" | "html" | "csv";
 export type ExcelStatementType = "hdfc" | "sbi" | "paytm";
@@ -9,8 +9,8 @@ export type BankPreviewRow = BankRecord & { key: string };
 export type AppPreviewRow = AppRecord & { key: string };
 
 export type ExcelWorkbookContext = {
-    workbook: XLSX.WorkBook;
-    sheet: XLSX.WorkSheet;
+  workbook: XLSX.WorkBook;
+  sheet: XLSX.WorkSheet;
 };
 
 export type ParsedStatementPreview = {

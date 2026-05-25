@@ -1,4 +1,4 @@
-import { UserSquare, ClipboardList, Clock, ClipboardCheck } from 'lucide-react';
+import { ClipboardCheck, ClipboardList, Clock, UserSquare } from 'lucide-react';
 import React from 'react';
 import Card from '../../../../../components/ui/Card';
 
@@ -53,8 +53,8 @@ const RecentActivity: React.FC = () => {
     <Card title="Recent Activity" className="h-full">
       <div className="space-y-4">
         {mockActivities.map((activity) => (
-          <div 
-            key={activity.id} 
+          <div
+            key={activity.id}
             className="group flex items-start space-x-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-200"
           >
             <div className="flex-shrink-0 p-2 rounded-full bg-slate-100 dark:bg-slate-700 group-hover:bg-white dark:group-hover:bg-slate-700 transition-colors">

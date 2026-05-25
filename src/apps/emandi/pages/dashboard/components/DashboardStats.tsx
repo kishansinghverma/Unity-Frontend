@@ -1,4 +1,4 @@
-import { UserSquare, ClipboardList, ClipboardCheck, DollarSign } from 'lucide-react';
+import { ClipboardCheck, ClipboardList, DollarSign, UserSquare } from 'lucide-react';
 import React from 'react';
 
 interface StatCardProps {

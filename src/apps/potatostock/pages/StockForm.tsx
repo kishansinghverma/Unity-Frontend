@@ -1,5 +1,5 @@
 import { Save, X } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import Card from '../../../components/ui/Card';
@@ -59,44 +59,44 @@ const StockForm: React.FC = () => {
 
   const validateForm = () => {
     const newErrors: Partial<StockFormData> = {};
-    
+
     if (!formData.variety) {
       newErrors.variety = 'Variety is required';
     }
-    
+
     if (!formData.quantity || formData.quantity <= 0) {
       newErrors.quantity = 'Valid quantity is required';
     }
-    
+
     if (!formData.price || formData.price <= 0) {
       newErrors.price = 'Valid price is required';
     }
-    
+
     if (!formData.storage) {
       newErrors.storage = 'Storage location is required';
     }
-    
+
     if (!formData.quality) {
       newErrors.quality = 'Quality grade is required';
     }
-    
+
     if (!formData.supplier) {
       newErrors.supplier = 'Supplier name is required';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       // Here you would handle the form submission
       console.log('Form submitted:', formData);

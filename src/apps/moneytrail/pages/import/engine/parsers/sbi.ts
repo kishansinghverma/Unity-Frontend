@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
-import * as XLSX from 'xlsx';
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import * as XLSX from 'xlsx';
 import { BankRecord } from "../../../review/engine/contracts/models";
-import { getStringAt, getNumberAt, getExcelWorkbookContext } from "./common";
+import { getExcelWorkbookContext, getNumberAt, getStringAt } from "./common";
 
 dayjs.extend(customParseFormat);
 

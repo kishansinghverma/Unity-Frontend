@@ -2,10 +2,10 @@ import { StringUtils } from "../../../../../../engine/helpers/stringHelper";
 import { ExcelStatementType, StatementFileType, StatementType } from "../contracts/types";
 import { getExcelWorkbookContext, getStringAt } from "./common";
 import { parseHdfcStatement } from "./hdfc";
-import { parsePaytmStatement } from "./paytm";
-import { parseSbiStatement } from "./sbi";
 import { parseIciciCardStatement } from "./icicicard";
+import { parsePaytmStatement } from "./paytm";
 import { parsePhonePeStatement } from "./phonepe";
+import { parseSbiStatement } from "./sbi";
 import { parseSbiCardStatement } from "./sbicard";
 
 const parsers = {

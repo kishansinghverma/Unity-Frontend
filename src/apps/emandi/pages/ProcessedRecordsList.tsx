@@ -1,4 +1,4 @@
-import { Search, Filter, RefreshCw, Trash2 } from 'lucide-react';
+import { Filter, RefreshCw, Search, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
@@ -39,14 +39,14 @@ const ProcessedRecordsList: React.FC = () => {
     { id: 'rate', label: 'Rate', accessor: 'rate', sortable: true, alignment: 'right' },
     { id: 'amount', label: 'Amount', accessor: 'amount', sortable: true, alignment: 'right' },
     { id: 'mode', label: 'Mode', accessor: 'mode', sortable: true },
-    { 
-      id: 'actions', 
-      label: 'Actions', 
+    {
+      id: 'actions',
+      label: 'Actions',
       accessor: 'id',
       alignment: 'center',
       render: (record: ProcessedRecord) => (
         <div className="flex justify-center">
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(record.id);
@@ -89,7 +89,7 @@ const ProcessedRecordsList: React.FC = () => {
       filteredData.sort((a, b) => {
         const aValue = a[sortConfig.field as keyof ProcessedRecord];
         const bValue = b[sortConfig.field as keyof ProcessedRecord];
-        
+
         if (aValue < bValue) {
           return sortConfig.direction === 'asc' ? -1 : 1;
         }
@@ -109,7 +109,7 @@ const ProcessedRecordsList: React.FC = () => {
   };
 
   const allFilteredData = getSortedAndFilteredData();
-  
+
   // Pagination
   const totalPages = Math.ceil(allFilteredData.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -147,7 +147,7 @@ const ProcessedRecordsList: React.FC = () => {
             />
           </div>
         </div>
-        
+
         <div className="flex gap-2">
           <Button
             variant="ghost"
@@ -179,25 +179,25 @@ const ProcessedRecordsList: React.FC = () => {
           Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to <span className="font-medium">{Math.min(indexOfLastItem, allFilteredData.length)}</span> of{' '}
           <span className="font-medium">{allFilteredData.length}</span> results
         </div>
-        
+
         <div className="flex space-x-1">
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
           >
             Previous
           </Button>
-          
+
           {/* Pagination buttons */}
           <div className="flex space-x-1">
             {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
               const pageNumber = i + 1;
               return (
-                <Button 
+                <Button
                   key={pageNumber}
-                  variant={currentPage === pageNumber ? "primary" : "ghost"} 
+                  variant={currentPage === pageNumber ? "primary" : "ghost"}
                   size="sm"
                   onClick={() => setCurrentPage(pageNumber)}
                 >
@@ -205,12 +205,12 @@ const ProcessedRecordsList: React.FC = () => {
                 </Button>
               );
             })}
-            
+
             {totalPages > 5 && currentPage < totalPages && (
               <>
                 {currentPage < totalPages - 1 && <span className="px-2 self-center">...</span>}
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="sm"
                   onClick={() => setCurrentPage(totalPages)}
                 >
@@ -219,9 +219,9 @@ const ProcessedRecordsList: React.FC = () => {
               </>
             )}
           </div>
-          
-          <Button 
-            variant="ghost" 
+
+          <Button
+            variant="ghost"
             size="sm"
             disabled={currentPage === totalPages || totalPages === 0}
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}

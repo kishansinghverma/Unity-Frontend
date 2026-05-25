@@ -1,4 +1,4 @@
-import { FileText, Table2, Table as Table1, CodeXml } from "lucide-react";
+import { CodeXml, FileText, Table as Table1, Table2 } from "lucide-react";
 import { NotificationMessages as TNotificationMessages } from "../../../../../engine/services/notificationService";
 import { StatementType, SupportedFormatItem } from "./contracts/types";
 

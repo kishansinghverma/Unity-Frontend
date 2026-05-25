@@ -1,4 +1,4 @@
-import { X, LayoutDashboard, Settings, User, ClipboardList, ListChecks, FileCheck, UserSquare, LogIn, Home, Thermometer, PlusCircle, ListFilter, ArrowRightLeft, DollarSign as PriceIcon, Archive, FileUp } from 'lucide-react';
+import { Archive, ArrowRightLeft, ClipboardList, FileCheck, FileUp, Home, LayoutDashboard, ListChecks, ListFilter, LogIn, PlusCircle, DollarSign as PriceIcon, Settings, Thermometer, User, UserSquare, X } from 'lucide-react';
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -61,12 +61,12 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     if (itemPath === '/emandi/gatepasses/new' && (location.pathname === '/emandi' || location.pathname === '/emandi/gatepasses/new')) {
       return true;
     }
-    
+
     // Other specific route logic
     if (itemPath === '/emandi/gatepasses/queued' && location.pathname === '/emandi/gatepasses') {
       return true;
     }
-    
+
     return location.pathname === itemPath;
   };
 
@@ -77,9 +77,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-20 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-hidden transition-all transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 lg:z-auto lg:static lg:w-72 ${
-        open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-      }`}
+      className={`fixed inset-y-0 left-0 z-20 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-hidden transition-all transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 lg:z-auto lg:static lg:w-72 ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
     >
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-2">
@@ -95,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
           <X className="w-6 h-6 text-gray-600 dark:text-gray-300" />
         </button>
       </div>
-      
+
       <div className="flex-1 overflow-y-auto">
         <nav className="px-4 py-3">
           <h3 className="text-xs font-semibold text-gray-500 uppercase dark:text-gray-400">Navigation</h3>
@@ -104,11 +103,10 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isNavItemActive(item.path)
+                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${isNavItemActive(item.path)
                     ? 'bg-blue-100 text-blue-600 dark:bg-gray-700 dark:text-blue-400'
                     : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-                }`}
+                  }`}
               >
                 {item.icon}
                 <span className="ml-3">{item.name}</span>
@@ -117,7 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
           </div>
         </nav>
       </div>
-      
+
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
         {isAuthenticated ? (
           <div className="flex items-center justify-between">
@@ -130,7 +128,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
                 <p className="text-xs text-gray-500 dark:text-gray-400">Administrator</p>
               </div>
             </div>
-            <button 
+            <button
               onClick={handleLogout}
               className="p-2 text-gray-500 hover:text-red-500 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
             >
@@ -143,7 +141,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
           </div>
         ) : (
           <div className="flex items-center justify-center">
-            <Link 
+            <Link
               to="/"
               className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 px-3 py-2"
             >

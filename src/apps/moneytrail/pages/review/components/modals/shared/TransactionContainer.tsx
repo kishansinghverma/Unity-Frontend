@@ -1,6 +1,5 @@
-import { FileText } from "lucide-react"
-import { ElementType, PropsWithChildren } from "react"
-import React, { memo } from "react";
+import { FileText } from "lucide-react";
+import React, { ElementType, memo, PropsWithChildren } from "react";
 
 export const TransactionContainerFC: React.FC<PropsWithChildren<{
   icon: ElementType,
@@ -36,7 +35,7 @@ export const TransactionContainerFC: React.FC<PropsWithChildren<{
             </div>
           </div>
         )}
-          {childCount > 0 && (<div className="p-4 flex-1 overflow-y-auto"> {children} </div>)}
+        {childCount > 0 && (<div className="p-4 flex-1 overflow-y-auto"> {children} </div>)}
       </div>
     )
   };

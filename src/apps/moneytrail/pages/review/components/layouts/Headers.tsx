@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { PlusCircle, CalendarArrowUp, ClockArrowUp } from "lucide-react";
+import { CalendarArrowUp, ClockArrowUp, PlusCircle } from "lucide-react";
 import { FC, memo } from "react";
 import { HeaderProps, ListHeaderProps } from "../../engine/contracts/props";
 
@@ -27,34 +27,34 @@ const HeaderFC: FC<HeaderProps> = ({ setModalVisible }) => (
 const ListHeaderFC: FC<ListHeaderProps> = ({
   title, subtitle, Icon, className, showProcessed, setShowProcessed
 }) => (
-    <header className={`px-6 py-4 flex-shrink-0 bg-gradient-to-r ${className}`}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center justify-start gap-4">
-          <div className="bg-white/20 p-3 rounded-lg">
-            <Icon size={28} className="text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-white">{title}</h1>
-            <p className="text-slate-100 text-sm">{subtitle}</p>
-          </div>
+  <header className={`px-6 py-4 flex-shrink-0 bg-gradient-to-r ${className}`}>
+    <div className="flex items-center justify-between">
+      <div className="flex items-center justify-start gap-4">
+        <div className="bg-white/20 p-3 rounded-lg">
+          <Icon size={28} className="text-white" />
         </div>
-        <div className="relative group">
-          <button
-            type="button"
-            onClick={() => setShowProcessed(flag => !flag)}
-            className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 focus:ring-white ${showProcessed ? 'bg-green-500/90' : 'bg-white/30'}`}
-            role="switch"
-            aria-checked={showProcessed}
-          >
-            <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 ease-in-out ${showProcessed ? 'translate-x-6' : 'translate-x-1'}`} />
-          </button>
-          <div className="absolute top-8 right-0 w-max bg-gray-900 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-            Show Processed
-          </div>
+        <div>
+          <h1 className="text-xl font-bold text-white">{title}</h1>
+          <p className="text-slate-100 text-sm">{subtitle}</p>
         </div>
       </div>
-    </header>
-  )
+      <div className="relative group">
+        <button
+          type="button"
+          onClick={() => setShowProcessed(flag => !flag)}
+          className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 focus:ring-white ${showProcessed ? 'bg-green-500/90' : 'bg-white/30'}`}
+          role="switch"
+          aria-checked={showProcessed}
+        >
+          <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 ease-in-out ${showProcessed ? 'translate-x-6' : 'translate-x-1'}`} />
+        </button>
+        <div className="absolute top-8 right-0 w-max bg-gray-900 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          Show Processed
+        </div>
+      </div>
+    </div>
+  </header>
+)
 
 export const Header = memo(HeaderFC);
 export const ListHeader = memo(ListHeaderFC);

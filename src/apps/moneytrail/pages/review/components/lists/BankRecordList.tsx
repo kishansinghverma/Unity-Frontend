@@ -1,15 +1,15 @@
 import { Pagination } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 import { Building2 } from "lucide-react";
-import { useState, useRef, useEffect, useMemo, useCallback, FC, memo } from "react";
-import { PostParams, Constants, Routes } from "../../../../../../engine/constant";
+import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Constants, PostParams, Routes } from "../../../../../../engine/constant";
 import { handleResponse } from "../../../../../../engine/helpers/httpHelper";
 import { notify } from "../../../../../../engine/services/notificationService";
 import { useAppDispatch } from "../../../../../../store/hooks";
 import { reviewApi } from "../../../../store/reviewSlice";
 import { BankRecordListProps } from "../../engine/contracts/props";
 import { ListHeader } from "../layouts/Headers";
-import { SkeletonItem, EmptyList } from "../shared/Common";
+import { EmptyList, SkeletonItem } from "../shared/Common";
 import { BankRecordListItem } from "./items/BankRecordListItem";
 
 const BankRecordListFC: FC<BankRecordListProps> = ({ isLoading, items, setBankItemId }) => {
@@ -101,7 +101,7 @@ const BankRecordListFC: FC<BankRecordListProps> = ({ isLoading, items, setBankIt
           }
         </ul>
       </div>
-      
+
       {!isLoading && filteredItems.length > 0 && (
         <div className="py-3 px-4 border-t border-gray-200 flex justify-center bg-white">
           <Pagination

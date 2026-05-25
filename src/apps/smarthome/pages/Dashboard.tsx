@@ -1,127 +1,127 @@
 // Import Lucide icons
 import {
-    ChevronDown,
-    ChevronRight,
-    Lightbulb,
-    Thermometer,
-    Tv2,
-    Speaker,
-    BedDouble,
-    CookingPot,
-    Sofa,
-    Bath,
-    Zap,
-    Droplets,
-    Power,
-    Moon,
-    ShieldCheck,
-    Clapperboard,
-    Coffee,
-    PartyPopper,
-    PlusCircle,
-    Activity,
-    AirVent,
-    Fan,
-    Router,
-    Smartphone,
-    Palette,
-    Music2,
-    Briefcase,
-    CloudSun,
-    Sunrise,
+  Activity,
+  AirVent,
+  Bath,
+  BedDouble,
+  Briefcase,
+  ChevronDown,
+  ChevronRight,
+  Clapperboard,
+  CloudSun,
+  Coffee,
+  CookingPot,
+  Droplets,
+  Fan,
+  Lightbulb,
+  Moon,
+  Music2,
+  Palette,
+  PartyPopper,
+  PlusCircle,
+  Power,
+  Router,
+  ShieldCheck,
+  Smartphone,
+  Sofa,
+  Speaker,
+  Sunrise,
+  Thermometer,
+  Tv2,
+  Zap,
 } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface StatCardProps {
-    title: string;
-    value: string;
-    icon: React.ElementType;
-    iconColor?: string;
-    trend?: string;
-    trendColor?: string;
+  title: string;
+  value: string;
+  icon: React.ElementType;
+  iconColor?: string;
+  trend?: string;
+  trendColor?: string;
 }
 
 interface QuickActionButtonProps {
-    label: string;
-    icon: React.ElementType;
-    bgColor?: string;
-    textColor?: string;
-    onClick?: () => void;
+  label: string;
+  icon: React.ElementType;
+  bgColor?: string;
+  textColor?: string;
+  onClick?: () => void;
 }
 
 interface Room {
-    id: string;
-    name: string;
-    icon: React.ElementType;
-    iconColor?: string;
-    deviceCount: number;
-    status: string; // e.g., "3 lights on", "AC at 22°C"
-    devices?: Device[];
+  id: string;
+  name: string;
+  icon: React.ElementType;
+  iconColor?: string;
+  deviceCount: number;
+  status: string; // e.g., "3 lights on", "AC at 22°C"
+  devices?: Device[];
 }
 
 interface Device {
-    id: string;
-    name: string;
-    icon: React.ElementType;
-    isOn: boolean;
+  id: string;
+  name: string;
+  icon: React.ElementType;
+  isOn: boolean;
 }
 
 interface Scene {
-    id: string;
-    name: string;
-    icon: React.ElementType;
-    iconColor?: string;
-    isActive?: boolean;
+  id: string;
+  name: string;
+  icon: React.ElementType;
+  iconColor?: string;
+  isActive?: boolean;
 }
 
 // Sample Data
 const roomsData: Room[] = [
-    {
-        id: 'living', name: 'Living Room', icon: Sofa, iconColor: 'text-amber-500', deviceCount: 5, status: 'TV On, 2 lights on', devices: [
-            { id: 'lr-light1', name: 'Ceiling Light', icon: Lightbulb, isOn: true },
-            { id: 'lr-light2', name: 'Lamp', icon: Lightbulb, isOn: true },
-            { id: 'lr-tv', name: 'Smart TV', icon: Tv2, isOn: true },
-            { id: 'lr-speaker', name: 'Soundbar', icon: Speaker, isOn: false },
-            { id: 'lr-thermostat', name: 'Thermostat', icon: Thermometer, isOn: true },
-        ]
-    },
-    {
-        id: 'kitchen', name: 'Kitchen', icon: CookingPot, iconColor: 'text-orange-500', deviceCount: 3, status: 'All devices off', devices: [
-            { id: 'k-light1', name: 'Main Light', icon: Lightbulb, isOn: false },
-            { id: 'k-fan', name: 'Exhaust Fan', icon: Fan, isOn: false },
-            { id: 'k-fridge', name: 'Smart Fridge', icon: Smartphone, isOn: true },
-        ]
-    },
-    {
-        id: 'bedroom', name: 'Master Bedroom', icon: BedDouble, iconColor: 'text-purple-500', deviceCount: 4, status: 'Night mode active', devices: [
-            { id: 'b-light1', name: 'Bedside Lamp L', icon: Lightbulb, isOn: true },
-            { id: 'b-light2', name: 'Bedside Lamp R', icon: Lightbulb, isOn: true },
-            { id: 'b-ac', name: 'Air Conditioner', icon: AirVent, isOn: true },
-            { id: 'b-curtains', name: 'Smart Curtains', icon: Palette, isOn: false },
-        ]
-    },
-    {
-        id: 'bathroom', name: 'Bathroom', icon: Bath, iconColor: 'text-cyan-500', deviceCount: 2, status: '1 light on', devices: [
-            { id: 'ba-light1', name: 'Mirror Light', icon: Lightbulb, isOn: true },
-            { id: 'ba-fan', name: 'Ventilation Fan', icon: Fan, isOn: false },
-        ]
-    },
-    {
-        id: 'office', name: 'Office', icon: Briefcase, iconColor: 'text-gray-500', deviceCount: 3, status: 'PC On', devices: [
-            { id: 'o-light1', name: 'Desk Lamp', icon: Lightbulb, isOn: true },
-            { id: 'o-pc', name: 'Computer', icon: Smartphone, isOn: true },
-            { id: 'o-router', name: 'Wi-Fi Router', icon: Router, isOn: true },
-        ]
-    },
+  {
+    id: 'living', name: 'Living Room', icon: Sofa, iconColor: 'text-amber-500', deviceCount: 5, status: 'TV On, 2 lights on', devices: [
+      { id: 'lr-light1', name: 'Ceiling Light', icon: Lightbulb, isOn: true },
+      { id: 'lr-light2', name: 'Lamp', icon: Lightbulb, isOn: true },
+      { id: 'lr-tv', name: 'Smart TV', icon: Tv2, isOn: true },
+      { id: 'lr-speaker', name: 'Soundbar', icon: Speaker, isOn: false },
+      { id: 'lr-thermostat', name: 'Thermostat', icon: Thermometer, isOn: true },
+    ]
+  },
+  {
+    id: 'kitchen', name: 'Kitchen', icon: CookingPot, iconColor: 'text-orange-500', deviceCount: 3, status: 'All devices off', devices: [
+      { id: 'k-light1', name: 'Main Light', icon: Lightbulb, isOn: false },
+      { id: 'k-fan', name: 'Exhaust Fan', icon: Fan, isOn: false },
+      { id: 'k-fridge', name: 'Smart Fridge', icon: Smartphone, isOn: true },
+    ]
+  },
+  {
+    id: 'bedroom', name: 'Master Bedroom', icon: BedDouble, iconColor: 'text-purple-500', deviceCount: 4, status: 'Night mode active', devices: [
+      { id: 'b-light1', name: 'Bedside Lamp L', icon: Lightbulb, isOn: true },
+      { id: 'b-light2', name: 'Bedside Lamp R', icon: Lightbulb, isOn: true },
+      { id: 'b-ac', name: 'Air Conditioner', icon: AirVent, isOn: true },
+      { id: 'b-curtains', name: 'Smart Curtains', icon: Palette, isOn: false },
+    ]
+  },
+  {
+    id: 'bathroom', name: 'Bathroom', icon: Bath, iconColor: 'text-cyan-500', deviceCount: 2, status: '1 light on', devices: [
+      { id: 'ba-light1', name: 'Mirror Light', icon: Lightbulb, isOn: true },
+      { id: 'ba-fan', name: 'Ventilation Fan', icon: Fan, isOn: false },
+    ]
+  },
+  {
+    id: 'office', name: 'Office', icon: Briefcase, iconColor: 'text-gray-500', deviceCount: 3, status: 'PC On', devices: [
+      { id: 'o-light1', name: 'Desk Lamp', icon: Lightbulb, isOn: true },
+      { id: 'o-pc', name: 'Computer', icon: Smartphone, isOn: true },
+      { id: 'o-router', name: 'Wi-Fi Router', icon: Router, isOn: true },
+    ]
+  },
 ];
 
 const scenesData: Scene[] = [
-    { id: 'movie', name: 'Movie Night', icon: Clapperboard, iconColor: 'text-red-500', isActive: false },
-    { id: 'morning', name: 'Good Morning', icon: Sunrise, iconColor: 'text-yellow-500', isActive: true },
-    { id: 'focus', name: 'Focus Mode', icon: Activity, iconColor: 'text-blue-500', isActive: false },
-    { id: 'relax', name: 'Relax Time', icon: Music2, iconColor: 'text-green-500', isActive: false },
-    { id: 'party', name: 'Party Time', icon: PartyPopper, iconColor: 'text-pink-500', isActive: false },
-    { id: 'bedtime', name: 'Bedtime', icon: Moon, iconColor: 'text-indigo-500', isActive: false },
+  { id: 'movie', name: 'Movie Night', icon: Clapperboard, iconColor: 'text-red-500', isActive: false },
+  { id: 'morning', name: 'Good Morning', icon: Sunrise, iconColor: 'text-yellow-500', isActive: true },
+  { id: 'focus', name: 'Focus Mode', icon: Activity, iconColor: 'text-blue-500', isActive: false },
+  { id: 'relax', name: 'Relax Time', icon: Music2, iconColor: 'text-green-500', isActive: false },
+  { id: 'party', name: 'Party Time', icon: PartyPopper, iconColor: 'text-pink-500', isActive: false },
+  { id: 'bedtime', name: 'Bedtime', icon: Moon, iconColor: 'text-indigo-500', isActive: false },
 ];
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, iconColor = 'text-indigo-600', trend, trendColor = 'text-green-500' }) => (
@@ -139,7 +139,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, iconColor
 
 const QuickActionButton: React.FC<QuickActionButtonProps> = ({ label, icon: Icon, bgColor = 'bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500', textColor = 'text-white', onClick }) => {
   return (
-    <button 
+    <button
       onClick={onClick}
       className={`flex flex-col items-center justify-center p-4 rounded-xl shadow-lg dark:shadow-md dark:shadow-slate-700/50 hover:shadow-xl dark:hover:shadow-slate-600/60 transition-all duration-300 transform hover:-translate-y-1 ${bgColor} ${textColor} w-full h-full min-h-[100px]`}
     >
@@ -149,7 +149,7 @@ const QuickActionButton: React.FC<QuickActionButtonProps> = ({ label, icon: Icon
   );
 };
 
-const DeviceToggle: React.FC<{device: Device, onToggle: (id: string) => void}> = ({ device, onToggle }) => {
+const DeviceToggle: React.FC<{ device: Device, onToggle: (id: string) => void }> = ({ device, onToggle }) => {
   return (
     <div className="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-700/50 rounded-md hover:bg-slate-100 dark:hover:bg-slate-600/70 transition-colors">
       <div className="flex items-center">
@@ -177,7 +177,7 @@ const RoomCard: React.FC<{ room: Room, onDeviceToggle: (roomId: string, deviceId
             <room.icon size={28} className={`${room.iconColor || 'text-indigo-600'} dark:${room.iconColor?.replace('500', '400') || 'dark:text-indigo-400'} mr-3`} />
             <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">{room.name}</h3>
           </div>
-          <button 
+          <button
             onClick={() => setIsOpen(!isOpen)}
             className="text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 p-1 rounded-full hover:bg-indigo-50 dark:hover:bg-slate-700 transition-colors"
           >
@@ -197,28 +197,28 @@ const RoomCard: React.FC<{ room: Room, onDeviceToggle: (roomId: string, deviceId
           </div>
         </div>
       )}
-      <div className={`h-1 ${room.iconColor?.replace('text-', 'bg-') || 'bg-indigo-600'} dark:${room.iconColor?.replace('text-','dark:bg-') || 'dark:bg-indigo-500'}`}></div>
+      <div className={`h-1 ${room.iconColor?.replace('text-', 'bg-') || 'bg-indigo-600'} dark:${room.iconColor?.replace('text-', 'dark:bg-') || 'dark:bg-indigo-500'}`}></div>
     </div>
   );
 };
 
 const SceneButton: React.FC<{ scene: Scene, onToggle: (id: string) => void }> = ({ scene, onToggle }) => {
-  const activeClass = `${scene.iconColor?.replace('text-','bg-')} bg-opacity-20 dark:bg-opacity-30 border-2 ${scene.iconColor?.replace('text-','border-')} dark:${scene.iconColor?.replace('text-','dark:border-').replace('500','400')}`;
+  const activeClass = `${scene.iconColor?.replace('text-', 'bg-')} bg-opacity-20 dark:bg-opacity-30 border-2 ${scene.iconColor?.replace('text-', 'border-')} dark:${scene.iconColor?.replace('text-', 'dark:border-').replace('500', '400')}`;
   const inactiveClass = 'bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700';
-  
+
   return (
-  <button
-    onClick={() => onToggle(scene.id)}
-    className={`
+    <button
+      onClick={() => onToggle(scene.id)}
+      className={`
       p-4 rounded-xl shadow-lg dark:shadow-md dark:shadow-slate-700/50 hover:shadow-xl dark:hover:shadow-slate-600/60 transition-all duration-300 transform hover:-translate-y-1
       flex flex-col items-center justify-center text-center w-full h-full min-h-[120px]
       ${scene.isActive ? activeClass : inactiveClass}
     `}
-  >
-    <scene.icon size={32} className={`${scene.iconColor || 'text-indigo-600'} mb-2 ${scene.isActive ? (scene.iconColor + ` dark:${scene.iconColor?.replace('500','400')}`) : 'text-slate-500 dark:text-slate-400'}`} />
-    <span className={`text-sm font-semibold ${scene.isActive ? (scene.iconColor + ` dark:${scene.iconColor?.replace('500','400')}`) : 'text-slate-700 dark:text-slate-200'}`}>{scene.name}</span>
-    {scene.isActive && <span className="text-xs mt-1 font-medium text-green-600 dark:text-green-400">Active</span>}
-  </button>
+    >
+      <scene.icon size={32} className={`${scene.iconColor || 'text-indigo-600'} mb-2 ${scene.isActive ? (scene.iconColor + ` dark:${scene.iconColor?.replace('500', '400')}`) : 'text-slate-500 dark:text-slate-400'}`} />
+      <span className={`text-sm font-semibold ${scene.isActive ? (scene.iconColor + ` dark:${scene.iconColor?.replace('500', '400')}`) : 'text-slate-700 dark:text-slate-200'}`}>{scene.name}</span>
+      {scene.isActive && <span className="text-xs mt-1 font-medium text-green-600 dark:text-green-400">Active</span>}
+    </button>
   );
 };
 
@@ -227,16 +227,16 @@ const DashboardPage: React.FC = () => {
   const [currentScenes, setCurrentScenes] = useState<Scene[]>(scenesData);
 
   const handleDeviceToggle = (roomId: string, deviceId: string) => {
-    setCurrentRooms(prevRooms => 
-      prevRooms.map(room => 
-        room.id === roomId 
-        ? {
+    setCurrentRooms(prevRooms =>
+      prevRooms.map(room =>
+        room.id === roomId
+          ? {
             ...room,
-            devices: room.devices?.map(device => 
-              device.id === deviceId ? {...device, isOn: !device.isOn} : device
+            devices: room.devices?.map(device =>
+              device.id === deviceId ? { ...device, isOn: !device.isOn } : device
             )
           }
-        : room
+          : room
       )
     );
   };
@@ -244,7 +244,7 @@ const DashboardPage: React.FC = () => {
   const handleSceneToggle = (sceneId: string) => {
     setCurrentScenes(prevScenes =>
       prevScenes.map(scene =>
-        scene.id === sceneId ? { ...scene, isActive: !scene.isActive } : scene 
+        scene.id === sceneId ? { ...scene, isActive: !scene.isActive } : scene
       )
     );
   };
@@ -263,7 +263,7 @@ const DashboardPage: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <StatCard title="Indoor Temp" value="23°C" icon={Thermometer} iconColor="text-red-500" trend="+0.5°C Today" trendColor="text-red-500" />
           <StatCard title="Outdoor Temp" value="28°C" icon={CloudSun} iconColor="text-orange-500" trend="Sunny" />
-          <StatCard title="Humidity" value="55%" icon={Droplets} iconColor="text-sky-500" trend="-2% Stable" trendColor="text-green-500"/>
+          <StatCard title="Humidity" value="55%" icon={Droplets} iconColor="text-sky-500" trend="-2% Stable" trendColor="text-green-500" />
           <StatCard title="Energy Usage" value="12 kWh" icon={Zap} iconColor="text-yellow-500" trend="Normal" />
         </div>
       </section>
@@ -279,7 +279,7 @@ const DashboardPage: React.FC = () => {
           <QuickActionButton label="Add New Device" icon={PlusCircle} bgColor="bg-sky-500 hover:bg-sky-600 dark:bg-sky-600 dark:hover:bg-sky-500" />
         </div>
       </section>
-      
+
       {/* Rooms Section */}
       <section>
         <div className="flex justify-between items-center mb-4">
@@ -300,7 +300,7 @@ const DashboardPage: React.FC = () => {
       <section>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-200">Scenes</h3>
-           <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center">
+          <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center">
             Manage Scenes <ChevronRight size={18} className="ml-1" />
           </button>
         </div>
@@ -315,11 +315,11 @@ const DashboardPage: React.FC = () => {
 };
 
 const Dashboard: React.FC = () => {
-    return (
-        <main className="flex-1 overflow-x-hidden overflow-y-auto pb-6">
-          <DashboardPage />
-        </main>
-    );
+  return (
+    <main className="flex-1 overflow-x-hidden overflow-y-auto pb-6">
+      <DashboardPage />
+    </main>
+  );
 };
 
 export default Dashboard;

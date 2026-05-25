@@ -1,5 +1,5 @@
-import { User, Lock } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import { Lock, User } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -24,7 +24,7 @@ const Login: React.FC = () => {
       setError('Please enter both username and password');
       return;
     }
-    
+
     // For demo purposes, accept any credentials
     login();
     navigate('/app-selection');
@@ -41,13 +41,13 @@ const Login: React.FC = () => {
             <h2 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">Unity Hub</h2>
             <p className="text-gray-500 dark:text-gray-400">Sign in to access your applications</p>
           </div>
-          
+
           {error && (
             <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
               {error}
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -66,7 +66,7 @@ const Login: React.FC = () => {
                 />
               </div>
             </div>
-            
+
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Password
@@ -84,7 +84,7 @@ const Login: React.FC = () => {
                 />
               </div>
             </div>
-            
+
             <div>
               <button
                 type="submit"

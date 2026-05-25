@@ -13,6 +13,6 @@ export type Fetchable<T> = {
 }
 
 export type ReactState<T> = {
-  get: () => T;
-  set: Dispatch<SetStateAction<T>>;
+    get: () => T;
+    set: Dispatch<SetStateAction<T>>;
 };

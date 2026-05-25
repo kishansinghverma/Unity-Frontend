@@ -1,5 +1,5 @@
-import { Menu, Search, Bell, ChevronDown, LayoutDashboard, BarChart3, Wheat, DollarSign, CandlestickChart, Home } from 'lucide-react';
-import React, { useState, useRef, useEffect } from 'react';
+import { BarChart3, Bell, CandlestickChart, ChevronDown, DollarSign, Home, LayoutDashboard, Menu, Search, Wheat } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { APPS } from '../../constants/apps';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -69,11 +69,10 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
             className="flex items-center space-x-2 focus:outline-none"
           >
             <div className="flex items-center space-x-2">
-              <span className={`h-8 w-8 ${
-                currentApp?.icon === 'Wheat' ? 'bg-yellow-400' : 
-                currentApp?.icon === 'Home' ? 'bg-rose-600' : 
-                'bg-purple-800'
-              } rounded-md flex items-center justify-center`}>
+              <span className={`h-8 w-8 ${currentApp?.icon === 'Wheat' ? 'bg-yellow-400' :
+                  currentApp?.icon === 'Home' ? 'bg-rose-600' :
+                    'bg-purple-800'
+                } rounded-md flex items-center justify-center`}>
                 <span className="text-white">{getIcon(currentApp?.icon || 'LayoutDashboard')}</span>
               </span>
               <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
