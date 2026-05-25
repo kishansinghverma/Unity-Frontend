@@ -17,6 +17,7 @@ export const bankColumns: TableColumnsType<BankPreviewRow> = [
     {
         key: "description",
         dataIndex: "description",
+        ellipsis: true,
         title: <span className="flex items-center gap-1.5 text-gray-600"><AlignLeft size={14} /> Description</span>,
         render: (value: string) => <Text style={{ textTransform: "capitalize" }}>{value.toLowerCase()}</Text>,
     },
@@ -54,12 +55,14 @@ export const appColumns: TableColumnsType<AppPreviewRow> = [
         key: "utr",
         dataIndex: "utr",
         width: 400,
+        ellipsis: true,
         title: <span className="flex items-center gap-1.5 text-gray-600"><Hash size={14} /> UTR</span>,
         render: (value: string) => <a type="secondary">{value}</a>,
     },
     {
         key: "recipient",
         dataIndex: "recipient",
+        ellipsis: true,
         title: <span className="flex items-center gap-1.5 text-gray-600"><UserRound size={14} /> Recipient</span>,
         render: (value: string) => <Text style={{ textTransform: "capitalize" }}>{value.toLowerCase()}</Text>,
     },

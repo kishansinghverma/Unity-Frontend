@@ -6,7 +6,7 @@ import { PostParams, Routes } from "../../../../engine/constant";
 import { handleError, handleJsonResponse } from "../../../../engine/helpers/httpHelper";
 import { NotificationMessages, notify } from "../../../../engine/services/notificationService";
 import { AppRecord, BankRecord } from "../review/engine/contracts/models";
-import { identifyStatementType, parseStatement } from "./engine/parsers";
+import { parseStatement } from "./engine/parsers";
 import { AppPreviewRow, BankPreviewRow, ParsedStatementPreview, StatementType, SupportedFormatItem, UploadResult } from "./engine/contracts/types";
 import { appColumns, bankColumns } from "./components";
 
@@ -74,12 +74,13 @@ const StatementParams: Record<StatementType, { source: string, fileType: string 
 };
 
 const parseStatementFile = async (file: File): Promise<ParsedStatementPreview> => {
-  const { records, statementType} = await parseStatement(file);
+  const { records, statementType } = await parseStatement(file);
 
   return {
-    records, statementType,
+    records,
+    statementType,
     fileName: file.name,
-    recordType: ['phonepe', 'paytm'].includes(statementType) ? 'app' : 'bank'
+    recordType: ['phonepe', 'paytm'].includes(statementType) ? 'app' : 'bank',
   };
 };
 
@@ -104,9 +105,6 @@ const ImportPage: React.FC = () => {
       .map((record, index) => ({ ...record, key: `${record.transactionId}-${index}` })),
     [parsedPreview],
   );
-
-  const previewColumns = parsedPreview?.recordType === "bank" ? bankColumns : appColumns;
-  const previewRows = parsedPreview?.recordType === "bank" ? bankRows : appRows;
 
   const clearSelection = () => setParsedPreview(null);
 
@@ -153,6 +151,66 @@ const ImportPage: React.FC = () => {
     response.finally(() => setIsUploading(false));
   };
 
+  const renderPreviewHeader = () => {
+    if (!parsedPreview) return null;
+
+    return (
+      <div className="flex items-center justify-between p-1">
+        <div className="flex items-center gap-2">
+          <ScanSearch size={15} strokeWidth={2.5} />
+          <Text style={{ fontSize: 15 }} className="text-gray-800 tracking-wide">Statement Preview</Text>
+        </div>
+        <div className="flex gap-12">
+          <div>
+            <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="gold">
+              <FileText size={12} strokeWidth={2.5} />
+              <span>{parsedPreview.fileName}</span>
+            </Tag>
+            <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="green">
+              <Database size={12} strokeWidth={2.5} />
+              <span>Records : {parsedPreview.records.length}</span>
+            </Tag>
+            <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="purple">
+              <LayoutGrid size={12} strokeWidth={2.5} />
+              <span>{StatementParams[parsedPreview.statementType].source}</span>
+            </Tag>
+            <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="cyan">
+              <CodeXml size={12} strokeWidth={2.5} />
+              <span>{StatementParams[parsedPreview.statementType].fileType}</span>
+            </Tag>
+          </div>
+          <div className="flex gap-2.5">
+            <Button
+              size="small"
+              color="primary"
+              variant="outlined"
+              shape="round"
+              icon={isUploading
+                ? <LoaderCircle size={14} strokeWidth={2.5} className="animate-spin" />
+                : <CloudUpload size={14} strokeWidth={2.5} />
+              }
+              disabled={isUploading || isParsing}
+              onClick={handleUpload}
+            >
+              Upload
+            </Button>
+            <Button
+              size="small"
+              color="danger"
+              variant="outlined"
+              shape="round"
+              icon={<Trash2 size={14} strokeWidth={2.5} />}
+              disabled={isUploading}
+              onClick={clearSelection}
+            >
+              Clear
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex h-full max-h-full min-h-0 flex-col gap-4">
       <Card
@@ -178,7 +236,6 @@ const ImportPage: React.FC = () => {
             <Col key={`format-group-${groupIndex}`} span={8}>
               <List>
                 {group.map((item) => {
-
                   return (
                     <List.Item key={`${item.title}`}>
                       <div className="flex w-full items-center gap-3">
@@ -224,73 +281,35 @@ const ImportPage: React.FC = () => {
           </div>
         </Card>
       ) : (
-        <Table
-          size="small"
-          bordered
-          virtual
-          columns={previewColumns}
-          dataSource={previewRows}
-          pagination={false}
-          scroll={{ y: 525 }}
-          className="[&_.ant-table-cell]:!px-3"
-          title={() => (
-            <div className="flex items-center justify-between p-1">
-              <div className="flex items-center gap-2">
-                <ScanSearch size={15} strokeWidth={2.5} />
-                <Text style={{ fontSize: 15 }} className="text-gray-800 tracking-wide">Statement Preview</Text>
-              </div>
-              <div className="flex gap-12">
-                <div>
-                  <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="gold">
-                    <FileText size={12} strokeWidth={2.5} />
-                    <span>{parsedPreview.fileName}</span>
-                  </Tag>
-                  <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="green">
-                    <Database size={12} strokeWidth={2.5} />
-                    <span>Records : {parsedPreview.records.length}</span>
-                  </Tag>
-                  <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="purple">
-                    <LayoutGrid size={12} strokeWidth={2.5} />
-                    <span>{StatementParams[parsedPreview.statementType].source}</span>
-                  </Tag>
-                  <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="cyan">
-                    <CodeXml size={12} strokeWidth={2.5} />
-                    <span>{StatementParams[parsedPreview.statementType].fileType}</span>
-                  </Tag>
-                </div>
-                <div className="flex gap-2.5">
-                  <Button
-                    size="small"
-                    color="primary"
-                    variant="outlined"
-                    shape="round"
-                    icon={isUploading ?
-                      <LoaderCircle size={14} strokeWidth={2.5} className="animate-spin" /> :
-                      <CloudUpload size={14} strokeWidth={2.5} />
-                    }
-                    disabled={isUploading || isParsing}
-                    onClick={handleUpload}
-                  >
-                    Upload
-                  </Button>
-                  <Button
-                    size="small"
-                    color="danger"
-                    variant="outlined"
-                    shape="round"
-                    icon={<Trash2 size={14} strokeWidth={2.5} />}
-                    disabled={isUploading}
-                    onClick={clearSelection}
-                  >
-                    Clear
-                  </Button>
-                </div>
-              </div>
-            </div>
+        <>
+          {parsedPreview.recordType === "bank" ? (
+            <Table
+              size="small"
+              bordered
+              virtual
+              columns={bankColumns}
+              dataSource={bankRows}
+              pagination={false}
+              scroll={{ y: 525 }}
+              className="[&_.ant-table-cell]:!px-3"
+              title={renderPreviewHeader}
+            />
+          ) : (
+            <Table
+              size="small"
+              bordered
+              virtual
+              columns={appColumns}
+              dataSource={appRows}
+              pagination={false}
+              scroll={{ y: 525 }}
+              className="[&_.ant-table-cell]:!px-3"
+              title={renderPreviewHeader}
+            />
           )}
-        />
+        </>
       )}
-    </div >
+    </div>
   );
 };
 
