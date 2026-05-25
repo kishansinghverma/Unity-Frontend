@@ -36,11 +36,13 @@ export const parseIciciCardStatement = async (file: File) => {
         const description = String(rowData[2] ?? StringUtils.empty).trim();
         const amount = String(rowData[5] ?? StringUtils.empty).replaceAll(',', '');
         const amountSigned = String(rowData[6] ?? StringUtils.empty).replaceAll(',', '');
-        const parsedAmount = parseFloat(amountSigned);
-        const type: 'Debit' | 'Credit' = isNaN(parsedAmount) ?
-            StringUtils.isNullOrEmpty(amountSigned) ? 'Debit' : 'Credit' : parsedAmount > 0 ? 'Debit' : 'Credit';
+        const parsedAmount = parseFloat(amount);
+        const parsedSignedAmount = parseFloat(amountSigned);
+        
+        const type: 'Debit' | 'Credit' = isNaN(parsedSignedAmount) ?
+            StringUtils.isNullOrEmpty(amountSigned) ? 'Debit' : 'Credit' : parsedSignedAmount > 0 ? 'Debit' : 'Credit';
 
-        if (parsedDate.isValid() && !isNaN(parsedAmount) && parseFloat(amount) !== 0) {
+        if (parsedDate.isValid() && !isNaN(parsedAmount) && parsedAmount !== 0) {
             const date = parsedDate.toDate();
             const amountAbsolute = Math.abs(parsedAmount);
 
