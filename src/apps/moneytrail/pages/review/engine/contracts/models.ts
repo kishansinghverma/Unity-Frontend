@@ -1,23 +1,23 @@
 export type BankRecord = {
-  date: Date,
-  description: string,
-  amount: number,
-  processed?: boolean,
-  type: "Credit" | "Debit",
-  bank: "SBI" | "HDFC" | "SBI CC" | "ICICI CC"
+    date: Date,
+    description: string,
+    amount: number,
+    processed?: boolean,
+    type: "Credit" | "Debit",
+    bank: "SBI" | "HDFC" | "SBI CC" | "ICICI CC"
 }
 
 export type AppRecord = {
-  date: Date,
-  recipient: string,
-  transactionId: string,
-  utr: string,
-  processed?: boolean,
-  bank: string | "SBI" | "HDFC"
-  type: string | "Credit" | "Debit",
-  amount: number
+    date: Date,
+    app: "paytm" | "phonepe",
+    recipient: string,
+    transactionId: string,
+    utr: string,
+    processed?: boolean,
+    bank: string | "SBI" | "HDFC"
+    type: string | "Credit" | "Debit",
+    amount: number
 }
-
 
 export type LocationRecord = {
     dateTime: string,
