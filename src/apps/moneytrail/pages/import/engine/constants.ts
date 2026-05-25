@@ -2,6 +2,21 @@ import { FileText, Table2, Table as Table1, CodeXml } from "lucide-react";
 import { NotificationMessages as TNotificationMessages } from "../../../../../engine/services/notificationService";
 import { StatementType, SupportedFormatItem } from "./contracts/types";
 
+export const TransactionMetaData: { [key: string]: string } = {
+    "Debited from XX0041": "HDFC",
+    "Debited from XX6026": "SBI",
+    "Credited to XX0041": "HDFC",
+    "Credited to XX6026": "SBI",
+    "Debited from XXXX38": "SBI CC",
+    "Debited from XX1133": "IOB",
+    "Credited to XX1133": "IOB",
+    "Credited to Account": "Other",
+    "UPI Lite": "UPI Lite",
+    "HDFC Bank - 41": "HDFC",
+    "SBI Rupay Credit Card - 38": "SBI CC",
+    "State Bank Of India - 26": "SBI",
+}
+
 export const NotificationMessages: TNotificationMessages = {
     pending: "Uploading Parsed Statement...",
     success: "Uploaded Successfully.",

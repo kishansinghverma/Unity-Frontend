@@ -8,21 +8,6 @@ import dayjs from 'dayjs';
 dayjs.extend(customParseFormat);
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs`;
 
-export const TransactionMetaData: { [key: string]: { Account: string, Type: string } } = {
-    "Debited from XX0041": { Account: "HDFC", Type: "Debit" },
-    "Debited from XX6026": { Account: "SBI", Type: "Debit" },
-    "Credited to XX0041": { Account: "HDFC", Type: "Credit" },
-    "Credited to XX6026": { Account: "SBI", Type: "Credit" },
-    "Debited from XXXX38": { Account: "SBI CC", Type: "Debit" },
-    "Debited from XX1133": { Account: "IOB", Type: "Debit" },
-    "Credited to XX1133": { Account: "IOB", Type: "Credit" },
-    "Credited to Account": { Account: "Other", Type: "Credit" },
-    "UPI Lite": { Account: "UPI Lite", Type: "Paytm" },
-    "HDFC Bank - 41": { Account: "HDFC", Type: "Paytm" },
-    "SBI Rupay Credit Card - 38": { Account: "SBI CC", Type: "Paytm" },
-    "State Bank Of India - 26": { Account: "SBI", Type: "Paytm" },
-}
-
 export const getNumberAt = (sheet: XLSX.WorkSheet, cellAddress: string): number | null => {
     const data = sheet[cellAddress]?.v;
     if (data === undefined || data === null) return null;

@@ -9,7 +9,6 @@ dayjs.extend(customParseFormat);
 export const parseHdfcStatement = async (file: File) => {
     const { sheet } = await getExcelWorkbookContext(file);
 
-    
     const range = XLSX.utils.decode_range(sheet["!ref"] || "");
     if (!range) throw new Error('No record found in HDFC Statement!');
 

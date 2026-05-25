@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { AppRecord } from "../../../review/engine/contracts/models";
-import { readPdfTokens, TransactionMetaData } from "./common";
+import { readPdfTokens } from "./common";
+import { TransactionMetaData } from "../constants";
 
 export const parsePhonePeStatement = async (file: File) => {
     const tokens = await readPdfTokens(file);
@@ -27,7 +28,7 @@ export const parsePhonePeStatement = async (file: File) => {
                 recipient: `${recipient.replace('Paid to', '').replace('Received from', '').replace('Bill paid -', '').trim()}`,
                 transactionId: tokens[index].split(':')[1].trim(),
                 utr: tokens[index + 1].split(':')[1].trim(),
-                bank: meta[tokens[index + 2].trim()]?.Account ?? 'Unknown',
+                bank: meta[tokens[index + 2].trim()] ?? 'Unknown',
                 type: tokens[index + 2].trim().includes('Credit') ? 'Credit' : tokens[index + 2].trim().includes('Debit') ? 'Debit' : 'Unknown',
                 amount: tokens[index + 4].replace('INR', '').trim().length > 0 ?
                     parseFloat(tokens[index + 4].replace('INR', '').trim()) : parseFloat(tokens[index + 5].trim())

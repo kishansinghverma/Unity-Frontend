@@ -1,10 +1,11 @@
 import * as XLSX from 'xlsx';
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppRecord } from "../../../review/engine/contracts/models";
-import { getExcelWorkbookContext, getNumberAt, getStringAt, TransactionMetaData } from './common';
+import { getExcelWorkbookContext, getNumberAt, getStringAt } from './common';
 import dayjs from 'dayjs';
 import { StringUtils } from '../../../../../../engine/helpers/stringHelper';
 import { getHash } from '../../../review/engine/utils';
+import { TransactionMetaData } from '../constants';
 
 dayjs.extend(customParseFormat);
 
@@ -32,7 +33,7 @@ export const parsePaytmStatement = async (file: File) => {
             const amount = getNumberAt(sheet, `F${row}`) ?? 0;
             const transactionId = `${getHash(date, amount ?? 0, recipient)}`;
             const utr = `${getStringAt(sheet, `D${row}`)}/${transactionId}`;
-            const bank = meta[getStringAt(sheet, `E${row}`) ?? StringUtils.empty]?.Account ?? 'Unknown';
+            const bank = meta[getStringAt(sheet, `E${row}`) ?? StringUtils.empty] ?? 'Unknown';
             const type = recipient === 'Automatic Add Money for UPI Lite' ? 'Debit' : amount > 0 ? 'Credit' : 'Debit';
 
             transactions.push({ date, app: 'paytm', recipient, transactionId, utr, bank, type, amount: Math.abs(amount) });
