@@ -8,7 +8,8 @@ import { notify } from "../../../../engine/services/notificationService";
 import { AppRecord, BankRecord } from "../review/engine/contracts/models";
 import { parseStatement } from "./engine/parsers";
 import { AppPreviewRow, BankPreviewRow, ParsedStatementPreview, UploadResult } from "./engine/contracts/types";
-import { AppColumns, BankColumns, PreviewTableHeader } from "./components";
+import { PreviewTableHeader } from "./components/PreviewTableHeader";
+import { AppColumns, BankColumns } from "./components/Columns";
 import { NotificationMessages, StatementParams, SupportedFormats } from "./engine/constants";
 
 const { Dragger } = Upload;
