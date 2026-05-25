@@ -1,13 +1,12 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { useAppSelector } from '../../store/hooks';
 import { selectCurrentApp } from '../../store/slices/appSlice';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
 const AppShell: React.FC = () => {
   const currentApp = useAppSelector(selectCurrentApp);
-  const dispatch = useAppDispatch();
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
 
   // Display a loading state until the app is set

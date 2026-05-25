@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { RecordItem } from './engine/contracts/types';
 
 function Dashboard() {
-  const [_, setSelectedTransaction] = useState<RecordItem | null>(null);
+  const [, setSelectedTransaction] = useState<RecordItem | null>(null);
 
   const mockRecords: RecordItem[] = []
   const totalTasks = mockRecords.length;

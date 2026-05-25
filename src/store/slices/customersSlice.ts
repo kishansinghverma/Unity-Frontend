@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import { RootState } from '..';
 
@@ -70,7 +70,7 @@ export const fetchCustomers = createAsyncThunk(
       // For this demo, we'll simulate a delay
       await new Promise(resolve => setTimeout(resolve, 500));
       return sampleCustomers;
-    } catch (error) {
+    } catch {
       return rejectWithValue('Failed to fetch customers');
     }
   }

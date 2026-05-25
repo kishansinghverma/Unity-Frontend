@@ -123,7 +123,7 @@ export const ManualEntryModal: FC<ManualEntryModalProps> = ({
     const saveTransaction = (formState: ManualEntryFormState) => {
       const selectedGroup = groups.data?.find(group => group.id === formState.group);
 
-      let payload = {
+      const payload = {
         group_id: selectedGroup?.id,
         cost: formState.amount,
         date: formState.date,
