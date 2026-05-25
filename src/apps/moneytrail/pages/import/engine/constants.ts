@@ -56,7 +56,6 @@ export const SupportedFormats: SupportedFormatItem[][] = [
         {
             title: "ICICI Credit Card",
             description: "Get Monthly / Yearly Statement as CSV File from WebApp.",
-
             iconStyle: "bg-blue-100 text-blue-700",
             icon: Table1
         },

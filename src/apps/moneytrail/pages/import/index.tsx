@@ -134,7 +134,7 @@ const ImportPage: React.FC = () => {
             </Col>
           ))}
         </Row>
-      </Card >
+      </Card>
 
       {!parsedPreview ? (
         <Card
