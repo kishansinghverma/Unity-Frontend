@@ -1,12 +1,15 @@
-import { TableColumnsType, Typography } from "antd";
+import { Button, TableColumnsType, Tag, Typography } from "antd";
 import dayjs from "dayjs";
-import { AlignLeft, BadgeIndianRupee, Calendar, Clock, Hash, UserRound } from "lucide-react";
+import { AlignLeft, BadgeIndianRupee, Calendar, Clock, CloudUpload, CodeXml, Database, FileText, Hash, LayoutGrid, LoaderCircle, ScanSearch, Trash2, UserRound } from "lucide-react";
 import { getFormattedAmount } from "../../../../engine/helpers/numberHelper";
 import { BankPreviewRow, AppPreviewRow } from "./engine/contracts/types";
+import { FC } from "react";
+import { StatementParams } from "./engine/constants";
+import { PreviewTableHeaderProps } from "./engine/contracts/props";
 
 const { Text } = Typography;
 
-export const bankColumns: TableColumnsType<BankPreviewRow> = [
+export const BankColumns: TableColumnsType<BankPreviewRow> = [
     {
         key: "date",
         dataIndex: "date",
@@ -36,7 +39,7 @@ export const bankColumns: TableColumnsType<BankPreviewRow> = [
     }
 ];
 
-export const appColumns: TableColumnsType<AppPreviewRow> = [
+export const AppColumns: TableColumnsType<AppPreviewRow> = [
     {
         key: "date",
         dataIndex: "date",
@@ -80,3 +83,63 @@ export const appColumns: TableColumnsType<AppPreviewRow> = [
         )
     }
 ];
+
+export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview, isUploading, isParsing, uploadRecords, clearSelection }) => {
+    if (!parsedPreview) return null;
+
+    return (
+        <div className="flex items-center justify-between p-1">
+            <div className="flex items-center gap-2">
+                <ScanSearch size={15} strokeWidth={2.5} />
+                <Text style={{ fontSize: 15 }} className="text-gray-800 tracking-wide">Statement Preview</Text>
+            </div>
+            <div className="flex gap-12">
+                <div>
+                    <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="gold">
+                        <FileText size={12} strokeWidth={2.5} />
+                        <span>{parsedPreview.fileName}</span>
+                    </Tag>
+                    <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="green">
+                        <Database size={12} strokeWidth={2.5} />
+                        <span>Records : {parsedPreview.records.length}</span>
+                    </Tag>
+                    <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="purple">
+                        <LayoutGrid size={12} strokeWidth={2.5} />
+                        <span>{StatementParams[parsedPreview.statementType].source}</span>
+                    </Tag>
+                    <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="cyan">
+                        <CodeXml size={12} strokeWidth={2.5} />
+                        <span>{StatementParams[parsedPreview.statementType].fileType}</span>
+                    </Tag>
+                </div>
+                <div className="flex gap-2.5">
+                    <Button
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                        shape="round"
+                        icon={isUploading
+                            ? <LoaderCircle size={14} strokeWidth={2.5} className="animate-spin" />
+                            : <CloudUpload size={14} strokeWidth={2.5} />
+                        }
+                        disabled={isUploading || isParsing}
+                        onClick={uploadRecords}
+                    >
+                        Upload
+                    </Button>
+                    <Button
+                        size="small"
+                        color="danger"
+                        variant="outlined"
+                        shape="round"
+                        icon={<Trash2 size={14} strokeWidth={2.5} />}
+                        disabled={isUploading}
+                        onClick={clearSelection}
+                    >
+                        Clear
+                    </Button>
+                </div>
+            </div>
+        </div>
+    );
+};

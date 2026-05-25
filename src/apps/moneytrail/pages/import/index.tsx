@@ -1,77 +1,18 @@
-import { Button, Card, Col, List, Row, Table, Tag, Typography, Upload } from "antd";
+import { Card, Col, List, Row, Table, Tag, Typography, Upload } from "antd";
 import type { UploadProps } from "antd";
-import { CloudUpload, CodeXml, Database, FileText, FileUp, LayoutGrid, LoaderCircle, ScanSearch, Table as Table1, Table2, Trash2 } from "lucide-react";
+import { CloudUpload, FileUp } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PostParams, Routes } from "../../../../engine/constant";
 import { handleError, handleJsonResponse } from "../../../../engine/helpers/httpHelper";
-import { NotificationMessages, notify } from "../../../../engine/services/notificationService";
+import { notify } from "../../../../engine/services/notificationService";
 import { AppRecord, BankRecord } from "../review/engine/contracts/models";
 import { parseStatement } from "./engine/parsers";
-import { AppPreviewRow, BankPreviewRow, ParsedStatementPreview, StatementType, SupportedFormatItem, UploadResult } from "./engine/contracts/types";
-import { appColumns, bankColumns } from "./components";
+import { AppPreviewRow, BankPreviewRow, ParsedStatementPreview, UploadResult } from "./engine/contracts/types";
+import { AppColumns, BankColumns, PreviewTableHeader } from "./components";
+import { NotificationMessages, StatementParams, SupportedFormats } from "./engine/constants";
 
 const { Dragger } = Upload;
 const { Text } = Typography;
-
-const notificationMessages: NotificationMessages = {
-  pending: "Uploading Parsed Statement...",
-  success: "Uploaded Successfully.",
-  error: "Error Occured While Uploading!",
-};
-
-const supportedFormats: SupportedFormatItem[][] = [
-  [
-    {
-      title: "PhonePe App Statement",
-      description: "Download the PDF statement from PhonePe App.",
-      iconStyle: "bg-red-100 text-red-700",
-      icon: FileText
-    },
-    {
-      title: "Paytm App Statement",
-      description: "Download the Excel statement from Paytm App.",
-      iconStyle: "bg-green-100 text-green-700",
-      icon: Table2
-    },
-  ],
-  [
-    {
-      title: "HDFC Bank Statement",
-      description: "Download Excel File from App/Netbanking.",
-      iconStyle: "bg-green-100 text-green-700",
-      icon: Table2
-    },
-    {
-      title: "SBI Bank Statement",
-      description: "Download Excel File from App/Netbanking.",
-      iconStyle: "bg-green-100 text-green-700",
-      icon: Table2
-    },
-  ],
-  [
-    {
-      title: "SBI Credit Card",
-      description: "Get <tbody> from Web App as HTML File using VS Code.",
-      iconStyle: "bg-blue-100 text-blue-700",
-      icon: Table1
-    },
-    {
-      title: "ICICI Credit Card",
-      description: "Get Monthly / Yearly Statement as CSV File from WebApp.",
-      iconStyle: "bg-amber-100 text-amber-700",
-      icon: CodeXml
-    },
-  ],
-];
-
-const StatementParams: Record<StatementType, { source: string, fileType: string }> = {
-  hdfc: { source: "HDFC Bank", fileType: "Excel" },
-  sbi: { source: "SBI Bank", fileType: "Excel" },
-  paytm: { source: "Paytm App", fileType: "Excel" },
-  phonepe: { source: "PhonePe App", fileType: "PDF" },
-  sbicc: { source: "SBI Credit Card", fileType: "HTML" },
-  icici: { source: "ICICI Credit Card", fileType: "CSV" },
-};
 
 const parseStatementFile = async (file: File): Promise<ParsedStatementPreview> => {
   const { records, statementType } = await parseStatement(file);
@@ -105,8 +46,6 @@ const ImportPage: React.FC = () => {
       .map((record, index) => ({ ...record, key: `${record.transactionId}-${index}` })),
     [parsedPreview],
   );
-
-  const clearSelection = () => setParsedPreview(null);
 
   const parseSelectedFile = async (file: File) => {
     setIsParsing(true);
@@ -143,72 +82,12 @@ const ImportPage: React.FC = () => {
     setIsUploading(true);
 
     const response = uploadTransactions(parsedPreview);
-    notify.promise(response, notificationMessages, {
+    notify.promise(response, NotificationMessages, {
       pending: `Uploading ${StatementParams[parsedPreview.statementType].source} Statement...`,
       success: (data: UploadResult) => `Uploaded ${data.insertedCount}/${data.totalCount} Records.`,
     });
-    
+
     response.finally(() => setIsUploading(false));
-  };
-
-  const renderPreviewHeader = () => {
-    if (!parsedPreview) return null;
-
-    return (
-      <div className="flex items-center justify-between p-1">
-        <div className="flex items-center gap-2">
-          <ScanSearch size={15} strokeWidth={2.5} />
-          <Text style={{ fontSize: 15 }} className="text-gray-800 tracking-wide">Statement Preview</Text>
-        </div>
-        <div className="flex gap-12">
-          <div>
-            <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="gold">
-              <FileText size={12} strokeWidth={2.5} />
-              <span>{parsedPreview.fileName}</span>
-            </Tag>
-            <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="green">
-              <Database size={12} strokeWidth={2.5} />
-              <span>Records : {parsedPreview.records.length}</span>
-            </Tag>
-            <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="purple">
-              <LayoutGrid size={12} strokeWidth={2.5} />
-              <span>{StatementParams[parsedPreview.statementType].source}</span>
-            </Tag>
-            <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="cyan">
-              <CodeXml size={12} strokeWidth={2.5} />
-              <span>{StatementParams[parsedPreview.statementType].fileType}</span>
-            </Tag>
-          </div>
-          <div className="flex gap-2.5">
-            <Button
-              size="small"
-              color="primary"
-              variant="outlined"
-              shape="round"
-              icon={isUploading
-                ? <LoaderCircle size={14} strokeWidth={2.5} className="animate-spin" />
-                : <CloudUpload size={14} strokeWidth={2.5} />
-              }
-              disabled={isUploading || isParsing}
-              onClick={handleUpload}
-            >
-              Upload
-            </Button>
-            <Button
-              size="small"
-              color="danger"
-              variant="outlined"
-              shape="round"
-              icon={<Trash2 size={14} strokeWidth={2.5} />}
-              disabled={isUploading}
-              onClick={clearSelection}
-            >
-              Clear
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
   };
 
   return (
@@ -232,7 +111,7 @@ const ImportPage: React.FC = () => {
         }
       >
         <Row gutter={48} className="px-2">
-          {supportedFormats.map((group, groupIndex) => (
+          {SupportedFormats.map((group, groupIndex) => (
             <Col key={`format-group-${groupIndex}`} span={8}>
               <List>
                 {group.map((item) => {
@@ -287,24 +166,36 @@ const ImportPage: React.FC = () => {
               size="small"
               bordered
               virtual
-              columns={bankColumns}
+              columns={BankColumns}
               dataSource={bankRows}
               pagination={false}
               scroll={{ y: 525 }}
               className="[&_.ant-table-cell]:!px-3"
-              title={renderPreviewHeader}
+              title={() => <PreviewTableHeader
+                parsedPreview={parsedPreview}
+                isUploading={isUploading}
+                isParsing={isParsing}
+                uploadRecords={handleUpload}
+                clearSelection={() => setParsedPreview(null)}
+              />}
             />
           ) : (
             <Table
               size="small"
               bordered
               virtual
-              columns={appColumns}
+              columns={AppColumns}
               dataSource={appRows}
               pagination={false}
               scroll={{ y: 525 }}
               className="[&_.ant-table-cell]:!px-3"
-              title={renderPreviewHeader}
+              title={() => <PreviewTableHeader
+                parsedPreview={parsedPreview}
+                isUploading={isUploading}
+                isParsing={isParsing}
+                uploadRecords={handleUpload}
+                clearSelection={() => setParsedPreview(null)}
+              />}
             />
           )}
         </>
