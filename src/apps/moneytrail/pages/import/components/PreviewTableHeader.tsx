@@ -17,7 +17,7 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
             </div>
             <div className="flex gap-12">
                 <div>
-                    <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="gold">
+                    <Tag className="rounded-full px-2.5 inline-flex items-center gap-1.5" color="orange">
                         <FileText size={12} strokeWidth={2.5} />
                         <span>{parsedPreview.fileName}</span>
                     </Tag>
@@ -39,7 +39,6 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
                         size="small"
                         color="danger"
                         variant="outlined"
-                        shape="round"
                         icon={<Trash2 size={14} strokeWidth={2.5} />}
                         disabled={isUploading}
                         onClick={clearSelection}
@@ -50,7 +49,6 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
                         size="small"
                         color="primary"
                         variant="outlined"
-                        shape="round"
                         icon={isUploading
                             ? <LoaderCircle size={14} strokeWidth={2.5} className="animate-spin" />
                             : <CloudUpload size={14} strokeWidth={2.5} />
