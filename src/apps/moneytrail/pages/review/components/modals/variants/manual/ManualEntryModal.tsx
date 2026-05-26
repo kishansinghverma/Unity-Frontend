@@ -6,7 +6,7 @@ import { FC, useState } from 'react';
 import { PostParams, Routes } from '../../../../../../../../engine/constant';
 import { handleError, handleResponse } from '../../../../../../../../engine/helpers/httpHelper';
 import { notify } from '../../../../../../../../engine/services/notificationService';
-import { getIcon, icon } from '../../../../../../../../static/icons/provider';
+import { ImgSrc, SvgImage } from '../../../../../../../../static/icons/provider';
 import { useAppDispatch } from '../../../../../../../../store/hooks';
 import { reviewApi, useCategoriesQuery, useDescriptionsQuery, useGroupsQuery } from '../../../../../../store/reviewSlice';
 import { SplitwiseCategory } from '../../../../engine/contracts/models';
@@ -69,17 +69,17 @@ export const ManualEntryModal: FC<ManualEntryModalProps> = ({
     })) : [];
 
   const sourceOptions: DefaultOptionType[] = [
-    { name: 'SBI', icon: icon.Sbi },
-    { name: 'HDFC', icon: icon.Hdfc },
-    { name: 'SBI Credit Card', icon: icon.SbiCc },
-    { name: 'ICICI Credit Card', icon: icon.Icici },
-    { name: 'Cash', icon: icon.Cash },
-    { name: 'Other', icon: icon.OtherPay }
+    { name: 'SBI', icon: ImgSrc.Sbi },
+    { name: 'HDFC', icon: ImgSrc.Hdfc },
+    { name: 'SBI Credit Card', icon: ImgSrc.SbiCc },
+    { name: 'ICICI Credit Card', icon: ImgSrc.Icici },
+    { name: 'Cash', icon: ImgSrc.Cash },
+    { name: 'Other', icon: ImgSrc.OtherPay }
   ].map((source) => ({
     title: source.name,
     value: source.name,
     label: <div className='flex gap-2 items-center w-full'>
-      <img className="w-5 h-5 rounded-full" src={getIcon(source.icon)} />
+      <SvgImage src={source.icon} width={20} height={20} style={{ borderRadius: 9999 }} />
       <span className='text-gray-600 font-medium'>{source.name}</span>
     </div>
   }));

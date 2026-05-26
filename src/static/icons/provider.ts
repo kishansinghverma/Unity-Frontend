@@ -1,22 +1,34 @@
+import { createElement, type CSSProperties, type FC } from 'react';
 import Cash from './cash.svg';
 import Hdfc from './hdfc.svg';
 import Icici from './icici.svg';
 import OtherPay from './otherpay.svg';
+import Paytm from './paytm.svg';
+import PhonePe from './phonepe.svg';
 import Sbi from './sbi.svg';
 import SbiCc from './sbicc.svg';
 import Upi from './upi.svg';
 
-const iconMap = {
+export const ImgSrc = {
   Cash,
   Hdfc,
   Icici,
   OtherPay,
+  Paytm,
+  PhonePe,
   Sbi,
   SbiCc,
   Upi
 } as const;
 
-type Svg = keyof typeof iconMap;
+type ImgSource = (typeof ImgSrc)[keyof typeof ImgSrc];
 
-export const icon = Object.fromEntries(Object.keys(iconMap).map((key) => [key, key])) as { [K in Svg]: K };
-export const getIcon = (name: Svg) => iconMap[name];
+type SvgImageProps = {
+  alt?: string;
+  src: ImgSource;
+  width?: number | string;
+  height?: number | string;
+  style?: CSSProperties;
+};
+
+export const SvgImage: FC<SvgImageProps> = ({ src: imageSrc, width, height, style, alt }) => createElement('img', { alt, src: imageSrc, style, width, height });

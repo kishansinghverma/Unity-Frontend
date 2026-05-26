@@ -22,6 +22,18 @@ export const parsePaytmStatement = async (file: File) => {
     const meta = TransactionMetaData;
     const transactions: Array<AppRecord> = [];
 
+    const prefixes = [
+        'Paid to',
+        'Received from',
+        'Recharge of',
+        'Money sent to'
+    ];
+
+    const upiLiteIdentifiers = [
+        'automatic add money for upi lite',
+        'money added to upi lite'
+    ]
+
     for (let row = range.s.r + 1; row <= range.e.r + 1; row++) {
         const dateVal = getStringAt(sheet, `A${row}`);
         const timeVal = getStringAt(sheet, `B${row}`);
@@ -29,12 +41,12 @@ export const parsePaytmStatement = async (file: File) => {
 
         if (txnDate.isValid()) {
             const date = dayjs(`${dateVal} - ${timeVal}`, 'DD/MM/YYYY - HH:mm:ss').toDate();
-            const recipient = getStringAt(sheet, `C${row}`)?.replace('Paid to', '').replace('Received from', '').replace('Recharge of', '').trim() ?? '** UNIDENTIFIED **';
+            const recipient = getStringAt(sheet, `C${row}`)?.replace(new RegExp(`^(${prefixes.join('|')})\\s*`, 'i'), StringUtils.empty).trim() || '** UNIDENTIFIED **';
             const amount = getNumberAt(sheet, `F${row}`) ?? 0;
             const transactionId = `${getHash(date, amount ?? 0, recipient)}`;
             const utr = `${getStringAt(sheet, `D${row}`)}/${transactionId}`;
             const bank = meta[getStringAt(sheet, `E${row}`) ?? StringUtils.empty] ?? 'Unknown';
-            const type = recipient === 'Automatic Add Money for UPI Lite' ? 'Debit' : amount > 0 ? 'Credit' : 'Debit';
+            const type = upiLiteIdentifiers.includes(recipient.toLowerCase())  ? 'Debit' : amount > 0 ? 'Credit' : 'Debit';
 
             transactions.push({ date, app: 'paytm', recipient, transactionId, utr, bank, type, amount: Math.abs(amount) });
         }
