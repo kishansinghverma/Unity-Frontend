@@ -4,24 +4,27 @@ import { FC, memo } from "react";
 import { HeaderProps, ListHeaderProps } from "../../engine/contracts/props";
 
 const HeaderComponent: FC<HeaderProps> = ({ setModalVisible }) => (
-  <div className="flex w-full items-center justify-between text-sm font-medium text-gray-600">
-    <button
-      onClick={() => setModalVisible(true)}
-      className="flex w-32 items-center gap-1 rounded-md px-2 py-1 transition-colors duration-200 hover:font-semibold hover:text-gray-900"
-    >
-      <PlusCircle size={20} />
-      <span>Add Expense</span>
-    </button>
-    <div className="hidden items-center gap-3 md:flex">
-      <div className="flex gap-1">
-        <CalendarArrowUp size={20} />
-        <div>{dayjs().format("DD-MMM-YYYY")}</div>
-      </div>
-      <div className="flex gap-1">
-        <ClockArrowUp size={20} />
-        <div>{dayjs().format("hh:mm A")}</div>
+  <div className="flex w-full items-center text-sm font-medium text-gray-600">
+    <div className="flex min-w-0 flex-1 items-center justify-between">
+      <button
+        onClick={() => setModalVisible(true)}
+        className="flex w-32 items-center gap-1 rounded-md px-2 py-1 transition-colors duration-200 hover:font-semibold hover:text-gray-900"
+      >
+        <PlusCircle size={20} />
+        <span>Add Expense</span>
+      </button>
+      <div className="hidden items-center gap-3 md:flex">
+        <div className="flex gap-1">
+          <CalendarArrowUp size={20} />
+          <div>{dayjs().format("DD-MMM-YYYY")}</div>
+        </div>
+        <div className="flex gap-1">
+          <ClockArrowUp size={20} />
+          <div>{dayjs().format("hh:mm A")}</div>
+        </div>
       </div>
     </div>
+    <div className="mx-2 h-6 w-px bg-gray-200 dark:bg-gray-600" aria-hidden />
   </div>
 );
 

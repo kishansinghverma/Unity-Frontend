@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 interface HeaderProps {
-  pageContent?: React.ReactNode;
+  pageActions?: React.ReactNode;
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ pageContent, sidebarOpen, setSidebarOpen }) => {
+const Header: React.FC<HeaderProps> = ({ pageActions, sidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -48,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ pageContent, sidebarOpen, setSidebarOpe
         >
           <Menu className="w-6 h-6 text-gray-600 dark:text-gray-300" />
         </button>
-        <div className="min-w-0 flex-1">{pageContent}</div>
+        <div className="min-w-0 flex-1">{pageActions}</div>
       </div>
 
       <div className="ml-4 flex shrink-0 items-center space-x-3">

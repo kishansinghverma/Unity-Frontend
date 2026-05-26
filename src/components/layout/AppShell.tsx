@@ -9,18 +9,18 @@ import Sidebar from './Sidebar';
 const AppShell: React.FC = () => {
   const currentApp = useAppSelector(selectCurrentApp);
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
-  const [headerContent, setHeaderContent] = React.useState<React.ReactNode | null>(null);
+  const [headerActions, setHeaderActions] = React.useState<React.ReactNode | null>(null);
   const headerOwnerRef = React.useRef<symbol | null>(null);
 
   const headerSlotValue = React.useMemo(() => ({
     setContent: (owner: symbol, content: React.ReactNode | null) => {
       headerOwnerRef.current = owner;
-      setHeaderContent(content);
+      setHeaderActions(content);
     },
     clearContent: (owner: symbol) => {
       if (headerOwnerRef.current === owner) {
         headerOwnerRef.current = null;
-        setHeaderContent(null);
+        setHeaderActions(null);
       }
     },
   }), []);
@@ -36,7 +36,7 @@ const AppShell: React.FC = () => {
         <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
 
         <div className="flex flex-col flex-1 overflow-hidden">
-          <Header pageContent={headerContent} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          <Header pageActions={headerActions} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
           <main className="flex-1 overflow-y-auto p-4 md:p-6">
             <Outlet />
