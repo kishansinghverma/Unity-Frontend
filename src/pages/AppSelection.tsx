@@ -88,15 +88,15 @@ const AppSelection: React.FC = () => {
                 <button
                   key={app.id}
                   onClick={() => handleAppSelect(app)}
-                  className="bg-white shadow-lg rounded-lg py-4 px-6 hover:shadow-xl transition-shadow duration-300 text-left"
+                  className="bg-white shadow-lg rounded-lg py-6 px-8 hover:shadow-xl transition-shadow duration-300 text-left"
                 >
                   <div className="flex items-start gap-5">
-                    <div className={`h-14 w-14 shrink-0 aspect-square rounded-md flex items-center justify-center text-white ${getAppIconBadgeClass(app.icon)}`}>
+                    <div className={`h-12 w-12 shrink-0 aspect-square rounded-md flex items-center justify-center text-white ${getAppIconBadgeClass(app.icon)}`}>
                       {appIcon}
                     </div>
-                    <div className="flex flex-col justify-center h-14">
-                      <h2 className="text-xl font-semibold text-gray-900">{app.name}</h2>
-                      <p className="text-sm text-gray-500 truncate w-80">{app.description}</p>
+                    <div className="flex flex-col justify-center h-12">
+                      <h2 className="text-xl font-semibold text-gray-600">{app.name}</h2>
+                      <p className="text-sm text-gray-400 truncate w-80">{app.description}</p>
                     </div>
                   </div>
                 </button>
