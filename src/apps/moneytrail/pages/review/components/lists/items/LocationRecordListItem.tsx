@@ -34,7 +34,7 @@ const LocationListItemFC: FC<LocationRecordListItemProps> = ({ isOpen, item, onO
           <AlphabetIcon seed={item._id} firstLetter={location.charAt(0).toUpperCase()} />
         </a>
         <div className="flex-grow pr-6 pl-4 min-w-4">
-          <h3 className="text-gray-800 line-clamp-2 break-all capitalize">{location}</h3>
+          <h3 className="text-gray-800 line-clamp-2 break-all capitalize" title={location}>{location}</h3>
         </div>
         <div className="text-right min-w-fit">
           <div className="text-gray-400">

@@ -24,7 +24,7 @@ const BankRecordListItemFC: FC<BankRecordListItemProps> = ({ isOpen, item, onOpe
         {item.processed && <ProcessedMarker />}
         <div className="flex items-center flex-shrink-0"><BankIcon bankName={item.bank} /></div>
         <div className="flex-grow pr-6 pl-4 min-w-4">
-          <h3 className="text-gray-800 line-clamp-2 break-all capitalize">{item.description}</h3>
+          <h3 className="text-gray-800 line-clamp-2 break-all capitalize" title={item.description}>{item.description}</h3>
         </div>
         <div className="text-right min-w-fit">
           <p className={`${item.type === 'Credit' ? 'text-green-600' : 'text-red-600'}`}>

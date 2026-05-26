@@ -36,7 +36,7 @@ const AppRecordListItemFC: FC<AppRecordListItemProps> = ({
         </div>
         <div className="flex-grow pl-4 min-w-4">
           <div className="flex justify-between">
-            <div className="flex-1 text-gray-800 line-clamp-1 break-all capitalize pr-2">{item.recipient}</div>
+            <div className="flex-1 text-gray-800 line-clamp-1 break-all capitalize pr-2" title={item.recipient}>{item.recipient}</div>
             {appIconSrc && (
               <div className="flex items-center">
                 <SvgImage src={appIconSrc} style={{ height: 12 }} alt={item.app} />
