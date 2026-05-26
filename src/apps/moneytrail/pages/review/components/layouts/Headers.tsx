@@ -5,6 +5,31 @@ import { Routes } from "../../../../../../engine/constant";
 import { handleJsonResponse } from "../../../../../../engine/helpers/httpHelper";
 import { HeaderProps, ListHeaderProps } from "../../engine/contracts/props";
 
+const ScrambleText: FC<{ type: "date" | "time" }> = ({ type }) => {
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (type === "date") {
+        const d = String(Math.floor(Math.random() * 31) + 1).padStart(2, "0");
+        const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        const m = months[Math.floor(Math.random() * months.length)];
+        const y = String(Math.floor(Math.random() * 5) + 2022); // 2022-2026
+        setText(`${d} ${m} ${y}`);
+      } else {
+        const h = String(Math.floor(Math.random() * 12) + 1).padStart(2, "0");
+        const min = String(Math.floor(Math.random() * 60)).padStart(2, "0");
+        const ap = Math.random() > 0.5 ? "AM" : "PM";
+        setText(`${h}:${min} ${ap}`);
+      }
+    }, 50);
+    
+    return () => clearInterval(interval);
+  }, [type]);
+
+  return <span>{text || (type === "date" ? "00 XXX 0000" : "00:00 XX")}</span>;
+};
+
 const HeaderComponent: FC<HeaderProps> = ({ setModalVisible }) => {
   const [lastRefinement, setLastRefinement] = useState<Date | null>(null);
 
@@ -37,13 +62,13 @@ const HeaderComponent: FC<HeaderProps> = ({ setModalVisible }) => {
           <PlusCircle size={15} strokeWidth={2.5} className="text-gray-600 transition-transform duration-300 group-hover:rotate-90 group-hover:scale-110 group-hover:text-gray-900" />
           Add Expense
         </button>
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="items-center gap-3 md:flex font-mono">
           <div className="flex items-center gap-1.5">
             <CalendarArrowUp size={20} />
             {lastRefinement ? (
-              <div>{dayjs(lastRefinement).format("DD-MMM-YYYY")}</div>
+              <div>{dayjs(lastRefinement).format("DD MMM YYYY")}</div>
             ) : (
-              <div className="h-4 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+              <ScrambleText type="date" />
             )}
           </div>
           <div className="flex items-center gap-1.5">
@@ -51,7 +76,7 @@ const HeaderComponent: FC<HeaderProps> = ({ setModalVisible }) => {
             {lastRefinement ? (
               <div>{dayjs(lastRefinement).format("hh:mm A")}</div>
             ) : (
-              <div className="h-4 w-16 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+              <ScrambleText type="time" />
             )}
           </div>
         </div>
