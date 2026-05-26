@@ -175,7 +175,7 @@ const ImportPage: React.FC = () => {
               columns={BankColumns}
               dataSource={bankRows}
               pagination={false}
-              scroll={{ y: 525 }}
+              scroll={{ y: 505 }}
               className="shadow-lg [&_.ant-table-cell]:!px-3"
               title={() => <PreviewTableHeader
                 parsedPreview={parsedPreview}
@@ -193,7 +193,7 @@ const ImportPage: React.FC = () => {
               columns={AppColumns}
               dataSource={appRows}
               pagination={false}
-              scroll={{ y: 525 }}
+              scroll={{ y: 505 }}
               className="shadow-lg [&_.ant-table-cell]:!px-3"
               title={() => <PreviewTableHeader
                 parsedPreview={parsedPreview}
