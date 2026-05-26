@@ -182,6 +182,7 @@ export const AppRecordReviewModal: FC<AppRecordReviewModalProps> = ({
           UTR: appRecord?.utr ?? "N/A",
           TransactionNo: appRecord?.transactionId ?? 'N/A',
           Recipient: appRecord?.recipient ?? 'N/A',
+          App: StringUtils.capitalize(appRecord?.bank) ?? 'N/A',
           Location: selectedLocationRecord?.location.replaceAll('\n', ', ') ?? 'N/A',
           Coordinates: selectedLocationRecord?.coordinate ? `https://www.google.com/maps?q=${selectedLocationRecord.coordinate}` : 'N/A'
         }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n'),
@@ -195,7 +196,8 @@ export const AppRecordReviewModal: FC<AppRecordReviewModalProps> = ({
           Bank: appRecord.bank ?? StringUtils.empty,
           UTR: appRecord?.utr ?? 'N/A',
           TransactionNo: appRecord?.transactionId ?? 'N/A',
-          Payer: appRecord?.recipient ?? 'N/A'
+          Payer: appRecord?.recipient ?? 'N/A',
+          App: StringUtils.capitalize(appRecord?.bank) ?? 'N/A'
         }).map(([k, v]) => `${k} : ${v}\n——————`).join('\n')
       }
 
@@ -357,6 +359,7 @@ export const AppRecordReviewModal: FC<AppRecordReviewModalProps> = ({
                       <th className={`${classes.th} w-12`}>Bank</th>
                       <th className={`${classes.th} w-28`}>UTR / Transaction #</th>
                       <th className={`${classes.th} w-28`}>Recipient</th>
+                      <th className={`${classes.th} w-12`}>App Used</th>
                       <th className={`${classes.th} w-40`}>Location</th>
                     </tr>
                   </thead>
@@ -366,6 +369,7 @@ export const AppRecordReviewModal: FC<AppRecordReviewModalProps> = ({
                       <td className={classes.tr}> {appRecord.bank} </td>
                       <td className={classes.tr}> {appRecord?.utr || '-'} </td>
                       <td className={`${classes.tr} capitalize`}> {appRecord?.recipient || '-'} </td>
+                      <td className={`${classes.tr} capitalize`}> {appRecord?.app || '-'} </td>
                       <td className={`${classes.tr} capitalize`}> {selectedLocationRecord?.location.replaceAll('\n', ', ') || '-'} </td>
                     </tr>
                   </tbody>

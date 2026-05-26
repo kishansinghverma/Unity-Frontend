@@ -4,6 +4,7 @@ import React from 'react';
 import { WithId } from '../../../../../../../../engine/models/types';
 import { AppRecord } from '../../../../engine/contracts/models';
 import { BankIcon } from '../../../shared/Common';
+import { ImgSrc, SvgImage } from '../../../../../../../../static/icons/provider';
 
 type AppTransactionCardProps = WithId<AppRecord> & {
   predictionLabel?: string;
@@ -28,7 +29,9 @@ const TransactionCard: React.FC<AppTransactionCardProps> = ({
     medium: 'bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200',
     high: 'bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-200',
   };
+  
   const predictionStyle = predictionTone ? predictionStyleByTone[predictionTone] : predictionStyleByTone.low;
+  const appIconSrc = appRecord.app === "paytm" ? ImgSrc.Paytm : appRecord.app === "phonepe" ? ImgSrc.PhonePe : null;
 
   return (
     <div>
@@ -48,25 +51,26 @@ const TransactionCard: React.FC<AppTransactionCardProps> = ({
           </div>
         </div>
 
-        {/* New Tags Section: Type, Category, Status */}
         <div className="flex items-start justify-between gap-2 mb-4">
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Transaction Type Tag */}
-            <span className={`${tagBaseStyle} ${isDebit
-              ? 'bg-red-100 text-red-700 border-red-200'
-              : 'bg-emerald-100 text-emerald-700 border-emerald-200'
-              }`}>
-              {appRecord.type}
-            </span>
-
-            {/* Processed/Pending Status Tag */}
-            <span className={`${tagBaseStyle} ${appRecord.processed
-              ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
-              : 'bg-yellow-100 text-yellow-700 border-yellow-200'
-              }`}>
-              {appRecord.processed ? <CheckCircle2 className="w-3 h-3 mr-1.5" /> : <Clock className="w-3 h-3 mr-1.5" />}
-              {appRecord.processed ? 'Processed' : 'Pending'}
-            </span>
+          <div className="flex justify-between w-full">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={`${tagBaseStyle} ${isDebit
+                ? 'bg-red-100 text-red-700 border-red-200'
+                : 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                }`}>
+                {appRecord.type}
+              </span>
+              <span className={`${tagBaseStyle} ${appRecord.processed
+                ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                : 'bg-yellow-100 text-yellow-700 border-yellow-200'
+                }`}>
+                {appRecord.processed ? <CheckCircle2 className="w-3 h-3 mr-1.5" /> : <Clock className="w-3 h-3 mr-1.5" />}
+                {appRecord.processed ? 'Processed' : 'Pending'}
+              </span>
+            </div>
+            {appIconSrc && <div className="flex items-center">
+              <SvgImage src={appIconSrc} style={{ height: 16 }} />
+            </div>}
           </div>
 
           {onApplyPrediction && predictionLabel && (
