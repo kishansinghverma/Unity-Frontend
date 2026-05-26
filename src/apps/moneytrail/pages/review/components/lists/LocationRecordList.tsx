@@ -1,6 +1,6 @@
 import { Pagination } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
-import { FileSearch } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PostParams, Routes } from "../../../../../../engine/constant";
 import { handleError, handleResponse } from "../../../../../../engine/helpers/httpHelper";
@@ -63,7 +63,7 @@ const LocationRecordListFC: FC<ReviewLocationRecordListProps> = ({
       <ListHeader {...{
         title: "Location Tags",
         subtitle: "Geo-Location Metadata Records",
-        Icon: FileSearch,
+        Icon: MapPin,
         className: 'from-orange-500 to-yellow-500',
         showProcessed,
         setShowProcessed

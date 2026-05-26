@@ -17,7 +17,7 @@ const AppRecordSectionComponent: React.FC<AppRecordSectionProps> = ({
   const [appRecordItemId, setAppRecordItemId] = useState<Nullable<string>>(null);
 
   return (
-    <div className="w-full mx-2 min-w-0 h-full flex">
+    <div className="w-full min-w-0 h-full flex">
       <AppRecordList
         items={appRecords}
         isLoading={isLoading}
