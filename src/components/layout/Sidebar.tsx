@@ -1,4 +1,4 @@
-import { Archive, ArrowRightLeft, ClipboardList, FileCheck, FileUp, Home, LayoutDashboard, ListChecks, ListFilter, LogIn, PlusCircle, DollarSign as PriceIcon, Settings, Thermometer, User, UserSquare, X } from 'lucide-react';
+import { ArrowRightLeft, ClipboardList, DollarSign as PriceIcon, FileCheck, FileUp, Home, LayoutDashboard, ListChecks, ListFilter, LogIn, PlusCircle, Settings, Thermometer, User, UserSquare, X } from 'lucide-react';
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     } else if (currentApp?.id === 'moneytrail') {
       return [
         { name: 'Dashboard', path: '/moneytrail/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-        { name: 'Review Expense', path: '/moneytrail/review', icon: <Archive className="w-5 h-5" /> },
+        { name: 'Review', path: '/moneytrail/review', icon: <ListChecks className="w-5 h-5" /> },
         { name: 'Import', path: '/moneytrail/import', icon: <FileUp className="w-5 h-5" /> },
         { name: 'Settings', path: '/moneytrail/settings', icon: <Settings className="w-5 h-5" /> },
       ];

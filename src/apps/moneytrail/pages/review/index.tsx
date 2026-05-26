@@ -7,7 +7,7 @@ import { BankRecordSection } from './components/sections/BankRecordSection';
 import { LocationRecordSection } from './components/sections/LocationRecordSection';
 import { hydratePredictionSamplesFromApi } from './engine/prediction';
 
-const ReviewExpense: React.FC = () => {
+const ReviewPage: React.FC = () => {
   const bankRecordQuery = useBankRecordQuery();
   const appRecordQuery = useAppRecordQuery();
   const locationRecordQuery = useLocationRecordQuery();
@@ -50,4 +50,4 @@ const ReviewExpense: React.FC = () => {
   );
 };
 
-export default ReviewExpense;
+export default ReviewPage;

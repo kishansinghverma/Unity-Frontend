@@ -10,7 +10,7 @@ import ProcessedRecordsList from './apps/emandi/pages/ProcessedRecordsList';
 // Money Trail App
 import MoneyTrailDashboard from './apps/moneytrail/pages/dashboard/Dashboard';
 import MoneyTrailImport from './apps/moneytrail/pages/import';
-import ReviewExpense from './apps/moneytrail/pages/review';
+import MoneyTrailReviewPage from './apps/moneytrail/pages/review';
 // Potato Stock App
 import PotatoStockDashboard from './apps/potatostock/pages/Dashboard';
 import PriceUpdatePage from './apps/potatostock/pages/PriceUpdatePage';
@@ -90,7 +90,7 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <MoneyTrailDashboard /> },
       { path: 'import', element: <MoneyTrailImport /> },
-      { path: 'review', element: <ReviewExpense /> },
+      { path: 'review', element: <MoneyTrailReviewPage /> },
       { path: 'settings', element: <div className="p-8 text-center">Money Trail Settings - Coming Soon</div> },
     ],
   },
