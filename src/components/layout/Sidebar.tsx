@@ -118,11 +118,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
   };
 
   return (
-    <aside
-      className={`fixed inset-y-0 left-0 z-30 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-visible transition-all transform bg-white border-r border-gray-200 lg:relative lg:z-30 lg:w-72 ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
-    >
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+    <aside className={`fixed inset-y-0 left-0 z-30 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-visible transition-all transform bg-white border-r border-gray-200 lg:relative lg:z-30 lg:w-72 ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 h-16">
         <div className="flex items-center space-x-2">
           <span className="h-8 w-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-md flex items-center justify-center shadow-sm">
             <span className="text-white font-bold text-xl drop-shadow-sm">U</span>

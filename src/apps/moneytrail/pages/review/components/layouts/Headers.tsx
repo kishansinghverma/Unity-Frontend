@@ -24,7 +24,7 @@ const HeaderComponent: FC<HeaderProps> = ({ setModalVisible }) => (
         </div>
       </div>
     </div>
-    <div className="mx-2 h-6 w-px bg-gray-200 dark:bg-gray-600" aria-hidden />
+    <div className="ml-4 h-6 w-px bg-gray-200 dark:bg-gray-600" aria-hidden />
   </div>
 );
 
