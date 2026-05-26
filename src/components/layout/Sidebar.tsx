@@ -119,35 +119,35 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-30 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-visible transition-all transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 lg:relative lg:z-30 lg:w-72 ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      className={`fixed inset-y-0 left-0 z-30 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-visible transition-all transform bg-white border-r border-gray-200 lg:relative lg:z-30 lg:w-72 ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
     >
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <div className="flex items-center space-x-2">
           <span className="h-8 w-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-md flex items-center justify-center shadow-sm">
             <span className="text-white font-bold text-xl drop-shadow-sm">U</span>
           </span>
-          <span className="text-xl font-semibold text-gray-800 dark:text-white">Unity Hub</span>
+          <span className="text-xl font-semibold text-gray-800">Unity Hub</span>
         </div>
         <button
           onClick={() => setOpen(false)}
           className="p-1 rounded-md lg:hidden focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <X className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+          <X className="w-6 h-6 text-gray-600" />
         </button>
       </div>
 
       <div className="flex-1 overflow-y-auto">
         <nav className="px-4 py-3">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase dark:text-gray-400">Navigation</h3>
+          <h3 className="text-xs font-semibold text-gray-500 uppercase">Navigation</h3>
           <div className="mt-2 space-y-1">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${isNavItemActive(item.path)
-                  ? 'bg-blue-100 text-blue-600 dark:bg-gray-700 dark:text-blue-400'
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  ? 'bg-blue-100 text-blue-600'
+                  : 'text-gray-700 hover:bg-gray-100'
                   }`}
               >
                 {item.icon}
@@ -158,26 +158,26 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
         </nav>
       </div>
 
-      <div className="border-t border-gray-200 p-3 dark:border-gray-700">
+      <div className="border-t border-gray-200 p-3">
         <div className="relative" ref={appDropdownRef}>
           <button
-            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-gray-100"
             onClick={() => setAppsDropdownOpen((previous) => !previous)}
           >
             <span className={`flex h-8 w-8 items-center justify-center rounded-md text-white ${getAppIconBadgeClass(currentApp?.icon || 'LayoutDashboard')}`}>
               {getAppIcon(currentApp?.icon || 'LayoutDashboard')}
             </span>
-            <span className="flex-1 min-w-0 truncate text-sm font-medium text-gray-700 dark:text-gray-200">{currentApp?.name ?? 'Select App'}</span>
+            <span className="flex-1 min-w-0 truncate text-sm font-medium text-gray-600 font-bold">{currentApp?.name ?? 'Select App'}</span>
             <ChevronUp className="h-4 w-4 text-gray-500" />
           </button>
           {appsDropdownOpen && (
-            <div className="absolute bottom-full left-0 right-0 z-50 mb-2 rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-gray-800">
-              <p className="px-3 py-2 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Apps</p>
+            <div className="absolute bottom-full left-0 right-0 z-50 mb-2 rounded-md border border-gray-200 bg-white p-2 shadow-lg">
+              <p className="px-3 py-2 text-xs font-semibold uppercase text-gray-500">Apps</p>
               <div className="mt-1 space-y-1">
                 {APPS.map((app) => (
                   <button
                     key={app.id}
-                    className={`flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${currentApp?.id === app.id ? 'bg-blue-100 text-blue-600 dark:bg-gray-700 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'}`}
+                    className={`flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${currentApp?.id === app.id ? 'bg-blue-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100'}`}
                     onClick={() => handleAppChange(app.id)}
                   >
                     {getAppIcon(app.icon)}
