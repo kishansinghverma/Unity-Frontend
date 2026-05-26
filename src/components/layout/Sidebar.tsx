@@ -164,7 +164,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
             className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-gray-100"
             onClick={() => setAppsDropdownOpen((previous) => !previous)}
           >
-            <span className={`flex h-8 w-8 items-center justify-center rounded-md text-white ${getAppIconBadgeClass(currentApp?.icon || 'LayoutDashboard')}`}>
+            <span className={`flex h-8 w-8 shrink-0 aspect-square items-center justify-center rounded-md text-white ${getAppIconBadgeClass(currentApp?.icon || 'LayoutDashboard')}`}>
               {getAppIcon(currentApp?.icon || 'LayoutDashboard')}
             </span>
             <span className="flex-1 min-w-0 truncate text-md text-gray-600 font-medium">{currentApp?.name ?? 'Select App'}</span>

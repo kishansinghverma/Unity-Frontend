@@ -4,7 +4,7 @@ export const APPS: AppInfo[] = [
   {
     id: 'emandi',
     name: 'eMandi Portal',
-    description: 'Manage gate passes, processed records, and parties',
+    description: 'Create and manage eMandi Gate Pass requests',
     icon: 'Wheat',
   },
   {
