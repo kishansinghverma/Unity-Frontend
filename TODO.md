@@ -1,5 +1,4 @@
 # TODO
-
 - Segregate mapper logic from UI components (move mappers to `engine/mappers`).
 - Separate reusable/common business logic from component files into `engine`.
 - Move API payload builders and normalizers out of modal components into `engine`.
