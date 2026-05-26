@@ -1,9 +1,9 @@
-import { BarChart3, Bell, CandlestickChart, ChevronDown, DollarSign, Home, LayoutDashboard, Menu, Search, Wheat } from 'lucide-react';
+import { Bell, ChevronDown, LogIn, LogOut, Menu, Search, User } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { APPS } from '../../constants/apps';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { selectCurrentApp, setCurrentApp } from '../../store/slices/appSlice';
+import { useAuth } from '../../context/AuthContext';
+import { useAppSelector } from '../../store/hooks';
+import { selectCurrentApp } from '../../store/slices/appSlice';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -11,16 +11,16 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
   const currentApp = useAppSelector(selectCurrentApp);
-  const [appsDropdownOpen, setAppsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setAppsDropdownOpen(false);
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setProfileDropdownOpen(false);
       }
     };
 
@@ -30,27 +30,15 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
     };
   }, []);
 
-  const getIcon = (icon: string) => {
-    switch (icon) {
-      case 'LayoutDashboard': return <LayoutDashboard className="w-5 h-5" />;
-      case 'BarChart3': return <BarChart3 className="w-5 h-5" />;
-      case 'Wheat': return <Wheat className="w-5 h-5" />;
-      case 'DollarSign': return <DollarSign className="w-5 h-5" />;
-      case 'ChartCandlestick': return <CandlestickChart className="w-5 h-5" />;
-      case 'Home': return <Home className="w-5 h-5" />;
-      default: return <LayoutDashboard className="w-5 h-5" />;
-    }
+  const handleSignOut = () => {
+    logout();
+    setProfileDropdownOpen(false);
+    navigate('/', { replace: true });
   };
 
-  const handleAppChange = (appId: string) => {
-    const app = APPS.find(a => a.id === appId);
-    if (app) {
-      dispatch(setCurrentApp(app));
-      setAppsDropdownOpen(false);
-
-      // Navigate to the appropriate app route
-      navigate(`/${app.id}`);
-    }
+  const handleSignIn = () => {
+    setProfileDropdownOpen(false);
+    navigate('/');
   };
 
   return (
@@ -62,49 +50,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
         >
           <Menu className="w-6 h-6 text-gray-600 dark:text-gray-300" />
         </button>
-
-        <div className="relative" ref={dropdownRef}>
-          <button
-            onClick={() => setAppsDropdownOpen(!appsDropdownOpen)}
-            className="flex items-center space-x-2 focus:outline-none"
-          >
-            <div className="flex items-center space-x-2">
-              <span className={`h-8 w-8 ${currentApp?.icon === 'Wheat' ? 'bg-yellow-400' :
-                  currentApp?.icon === 'Home' ? 'bg-rose-600' :
-                    'bg-purple-800'
-                } rounded-md flex items-center justify-center`}>
-                <span className="text-white">{getIcon(currentApp?.icon || 'LayoutDashboard')}</span>
-              </span>
-              <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
-                {currentApp?.name}
-              </h1>
-              <ChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-            </div>
-          </button>
-
-          {appsDropdownOpen && (
-            <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-              <div className="p-2">
-                <h3 className="text-xs font-semibold text-gray-500 uppercase dark:text-gray-400 px-3 py-2">Apps</h3>
-                <div className="mt-1 space-y-1">
-                  {APPS.map((app) => (
-                    <button
-                      key={app.id}
-                      onClick={() => handleAppChange(app.id)}
-                      className={`flex items-center px-3 py-2 w-full rounded-md text-sm font-medium transition-colors ${currentApp?.id === app.id
-                        ? 'bg-blue-100 text-blue-600 dark:bg-gray-700 dark:text-blue-400'
-                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-                        }`}
-                    >
-                      {getIcon(app.icon)}
-                      <span className="ml-3">{app.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        <h1 className="text-lg font-semibold text-gray-800 dark:text-white">{currentApp?.name ?? 'Unity Hub'}</h1>
       </div>
 
       <div className="flex items-center space-x-3">
@@ -121,6 +67,49 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
         <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
           <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
         </button>
+        <div className="relative" ref={profileDropdownRef}>
+          <button
+            onClick={() => setProfileDropdownOpen((previous) => !previous)}
+            className="flex items-center gap-2 rounded-full p-1 pr-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-white">
+              <User className="w-4 h-4" />
+            </span>
+            <ChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+          </button>
+          {profileDropdownOpen && (
+            <div className="absolute right-0 top-full mt-2 w-56 rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+              <div className="mb-2 border-b border-gray-200 px-3 py-2 dark:border-gray-700">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Kishan Singh</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Administrator</p>
+              </div>
+              <button
+                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                onClick={() => setProfileDropdownOpen(false)}
+              >
+                <User className="w-4 h-4" />
+                <span>Profile</span>
+              </button>
+              {isAuthenticated ? (
+                <button
+                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign out</span>
+                </button>
+              ) : (
+                <button
+                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30"
+                  onClick={handleSignIn}
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>Sign in</span>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

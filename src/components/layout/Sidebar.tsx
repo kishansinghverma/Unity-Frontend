@@ -1,9 +1,9 @@
-import { ArrowRightLeft, ClipboardList, DollarSign as PriceIcon, FileCheck, FileUp, Home, LayoutDashboard, ListChecks, ListFilter, LogIn, PlusCircle, Settings, Thermometer, User, UserSquare, X } from 'lucide-react';
-import React from 'react';
+import { ArrowRightLeft, BarChart3, CandlestickChart, ChevronUp, ClipboardList, DollarSign, DollarSign as PriceIcon, FileCheck, FileUp, Home, LayoutDashboard, ListChecks, ListFilter, Package, PlusCircle, Settings, Thermometer, UserSquare, Wheat, X } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { useAppSelector } from '../../store/hooks';
-import { selectCurrentApp } from '../../store/slices/appSlice';
+import { APPS } from '../../constants/apps';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { selectCurrentApp, setCurrentApp } from '../../store/slices/appSlice';
 
 interface SidebarProps {
   open: boolean;
@@ -13,8 +13,23 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const currentApp = useAppSelector(selectCurrentApp);
-  const { isAuthenticated, logout } = useAuth();
+  const [appsDropdownOpen, setAppsDropdownOpen] = useState(false);
+  const appDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (appDropdownRef.current && !appDropdownRef.current.contains(event.target as Node)) {
+        setAppsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Define navigation items based on current app
   const getNavItems = () => {
@@ -70,20 +85,47 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     return location.pathname === itemPath;
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/', { replace: true });
+  const getAppIcon = (icon: string) => {
+    switch (icon) {
+      case 'LayoutDashboard': return <LayoutDashboard className="h-5 w-5" />;
+      case 'BarChart3': return <BarChart3 className="h-5 w-5" />;
+      case 'Wheat': return <Wheat className="h-5 w-5" />;
+      case 'DollarSign': return <DollarSign className="h-5 w-5" />;
+      case 'ChartCandlestick': return <CandlestickChart className="h-5 w-5" />;
+      case 'Home': return <Home className="h-5 w-5" />;
+      case 'Package': return <Package className="h-5 w-5" />;
+      default: return <LayoutDashboard className="h-5 w-5" />;
+    }
+  };
+
+  const getAppIconBadgeClass = (icon: string) => {
+    switch (icon) {
+      case 'Wheat': return 'bg-green-600';
+      case 'Home': return 'bg-rose-600';
+      case 'ChartCandlestick': return 'bg-purple-800';
+      case 'Package': return 'bg-amber-500/80';
+      default: return 'bg-mist-700';
+    }
+  };
+
+  const handleAppChange = (appId: string) => {
+    const app = APPS.find((value) => value.id === appId);
+    if (!app) return;
+
+    dispatch(setCurrentApp(app));
+    setAppsDropdownOpen(false);
+    navigate(`/${app.id}`);
   };
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-20 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-hidden transition-all transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 lg:z-auto lg:static lg:w-72 ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      className={`fixed inset-y-0 left-0 z-30 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-visible transition-all transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 lg:relative lg:z-30 lg:w-72 ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
     >
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-2">
-          <span className="h-8 w-8 bg-green-600 rounded-md flex items-center justify-center">
-            <span className="text-white font-bold text-xl">U</span>
+          <span className="h-8 w-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-md flex items-center justify-center shadow-sm">
+            <span className="text-white font-bold text-xl drop-shadow-sm">U</span>
           </span>
           <span className="text-xl font-semibold text-gray-800 dark:text-white">Unity Hub</span>
         </div>
@@ -104,8 +146,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
                 key={item.path}
                 to={item.path}
                 className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${isNavItemActive(item.path)
-                    ? 'bg-blue-100 text-blue-600 dark:bg-gray-700 dark:text-blue-400'
-                    : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  ? 'bg-blue-100 text-blue-600 dark:bg-gray-700 dark:text-blue-400'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
                   }`}
               >
                 {item.icon}
@@ -116,40 +158,36 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
         </nav>
       </div>
 
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        {isAuthenticated ? (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-500 text-white">
-                <User className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">John Doe</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Administrator</p>
+      <div className="border-t border-gray-200 p-3 dark:border-gray-700">
+        <div className="relative" ref={appDropdownRef}>
+          <button
+            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+            onClick={() => setAppsDropdownOpen((previous) => !previous)}
+          >
+            <span className={`flex h-8 w-8 items-center justify-center rounded-md text-white ${getAppIconBadgeClass(currentApp?.icon || 'LayoutDashboard')}`}>
+              {getAppIcon(currentApp?.icon || 'LayoutDashboard')}
+            </span>
+            <span className="flex-1 min-w-0 truncate text-sm font-medium text-gray-700 dark:text-gray-200">{currentApp?.name ?? 'Select App'}</span>
+            <ChevronUp className="h-4 w-4 text-gray-500" />
+          </button>
+          {appsDropdownOpen && (
+            <div className="absolute bottom-full left-0 right-0 z-50 mb-2 rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+              <p className="px-3 py-2 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Apps</p>
+              <div className="mt-1 space-y-1">
+                {APPS.map((app) => (
+                  <button
+                    key={app.id}
+                    className={`flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${currentApp?.id === app.id ? 'bg-blue-100 text-blue-600 dark:bg-gray-700 dark:text-blue-400' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'}`}
+                    onClick={() => handleAppChange(app.id)}
+                  >
+                    {getAppIcon(app.icon)}
+                    <span className="ml-3">{app.name}</span>
+                  </button>
+                ))}
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="p-2 text-gray-500 hover:text-red-500 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-              </svg>
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center">
-            <Link
-              to="/"
-              className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 px-3 py-2"
-            >
-              <LogIn className="w-5 h-5" />
-              <span>Sign in</span>
-            </Link>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </aside>
   );
