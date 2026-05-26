@@ -167,7 +167,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
             <span className={`flex h-8 w-8 items-center justify-center rounded-md text-white ${getAppIconBadgeClass(currentApp?.icon || 'LayoutDashboard')}`}>
               {getAppIcon(currentApp?.icon || 'LayoutDashboard')}
             </span>
-            <span className="flex-1 min-w-0 truncate text-sm font-medium text-gray-600 font-bold">{currentApp?.name ?? 'Select App'}</span>
+            <span className="flex-1 min-w-0 truncate text-md text-gray-600 font-medium">{currentApp?.name ?? 'Select App'}</span>
             <ChevronUp className="h-4 w-4 text-gray-500" />
           </button>
           {appsDropdownOpen && (
