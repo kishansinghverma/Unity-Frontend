@@ -17,7 +17,7 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
                 </div>
                 <div className="flex flex-col">
                     <Text className="text-gray-900 font-semibold leading-tight" style={{ fontSize: 14 }}>Statement Preview</Text>
-                    <Text className="text-gray-500 leading-tight" style={{ fontSize: 12 }}>Review parsed transactions before uploading</Text>
+                    <Text className="text-gray-500 leading-tight" style={{ fontSize: 12 }}>Review parsed transactions</Text>
                 </div>
             </div>
             
