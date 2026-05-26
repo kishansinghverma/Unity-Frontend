@@ -37,6 +37,17 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
                 <div className="flex gap-2.5">
                     <Button
                         size="small"
+                        color="danger"
+                        variant="outlined"
+                        shape="round"
+                        icon={<Trash2 size={14} strokeWidth={2.5} />}
+                        disabled={isUploading}
+                        onClick={clearSelection}
+                    >
+                        Clear
+                    </Button>
+                    <Button
+                        size="small"
                         color="primary"
                         variant="outlined"
                         shape="round"
@@ -48,17 +59,6 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
                         onClick={uploadRecords}
                     >
                         Upload
-                    </Button>
-                    <Button
-                        size="small"
-                        color="danger"
-                        variant="outlined"
-                        shape="round"
-                        icon={<Trash2 size={14} strokeWidth={2.5} />}
-                        disabled={isUploading}
-                        onClick={clearSelection}
-                    >
-                        Clear
                     </Button>
                 </div>
             </div>
