@@ -12,7 +12,7 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
     return (
         <div className="flex items-center justify-between p-1.5">
             <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600">
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600">
                     <Eye size={16} strokeWidth={2.5} />
                 </div>
                 <div className="flex flex-col">
@@ -23,49 +23,49 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
             
             <div className="flex items-center gap-8">
                 <div className="flex items-center gap-2">
-                    <Tag className="rounded-md px-2 py-0.5 border-gray-200 bg-gray-50 text-gray-600 inline-flex items-center gap-1.5 shadow-sm m-0">
-                        <FileText size={12} strokeWidth={2.5} className="text-gray-400" />
+                    <Tag className="rounded-md px-2 py-0.5 border-amber-200 bg-amber-50 text-amber-700 inline-flex items-center gap-1.5 shadow-sm m-0">
+                        <FileText size={12} strokeWidth={2.5} className="text-amber-600" />
                         <span className="font-medium max-w-[250px] truncate" title={parsedPreview.fileName}>{parsedPreview.fileName}</span>
                     </Tag>
-                    <Tag className="rounded-md px-2 py-0.5 border-indigo-100 bg-indigo-50 text-indigo-600 inline-flex items-center gap-1.5 shadow-sm m-0">
-                        <Database size={12} strokeWidth={2.5} className="text-indigo-400" />
+                    <Tag className="rounded-md px-2 py-0.5 border-violet-200 bg-violet-50 text-violet-700 inline-flex items-center gap-1.5 shadow-sm m-0">
+                        <Database size={12} strokeWidth={2.5} className="text-violet-600" />
                         <span className="font-medium">{parsedPreview.records.length} Records</span>
                     </Tag>
-                    <Tag className="rounded-md px-2 py-0.5 border-emerald-100 bg-emerald-50 text-emerald-600 inline-flex items-center gap-1.5 shadow-sm m-0">
-                        <LayoutGrid size={12} strokeWidth={2.5} className="text-emerald-400" />
+                    <Tag className="rounded-md px-2 py-0.5 border-emerald-200 bg-emerald-50 text-emerald-700 inline-flex items-center gap-1.5 shadow-sm m-0">
+                        <LayoutGrid size={12} strokeWidth={2.5} className="text-emerald-600" />
                         <span className="font-medium">{StatementParams[parsedPreview.statementType].source}</span>
                     </Tag>
-                    <Tag className="rounded-md px-2 py-0.5 border-amber-100 bg-amber-50 text-amber-600 inline-flex items-center gap-1.5 shadow-sm m-0">
-                        <CodeXml size={12} strokeWidth={2.5} className="text-amber-400" />
+                    <Tag className="rounded-md px-2 py-0.5 border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 inline-flex items-center gap-1.5 shadow-sm m-0">
+                        <CodeXml size={12} strokeWidth={2.5} className="text-fuchsia-600" />
                         <span className="font-medium">{StatementParams[parsedPreview.statementType].fileType}</span>
                     </Tag>
                 </div>
                 
-                <div className="flex items-center gap-2 border-l border-gray-200 pl-8">
-                    <Button
-                        size="small"
-                        type="text"
-                        danger
-                        icon={<Trash2 size={14} />}
-                        disabled={isUploading}
-                        onClick={clearSelection}
-                        className="hover:bg-red-50"
-                    >
-                        Clear
-                    </Button>
-                    <Button
-                        size="small"
-                        type="primary"
-                        className="bg-indigo-600 hover:bg-indigo-700 shadow-sm"
-                        icon={isUploading
-                            ? <LoaderCircle size={14} className="animate-spin" />
-                            : <CloudUpload size={14} />
-                        }
-                        disabled={isUploading || isParsing}
-                        onClick={uploadRecords}
-                    >
-                        Upload Records
-                    </Button>
+                <div className="flex items-center ml-4">
+                    <div className="inline-flex rounded-lg bg-white">
+                        <button
+                            type="button"
+                            disabled={isUploading || isParsing}
+                            onClick={uploadRecords}
+                            className="group relative inline-flex items-center gap-2 rounded-l-lg border border-slate-300 bg-blue-50/50 px-4 py-1.5 text-sm font-semibold text-blue-600 transition-all hover:z-10 hover:border-blue-300 hover:bg-blue-100/50 focus:z-10 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                        >
+                            {isUploading ? (
+                                <LoaderCircle size={14} className="animate-spin text-blue-600" />
+                            ) : (
+                                <CloudUpload size={14} className="transition-transform group-hover:-translate-y-0.5" />
+                            )}
+                            Upload
+                        </button>
+                        <button
+                            type="button"
+                            disabled={isUploading}
+                            onClick={clearSelection}
+                            className="group relative -ml-px inline-flex items-center gap-2 rounded-r-lg border border-slate-300 bg-rose-50/50 px-3 py-1.5 text-sm font-medium text-rose-600 transition-all hover:z-10 hover:border-rose-300 hover:bg-rose-100/50 focus:z-10 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                        >
+                            <Trash2 size={14} className="transition-transform group-hover:scale-110" />
+                            <span className="sr-only">Clear</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
