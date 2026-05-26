@@ -52,7 +52,7 @@ const Header: React.FC<HeaderProps> = ({ pageActions, sidebarOpen, setSidebarOpe
       </div>
 
       <div className="flex shrink-0 items-center space-x-3 pl-3">
-        <button className="rounded-full p-2 hover:bg-gray-100">
+        <button className="rounded-full bg-gray-100 p-2 transition-colors duration-200 hover:bg-gray-200">
           <Bell className="h-5 w-5 text-gray-600" />
         </button>
         <div className="relative" ref={profileDropdownRef}>
