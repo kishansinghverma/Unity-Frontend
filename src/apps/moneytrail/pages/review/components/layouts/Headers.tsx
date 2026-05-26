@@ -1,37 +1,67 @@
 import dayjs from "dayjs";
 import { CalendarArrowUp, ClockArrowUp, PlusCircle } from "lucide-react";
-import { FC, memo } from "react";
+import { FC, memo, useEffect, useState } from "react";
+import { Routes } from "../../../../../../engine/constant";
+import { handleJsonResponse } from "../../../../../../engine/helpers/httpHelper";
 import { HeaderProps, ListHeaderProps } from "../../engine/contracts/props";
 
-const HeaderComponent: FC<HeaderProps> = ({ setModalVisible }) => (
-  <div className="flex w-full items-center text-sm font-medium text-gray-600">
-    <div className="flex min-w-0 flex-1 items-center justify-between">
-      <button
-        type="button"
-        onClick={() => setModalVisible(true)}
-        className="group flex items-center gap-1.5 rounded-[4px] px-2.5 py-1.5 text-[14px] font-medium text-gray-700 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-200 focus:outline-none"
-      >
-        <PlusCircle size={15} strokeWidth={2.5} className="text-gray-600 transition-transform duration-300 group-hover:rotate-90 group-hover:scale-110 group-hover:text-gray-900" />
-        Add Expense
-      </button>
-      <div className="hidden items-center gap-3 md:flex">
-        <div className="flex gap-1">
-          <CalendarArrowUp size={20} />
-          <div>{dayjs().format("DD-MMM-YYYY")}</div>
-        </div>
-        <div className="flex gap-1">
-          <ClockArrowUp size={20} />
-          <div>{dayjs().format("hh:mm A")}</div>
+const HeaderComponent: FC<HeaderProps> = ({ setModalVisible }) => {
+  const [lastRefinement, setLastRefinement] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const fetchLastRefinement = async () => {
+      try {
+        const data = await fetch(Routes.ExpenseLastRefinement).then(handleJsonResponse);
+        if (data && data.value) {
+          setLastRefinement(new Date(data.value));
+        }
+      } catch (error) {
+        console.error("Failed to fetch last refinement time:", error);
+      }
+    };
+
+    fetchLastRefinement();
+    const interval = setInterval(fetchLastRefinement, 2 * 60 * 1000); // 2 minutes
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex w-full items-center text-sm font-medium text-gray-600">
+      <div className="flex min-w-0 flex-1 items-center justify-between">
+        <button
+          type="button"
+          onClick={() => setModalVisible(true)}
+          className="group flex items-center gap-1.5 rounded-[4px] px-2.5 py-1.5 text-[14px] font-medium text-gray-700 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-200 focus:outline-none"
+        >
+          <PlusCircle size={15} strokeWidth={2.5} className="text-gray-600 transition-transform duration-300 group-hover:rotate-90 group-hover:scale-110 group-hover:text-gray-900" />
+          Add Expense
+        </button>
+        <div className="hidden items-center gap-3 md:flex">
+          <div className="flex items-center gap-1.5">
+            <CalendarArrowUp size={20} />
+            {lastRefinement ? (
+              <div>{dayjs(lastRefinement).format("DD-MMM-YYYY")}</div>
+            ) : (
+              <div className="h-4 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+            )}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <ClockArrowUp size={20} />
+            {lastRefinement ? (
+              <div>{dayjs(lastRefinement).format("hh:mm A")}</div>
+            ) : (
+              <div className="h-4 w-16 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+            )}
+          </div>
         </div>
       </div>
+      <div className="ml-4 h-6 w-px bg-gray-200 dark:bg-gray-600" aria-hidden />
     </div>
-    <div className="ml-4 h-6 w-px bg-gray-200 dark:bg-gray-600" aria-hidden />
-  </div>
-);
+  );
+};
 
-const ListHeaderFC: FC<ListHeaderProps> = ({
-  title, subtitle, Icon, className, showProcessed, setShowProcessed
-}) => (
+const ListHeaderFC: FC<ListHeaderProps> = ({ title, subtitle, Icon, className, showProcessed, setShowProcessed }) => (
   <header className={`px-6 py-4 flex-shrink-0 bg-gradient-to-r ${className}`}>
     <div className="flex items-center justify-between">
       <div className="flex items-center justify-start gap-4">
@@ -60,5 +90,6 @@ const ListHeaderFC: FC<ListHeaderProps> = ({
     </div>
   </header>
 );
+
 export const HeaderFC = memo(HeaderComponent);
 export const ListHeader = memo(ListHeaderFC);
