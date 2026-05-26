@@ -25,7 +25,7 @@ const ReviewPage: React.FC = () => {
   }, [predictionsQuery.data]);
 
   return (
-    <div className="px-2 pb-4 h-full min-h-0 flex flex-col gap-1">
+    <div className="h-full min-h-0 flex flex-col gap-1">
       <Header setModalVisible={setManualEntryModalVisible} />
       <div className="flex flex-row justify-between gap-6 flex-1 min-h-0">
         <BankRecordSection

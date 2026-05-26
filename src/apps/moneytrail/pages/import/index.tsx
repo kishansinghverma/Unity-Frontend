@@ -95,7 +95,7 @@ const ImportPage: React.FC = () => {
     <div className="flex h-full max-h-full min-h-0 flex-col gap-4">
       <Card
         size="small"
-        className="shrink-0"
+        className="shrink-0 shadow-lg"
         title={
           <div className="flex items-center justify-between px-2 py-3">
             <div>
@@ -139,7 +139,7 @@ const ImportPage: React.FC = () => {
       {!parsedPreview ? (
         <Card
           size="small"
-          className="flex min-h-0 flex-1 flex-col"
+          className="flex min-h-0 flex-1 flex-col shadow-lg"
           styles={{
             body: {
               padding: 0,
@@ -171,7 +171,7 @@ const ImportPage: React.FC = () => {
               dataSource={bankRows}
               pagination={false}
               scroll={{ y: 525 }}
-              className="[&_.ant-table-cell]:!px-3"
+              className="shadow-lg [&_.ant-table-cell]:!px-3"
               title={() => <PreviewTableHeader
                 parsedPreview={parsedPreview}
                 isUploading={isUploading}
@@ -189,7 +189,7 @@ const ImportPage: React.FC = () => {
               dataSource={appRows}
               pagination={false}
               scroll={{ y: 525 }}
-              className="[&_.ant-table-cell]:!px-3"
+              className="shadow-lg [&_.ant-table-cell]:!px-3"
               title={() => <PreviewTableHeader
                 parsedPreview={parsedPreview}
                 isUploading={isUploading}
