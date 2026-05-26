@@ -3,22 +3,23 @@ import { CalendarArrowUp, ClockArrowUp, PlusCircle } from "lucide-react";
 import { FC, memo } from "react";
 import { HeaderProps, ListHeaderProps } from "../../engine/contracts/props";
 
-const HeaderFC: FC<HeaderProps> = ({ setModalVisible }) => (
-  <div className="flex px-4 py-3 mb-6 justify-between items-center text-sm font-medium text-gray-600 duration-200 rounded-xl bg-white shadow-md border border-gray-200 bg-white">
-    <div className="flex gap-2">
-      <button onClick={() => setModalVisible(true)} className="flex gap-1 hover:text-gray-900 hover:font-semibold transition-colors duration-200 rounded-md px-2 py-1 flex w-32">
-        <PlusCircle size={20} />
-        <span>Add Expense</span>
-      </button>
-    </div>
-    <div className="flex gap-3">
+const HeaderComponent: FC<HeaderProps> = ({ setModalVisible }) => (
+  <div className="flex w-full items-center justify-between text-sm font-medium text-gray-600">
+    <button
+      onClick={() => setModalVisible(true)}
+      className="flex w-32 items-center gap-1 rounded-md px-2 py-1 transition-colors duration-200 hover:font-semibold hover:text-gray-900"
+    >
+      <PlusCircle size={20} />
+      <span>Add Expense</span>
+    </button>
+    <div className="hidden items-center gap-3 md:flex">
       <div className="flex gap-1">
         <CalendarArrowUp size={20} />
-        <div> {dayjs(Date.now()).format('DD-MMM-YYYY')} </div>
+        <div>{dayjs().format("DD-MMM-YYYY")}</div>
       </div>
       <div className="flex gap-1">
         <ClockArrowUp size={20} />
-        <div> {dayjs(Date.now()).format('hh:mm A')} </div>
+        <div>{dayjs().format("hh:mm A")}</div>
       </div>
     </div>
   </div>
@@ -54,7 +55,6 @@ const ListHeaderFC: FC<ListHeaderProps> = ({
       </div>
     </div>
   </header>
-)
-
-export const Header = memo(HeaderFC);
+);
+export const HeaderFC = memo(HeaderComponent);
 export const ListHeader = memo(ListHeaderFC);
