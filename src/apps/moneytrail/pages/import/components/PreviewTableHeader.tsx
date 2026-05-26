@@ -20,7 +20,7 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
                     <Text className="text-gray-500 leading-tight" style={{ fontSize: 12 }}>Review parsed transactions</Text>
                 </div>
             </div>
-            
+
             <div className="flex items-center gap-8">
                 <div className="flex items-center gap-2">
                     <Tag className="rounded-md px-2 py-0.5 border-amber-200 bg-amber-50 text-amber-700 inline-flex items-center gap-1.5 shadow-sm m-0">
@@ -40,7 +40,7 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
                         <span className="font-medium">{StatementParams[parsedPreview.statementType].fileType}</span>
                     </Tag>
                 </div>
-                
+
                 <div className="flex items-center ml-4">
                     <div className="inline-flex rounded-lg bg-white">
                         <button
@@ -50,9 +50,9 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
                             className="group relative inline-flex items-center gap-2 rounded-l-lg border border-slate-300 bg-blue-50/50 px-4 py-1.5 text-sm font-semibold text-blue-600 transition-all hover:z-10 hover:border-blue-300 hover:bg-blue-100/50 focus:z-10 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                         >
                             {isUploading ? (
-                                <LoaderCircle size={14} className="animate-spin text-blue-600" />
+                                <LoaderCircle size={14} strokeWidth={2.5} className="animate-spin text-blue-600" />
                             ) : (
-                                <CloudUpload size={14} className="transition-transform group-hover:-translate-y-0.5" />
+                                <CloudUpload size={14} strokeWidth={2.5} className="transition-transform group-hover:-translate-y-0.5" />
                             )}
                             Upload
                         </button>
@@ -62,7 +62,7 @@ export const PreviewTableHeader: FC<PreviewTableHeaderProps> = ({ parsedPreview,
                             onClick={clearSelection}
                             className="group relative -ml-px inline-flex items-center gap-2 rounded-r-lg border border-slate-300 bg-rose-50/50 px-3 py-1.5 text-sm font-medium text-rose-600 transition-all hover:z-10 hover:border-rose-300 hover:bg-rose-100/50 focus:z-10 focus:outline-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                         >
-                            <Trash2 size={14} className="transition-transform group-hover:scale-110" />
+                            <Trash2 size={14} strokeWidth={2.5} className="transition-transform group-hover:scale-110" />
                             <span className="sr-only">Clear</span>
                         </button>
                     </div>
