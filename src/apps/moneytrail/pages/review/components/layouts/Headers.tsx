@@ -7,11 +7,12 @@ const HeaderComponent: FC<HeaderProps> = ({ setModalVisible }) => (
   <div className="flex w-full items-center text-sm font-medium text-gray-600">
     <div className="flex min-w-0 flex-1 items-center justify-between">
       <button
+        type="button"
         onClick={() => setModalVisible(true)}
-        className="flex w-32 items-center gap-1 rounded-md px-2 py-1 transition-colors duration-200 hover:font-semibold hover:text-gray-900"
+        className="group flex items-center gap-1.5 rounded-[4px] px-2.5 py-1.5 text-[14px] font-medium text-gray-700 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-200 focus:outline-none"
       >
-        <PlusCircle size={20} />
-        <span>Add Expense</span>
+        <PlusCircle size={15} className="text-gray-600 transition-transform duration-300 group-hover:rotate-90 group-hover:scale-110 group-hover:text-gray-900" />
+        Add Expense
       </button>
       <div className="hidden items-center gap-3 md:flex">
         <div className="flex gap-1">
