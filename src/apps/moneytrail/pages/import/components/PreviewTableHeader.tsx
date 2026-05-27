@@ -1,5 +1,5 @@
-import { Button, Tag, Typography } from "antd";
-import { CloudUpload, CodeXml, Database, Eye, FileText, Focus, LayoutGrid, LoaderCircle, Table2, Trash2 } from "lucide-react";
+import { Tag, Typography } from "antd";
+import { CloudUpload, CodeXml, Database, Eye, FileText, LayoutGrid, LoaderCircle, Trash2 } from "lucide-react";
 import { FC } from "react";
 import { StatementParams } from "../engine/constants";
 import { PreviewTableHeaderProps } from "../engine/contracts/props";
