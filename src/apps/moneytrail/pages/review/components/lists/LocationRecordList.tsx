@@ -21,7 +21,7 @@ const LocationRecordListFC: FC<ReviewLocationRecordListProps> = ({
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 15;
+  const pageSize = 18;
   const listContainerRef = useRef<HTMLDivElement>(null);
   const handleClickOutside = useCallback((event: MouseEvent | TouchEvent) => {
     if (openItemId !== null && listContainerRef.current && !listContainerRef.current.contains(event.target as Node)) {
@@ -59,7 +59,7 @@ const LocationRecordListFC: FC<ReviewLocationRecordListProps> = ({
   );
 
   return (
-    <div ref={listContainerRef} className="w-full h-fit max-h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border">
+    <div ref={listContainerRef} className="w-full h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border">
       <ListHeader {...{
         title: "Location Tags",
         subtitle: "Geo-Location Metadata Records",
@@ -69,7 +69,7 @@ const LocationRecordListFC: FC<ReviewLocationRecordListProps> = ({
         setShowProcessed
       }} />
 
-      <div className="select-none overflow-y-auto">
+      <div className="select-none overflow-y-auto flex-1">
         <ul>
           {isLoading ?
             Array.from({ length: 5 }).map((_, index) => <SkeletonItem key={index} />) :

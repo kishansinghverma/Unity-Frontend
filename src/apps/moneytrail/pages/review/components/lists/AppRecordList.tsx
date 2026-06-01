@@ -17,7 +17,7 @@ const AppRecordListFC: FC<ReviewAppRecordListProps> = ({ isLoading, items, setAp
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 15;
+  const pageSize = 18;
   const listContainerRef = useRef<HTMLDivElement>(null);
   const handleClickOutside = useCallback((event: MouseEvent | TouchEvent) => {
     if (openItemId !== null && listContainerRef.current && !listContainerRef.current.contains(event.target as Node)) {
@@ -56,7 +56,7 @@ const AppRecordListFC: FC<ReviewAppRecordListProps> = ({ isLoading, items, setAp
 
   return (
     <>
-      <div ref={listContainerRef} className="w-full h-fit max-h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border">
+      <div ref={listContainerRef} className="w-full h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border">
         <ListHeader {...{
           title: "App Transactions",
           subtitle: "Aggregated Payment App Records",
@@ -65,7 +65,7 @@ const AppRecordListFC: FC<ReviewAppRecordListProps> = ({ isLoading, items, setAp
           showProcessed,
           setShowProcessed
         }} />
-        <div className="select-none overflow-y-auto">
+        <div className="select-none overflow-y-auto flex-1">
           <ul>
             {isLoading ?
               (Array.from({ length: 5 }).map((_, index) => <SkeletonItem key={index} />)) :
