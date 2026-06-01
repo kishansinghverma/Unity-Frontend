@@ -156,12 +156,12 @@ const ImportPage: React.FC = () => {
           }}
         >
           <div className="flex h-full min-h-0 p-12">
-            <Dragger {...uploadProps} className="w-full h-full">
-              <div className="mx-auto mb-3 inline-flex p-3 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-gray-600">
-                <CloudUpload size={28} strokeWidth={2} />
+            <Dragger {...uploadProps} className="w-full h-full [&_.ant-upload-drag]:!bg-blue-50/40 [&_.ant-upload-drag]:!border-slate-200 hover:[&_.ant-upload-drag]:!border-indigo-400 hover:[&_.ant-upload-drag]:!bg-indigo-50/30 transition-colors duration-200">
+              <div className="mx-auto mb-3 inline-flex p-4 items-center justify-center rounded-2xl bg-white shadow-sm border border-slate-100 text-indigo-500 group-hover:scale-110 transition-transform duration-300">
+                <CloudUpload size={32} strokeWidth={2} />
               </div>
-              <div className="mb-1 text-base font-medium text-gray-900">Drop your statement file here</div>
-              <div className="text-sm text-gray-500">Or click to browse - PDF, XLSX, HTML, CSV supported</div>
+              <div className="mb-1 text-base font-semibold text-slate-700">Drop your statement file here</div>
+              <div className="text-sm text-slate-500 font-medium">Or click to browse • PDF, XLSX, HTML, CSV supported</div>
             </Dragger>
           </div>
         </Card>
