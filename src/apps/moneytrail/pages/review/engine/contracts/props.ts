@@ -42,12 +42,14 @@ export type BankRecordSectionProps = {
   appRecords: WithId<AppRecord>[];
   locationRecords: WithId<LocationRecord>[];
   isLoading: boolean;
+  pageSize: number;
 };
 
 export type AppRecordSectionProps = {
   appRecords: WithId<AppRecord>[];
   locationRecords: WithId<LocationRecord>[];
   isLoading: boolean;
+  pageSize: number;
 };
 
 export type LocationRecordSectionProps = {
@@ -55,6 +57,7 @@ export type LocationRecordSectionProps = {
   isLoading: boolean;
   isManualEntryModalVisible: boolean;
   setManualEntryModalVisible: Dispatch<SetStateAction<boolean>>;
+  pageSize: number;
 };
 
 export type HeaderProps = {
@@ -74,18 +77,21 @@ export type BankRecordListProps = {
   items: WithId<BankRecord>[];
   isLoading: boolean;
   setBankItemId: Dispatch<SetStateAction<Nullable<string>>>;
+  pageSize: number;
 };
 
 export type ReviewLocationRecordListProps = {
   items: WithId<LocationRecord>[];
   isLoading: boolean;
   setLocationRecordItem: Dispatch<SetStateAction<Nullable<WithId<LocationRecord>>>>;
+  pageSize: number;
 };
 
 export type ReviewAppRecordListProps = {
   items: WithId<AppRecord>[];
   isLoading: boolean;
   setAppRecordItemId: Dispatch<SetStateAction<Nullable<string>>>;
+  pageSize: number;
 };
 
 export type TransactionListProps = {

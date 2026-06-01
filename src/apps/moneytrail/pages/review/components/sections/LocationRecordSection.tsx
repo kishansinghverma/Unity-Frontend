@@ -15,6 +15,7 @@ const LocationRecordSectionComponent: React.FC<LocationRecordSectionProps> = ({
   isLoading,
   isManualEntryModalVisible,
   setManualEntryModalVisible,
+  pageSize,
 }) => {
   const [locationRecordItem, setLocationRecordItem] = useState<Nullable<WithId<LocationRecord>>>(null);
 
@@ -24,6 +25,7 @@ const LocationRecordSectionComponent: React.FC<LocationRecordSectionProps> = ({
         items={locationRecords}
         isLoading={isLoading}
         setLocationRecordItem={setLocationRecordItem}
+        pageSize={pageSize}
       />
       {(isManualEntryModalVisible || locationRecordItem) && (
         <Suspense fallback={null}>

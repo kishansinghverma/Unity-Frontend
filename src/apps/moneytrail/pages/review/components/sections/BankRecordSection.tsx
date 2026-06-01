@@ -14,6 +14,7 @@ const BankRecordSectionComponent: React.FC<BankRecordSectionProps> = ({
   appRecords,
   locationRecords,
   isLoading,
+  pageSize,
 }) => {
   const [bankItemId, setBankItemId] = useState<Nullable<string>>(null);
 
@@ -23,6 +24,7 @@ const BankRecordSectionComponent: React.FC<BankRecordSectionProps> = ({
         items={bankRecords}
         isLoading={isLoading}
         setBankItemId={setBankItemId}
+        pageSize={pageSize}
       />
       {bankItemId && (
         <Suspense fallback={null}>

@@ -13,6 +13,7 @@ const AppRecordSectionComponent: React.FC<AppRecordSectionProps> = ({
   appRecords,
   locationRecords,
   isLoading,
+  pageSize,
 }) => {
   const [appRecordItemId, setAppRecordItemId] = useState<Nullable<string>>(null);
 
@@ -22,6 +23,7 @@ const AppRecordSectionComponent: React.FC<AppRecordSectionProps> = ({
         items={appRecords}
         isLoading={isLoading}
         setAppRecordItemId={setAppRecordItemId}
+        pageSize={pageSize}
       />
       {appRecordItemId && (
         <Suspense fallback={null}>

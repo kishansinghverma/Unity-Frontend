@@ -12,12 +12,11 @@ import { ListHeader } from "../layouts/Headers";
 import { EmptyList, SkeletonItem } from "../shared/Common";
 import { BankRecordListItem } from "./items/BankRecordListItem";
 
-const BankRecordListFC: FC<BankRecordListProps> = ({ isLoading, items, setBankItemId }) => {
+const BankRecordListFC: FC<BankRecordListProps> = ({ isLoading, items, setBankItemId, pageSize }) => {
   const dispatch = useAppDispatch();
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const [showProcessed, setShowProcessed] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 18;
   const listContainerRef = useRef<HTMLDivElement>(null);
   const handleClickOutside = useCallback((event: MouseEvent | TouchEvent) => {
     if (openItemId !== null && listContainerRef.current && !listContainerRef.current.contains(event.target as Node)) {

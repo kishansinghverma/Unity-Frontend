@@ -19,6 +19,7 @@ const ReviewPage: React.FC = () => {
   const locationRecords = getArrayOrDefault(locationRecordQuery);
 
   const [isManualEntryModalVisible, setManualEntryModalVisible] = useState(false);
+  const pageSize = 18;
 
   const headerContent = useMemo(() => <HeaderFC setModalVisible={setManualEntryModalVisible} />, []);
   useHeaderContent(headerContent);
@@ -36,17 +37,20 @@ const ReviewPage: React.FC = () => {
           appRecords={appRecords}
           locationRecords={locationRecords}
           isLoading={bankRecordQuery.isLoading}
+          pageSize={pageSize}
         />
         <AppRecordSection
           appRecords={appRecords}
           locationRecords={locationRecords}
           isLoading={appRecordQuery.isLoading}
+          pageSize={pageSize}
         />
         <LocationRecordSection
           locationRecords={locationRecords}
           isLoading={locationRecordQuery.isLoading}
           isManualEntryModalVisible={isManualEntryModalVisible}
           setManualEntryModalVisible={setManualEntryModalVisible}
+          pageSize={pageSize}
         />
       </div>
     </div>
