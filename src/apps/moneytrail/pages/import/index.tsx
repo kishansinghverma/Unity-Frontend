@@ -1,7 +1,7 @@
 import type { UploadProps } from "antd";
 import { Card, Col, List, Row, Table, Tag, Typography, Upload } from "antd";
 import { CloudUpload, FileUp } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useHeaderContent } from "../../../../components/layout/headerSlot";
 import { PostParams, Routes } from "../../../../engine/constant";
 import { handleError, handleJsonResponse } from "../../../../engine/helpers/httpHelper";
@@ -37,6 +37,21 @@ const ImportPage: React.FC = () => {
   const [isParsing, setIsParsing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [parsedPreview, setParsedPreview] = useState<ParsedStatementPreview | null>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [tableScrollHeight, setTableScrollHeight] = useState(500);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        // Table header is ~40px, PreviewTableHeader is ~55px, plus border/padding offsets
+        setTableScrollHeight(Math.max(200, entry.contentRect.height - 100));
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [parsedPreview]);
 
   const pageActions = useMemo(() => <Header />, []);
   useHeaderContent(pageActions);
@@ -166,7 +181,7 @@ const ImportPage: React.FC = () => {
           </div>
         </Card>
       ) : (
-        <>
+        <div ref={containerRef} className="flex-1 min-h-0 w-full overflow-hidden flex flex-col rounded-lg shadow-lg bg-white">
           {parsedPreview.recordType === "bank" ? (
             <Table
               size="small"
@@ -175,8 +190,8 @@ const ImportPage: React.FC = () => {
               columns={BankColumns}
               dataSource={bankRows}
               pagination={false}
-              scroll={{ y: 505 }}
-              className="shadow-lg [&_.ant-table-cell]:!px-3"
+              scroll={{ y: tableScrollHeight }}
+              className="h-full flex flex-col [&_.ant-spin-nested-loading]:flex-1 [&_.ant-spin-nested-loading]:flex [&_.ant-spin-nested-loading]:flex-col [&_.ant-spin-container]:flex-1 [&_.ant-spin-container]:flex [&_.ant-spin-container]:flex-col [&_.ant-table]:flex-1 [&_.ant-table]:flex [&_.ant-table]:flex-col [&_.ant-table-container]:flex-1 [&_.ant-table-container]:flex [&_.ant-table-container]:flex-col [&_.ant-table-body]:flex-1 [&_.ant-table-cell]:!px-3 [&_.ant-table-thead>tr>th]:!bg-blue-50/40"
               title={() => <PreviewTableHeader
                 parsedPreview={parsedPreview}
                 isUploading={isUploading}
@@ -193,8 +208,8 @@ const ImportPage: React.FC = () => {
               columns={AppColumns}
               dataSource={appRows}
               pagination={false}
-              scroll={{ y: 505 }}
-              className="shadow-lg [&_.ant-table-cell]:!px-3"
+              scroll={{ y: tableScrollHeight }}
+              className="h-full flex flex-col [&_.ant-spin-nested-loading]:flex-1 [&_.ant-spin-nested-loading]:flex [&_.ant-spin-nested-loading]:flex-col [&_.ant-spin-container]:flex-1 [&_.ant-spin-container]:flex [&_.ant-spin-container]:flex-col [&_.ant-table]:flex-1 [&_.ant-table]:flex [&_.ant-table]:flex-col [&_.ant-table-container]:flex-1 [&_.ant-table-container]:flex [&_.ant-table-container]:flex-col [&_.ant-table-body]:flex-1 [&_.ant-table-cell]:!px-3 [&_.ant-table-thead>tr>th]:!bg-blue-50/40"
               title={() => <PreviewTableHeader
                 parsedPreview={parsedPreview}
                 isUploading={isUploading}
@@ -204,7 +219,7 @@ const ImportPage: React.FC = () => {
               />}
             />
           )}
-        </>
+        </div>
       )}
     </div>
   );
