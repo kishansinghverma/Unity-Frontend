@@ -31,22 +31,22 @@ const ScrambleText: FC<{ type: "date" | "time" }> = ({ type }) => {
 };
 
 const HeaderComponent: FC<HeaderProps> = ({ setModalVisible }) => {
-  const [lastRefinement, setLastRefinement] = useState<Date | null>(null);
+  const [reviewedOn, setReviewedOn] = useState<Date | null>(null);
 
   useEffect(() => {
-    const fetchLastRefinement = async () => {
+    const fetchReviewedOn = async () => {
       try {
-        const data = await fetch(Routes.ExpenseLastRefinement).then(handleJsonResponse);
+        const data = await fetch(Routes.ExpenseReviewedOn).then(handleJsonResponse);
         if (data && data.value) {
-          setLastRefinement(new Date(data.value));
+          setReviewedOn(new Date(data.value));
         }
       } catch (error) {
-        console.error("Failed to fetch last refinement time:", error);
+        console.error("Failed to fetch reviewed on time:", error);
       }
     };
 
-    fetchLastRefinement();
-    const interval = setInterval(fetchLastRefinement, 2 * 60 * 1000); // 2 minutes
+    fetchReviewedOn();
+    const interval = setInterval(fetchReviewedOn, 2 * 60 * 1000); // 2 minutes
 
     return () => clearInterval(interval);
   }, []);
@@ -65,16 +65,16 @@ const HeaderComponent: FC<HeaderProps> = ({ setModalVisible }) => {
         <div className="items-center gap-3 md:flex font-mono">
           <div className="flex items-center gap-1.5">
             <CalendarArrowUp size={20} />
-            {lastRefinement ? (
-              <div>{dayjs(lastRefinement).format("DD MMM YYYY")}</div>
+            {reviewedOn ? (
+              <div>{dayjs(reviewedOn).format("DD MMM YYYY")}</div>
             ) : (
               <ScrambleText type="date" />
             )}
           </div>
           <div className="flex items-center gap-1.5">
             <ClockArrowUp size={20} />
-            {lastRefinement ? (
-              <div>{dayjs(lastRefinement).format("hh:mm A")}</div>
+            {reviewedOn ? (
+              <div>{dayjs(reviewedOn).format("hh:mm A")}</div>
             ) : (
               <ScrambleText type="time" />
             )}

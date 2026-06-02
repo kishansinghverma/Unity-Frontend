@@ -186,8 +186,8 @@ export const BankReviewModal: FC<BankRecordReviewModalProps> = ({
       parties: selectedGroup?.members.map(m => m.id),
       category: formState.category,
       bankTxnId: bankRecord?._id,
-      phonePeTxnId: selectedAppRecord?._id,
-      draftTxnId: selectedLocationRecord?._id,
+      appTxnId: selectedAppRecord?._id,
+      locationTxnId: selectedLocationRecord?._id,
     };
 
     if (bankRecord.type === 'Debit') {

@@ -130,7 +130,7 @@ export const ManualEntryModal: FC<ManualEntryModalProps> = ({
       description: formState.description,
       parties: selectedGroup?.members.map(m => m.id),
       category: formState.category,
-      draftTxnId: locationRecord?._id,
+      locationTxnId: locationRecord?._id,
       details: Object.entries({
         Source: formState.source,
         Location: formState.location ?? 'N/A',

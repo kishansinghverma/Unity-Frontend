@@ -170,8 +170,8 @@ export const AppRecordReviewModal: FC<AppRecordReviewModalProps> = ({
       description: formState.description,
       parties: selectedGroup?.members.map(m => m.id),
       category: formState.category,
-      phonePeTxnId: appRecord?._id,
-      draftTxnId: selectedLocationRecord?._id,
+      appTxnId: appRecord?._id,
+      locationTxnId: selectedLocationRecord?._id,
     };
 
     if (appRecord.type === 'Debit') {
