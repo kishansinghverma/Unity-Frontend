@@ -99,6 +99,9 @@ const mockProcessedRecords = [
   },
 ];
 
+type MockProcessedRecord = (typeof mockProcessedRecords)[number];
+type MockProcessedRecordInput = Omit<MockProcessedRecord, 'id'>;
+
 export const getMockProcessedRecords = () => {
   // Return copy of the data
   return [...mockProcessedRecords];
@@ -108,7 +111,7 @@ export const getMockProcessedRecordById = (id: string) => {
   return mockProcessedRecords.find(record => record.id === id);
 };
 
-export const createMockProcessedRecord = (recordData: any) => {
+export const createMockProcessedRecord = (recordData: MockProcessedRecordInput) => {
   const newRecord = {
     id: uuidv4(),
     ...recordData,
@@ -120,7 +123,7 @@ export const createMockProcessedRecord = (recordData: any) => {
   return newRecord;
 };
 
-export const updateMockProcessedRecord = (id: string, recordData: any) => {
+export const updateMockProcessedRecord = (id: string, recordData: Partial<MockProcessedRecordInput>) => {
   // In a real app, you would update the database
   const recordIndex = mockProcessedRecords.findIndex(record => record.id === id);
   

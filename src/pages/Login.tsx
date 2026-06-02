@@ -1,7 +1,7 @@
 import { Lock, User } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');

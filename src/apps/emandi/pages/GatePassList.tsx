@@ -27,7 +27,7 @@ const GatePassList: React.FC = () => {
     direction: 'desc',
   });
 
-  const columns: ListColumn[] = [
+  const columns: ListColumn<GatePass>[] = [
     { id: 'date', label: 'Date', accessor: 'date', sortable: true },
     { id: 'seller', label: 'Seller', accessor: 'seller', sortable: true },
     { id: 'vehicle', label: 'Vehicle', accessor: 'vehicle', sortable: true },

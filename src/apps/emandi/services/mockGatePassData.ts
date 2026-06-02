@@ -53,6 +53,9 @@ const mockGatePasses = [
   },
 ];
 
+type MockGatePass = (typeof mockGatePasses)[number];
+type MockGatePassInput = Omit<MockGatePass, 'id'>;
+
 export const getMockGatePasses = () => {
   // Return copy of the data
   return [...mockGatePasses];
@@ -62,7 +65,7 @@ export const getMockGatePassById = (id: string) => {
   return mockGatePasses.find(gatePass => gatePass.id === id);
 };
 
-export const createMockGatePass = (gatePassData: any) => {
+export const createMockGatePass = (gatePassData: MockGatePassInput) => {
   const newGatePass = {
     id: uuidv4(),
     ...gatePassData,
@@ -74,7 +77,7 @@ export const createMockGatePass = (gatePassData: any) => {
   return newGatePass;
 };
 
-export const updateMockGatePass = (id: string, gatePassData: any) => {
+export const updateMockGatePass = (id: string, gatePassData: Partial<MockGatePassInput>) => {
   // In a real app, you would update the database
   const gatePassIndex = mockGatePasses.findIndex(gatePass => gatePass.id === id);
   

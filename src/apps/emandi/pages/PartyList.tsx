@@ -27,7 +27,7 @@ const PartyList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  const columns: ListColumn[] = [
+  const columns: ListColumn<Party>[] = [
     { id: 'name', label: 'Name', accessor: 'name', sortable: true },
     { id: 'mandi', label: 'Mandi', accessor: 'mandi', sortable: true },
     { id: 'state', label: 'State', accessor: 'state', sortable: true },

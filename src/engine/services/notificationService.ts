@@ -10,10 +10,10 @@ export type NotificationMessages = {
     error?: string | ReactNode;
 }
 
-export type NotificationDescriptions = {
+export type NotificationDescriptions<T = unknown> = {
     pending?: string;
-    success?: string | ((data: any) => string);
-    error?: string | ((data: any) => string);
+    success?: string | ((data: T) => string);
+    error?: string | ((data: unknown) => string);
 }
 
 const styles = {
@@ -28,6 +28,8 @@ let toast: NotifyFunction = () => console.warn('Notification Engine Not Ready!')
 
 export const setNotificationApi = (api: ReturnType<typeof notification.useNotification>[0]) => { toast = api.open };
 
+const getErrorDescription = (error: unknown) => error instanceof Error ? error.message : String(error);
+
 export const notify = {
     error: (props: ArgsProps) => toast({
         message: FailedMessage({ content: props.message }),
@@ -41,7 +43,7 @@ export const notify = {
         duration: 5,
         className: styles.success
     }),
-    promise: (promise: Promise<any>, messages: NotificationMessages, descriptions: NotificationDescriptions) => {
+    promise: <T>(promise: Promise<T>, messages: NotificationMessages, descriptions: NotificationDescriptions<T>) => {
         const notificationKey = crypto.randomUUID();
 
         toast({
@@ -61,13 +63,13 @@ export const notify = {
                 description: description ?? DefaultDescriptions.success as string,
                 className: styles.success
             });
-        }).catch((err) => {
+        }).catch((err: unknown) => {
             const description = typeof descriptions.error === 'function' ? descriptions.error(err) : descriptions.error;
             toast({
                 key: notificationKey,
                 duration: 30,
                 message: FailedMessage({ content: messages.error ?? DefaultMessages.error }),
-                description: description ?? err?.message ?? DefaultDescriptions.error,
+                description: description ?? getErrorDescription(err) ?? DefaultDescriptions.error,
                 className: styles.error
             });
         });

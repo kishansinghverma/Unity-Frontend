@@ -3,7 +3,7 @@ import { ListColumn, SortConfig } from '../../types';
 
 interface TableProps<T extends { id: string }> {
   data: T[];
-  columns: ListColumn[];
+  columns: ListColumn<T>[];
   onRowClick?: (item: T) => void;
   sortConfig?: SortConfig;
   onSort?: (field: string) => void;

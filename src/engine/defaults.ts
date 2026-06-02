@@ -2,7 +2,7 @@ import { StringUtils } from "./helpers/stringHelper";
 import { Fetchable } from "./models/types";
 import { NotificationDescriptions, NotificationMessages } from "./services/notificationService";
 
-export const FetchableDefault: Fetchable<any[]> = {
+export const FetchableDefault: Fetchable<unknown[]> = {
     contents: [],
     isLoading: true,
     error: StringUtils.empty

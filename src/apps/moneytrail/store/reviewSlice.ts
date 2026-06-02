@@ -4,11 +4,7 @@ import { Routes } from '../../../engine/constant';
 import { WithId } from '../../../engine/models/types';
 import { AppRecord, BankRecord, LocationRecord, SplitwiseCategoriesResponse, SplitwiseGroupsResponse } from '../pages/review/engine/contracts/models';
 
-const initialState: {
-
-} = {
-
-};
+const initialState: Record<string, never> = {};
 
 export const reviewApi = createApi({
   reducerPath: 'review/fetch',

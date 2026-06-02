@@ -29,7 +29,7 @@ const ProcessedRecordsList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  const columns: ListColumn[] = [
+  const columns: ListColumn<ProcessedRecord>[] = [
     { id: 'date', label: 'Date', accessor: 'date', sortable: true },
     { id: 'seller', label: 'Seller', accessor: 'seller', sortable: true },
     { id: 'vehicle', label: 'Vehicle', accessor: 'vehicle', sortable: true },

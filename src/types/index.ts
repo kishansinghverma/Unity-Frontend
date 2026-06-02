@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export interface AppInfo {
   id: string;
   name: string;
@@ -16,16 +18,16 @@ export interface FormField {
 
 export interface Record {
   id: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
-export interface ListColumn {
+export interface ListColumn<T = Record> {
   id: string;
   label: string;
   accessor: string;
   sortable?: boolean;
   filterable?: boolean;
-  render?: (item: any) => React.ReactNode;
+  render?: (item: T) => ReactNode;
   alignment?: 'left' | 'center' | 'right';
 }
 

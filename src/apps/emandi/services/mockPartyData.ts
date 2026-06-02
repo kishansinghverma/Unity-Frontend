@@ -67,6 +67,9 @@ const mockParties = [
   },
 ];
 
+type MockParty = (typeof mockParties)[number];
+type MockPartyInput = Omit<MockParty, 'id'>;
+
 export const getMockParties = () => {
   // Return copy of the data
   return [...mockParties];
@@ -76,7 +79,7 @@ export const getMockPartyById = (id: string) => {
   return mockParties.find(party => party.id === id);
 };
 
-export const createMockParty = (partyData: any) => {
+export const createMockParty = (partyData: MockPartyInput) => {
   const newParty = {
     id: uuidv4(),
     ...partyData,
@@ -88,7 +91,7 @@ export const createMockParty = (partyData: any) => {
   return newParty;
 };
 
-export const updateMockParty = (id: string, partyData: any) => {
+export const updateMockParty = (id: string, partyData: Partial<MockPartyInput>) => {
   // In a real app, you would update the database
   const partyIndex = mockParties.findIndex(party => party.id === id);
   

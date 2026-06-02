@@ -53,6 +53,9 @@ const mockCustomers = [
   },
 ];
 
+type MockCustomer = (typeof mockCustomers)[number];
+type MockCustomerInput = Omit<MockCustomer, 'id'>;
+
 export const getMockCustomers = () => {
   // Return copy of the data
   return [...mockCustomers];
@@ -62,7 +65,7 @@ export const getMockCustomerById = (id: string) => {
   return mockCustomers.find(customer => customer.id === id);
 };
 
-export const createMockCustomer = (customerData: any) => {
+export const createMockCustomer = (customerData: MockCustomerInput) => {
   const newCustomer = {
     id: uuidv4(),
     ...customerData,
@@ -74,7 +77,7 @@ export const createMockCustomer = (customerData: any) => {
   return newCustomer;
 };
 
-export const updateMockCustomer = (id: string, customerData: any) => {
+export const updateMockCustomer = (id: string, customerData: Partial<MockCustomerInput>) => {
   // In a real app, you would update the database
   const customerIndex = mockCustomers.findIndex(customer => customer.id === id);
   

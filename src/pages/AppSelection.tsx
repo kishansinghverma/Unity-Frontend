@@ -2,7 +2,7 @@ import { CandlestickChart, Home, LogOut, Package, Wheat } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { APPS } from '../constants/apps';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useAppDispatch } from '../store/hooks';
 import { setCurrentApp } from '../store/slices/appSlice';
 
